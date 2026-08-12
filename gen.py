@@ -36,6 +36,7 @@ NAV = [
     ("firmware-integration.html", "Running real firmware"),
     ("emulation.html", "Emulating a board"),
     ("SECTION", "Reference"),
+    ("settings.html", "Settings"),
     ("reference-cli.html", "CLI"),
     ("reference-control.html", "Control socket"),
     ("limits.html", "Known limits"),
