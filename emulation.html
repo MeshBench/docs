@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Emulating a board - MeshBench</title>
+<style>
+:root {
+  --ink: #16191d; --dim: #5b636e; --line: #d9dee5; --bg: #ffffff;
+  --panel: #f5f7fa; --accent: #1f6feb; --warn: #b45309; --good: #15803d;
+  --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root { --ink:#e6e9ee; --dim:#9aa4b2; --line:#2a3038; --bg:#0f1215;
+          --panel:#171b20; --accent:#6ea8fe; --warn:#f0b429; --good:#4ade80; }
+}
+* { box-sizing: border-box; }
+body { margin:0; background:var(--bg); color:var(--ink);
+  font: 16px/1.65 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+.wrap { display:flex; align-items:flex-start; max-width:1180px; margin:0 auto; }
+nav { position:sticky; top:0; width:230px; flex:0 0 230px; padding:28px 18px;
+  border-right:1px solid var(--line); height:100vh; overflow-y:auto; }
+nav h1 { font-size:15px; letter-spacing:.08em; text-transform:uppercase;
+  color:var(--dim); margin:0 0 14px; }
+nav a { display:block; padding:5px 0; color:var(--ink); text-decoration:none; font-size:14.5px; }
+nav a:hover { color:var(--accent); }
+nav a.here { color:var(--accent); font-weight:600; }
+nav .navsec { font-size:11.5px; letter-spacing:.09em; text-transform:uppercase;
+  color:var(--dim); margin:18px 0 4px; border:0; padding:0; font-weight:600; }
+figure { margin:22px 0; }
+figure svg { max-width:100%; height:auto; display:block; }
+figcaption { color:var(--dim); font-size:13.5px; margin-top:8px; max-width:70ch; }
+.svg-ink { fill:var(--ink); } .svg-dim { fill:var(--dim); }
+.svg-line { stroke:var(--line); fill:none; } .svg-accent { stroke:var(--accent); fill:none; }
+.svg-panel { fill:var(--panel); stroke:var(--line); }
+.svg-real { fill:none; stroke:var(--good); stroke-dasharray:5 4; }
+main { flex:1 1 auto; padding:34px 40px 90px; min-width:0; }
+h1,h2,h3 { line-height:1.25; text-wrap:balance; }
+h1 { font-size:31px; margin:0 0 6px; }
+h2 { font-size:22px; margin:34px 0 10px; padding-top:14px; border-top:1px solid var(--line); }
+h3 { font-size:17px; margin:24px 0 8px; }
+p, li { max-width:70ch; }
+code { font-family:var(--mono); font-size:.9em; background:var(--panel);
+  padding:1px 5px; border-radius:4px; }
+pre { background:var(--panel); border:1px solid var(--line); border-radius:8px;
+  padding:14px 16px; overflow-x:auto; }
+pre code { background:none; padding:0; }
+img { max-width:100%; border:1px solid var(--line); border-radius:8px; display:block; margin:18px 0; }
+table { border-collapse:collapse; margin:16px 0; font-size:14.5px; display:block; overflow-x:auto; }
+th, td { border:1px solid var(--line); padding:7px 11px; text-align:left; vertical-align:top; }
+th { background:var(--panel); }
+td.num, th.num { text-align:right; font-variant-numeric:tabular-nums; }
+blockquote { margin:16px 0; padding:10px 16px; border-left:3px solid var(--warn);
+  background:var(--panel); border-radius:0 8px 8px 0; }
+blockquote p { margin:.4em 0; }
+ol.steps { counter-reset:step; list-style:none; padding-left:0; }
+ol.steps > li { counter-increment:step; position:relative; padding:0 0 4px 42px; margin:16px 0; }
+ol.steps > li::before { content:counter(step); position:absolute; left:0; top:0;
+  width:27px; height:27px; border-radius:50%; background:var(--accent); color:#fff;
+  display:flex; align-items:center; justify-content:center; font-size:14px; font-weight:600; }
+footer { color:var(--dim); font-size:13.5px; border-top:1px solid var(--line);
+  margin-top:44px; padding-top:14px; }
+a { color:var(--accent); }
+@media (max-width:820px) {
+  .wrap { display:block; } nav { position:static; width:auto; height:auto;
+    border-right:0; border-bottom:1px solid var(--line); }
+  nav a { display:inline-block; margin-right:14px; } main { padding:24px 18px 70px; }
+}
+</style></head>
+<body><div class="wrap">
+<nav><h1>MeshBench</h1><a href="index.html">Overview</a><a href="getting-started.html">Getting started</a><h2 class="navsec">Guides</h2><a href="firmware-library.html">Firmware library</a><a href="firmware-development.html">Firmware development</a><a href="companion-bench.html">Companion bench</a><a href="fixtures.html">Shipped networks</a><a href="experiments.html">Experiments</a><h2 class="navsec">How it works</h2><a href="architecture.html">Architecture</a><a href="rf-chain.html">The RF chain</a><a href="firmware-integration.html">Running real firmware</a><a href="emulation.html" class="here">Emulating a board</a><h2 class="navsec">Reference</h2><a href="reference-cli.html">CLI</a><a href="reference-control.html">Control socket</a><a href="limits.html">Known limits</a></nav>
+<main><h1>Emulating a board</h1>
+<p>Running the <strong>published firmware image</strong>, unmodified, the same file somebody flashes onto hardware, against MeshBench&#x27;s radio channel.</p>
+<p>This is a different thing from the native path. A native build compiles MeshCore for your host and links a shim in place of the radio driver: fast, deterministic, and what every study and every CI gate uses. Emulation runs the real binary on a model of the real chip, which is slow and not deterministic, and answers a question the native path cannot: <strong>does this release actually come up and talk on this board?</strong></p>
+<figure>
+<svg viewBox="0 0 760 400" role="img" aria-label="The emulation stack, with a real and simulated divide">
+  <text x="150" y="18" class="svg-dim" font-size="12" text-anchor="middle" letter-spacing="1.5">REAL</text>
+  <text x="530" y="18" class="svg-dim" font-size="12" text-anchor="middle" letter-spacing="1.5">SIMULATED</text>
+  <line x1="300" y1="28" x2="300" y2="390" class="svg-real" stroke-width="2"/>
+  <rect x="30" y="40" width="240" height="54" rx="7" class="svg-panel"/>
+  <text x="150" y="63" class="svg-ink" font-size="13" text-anchor="middle" font-weight="600">Published firmware image</text>
+  <text x="150" y="82" class="svg-dim" font-size="11.5" text-anchor="middle">Heltec_v3_repeater-v1.17.0.bin</text>
+  <rect x="30" y="112" width="240" height="54" rx="7" class="svg-panel"/>
+  <text x="150" y="135" class="svg-ink" font-size="13" text-anchor="middle" font-weight="600">MeshCore, unmodified</text>
+  <text x="150" y="154" class="svg-dim" font-size="11.5" text-anchor="middle">same code, same compiler, same flags</text>
+  <rect x="30" y="184" width="240" height="70" rx="7" class="svg-panel"/>
+  <text x="150" y="206" class="svg-ink" font-size="13" text-anchor="middle" font-weight="600">CPU and peripherals</text>
+  <text x="150" y="224" class="svg-dim" font-size="11.5" text-anchor="middle">QEMU (Xtensa) or Renode (Cortex-M4)</text>
+  <text x="150" y="241" class="svg-dim" font-size="11.5" text-anchor="middle">SPIM, GPIO, RTC, TWIM, SAADC</text>
+  <rect x="30" y="272" width="240" height="54" rx="7" class="svg-panel"/>
+  <text x="150" y="294" class="svg-ink" font-size="13" text-anchor="middle" font-weight="600">SPI bus</text>
+  <text x="150" y="313" class="svg-dim" font-size="11.5" text-anchor="middle">commands, registers, IRQ line, NSS</text>
+  <path d="M270 299 L 420 299" class="svg-accent" stroke-width="2" marker-end="url(#a)"/>
+  <defs><marker id="a" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto">
+    <polygon points="0 0, 9 3.5, 0 7" fill="currentColor" class="svg-ink"/></marker></defs>
+  <rect x="420" y="272" width="290" height="54" rx="7" class="svg-panel"/>
+  <text x="565" y="294" class="svg-ink" font-size="13" text-anchor="middle" font-weight="600">radioserver</text>
+  <text x="565" y="313" class="svg-dim" font-size="11.5" text-anchor="middle">the SX1262 chip model, out of process</text>
+  <rect x="420" y="184" width="290" height="70" rx="7" class="svg-panel"/>
+  <text x="565" y="206" class="svg-ink" font-size="13" text-anchor="middle" font-weight="600">MeshBench channel</text>
+  <text x="565" y="224" class="svg-dim" font-size="11.5" text-anchor="middle">sum, delay, path loss, terrain, noise</text>
+  <text x="565" y="241" class="svg-dim" font-size="11.5" text-anchor="middle">sample accurate, decides nothing</text>
+  <rect x="420" y="112" width="290" height="54" rx="7" class="svg-panel"/>
+  <text x="565" y="135" class="svg-ink" font-size="13" text-anchor="middle" font-weight="600">Every other node</text>
+  <text x="565" y="154" class="svg-dim" font-size="11.5" text-anchor="middle">native, emulated, or an SDR observer</text>
+  <line x1="565" y1="272" x2="565" y2="258" class="svg-line" stroke-width="2"/>
+  <line x1="565" y1="184" x2="565" y2="170" class="svg-line" stroke-width="2"/>
+  <line x1="150" y1="94" x2="150" y2="108" class="svg-line" stroke-width="2"/>
+  <line x1="150" y1="166" x2="150" y2="180" class="svg-line" stroke-width="2"/>
+  <line x1="150" y1="254" x2="150" y2="268" class="svg-line" stroke-width="2"/>
+  <text x="380" y="365" class="svg-dim" font-size="11.5" text-anchor="middle">the boundary is the SPI bus</text>
+</svg>
+<figcaption>Everything left of the dashed line is the artefact people flash onto
+hardware. The boundary is the SPI bus, which is where a real SX1262 would be, so
+nothing above it has to be told it is being simulated.</figcaption>
+</figure>
+<h2>Why the boundary is the SPI bus</h2>
+<p>MeshCore talks to its radio over SPI: command opcodes, register reads and writes, a busy line and an interrupt line. Put the model there and the firmware above it needs no modification at all. Put it any higher, at the driver or the packet layer, and you are no longer testing the thing that ships.</p>
+<p>That choice is what makes the answer meaningful. When an emulated Heltec v3 sent an advert and thirty-eight other nodes decoded it, what was verified was the published binary&#x27;s SPI conversation with a chip model, not a re-implementation of what that conversation should look like.</p>
+<h2>radioserver: one chip model, three consumers</h2>
+<p><code>radioserver</code> is a small C++17 program that presents the SX1262 interface and turns transmit commands into waveforms. It runs <strong>out of process</strong> and is shared by all three ways of running firmware:</p>
+<table><thead><tr><th>consumer</th><th>how it connects</th></tr></thead><tbody><tr><td>native builds</td><td>in-process shim, no socket</td></tr><tr><td>QEMU</td><td>Unix domain socket</td></tr><tr><td>Renode</td><td>TCP</td></tr></tbody></table>
+<p>The TCP path exists even though Linux does not need it, because Windows will: the Unix socket path is the single item on the critical path for a Windows build.</p>
+<p>One model rather than three means a bug in the chip&#x27;s behaviour is a bug everywhere, which is much easier to find than three subtly different radios.</p>
+<h2>QEMU, for ESP32 (Xtensa)</h2>
+<p><strong>The fork adds <code>hw/ssi/sx1262.c</code></strong>, an SX1262 device upstream does not have. The packaging workflow asserts that file is in the tree it built, because a checkout that silently resolved to upstream produces a QEMU that runs perfectly and reports no chip present, which looks like our bug.</p>
+<p><strong>It must be configured with <code>--enable-gcrypt</code>.</strong> Without it the <code>esp32</code> machine will not instantiate at all, and the error does not mention crypto.</p>
+<h2>Renode, for nRF52 (Cortex-M4)</h2>
+<p>The nRF52840 path took considerably more work, and every piece of it is a detail that produced a silent failure first.</p>
+<h3>SPIM3 lives at 0x4002F000</h3>
+<p>The nRF52840 has four SPI master instances. The one MeshCore uses on these boards is <strong>SPIM3 at <code>0x4002F000</code></strong>, which was initially mis-identified as CryptoCell. The register offsets settle it: <code>0x118</code> is <code>EVENTS_END</code>, <code>0x304</code> and <code>0x308</code> are <code>INTENSET</code> and <code>INTENCLR</code>. Those are SPIM&#x27;s, not CryptoCell&#x27;s.</p>
+<h3>EasyDMA, not a data register</h3>
+<p>SPIM does not have a byte-at-a-time data register. The firmware writes a pointer and a length into <code>TXD.PTR</code> and <code>TXD.MAXCNT</code>, the same for <code>RXD</code>, and triggers <code>TASKS_START</code>. The peripheral model has to read the transmit buffer out of guest memory, run the transaction, write the reply back into the receive buffer, and then raise <code>EVENTS_END</code>. A model that ignores EasyDMA sees no bytes at all and the firmware waits forever for a chip that never answers.</p>
+<h3>Chip select is a GPIO, and Renode never releases it</h3>
+<p>An SX1262 transaction is delimited by NSS going low and then high again. Renode&#x27;s SPI infrastructure never calls <code>FinishTransmission()</code>, so from the chip model&#x27;s point of view the transaction never ends and every subsequent command is read as a continuation of the first one.</p>
+<p>The fix is to stop treating NSS as the SPI controller&#x27;s business and wire it as what it actually is on the board: a GPIO. For the RAK4631 that is <code>gpio1</code> pin 10, with DIO1, the interrupt line, on <code>gpio1</code> pin 15. Those numbers are recorded per board in <code>internal/scenario/boards.go</code> as <code>RenodeWiring</code>, because they are a property of the board rather than of the emulator.</p>
+<h3>The SEVONPEND fix, and why the fix looked absent</h3>
+<p>Published nRF52 firmware sets <strong>SEVONPEND</strong> and then executes <code>WFE</code>, expecting to be woken when an interrupt becomes pending, whether or not it is enabled to fire.</p>
+<p>Renode&#x27;s CPU core, tlib, was checking whether any interrupt was pending in a way that did not match the ARM semantics the firmware relies on, so the core slept and never woke. The mesh looked alive and completely silent.</p>
+<p>The fix has three parts, and missing any one of them looks identical from outside:</p>
+<ol class="steps"><li>tlib gains <code>tlib_nvic_get_pending_masked_irq()</code> and the wake check uses it.</li><li><code>renode_arm_callbacks.c</code> needs the binding
+<code>EXTERNAL_AS(int32_t, PendingIRQ, tlib_nvic_get_pending_irq)</code>. Without this
+the new function exists and is never called, and the whole change appears to
+do nothing.</li><li>The managed side calls <code>sleeper.Interrupt()</code> so the sleeping thread actually
+wakes.</li></ol>
+<blockquote><p><strong>A fix that is absent and a fix that is wrong look identical from outside.</strong> The first attempt at this had the tlib change and not the binding, and the conclusion drawn was &quot;SEVONPEND is not the problem&quot;, which was wrong.</p></blockquote>
+<h3>Peripherals the firmware touches on the way up</h3>
+<p>MeshCore does not only talk to the radio. Boot touches several peripherals, and each missing one stops the firmware somewhere earlier and less obviously:</p>
+<table><thead><tr><th>peripheral</th><th>why the firmware needs it</th></tr></thead><tbody><tr><td><code>NRF52840_Temp</code></td><td>the temperature sensor read at start-up</td></tr><tr><td><code>NRF52840_Clock</code></td><td>HFCLK and LFCLK start, waited on before anything proceeds</td></tr><tr><td><code>NRF52840_SAADC</code></td><td>battery voltage</td></tr><tr><td><code>NRF52840_TWIM</code></td><td>I2C, for the display and sensors on some boards</td></tr><tr><td><code>RadioServerSX1262</code></td><td>the radio, bridged to radioserver</td></tr></tbody></table>
+<p>These live in <code>tools/renode/peripherals/</code> as C# files loaded by the platform description.</p>
+<h2>Forks, and why they are not upstream builds</h2>
+<p>Neither emulator can be a distribution build:</p>
+<ul><li>Our <strong>QEMU</strong> carries the SX1262 device. A stock build runs and reports no chip.</li><li>Our <strong>Renode</strong> carries the SEVONPEND fix. A stock build boots the firmware and</li></ul>
+<p>  it sleeps for ever.</p>
+<p>Both are built in CI from MeshBench&#x27;s forks. A bundle that shipped a stock build of either would fail in a way that looks like MeshBench&#x27;s fault.</p>
+<h2>What it costs, and the ceiling</h2>
+<p><strong>Each emulated node is its own emulator process, running in real time</strong>, and costs roughly one core and 150 MB.</p>
+<blockquote><p><strong>Never run more than eight at once on a twelve-core machine, and never let free memory fall below 3 GB.</strong> Past the ceiling nothing reports an error. Boots stretch, simulated time falls behind the wall clock, and the symptom is a mesh that has gone quiet: exactly what a genuine RF problem looks like.</p></blockquote>
+<p>The firmware library says how many nodes a board image would land on before you press the button, for this reason.</p>
+<h2>Emulation is a conformance tool, not a measurement tool</h2>
+<p>Emulated nodes run on wall time. Two runs of the same seed do not agree, so:</p>
+<ul><li><strong>every CI gate is native</strong></li><li><strong>every study arm is native</strong></li><li>emulation answers &quot;does this published build come up, configure itself, and</li></ul>
+<p>  put a correctly formed packet on the air&quot;</p>
+<p>Both architectures have been taken to that point. The ESP32 path produced an advert decoded by thirty-eight other nodes; the nRF52 path produced a 127-byte advert after 5,240 SPI transactions.</p>
+<footer>MeshBench documentation. Built from the running application, not from
+mock-ups. Screenshots are window-only captures; see CLAUDE.md for the rule that
+keeps them current.</footer>
+</main></div></body></html>

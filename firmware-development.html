@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Firmware development - MeshBench</title>
+<style>
+:root {
+  --ink: #16191d; --dim: #5b636e; --line: #d9dee5; --bg: #ffffff;
+  --panel: #f5f7fa; --accent: #1f6feb; --warn: #b45309; --good: #15803d;
+  --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root { --ink:#e6e9ee; --dim:#9aa4b2; --line:#2a3038; --bg:#0f1215;
+          --panel:#171b20; --accent:#6ea8fe; --warn:#f0b429; --good:#4ade80; }
+}
+* { box-sizing: border-box; }
+body { margin:0; background:var(--bg); color:var(--ink);
+  font: 16px/1.65 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+.wrap { display:flex; align-items:flex-start; max-width:1180px; margin:0 auto; }
+nav { position:sticky; top:0; width:230px; flex:0 0 230px; padding:28px 18px;
+  border-right:1px solid var(--line); height:100vh; overflow-y:auto; }
+nav h1 { font-size:15px; letter-spacing:.08em; text-transform:uppercase;
+  color:var(--dim); margin:0 0 14px; }
+nav a { display:block; padding:5px 0; color:var(--ink); text-decoration:none; font-size:14.5px; }
+nav a:hover { color:var(--accent); }
+nav a.here { color:var(--accent); font-weight:600; }
+nav .navsec { font-size:11.5px; letter-spacing:.09em; text-transform:uppercase;
+  color:var(--dim); margin:18px 0 4px; border:0; padding:0; font-weight:600; }
+figure { margin:22px 0; }
+figure svg { max-width:100%; height:auto; display:block; }
+figcaption { color:var(--dim); font-size:13.5px; margin-top:8px; max-width:70ch; }
+.svg-ink { fill:var(--ink); } .svg-dim { fill:var(--dim); }
+.svg-line { stroke:var(--line); fill:none; } .svg-accent { stroke:var(--accent); fill:none; }
+.svg-panel { fill:var(--panel); stroke:var(--line); }
+.svg-real { fill:none; stroke:var(--good); stroke-dasharray:5 4; }
+main { flex:1 1 auto; padding:34px 40px 90px; min-width:0; }
+h1,h2,h3 { line-height:1.25; text-wrap:balance; }
+h1 { font-size:31px; margin:0 0 6px; }
+h2 { font-size:22px; margin:34px 0 10px; padding-top:14px; border-top:1px solid var(--line); }
+h3 { font-size:17px; margin:24px 0 8px; }
+p, li { max-width:70ch; }
+code { font-family:var(--mono); font-size:.9em; background:var(--panel);
+  padding:1px 5px; border-radius:4px; }
+pre { background:var(--panel); border:1px solid var(--line); border-radius:8px;
+  padding:14px 16px; overflow-x:auto; }
+pre code { background:none; padding:0; }
+img { max-width:100%; border:1px solid var(--line); border-radius:8px; display:block; margin:18px 0; }
+table { border-collapse:collapse; margin:16px 0; font-size:14.5px; display:block; overflow-x:auto; }
+th, td { border:1px solid var(--line); padding:7px 11px; text-align:left; vertical-align:top; }
+th { background:var(--panel); }
+td.num, th.num { text-align:right; font-variant-numeric:tabular-nums; }
+blockquote { margin:16px 0; padding:10px 16px; border-left:3px solid var(--warn);
+  background:var(--panel); border-radius:0 8px 8px 0; }
+blockquote p { margin:.4em 0; }
+ol.steps { counter-reset:step; list-style:none; padding-left:0; }
+ol.steps > li { counter-increment:step; position:relative; padding:0 0 4px 42px; margin:16px 0; }
+ol.steps > li::before { content:counter(step); position:absolute; left:0; top:0;
+  width:27px; height:27px; border-radius:50%; background:var(--accent); color:#fff;
+  display:flex; align-items:center; justify-content:center; font-size:14px; font-weight:600; }
+footer { color:var(--dim); font-size:13.5px; border-top:1px solid var(--line);
+  margin-top:44px; padding-top:14px; }
+a { color:var(--accent); }
+@media (max-width:820px) {
+  .wrap { display:block; } nav { position:static; width:auto; height:auto;
+    border-right:0; border-bottom:1px solid var(--line); }
+  nav a { display:inline-block; margin-right:14px; } main { padding:24px 18px 70px; }
+}
+</style></head>
+<body><div class="wrap">
+<nav><h1>MeshBench</h1><a href="index.html">Overview</a><a href="getting-started.html">Getting started</a><h2 class="navsec">Guides</h2><a href="firmware-library.html">Firmware library</a><a href="firmware-development.html" class="here">Firmware development</a><a href="companion-bench.html">Companion bench</a><a href="fixtures.html">Shipped networks</a><a href="experiments.html">Experiments</a><h2 class="navsec">How it works</h2><a href="architecture.html">Architecture</a><a href="rf-chain.html">The RF chain</a><a href="firmware-integration.html">Running real firmware</a><a href="emulation.html">Emulating a board</a><h2 class="navsec">Reference</h2><a href="reference-cli.html">CLI</a><a href="reference-control.html">Control socket</a><a href="limits.html">Known limits</a></nav>
+<main><h1>Firmware development</h1>
+<p>The loop this page describes is the reason MeshBench exists in its current shape: change MeshCore, and find out what your change does to a real network of three hundred nodes before it reaches anybody&#x27;s hardware.</p>
+<p><img src="images/firmware-library-annotated.png" alt="The firmware library"></p>
+<h2>The loop, end to end</h2>
+<ol class="steps"><li><strong>Change the firmware.</strong> Any local clone of MeshCore, on a branch. Nothing
+about MeshBench needs to know what you changed.
+``<code>
+cd ~/src/MeshCore
+git checkout -b fix/relay-suppression
+$EDITOR src/Dispatcher.cpp
+</code>``</li><li><strong>Build it for this machine.</strong> MeshBench runs the firmware natively, so this
+is a host build rather than a board image.
+``<code>
+meshcore-native/build.sh simple_repeater ~/builds/my-arm
+</code>`<code>
+The build produces </code>meshcore-simple_repeater-linux-amd64`.</li><li><strong>Hand it to MeshBench.</strong> With the workbench running:
+``<code>
+msim firmware import ~/builds/my-arm/meshcore-simple_repeater-linux-amd64 \
+--role simple_repeater --version my-arm
+</code>`<code>
+It appears in the firmware library immediately, labelled
+</code>simple_repeater my-arm (native)`.</li><li><strong>Assign it.</strong> In the firmware library, find the row and press <strong><code>use for
+role</code></strong>. Every node of that role now runs your build. The button is scoped to
+the role because a companion asked to run a repeater build would be a
+different kind of node, not a different version.</li><li><strong>Run it against a control.</strong> See <a href="experiments.html">Experiments</a>: two arms,
+one naming <code>my-arm</code> and one naming the release you forked from, the same
+seeds, the same network.</li><li><strong>Export the report.</strong> <code>experiment.export</code> writes an HTML report with both
+arms side by side.</li></ol>
+<h2>From PlatformIO, in one keypress</h2>
+<p>If you build with PlatformIO, <code>tools/platformio/meshbench.py</code> removes steps 2 and 3 entirely. Add it to an environment:</p>
+<pre><code>extra_scripts = post:meshbench.py</code></pre>
+<p>After a successful build the image is handed to the running workbench over its control socket. The environment name supplies the board and the role:</p>
+<table><thead><tr><th>environment</th><th>board</th><th>role</th></tr></thead><tbody><tr><td><code>Tbeam_SX1262_repeater</code></td><td>Tbeam_SX1262</td><td>simple_repeater</td></tr><tr><td><code>Heltec_v3_companion_radio_usb</code></td><td>Heltec_v3</td><td>companion_radio</td></tr></tbody></table>
+<p>The build is named after the git branch it came from, so two local builds appear separately in the library rather than overwriting each other. If the workbench is not running the hand-over is skipped and the build still succeeds: a build should not fail because a simulator is closed.</p>
+<h2>Three things that quietly ruin a comparison</h2>
+<p>These are not hypothetical. Each one has produced a confidently wrong answer here, and each one fails silently in *both* arms, which is the worst way for a comparison to fail.</p>
+<h3>Saved node state beats a compiled default</h3>
+<p>A node keeps its preferences between runs, exactly as hardware does. A node that has run before loads its old value at boot and never reaches your changed default. Both arms then return identical numbers and your change looks inert.</p>
+<p><strong>Wipe between arms.</strong> The firmware library has a <code>wipe every node&#x27;s memory</code> button; the verb is <code>firmware.wipe</code>. Identities regenerate from the run seed, so a wipe costs nothing but the next boot.</p>
+<h3>An arm needs every role, not just the one you changed</h3>
+<p>If you point MeshBench at a directory of builds, it needs one per role. A network with companions or a room server fails to resolve otherwise, with an error about firmware on 0 of N nodes. Copy the roles you did not change in from the release cache so exactly one thing differs.</p>
+<h3>Versions are per role</h3>
+<p>Upstream tags one role at a time, so <code>companion-v1.17.0</code> and <code>repeater-v1.17.0</code> are different releases. Asking for a bare <code>v1.17.0</code> resolves nothing and reports &quot;no native builds published&quot;, which points at the release rather than at the string that caused it.</p>
+<h2>A worked example</h2>
+<p>The protocol study on this simulator used exactly this loop. One arm restored <code>rx_delay_base</code> to 10.0 in <code>MyMesh::begin()</code>; the control was the same source built from a second branch. On the 311-node Scotland and Ireland network:</p>
+<table><thead><tr><th>arm</th><th>transmissions</th><th>collisions</th><th>airtime</th></tr></thead><tbody><tr><td>control, v1.17.0</td><td>159</td><td>1345</td><td>127.1 s</td></tr><tr><td>rx delay plus relay suppression</td><td>106.7</td><td>1040</td><td>102.3 s</td></tr></tbody></table>
+<p>Delivery was unchanged. The full reports are in the reports repository.</p>
+<p><strong>Run the control twice.</strong> Two builds of identical source must produce identical numbers. If they do not, nothing else you measure that day means anything, and the cheapest way to find that out is a second control arm rather than a surprising result three hours later.</p>
+<footer>MeshBench documentation. Built from the running application, not from
+mock-ups. Screenshots are window-only captures; see CLAUDE.md for the rule that
+keeps them current.</footer>
+</main></div></body></html>

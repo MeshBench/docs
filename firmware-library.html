@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The firmware library - MeshBench</title>
+<style>
+:root {
+  --ink: #16191d; --dim: #5b636e; --line: #d9dee5; --bg: #ffffff;
+  --panel: #f5f7fa; --accent: #1f6feb; --warn: #b45309; --good: #15803d;
+  --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root { --ink:#e6e9ee; --dim:#9aa4b2; --line:#2a3038; --bg:#0f1215;
+          --panel:#171b20; --accent:#6ea8fe; --warn:#f0b429; --good:#4ade80; }
+}
+* { box-sizing: border-box; }
+body { margin:0; background:var(--bg); color:var(--ink);
+  font: 16px/1.65 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+.wrap { display:flex; align-items:flex-start; max-width:1180px; margin:0 auto; }
+nav { position:sticky; top:0; width:230px; flex:0 0 230px; padding:28px 18px;
+  border-right:1px solid var(--line); height:100vh; overflow-y:auto; }
+nav h1 { font-size:15px; letter-spacing:.08em; text-transform:uppercase;
+  color:var(--dim); margin:0 0 14px; }
+nav a { display:block; padding:5px 0; color:var(--ink); text-decoration:none; font-size:14.5px; }
+nav a:hover { color:var(--accent); }
+nav a.here { color:var(--accent); font-weight:600; }
+nav .navsec { font-size:11.5px; letter-spacing:.09em; text-transform:uppercase;
+  color:var(--dim); margin:18px 0 4px; border:0; padding:0; font-weight:600; }
+figure { margin:22px 0; }
+figure svg { max-width:100%; height:auto; display:block; }
+figcaption { color:var(--dim); font-size:13.5px; margin-top:8px; max-width:70ch; }
+.svg-ink { fill:var(--ink); } .svg-dim { fill:var(--dim); }
+.svg-line { stroke:var(--line); fill:none; } .svg-accent { stroke:var(--accent); fill:none; }
+.svg-panel { fill:var(--panel); stroke:var(--line); }
+.svg-real { fill:none; stroke:var(--good); stroke-dasharray:5 4; }
+main { flex:1 1 auto; padding:34px 40px 90px; min-width:0; }
+h1,h2,h3 { line-height:1.25; text-wrap:balance; }
+h1 { font-size:31px; margin:0 0 6px; }
+h2 { font-size:22px; margin:34px 0 10px; padding-top:14px; border-top:1px solid var(--line); }
+h3 { font-size:17px; margin:24px 0 8px; }
+p, li { max-width:70ch; }
+code { font-family:var(--mono); font-size:.9em; background:var(--panel);
+  padding:1px 5px; border-radius:4px; }
+pre { background:var(--panel); border:1px solid var(--line); border-radius:8px;
+  padding:14px 16px; overflow-x:auto; }
+pre code { background:none; padding:0; }
+img { max-width:100%; border:1px solid var(--line); border-radius:8px; display:block; margin:18px 0; }
+table { border-collapse:collapse; margin:16px 0; font-size:14.5px; display:block; overflow-x:auto; }
+th, td { border:1px solid var(--line); padding:7px 11px; text-align:left; vertical-align:top; }
+th { background:var(--panel); }
+td.num, th.num { text-align:right; font-variant-numeric:tabular-nums; }
+blockquote { margin:16px 0; padding:10px 16px; border-left:3px solid var(--warn);
+  background:var(--panel); border-radius:0 8px 8px 0; }
+blockquote p { margin:.4em 0; }
+ol.steps { counter-reset:step; list-style:none; padding-left:0; }
+ol.steps > li { counter-increment:step; position:relative; padding:0 0 4px 42px; margin:16px 0; }
+ol.steps > li::before { content:counter(step); position:absolute; left:0; top:0;
+  width:27px; height:27px; border-radius:50%; background:var(--accent); color:#fff;
+  display:flex; align-items:center; justify-content:center; font-size:14px; font-weight:600; }
+footer { color:var(--dim); font-size:13.5px; border-top:1px solid var(--line);
+  margin-top:44px; padding-top:14px; }
+a { color:var(--accent); }
+@media (max-width:820px) {
+  .wrap { display:block; } nav { position:static; width:auto; height:auto;
+    border-right:0; border-bottom:1px solid var(--line); }
+  nav a { display:inline-block; margin-right:14px; } main { padding:24px 18px 70px; }
+}
+</style></head>
+<body><div class="wrap">
+<nav><h1>MeshBench</h1><a href="index.html">Overview</a><a href="getting-started.html">Getting started</a><h2 class="navsec">Guides</h2><a href="firmware-library.html" class="here">Firmware library</a><a href="firmware-development.html">Firmware development</a><a href="companion-bench.html">Companion bench</a><a href="fixtures.html">Shipped networks</a><a href="experiments.html">Experiments</a><h2 class="navsec">How it works</h2><a href="architecture.html">Architecture</a><a href="rf-chain.html">The RF chain</a><a href="firmware-integration.html">Running real firmware</a><a href="emulation.html">Emulating a board</a><h2 class="navsec">Reference</h2><a href="reference-cli.html">CLI</a><a href="reference-control.html">Control socket</a><a href="limits.html">Known limits</a></nav>
+<main><h1>The firmware library</h1>
+<p>Every build MeshBench knows about, whether it is on this machine or merely published, and what each node is running.</p>
+<p><img src="images/firmware-library-annotated.png" alt="The firmware library"></p>
+<p>The three marks, in order.</p>
+<p><strong>1. Filters and search.</strong> <code>on disk only</code> hides everything that would need a download, <code>boards only</code> hides the host builds, <code>native only</code> does the reverse. The search box matches role, version or board, because those are the three things people actually look for: they type <code>1.17</code>, or <code>companion</code>, or the board on the desk.</p>
+<p><strong>2. The key.</strong> <code>native</code> in green is a build compiled for this machine. <code>board</code> in orange is emulated hardware: the image people flash, run unmodified inside an emulator. The count beside it is how many builds the catalogue knows.</p>
+<p><strong>3. Storage, and the button that saves an afternoon.</strong> <code>wipe every node&#x27;s memory</code> deletes the persisted per-node state. Nodes keep their identity and preferences between runs, as hardware does, and that is a trap when comparing two firmware builds: <strong>saved preferences beat a compiled default</strong>, so a node that has run before loads its old value and never reaches the changed one. Both arms of a comparison then return identical numbers and the change looks inert. Identities regenerate from the run seed, so a wipe costs nothing but the next boot.</p>
+<h2>Columns</h2>
+<table><thead><tr><th>column</th><th>meaning</th></tr></thead><tbody><tr><td>role</td><td>the MeshCore application: <code>simple_repeater</code>, <code>companion_radio</code>, <code>simple_room_server</code></td></tr><tr><td>version</td><td>a per-role release tag, <code>repeater-v1.17.0</code>, not a bare <code>v1.17.0</code></td></tr><tr><td>board</td><td><code>native</code> for a host build, or the board an emulated image is for</td></tr><tr><td>on disk</td><td>size if it is here, or a <code>download</code> button if it is not</td></tr><tr><td>in use by</td><td>how many nodes in the current scenario run it</td></tr></tbody></table>
+<p><strong>Versions are per role.</strong> Upstream tags one role at a time and so do our native builds, so <code>companion-v1.17.0</code> and <code>repeater-v1.17.0</code> are different releases. Asking for a bare <code>v1.17.0</code> resolves nothing and reports &quot;no native builds published&quot;, which points at the release rather than at the string that caused it.</p>
+<h2>Assigning firmware</h2>
+<p><code>use for role</code> sets every node of that role to that build. It never changes what a node *is*: a companion asked to run a repeater build would be a different node type, so the button is scoped to the role and says so.</p>
+<p>For an emulated board image the same button applies, with one thing worth knowing before pressing it: <strong>every node it lands on becomes its own emulator</strong>, running in real time and costing about a core. The tooltip says how many nodes that would be. Eight saturate a twelve-core machine, and past that nothing reports an error - boots stretch and simulated time falls behind the wall clock, which reads as a mesh that has gone quiet.</p>
+<h2>Getting a build in from outside</h2>
+<p>A branch build, a patched image or somebody else&#x27;s binary can be imported directly. From a MeshCore checkout that uses PlatformIO, <code>tools/platformio/</code> carries a post-build hook that hands the image over automatically, so building and testing is one keypress:</p>
+<p>    extra_scripts = post:meshbench.py</p>
+<p>It reads the board and role out of the environment name and names the build after the branch it came from, so two local builds appear separately rather than overwriting each other.</p>
+<footer>MeshBench documentation. Built from the running application, not from
+mock-ups. Screenshots are window-only captures; see CLAUDE.md for the rule that
+keeps them current.</footer>
+</main></div></body></html>
