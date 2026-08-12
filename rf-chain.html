@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The RF chain - MeshBench</title>
+<style>
+:root {
+  --ink: #16191d; --dim: #5b636e; --line: #d9dee5; --bg: #ffffff;
+  --panel: #f5f7fa; --accent: #1f6feb; --warn: #b45309; --good: #15803d;
+  --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root { --ink:#e6e9ee; --dim:#9aa4b2; --line:#2a3038; --bg:#0f1215;
+          --panel:#171b20; --accent:#6ea8fe; --warn:#f0b429; --good:#4ade80; }
+}
+* { box-sizing: border-box; }
+body { margin:0; background:var(--bg); color:var(--ink);
+  font: 16px/1.65 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+.wrap { display:flex; align-items:flex-start; max-width:1180px; margin:0 auto; }
+nav { position:sticky; top:0; width:230px; flex:0 0 230px; padding:28px 18px;
+  border-right:1px solid var(--line); height:100vh; overflow-y:auto; }
+nav h1 { font-size:15px; letter-spacing:.08em; text-transform:uppercase;
+  color:var(--dim); margin:0 0 14px; }
+nav a { display:block; padding:5px 0; color:var(--ink); text-decoration:none; font-size:14.5px; }
+nav a:hover { color:var(--accent); }
+nav a.here { color:var(--accent); font-weight:600; }
+nav .navsec { font-size:11.5px; letter-spacing:.09em; text-transform:uppercase;
+  color:var(--dim); margin:18px 0 4px; border:0; padding:0; font-weight:600; }
+figure { margin:22px 0; }
+figure svg { max-width:100%; height:auto; display:block; }
+figcaption { color:var(--dim); font-size:13.5px; margin-top:8px; max-width:70ch; }
+.svg-ink { fill:var(--ink); } .svg-dim { fill:var(--dim); }
+.svg-line { stroke:var(--line); fill:none; } .svg-accent { stroke:var(--accent); fill:none; }
+.svg-panel { fill:var(--panel); stroke:var(--line); }
+.svg-real { fill:none; stroke:var(--good); stroke-dasharray:5 4; }
+main { flex:1 1 auto; padding:34px 40px 90px; min-width:0; }
+h1,h2,h3 { line-height:1.25; text-wrap:balance; }
+h1 { font-size:31px; margin:0 0 6px; }
+h2 { font-size:22px; margin:34px 0 10px; padding-top:14px; border-top:1px solid var(--line); }
+h3 { font-size:17px; margin:24px 0 8px; }
+p, li { max-width:70ch; }
+code { font-family:var(--mono); font-size:.9em; background:var(--panel);
+  padding:1px 5px; border-radius:4px; }
+pre { background:var(--panel); border:1px solid var(--line); border-radius:8px;
+  padding:14px 16px; overflow-x:auto; }
+pre code { background:none; padding:0; }
+img { max-width:100%; border:1px solid var(--line); border-radius:8px; display:block; margin:18px 0; }
+table { border-collapse:collapse; margin:16px 0; font-size:14.5px; display:block; overflow-x:auto; }
+th, td { border:1px solid var(--line); padding:7px 11px; text-align:left; vertical-align:top; }
+th { background:var(--panel); }
+td.num, th.num { text-align:right; font-variant-numeric:tabular-nums; }
+blockquote { margin:16px 0; padding:10px 16px; border-left:3px solid var(--warn);
+  background:var(--panel); border-radius:0 8px 8px 0; }
+blockquote p { margin:.4em 0; }
+ol.steps { counter-reset:step; list-style:none; padding-left:0; }
+ol.steps > li { counter-increment:step; position:relative; padding:0 0 4px 42px; margin:16px 0; }
+ol.steps > li::before { content:counter(step); position:absolute; left:0; top:0;
+  width:27px; height:27px; border-radius:50%; background:var(--accent); color:#fff;
+  display:flex; align-items:center; justify-content:center; font-size:14px; font-weight:600; }
+footer { color:var(--dim); font-size:13.5px; border-top:1px solid var(--line);
+  margin-top:44px; padding-top:14px; }
+a { color:var(--accent); }
+@media (max-width:820px) {
+  .wrap { display:block; } nav { position:static; width:auto; height:auto;
+    border-right:0; border-bottom:1px solid var(--line); }
+  nav a { display:inline-block; margin-right:14px; } main { padding:24px 18px 70px; }
+}
+</style></head>
+<body><div class="wrap">
+<nav><h1>MeshBench</h1><a href="index.html">Overview</a><a href="getting-started.html">Getting started</a><h2 class="navsec">Guides</h2><a href="firmware-library.html">Firmware library</a><a href="firmware-development.html">Firmware development</a><a href="companion-bench.html">Companion bench</a><a href="fixtures.html">Shipped networks</a><a href="experiments.html">Experiments</a><h2 class="navsec">How it works</h2><a href="architecture.html">Architecture</a><a href="rf-chain.html" class="here">The RF chain</a><a href="firmware-integration.html">Running real firmware</a><a href="emulation.html">Emulating a board</a><h2 class="navsec">Reference</h2><a href="reference-cli.html">CLI</a><a href="reference-control.html">Control socket</a><a href="limits.html">Known limits</a></nav>
+<main><h1>The RF chain</h1>
+<p>What happens to a packet between one node&#x27;s antenna and another&#x27;s, in the order it happens.</p>
+<h2>1. Modulation</h2>
+<p>The bytes the firmware handed its radio are turned into complex baseband samples using LoRa&#x27;s chirp spread spectrum: a symbol is a chirp whose starting frequency encodes the value, and the spreading factor sets how many samples that chirp occupies.</p>
+<p><strong>Airtime must agree with the firmware.</strong> MeshCore computes its own estimate with <code>getEstAirtimeFor()</code> and builds its CSMA timing on it. The simulator matches that calculation rather than deriving its own, because a discrepancy makes the two desynchronise silently.</p>
+<h2>2. Delay</h2>
+<p>Distance over the speed of light. At mesh distances this is tens of microseconds, which sounds negligible and is not: it is the difference between two transmissions overlapping symbol-aligned and overlapping half a symbol out, and the demodulator treats those very differently.</p>
+<h2>3. Path loss and terrain</h2>
+<p>The link budget between two points, in both directions:</p>
+<ul><li>free space loss at the carrier frequency</li><li>terrain profile sampled from DEM tiles, cached permanently, with an offline</li></ul>
+<p>  mode that fails loudly rather than quietly returning flat earth</p>
+<ul><li>diffraction over obstructions</li><li>feedline loss and antenna gain, evaluated in the true direction to the far end</li></ul>
+<p><strong>Both directions, always.</strong> A hilltop repeater with a big antenna and a handheld with a rubber duck have an asymmetric link, and a result that reports one number for &quot;the link&quot; is hiding half the answer.</p>
+<h2>4. Summation</h2>
+<p>Every transmission in flight is summed at the receiver&#x27;s antenna, as complex samples, with its own delay and its own attenuation.</p>
+<p>This is the step that makes the simulator worth running. There is no rule about collisions anywhere in the code. Two overlapping transmissions produce a sum, and what the demodulator recovers from that sum depends on their relative power, their relative timing, and their spreading factors. <strong>Capture effect emerges</strong>: a strong signal is recovered despite a weak overlapping one, exactly as real hardware does it.</p>
+<h2>5. Noise</h2>
+<p>Thermal noise at the receiver&#x27;s noise figure, from the board profile. Plus any emitters in the scenario, which is what an interferer node is.</p>
+<h2>6. Demodulation</h2>
+<p>De-chirp, FFT, pick the peak per symbol, then the LoRa forward error correction at the configured coding rate. The packet either decodes or it does not, and if it does not the engine records *why*: below the demodulator floor, corrupted by overlap, radio was elsewhere, or the receiver was mid-transmission.</p>
+<p>That distinction is the reason the event log records a cause rather than a boolean. &quot;It did not arrive&quot; and &quot;it arrived 3 dB under the floor&quot; lead to completely different fixes.</p>
+<h2>What is missing, and which way it biases</h2>
+<p>The simulator is <strong>kinder than the air</strong>:</p>
+<table><thead><tr><th>absent</th><th>effect on results</th></tr></thead><tbody><tr><td>multipath and fading</td><td>links look more stable than they are</td></tr><tr><td>body loss and orientation</td><td>handhelds look better than they are</td></tr><tr><td>oscillator error and drift</td><td>timing looks tighter than it is</td></tr><tr><td>interference from outside the scenario</td><td>the band looks quieter than it is</td></tr><tr><td>antenna pattern imperfection</td><td>siting looks more forgiving than it is</td></tr></tbody></table>
+<p>The biases run almost entirely one way, which is what makes the output usable: <strong>treat every absolute number as a best case</strong>. A link that fails here fails in reality; a link that works here may not.</p>
+<p>This is also why comparisons are worth far more than single runs. Both arms of an A/B are equally flattered, so the difference between them survives.</p>
+<footer>MeshBench documentation. Built from the running application, not from
+mock-ups. Screenshots are window-only captures; see CLAUDE.md for the rule that
+keeps them current.</footer>
+</main></div></body></html>
