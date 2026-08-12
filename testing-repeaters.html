@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Testing a repeater - MeshBench</title>
+<style>
+:root {
+  --ink: #16191d; --dim: #5b636e; --line: #d9dee5; --bg: #ffffff;
+  --panel: #f5f7fa; --accent: #1f6feb; --warn: #b45309; --good: #15803d;
+  --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root { --ink:#e6e9ee; --dim:#9aa4b2; --line:#2a3038; --bg:#0f1215;
+          --panel:#171b20; --accent:#6ea8fe; --warn:#f0b429; --good:#4ade80; }
+}
+* { box-sizing: border-box; }
+body { margin:0; background:var(--bg); color:var(--ink);
+  font: 16px/1.65 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+.wrap { display:flex; align-items:flex-start; max-width:1180px; margin:0 auto; }
+nav { position:sticky; top:0; width:230px; flex:0 0 230px; padding:28px 18px;
+  border-right:1px solid var(--line); height:100vh; overflow-y:auto; }
+nav h1 { font-size:15px; letter-spacing:.08em; text-transform:uppercase;
+  color:var(--dim); margin:0 0 14px; }
+nav a { display:block; padding:5px 0; color:var(--ink); text-decoration:none; font-size:14.5px; }
+nav a:hover { color:var(--accent); }
+nav a.here { color:var(--accent); font-weight:600; }
+nav .navsec { font-size:11.5px; letter-spacing:.09em; text-transform:uppercase;
+  color:var(--dim); margin:18px 0 4px; border:0; padding:0; font-weight:600; }
+figure { margin:22px 0; }
+figure svg { max-width:100%; height:auto; display:block; }
+figcaption { color:var(--dim); font-size:13.5px; margin-top:8px; max-width:70ch; }
+.svg-ink { fill:var(--ink); } .svg-dim { fill:var(--dim); }
+.svg-line { stroke:var(--line); fill:none; } .svg-accent { stroke:var(--accent); fill:none; }
+.svg-panel { fill:var(--panel); stroke:var(--line); }
+.svg-real { fill:none; stroke:var(--good); stroke-dasharray:5 4; }
+main { flex:1 1 auto; padding:34px 40px 90px; min-width:0; }
+h1,h2,h3 { line-height:1.25; text-wrap:balance; }
+h1 { font-size:31px; margin:0 0 6px; }
+h2 { font-size:22px; margin:34px 0 10px; padding-top:14px; border-top:1px solid var(--line); }
+h3 { font-size:17px; margin:24px 0 8px; }
+p, li { max-width:70ch; }
+code { font-family:var(--mono); font-size:.9em; background:var(--panel);
+  padding:1px 5px; border-radius:4px; }
+pre { background:var(--panel); border:1px solid var(--line); border-radius:8px;
+  padding:14px 16px; overflow-x:auto; }
+pre code { background:none; padding:0; }
+img { max-width:100%; border:1px solid var(--line); border-radius:8px; display:block; margin:18px 0; }
+table { border-collapse:collapse; margin:16px 0; font-size:14.5px; display:block; overflow-x:auto; }
+th, td { border:1px solid var(--line); padding:7px 11px; text-align:left; vertical-align:top; }
+th { background:var(--panel); }
+td.num, th.num { text-align:right; font-variant-numeric:tabular-nums; }
+blockquote { margin:16px 0; padding:10px 16px; border-left:3px solid var(--warn);
+  background:var(--panel); border-radius:0 8px 8px 0; }
+blockquote p { margin:.4em 0; }
+ol.steps { counter-reset:step; list-style:none; padding-left:0; }
+ol.steps > li { counter-increment:step; position:relative; padding:0 0 4px 42px; margin:16px 0; }
+ol.steps > li::before { content:counter(step); position:absolute; left:0; top:0;
+  width:27px; height:27px; border-radius:50%; background:var(--accent); color:#fff;
+  display:flex; align-items:center; justify-content:center; font-size:14px; font-weight:600; }
+footer { color:var(--dim); font-size:13.5px; border-top:1px solid var(--line);
+  margin-top:44px; padding-top:14px; }
+a { color:var(--accent); }
+@media (max-width:820px) {
+  .wrap { display:block; } nav { position:static; width:auto; height:auto;
+    border-right:0; border-bottom:1px solid var(--line); }
+  nav a { display:inline-block; margin-right:14px; } main { padding:24px 18px 70px; }
+}
+</style></head>
+<body><div class="wrap">
+<nav><h1>MeshBench</h1><a href="index.html">Overview</a><a href="getting-started.html">Getting started</a><h2 class="navsec">Guides</h2><a href="firmware-library.html">Firmware library</a><a href="firmware-development.html">Firmware development</a><a href="app-development.html">App development</a><a href="companion-bench.html">Companion bench</a><a href="fixtures.html">Shipped networks</a><a href="testing-repeaters.html" class="here">Testing a repeater</a><a href="experiments.html">Experiments</a><a href="studies.html">Studies</a><h2 class="navsec">How it works</h2><a href="architecture.html">Architecture</a><a href="native-vs-emulated.html">Native and emulated</a><a href="rf-chain.html">The RF chain</a><a href="firmware-integration.html">Running real firmware</a><a href="emulation.html">Emulating a board</a><h2 class="navsec">Reference</h2><a href="reference-cli.html">CLI</a><a href="reference-control.html">Control socket</a><a href="limits.html">Known limits</a></nav>
+<main><h1>Testing a repeater</h1>
+<p>A worked example from an empty workbench to an answer about a real repeater: does adding it help, and what does it cost the network.</p>
+<h2>1. Load a network</h2>
+<p><code>File</code> then <code>Open project</code>, and choose <code>fixture-scotland-strict</code>. 161 real nodes from ScotMesh with the transport regions the real ones hold.</p>
+<p>The view switcher along the top selects what kind of work you are doing. Start in <strong>Plan</strong>.</p>
+<p><img src="images/crop-viewbar.png" alt="The view switcher"></p>
+<h2>2. Place the repeater</h2>
+<p>In <strong>Plan</strong>, choose the repeater tool and click where the site is. Set its height and transmit power in the Inspector: height above ground matters more than power on almost every link.</p>
+<p>Over the control socket:</p>
+<pre><code>{&quot;id&quot;:1,&quot;method&quot;:&quot;nodes.place&quot;,&quot;params&quot;:{
+   &quot;kind&quot;:&quot;repeater&quot;,&quot;name&quot;:&quot;Test Site&quot;,&quot;lat&quot;:56.12,&quot;lon&quot;:-3.45,
+   &quot;height_m&quot;:25,&quot;tx_dbm&quot;:22}}</code></pre>
+<h2>3. Give it the regions its neighbours hold</h2>
+<p>A repeater forwards flood traffic only for the transport regions it has been told about. A node with none receives everything and forwards nothing, and reports no error while doing so.</p>
+<pre><code>{&quot;id&quot;:2,&quot;method&quot;:&quot;nodes.regions&quot;,&quot;params&quot;:{
+   &quot;node&quot;:&quot;Test Site&quot;,&quot;regions&quot;:[&quot;#sco&quot;],&quot;default_scope&quot;:&quot;#sco&quot;}}</code></pre>
+<h2>4. Start firmware and watch it</h2>
+<p><code>Simulation</code> then <code>Start firmware</code>. Every node launches a real MeshCore build, and is told its name, position, clock and regions. The count in the status bar reaches the node total when they are all up.</p>
+<p>Press play. In <strong>Run</strong>, the Events panel lists every transmission, reception and miss with a cause, so &quot;it did not arrive&quot; and &quot;it arrived 3 dB under the demodulator floor&quot; are different lines.</p>
+<h2>5. Ask the node what it believes</h2>
+<p>The console runs a line on the node&#x27;s own CLI and returns what it said, which is the quickest way to check configuration actually landed:</p>
+<pre><code>{&quot;id&quot;:3,&quot;method&quot;:&quot;console.type&quot;,&quot;params&quot;:{&quot;node&quot;:&quot;Test Site&quot;,&quot;command&quot;:&quot;get repeat&quot;}}</code></pre>
+<p>Useful commands: <code>get name</code>, <code>get repeat</code>, <code>get flood.max</code>, <code>get path.hash.mode</code>, <code>region put &lt;r&gt;</code>, <code>region allowf &lt;r&gt;</code>, <code>region save</code>. The full list is at &lt;https://docs.meshcore.io/cli_commands/&gt;. There is no <code>help</code> and no <code>region list</code>; both answer <code>Err - ??</code>.</p>
+<h2>6. Measure the difference it makes</h2>
+<p>The question is comparative, so run it as a sweep with the site present in one arm and absent in the other. In <strong>Bench</strong>, set the senders first: <code>spread</code> rather than adjacent, so they contend with the mesh rather than with each other.</p>
+<p><img src="images/crop-senders.png" alt="The senders panel"></p>
+<p>Then start it, and watch each run complete.</p>
+<p><img src="images/crop-runs.png" alt="Runs completing"></p>
+<h2>7. Read the result</h2>
+<table><thead><tr><th>metric</th><th>what it tells you about a repeater</th></tr></thead><tbody><tr><td><code>reach_pct</code></td><td>how much of the network a message got to. The headline.</td></tr><tr><td><code>tx</code></td><td>how much traffic the network generated to achieve it</td></tr><tr><td><code>collisions</code></td><td>how much of that traffic destroyed other traffic</td></tr><tr><td><code>airtime_ms</code></td><td>total time the network spent transmitting</td></tr><tr><td><code>duty</code></td><td>per node, the compliance number</td></tr></tbody></table>
+<p>A repeater that raises reach and lowers collisions is helping. One that raises reach and raises airtime sharply is buying delivery with spectrum, which may still be the right trade on a quiet band and the wrong one on a busy one.</p>
+<h2>What to be careful about</h2>
+<p><strong>Two runs, one changed thing.</strong> A sweep holds the network, the seeds and the traffic constant so the only difference is the one you made.</p>
+<p><strong>Position uncertainty propagates.</strong> A node imported at plus or minus five kilometres does not produce a confident answer about a marginal link.</p>
+<p><strong>Reachability is asymmetric.</strong> A hilltop repeater with a good antenna hears a handheld that cannot hear it back. Results state both directions.</p>
+<p><strong>The model is a best case.</strong> No multipath, no body loss, no interference from outside the network. A link that fails here fails in reality; a link that works here may not.</p>
+<footer>MeshBench documentation. Built from the running application, not from
+mock-ups. Screenshots are window-only captures; see CLAUDE.md for the rule that
+keeps them current.</footer>
+</main></div></body></html>
