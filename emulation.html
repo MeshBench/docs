@@ -68,98 +68,87 @@ a { color:var(--accent); }
 <body><div class="wrap">
 <nav><h1>MeshBench</h1><a href="index.html">Overview</a><a href="getting-started.html">Getting started</a><h2 class="navsec">Guides</h2><a href="firmware-library.html">Firmware library</a><a href="firmware-development.html">Firmware development</a><a href="app-development.html">App development</a><a href="companion-bench.html">Companion bench</a><a href="fixtures.html">Shipped networks</a><a href="testing-repeaters.html">Testing a repeater</a><a href="experiments.html">Experiments</a><a href="studies.html">Studies</a><h2 class="navsec">How it works</h2><a href="architecture.html">Architecture</a><a href="native-vs-emulated.html">Native and emulated</a><a href="rf-chain.html">The RF chain</a><a href="firmware-integration.html">Running real firmware</a><a href="emulation.html" class="here">Emulating a board</a><h2 class="navsec">Reference</h2><a href="reference-cli.html">CLI</a><a href="reference-control.html">Control socket</a><a href="limits.html">Known limits</a></nav>
 <main><h1>Emulating a board</h1>
-<p>Running the <strong>published firmware image</strong>, unmodified, the same file somebody flashes onto hardware, against MeshBench&#x27;s radio channel.</p>
-<p>This is a different thing from the native path. A native build compiles MeshCore for your host and links a shim in place of the radio driver: fast, deterministic, and what every study and every CI gate uses. Emulation runs the real binary on a model of the real chip, which is slow and not deterministic, and answers a question the native path cannot: <strong>does this release actually come up and talk on this board?</strong></p>
+<p>Emulation runs the <strong>published firmware image</strong> — the same file that is flashed onto hardware — on a model of the chip it was built for, against MeshBench&#x27;s radio channel.</p>
+<p>It answers a question the native path cannot: does this release come up on this board, configure itself, and put a correctly formed packet on the air.</p>
 <figure>
-<svg viewBox="0 0 760 400" role="img" aria-label="The emulation stack, with a real and simulated divide">
-  <text x="150" y="18" class="svg-dim" font-size="12" text-anchor="middle" letter-spacing="1.5">REAL</text>
-  <text x="530" y="18" class="svg-dim" font-size="12" text-anchor="middle" letter-spacing="1.5">SIMULATED</text>
-  <line x1="300" y1="28" x2="300" y2="390" class="svg-real" stroke-width="2"/>
-  <rect x="30" y="40" width="240" height="54" rx="7" class="svg-panel"/>
-  <text x="150" y="63" class="svg-ink" font-size="13" text-anchor="middle" font-weight="600">Published firmware image</text>
-  <text x="150" y="82" class="svg-dim" font-size="11.5" text-anchor="middle">Heltec_v3_repeater-v1.17.0.bin</text>
-  <rect x="30" y="112" width="240" height="54" rx="7" class="svg-panel"/>
-  <text x="150" y="135" class="svg-ink" font-size="13" text-anchor="middle" font-weight="600">MeshCore, unmodified</text>
-  <text x="150" y="154" class="svg-dim" font-size="11.5" text-anchor="middle">same code, same compiler, same flags</text>
-  <rect x="30" y="184" width="240" height="70" rx="7" class="svg-panel"/>
-  <text x="150" y="206" class="svg-ink" font-size="13" text-anchor="middle" font-weight="600">CPU and peripherals</text>
-  <text x="150" y="224" class="svg-dim" font-size="11.5" text-anchor="middle">QEMU (Xtensa) or Renode (Cortex-M4)</text>
-  <text x="150" y="241" class="svg-dim" font-size="11.5" text-anchor="middle">SPIM, GPIO, RTC, TWIM, SAADC</text>
-  <rect x="30" y="272" width="240" height="54" rx="7" class="svg-panel"/>
-  <text x="150" y="294" class="svg-ink" font-size="13" text-anchor="middle" font-weight="600">SPI bus</text>
-  <text x="150" y="313" class="svg-dim" font-size="11.5" text-anchor="middle">commands, registers, IRQ line, NSS</text>
-  <path d="M270 299 L 420 299" class="svg-accent" stroke-width="2" marker-end="url(#a)"/>
-  <defs><marker id="a" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto">
-    <polygon points="0 0, 9 3.5, 0 7" fill="currentColor" class="svg-ink"/></marker></defs>
-  <rect x="420" y="272" width="290" height="54" rx="7" class="svg-panel"/>
-  <text x="565" y="294" class="svg-ink" font-size="13" text-anchor="middle" font-weight="600">radioserver</text>
-  <text x="565" y="313" class="svg-dim" font-size="11.5" text-anchor="middle">the SX1262 chip model, out of process</text>
-  <rect x="420" y="184" width="290" height="70" rx="7" class="svg-panel"/>
-  <text x="565" y="206" class="svg-ink" font-size="13" text-anchor="middle" font-weight="600">MeshBench channel</text>
-  <text x="565" y="224" class="svg-dim" font-size="11.5" text-anchor="middle">sum, delay, path loss, terrain, noise</text>
-  <text x="565" y="241" class="svg-dim" font-size="11.5" text-anchor="middle">sample accurate, decides nothing</text>
-  <rect x="420" y="112" width="290" height="54" rx="7" class="svg-panel"/>
-  <text x="565" y="135" class="svg-ink" font-size="13" text-anchor="middle" font-weight="600">Every other node</text>
-  <text x="565" y="154" class="svg-dim" font-size="11.5" text-anchor="middle">native, emulated, or an SDR observer</text>
-  <line x1="565" y1="272" x2="565" y2="258" class="svg-line" stroke-width="2"/>
-  <line x1="565" y1="184" x2="565" y2="170" class="svg-line" stroke-width="2"/>
-  <line x1="150" y1="94" x2="150" y2="108" class="svg-line" stroke-width="2"/>
-  <line x1="150" y1="166" x2="150" y2="180" class="svg-line" stroke-width="2"/>
-  <line x1="150" y1="254" x2="150" y2="268" class="svg-line" stroke-width="2"/>
-  <text x="380" y="365" class="svg-dim" font-size="11.5" text-anchor="middle">the boundary is the SPI bus</text>
+<svg viewBox="0 0 760 300" role="img" aria-label="Where the emulation boundary sits">
+  <defs>
+    <linearGradient id="chip" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="var(--warn)" stop-opacity=".18"/>
+      <stop offset="1" stop-color="var(--warn)" stop-opacity=".05"/>
+    </linearGradient>
+    <marker id="fa" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto">
+      <path d="M0 0 L9 3.5 L0 7 z" fill="var(--faint)"/></marker>
+  </defs>
+
+  <rect x="24" y="34" width="300" height="216" rx="12" fill="url(#chip)" stroke="var(--warn)" stroke-opacity=".55"/>
+  <text x="174" y="24" font-size="12" fill="var(--dim)" text-anchor="middle">emulated microcontroller</text>
+  <rect x="48" y="52" width="252" height="34" rx="6" fill="var(--card)" stroke="var(--rule)"/>
+  <text x="174" y="74" font-size="12" fill="var(--ink)" text-anchor="middle">MeshCore application</text>
+  <rect x="48" y="94" width="252" height="34" rx="6" fill="var(--card)" stroke="var(--rule)"/>
+  <text x="174" y="116" font-size="12" fill="var(--ink)" text-anchor="middle">RadioLib SX126x driver</text>
+  <rect x="48" y="136" width="252" height="34" rx="6" fill="var(--card)" stroke="var(--rule)"/>
+  <text x="174" y="158" font-size="12" fill="var(--ink)" text-anchor="middle">SPI peripheral, EasyDMA</text>
+  <rect x="48" y="178" width="120" height="30" rx="6" fill="var(--card)" stroke="var(--rule)"/>
+  <text x="108" y="198" font-size="11" fill="var(--ink)" text-anchor="middle">GPIO: NSS</text>
+  <rect x="180" y="178" width="120" height="30" rx="6" fill="var(--card)" stroke="var(--rule)"/>
+  <text x="240" y="198" font-size="11" fill="var(--ink)" text-anchor="middle">GPIO: DIO1</text>
+  <text x="174" y="232" font-size="11" fill="var(--dim)" text-anchor="middle">QEMU for Xtensa, Renode for Cortex-M4</text>
+
+  <path d="M328 150 L 392 150" stroke="var(--faint)" stroke-width="2" marker-end="url(#fa)"/>
+  <path d="M392 175 L 328 175" stroke="var(--faint)" stroke-width="2" marker-end="url(#fa)"/>
+  <text x="360" y="142" font-size="10.5" fill="var(--faint)" text-anchor="middle">commands</text>
+  <text x="360" y="196" font-size="10.5" fill="var(--faint)" text-anchor="middle">IRQ</text>
+
+  <rect x="396" y="96" width="150" height="92" rx="10" fill="var(--card)" stroke="var(--accent)"/>
+  <text x="471" y="126" font-size="12.5" fill="var(--ink)" text-anchor="middle" font-weight="600">SX1262 model</text>
+  <text x="471" y="146" font-size="10.5" fill="var(--dim)" text-anchor="middle">registers, opcodes,</text>
+  <text x="471" y="162" font-size="10.5" fill="var(--dim)" text-anchor="middle">busy and IRQ lines</text>
+  <text x="471" y="180" font-size="10.5" fill="var(--dim)" text-anchor="middle">out of process</text>
+
+  <path d="M550 142 L 606 142" stroke="var(--accent)" stroke-width="2" marker-end="url(#fa)"/>
+  <rect x="610" y="96" width="126" height="92" rx="10" fill="var(--card)" stroke="var(--rule)"/>
+  <text x="673" y="126" font-size="12" fill="var(--ink)" text-anchor="middle">the channel</text>
+  <text x="673" y="146" font-size="10.5" fill="var(--dim)" text-anchor="middle">waveforms, delay,</text>
+  <text x="673" y="162" font-size="10.5" fill="var(--dim)" text-anchor="middle">terrain, noise</text>
+  <text x="673" y="180" font-size="10.5" fill="var(--dim)" text-anchor="middle">every other node</text>
+
+  <text x="380" y="278" font-size="11.5" fill="var(--dim)" text-anchor="middle">The boundary is the SPI bus, which is where a real SX1262 sits. Nothing above it is modified.</text>
 </svg>
-<figcaption>Everything left of the dashed line is the artefact people flash onto
-hardware. The boundary is the SPI bus, which is where a real SX1262 would be, so
-nothing above it has to be told it is being simulated.</figcaption>
+<figcaption>The firmware, its radio driver and the chip's register interface are
+all unchanged. The substitution happens at the bus, so the image under test is
+the image that ships.</figcaption>
 </figure>
 <h2>Why the boundary is the SPI bus</h2>
-<p>MeshCore talks to its radio over SPI: command opcodes, register reads and writes, a busy line and an interrupt line. Put the model there and the firmware above it needs no modification at all. Put it any higher, at the driver or the packet layer, and you are no longer testing the thing that ships.</p>
-<p>That choice is what makes the answer meaningful. When an emulated Heltec v3 sent an advert and thirty-eight other nodes decoded it, what was verified was the published binary&#x27;s SPI conversation with a chip model, not a re-implementation of what that conversation should look like.</p>
-<h2>radioserver: one chip model, three consumers</h2>
-<p><code>radioserver</code> is a small C++17 program that presents the SX1262 interface and turns transmit commands into waveforms. It runs <strong>out of process</strong> and is shared by all three ways of running firmware:</p>
-<table><thead><tr><th>consumer</th><th>how it connects</th></tr></thead><tbody><tr><td>native builds</td><td>in-process shim, no socket</td></tr><tr><td>QEMU</td><td>Unix domain socket</td></tr><tr><td>Renode</td><td>TCP</td></tr></tbody></table>
-<p>The TCP path exists even though Linux does not need it, because Windows will: the Unix socket path is the single item on the critical path for a Windows build.</p>
-<p>One model rather than three means a bug in the chip&#x27;s behaviour is a bug everywhere, which is much easier to find than three subtly different radios.</p>
-<h2>QEMU, for ESP32 (Xtensa)</h2>
-<p><strong>The fork adds <code>hw/ssi/sx1262.c</code></strong>, an SX1262 device upstream does not have. The packaging workflow asserts that file is in the tree it built, because a checkout that silently resolved to upstream produces a QEMU that runs perfectly and reports no chip present, which looks like our bug.</p>
-<p><strong>It must be configured with <code>--enable-gcrypt</code>.</strong> Without it the <code>esp32</code> machine will not instantiate at all, and the error does not mention crypto.</p>
-<h2>Renode, for nRF52 (Cortex-M4)</h2>
-<p>The nRF52840 path took considerably more work, and every piece of it is a detail that produced a silent failure first.</p>
-<h3>SPIM3 lives at 0x4002F000</h3>
-<p>The nRF52840 has four SPI master instances. The one MeshCore uses on these boards is <strong>SPIM3 at <code>0x4002F000</code></strong>, which was initially mis-identified as CryptoCell. The register offsets settle it: <code>0x118</code> is <code>EVENTS_END</code>, <code>0x304</code> and <code>0x308</code> are <code>INTENSET</code> and <code>INTENCLR</code>. Those are SPIM&#x27;s, not CryptoCell&#x27;s.</p>
-<h3>EasyDMA, not a data register</h3>
-<p>SPIM does not have a byte-at-a-time data register. The firmware writes a pointer and a length into <code>TXD.PTR</code> and <code>TXD.MAXCNT</code>, the same for <code>RXD</code>, and triggers <code>TASKS_START</code>. The peripheral model has to read the transmit buffer out of guest memory, run the transaction, write the reply back into the receive buffer, and then raise <code>EVENTS_END</code>. A model that ignores EasyDMA sees no bytes at all and the firmware waits forever for a chip that never answers.</p>
-<h3>Chip select is a GPIO, and Renode never releases it</h3>
-<p>An SX1262 transaction is delimited by NSS going low and then high again. Renode&#x27;s SPI infrastructure never calls <code>FinishTransmission()</code>, so from the chip model&#x27;s point of view the transaction never ends and every subsequent command is read as a continuation of the first one.</p>
-<p>The fix is to stop treating NSS as the SPI controller&#x27;s business and wire it as what it actually is on the board: a GPIO. For the RAK4631 that is <code>gpio1</code> pin 10, with DIO1, the interrupt line, on <code>gpio1</code> pin 15. Those numbers are recorded per board in <code>internal/scenario/boards.go</code> as <code>RenodeWiring</code>, because they are a property of the board rather than of the emulator.</p>
-<h3>The SEVONPEND fix, and why the fix looked absent</h3>
-<p>Published nRF52 firmware sets <strong>SEVONPEND</strong> and then executes <code>WFE</code>, expecting to be woken when an interrupt becomes pending, whether or not it is enabled to fire.</p>
-<p>Renode&#x27;s CPU core, tlib, was checking whether any interrupt was pending in a way that did not match the ARM semantics the firmware relies on, so the core slept and never woke. The mesh looked alive and completely silent.</p>
-<p>The fix has three parts, and missing any one of them looks identical from outside:</p>
-<ol class="steps"><li>tlib gains <code>tlib_nvic_get_pending_masked_irq()</code> and the wake check uses it.</li><li><code>renode_arm_callbacks.c</code> needs the binding
-<code>EXTERNAL_AS(int32_t, PendingIRQ, tlib_nvic_get_pending_irq)</code>. Without this
-the new function exists and is never called, and the whole change appears to
-do nothing.</li><li>The managed side calls <code>sleeper.Interrupt()</code> so the sleeping thread actually
-wakes.</li></ol>
-<blockquote><p><strong>A fix that is absent and a fix that is wrong look identical from outside.</strong> The first attempt at this had the tlib change and not the binding, and the conclusion drawn was &quot;SEVONPEND is not the problem&quot;, which was wrong.</p></blockquote>
-<h3>Peripherals the firmware touches on the way up</h3>
-<p>MeshCore does not only talk to the radio. Boot touches several peripherals, and each missing one stops the firmware somewhere earlier and less obviously:</p>
-<table><thead><tr><th>peripheral</th><th>why the firmware needs it</th></tr></thead><tbody><tr><td><code>NRF52840_Temp</code></td><td>the temperature sensor read at start-up</td></tr><tr><td><code>NRF52840_Clock</code></td><td>HFCLK and LFCLK start, waited on before anything proceeds</td></tr><tr><td><code>NRF52840_SAADC</code></td><td>battery voltage</td></tr><tr><td><code>NRF52840_TWIM</code></td><td>I2C, for the display and sensors on some boards</td></tr><tr><td><code>RadioServerSX1262</code></td><td>the radio, bridged to radioserver</td></tr></tbody></table>
-<p>These live in <code>tools/renode/peripherals/</code> as C# files loaded by the platform description.</p>
-<h2>Forks, and why they are not upstream builds</h2>
-<p>Neither emulator can be a distribution build:</p>
-<ul><li>Our <strong>QEMU</strong> carries the SX1262 device. A stock build runs and reports no chip.</li><li>Our <strong>Renode</strong> carries the SEVONPEND fix. A stock build boots the firmware and</li></ul>
-<p>  it sleeps for ever.</p>
-<p>Both are built in CI from MeshBench&#x27;s forks. A bundle that shipped a stock build of either would fail in a way that looks like MeshBench&#x27;s fault.</p>
-<h2>What it costs, and the ceiling</h2>
-<p><strong>Each emulated node is its own emulator process, running in real time</strong>, and costs roughly one core and 150 MB.</p>
-<blockquote><p><strong>Never run more than eight at once on a twelve-core machine, and never let free memory fall below 3 GB.</strong> Past the ceiling nothing reports an error. Boots stretch, simulated time falls behind the wall clock, and the symptom is a mesh that has gone quiet: exactly what a genuine RF problem looks like.</p></blockquote>
-<p>The firmware library says how many nodes a board image would land on before you press the button, for this reason.</p>
-<h2>Emulation is a conformance tool, not a measurement tool</h2>
-<p>Emulated nodes run on wall time. Two runs of the same seed do not agree, so:</p>
-<ul><li><strong>every CI gate is native</strong></li><li><strong>every study arm is native</strong></li><li>emulation answers &quot;does this published build come up, configure itself, and</li></ul>
-<p>  put a correctly formed packet on the air&quot;</p>
-<p>Both architectures have been taken to that point. The ESP32 path produced an advert decoded by thirty-eight other nodes; the nRF52 path produced a 127-byte advert after 5,240 SPI transactions.</p>
+<p>MeshCore reaches its radio through SPI: command opcodes, register reads and writes, a busy line and an interrupt line. Modelling the chip at that boundary means the firmware above it needs no modification, and what gets verified is the binary people flash rather than a re-implementation of what it should do.</p>
+<h2>The chip model</h2>
+<p><code>radioserver</code> presents the SX1262 interface and turns transmit commands into waveforms for the channel. It runs as a separate process and is shared by all three ways of running firmware:</p>
+<table><thead><tr><th>firmware</th><th>connection to the chip model</th></tr></thead><tbody><tr><td>native build</td><td>linked in process, no socket</td></tr><tr><td>QEMU</td><td>Unix domain socket</td></tr><tr><td>Renode</td><td>TCP</td></tr></tbody></table>
+<p>One model rather than three means the radio behaves the same whichever way a node is run.</p>
+<h2>ESP32, under QEMU</h2>
+<p>The Xtensa path uses QEMU with an SX1262 device attached to the SPI controller. Two build requirements:</p>
+<ul><li><strong>The SX1262 device must be present in the tree being built.</strong> A build without</li></ul>
+<p>  it produces a QEMU that starts normally and reports no chip.</p>
+<ul><li><strong><code>--enable-gcrypt</code> is required</strong>, or the <code>esp32</code> machine will not instantiate.</li></ul>
+<h2>nRF52, under Renode</h2>
+<p>The Cortex-M4 path models more of the chip, because more of it is touched before the radio is reached.</p>
+<h3>SPIM3 and EasyDMA</h3>
+<p>The nRF52840 has four SPI master instances; these boards use <strong>SPIM3 at <code>0x4002F000</code></strong>. It is identifiable from its register offsets: <code>0x118</code> is <code>EVENTS_END</code>, <code>0x304</code> and <code>0x308</code> are <code>INTENSET</code> and <code>INTENCLR</code>.</p>
+<p>SPIM has no byte-at-a-time data register. The firmware writes a buffer pointer and a length into <code>TXD.PTR</code> and <code>TXD.MAXCNT</code>, the same for <code>RXD</code>, and triggers <code>TASKS_START</code>. The peripheral model reads the transmit buffer out of guest memory, runs the transaction, writes the reply into the receive buffer and raises <code>EVENTS_END</code>. A model that does not implement EasyDMA transfers no bytes, and the firmware waits indefinitely for a reply.</p>
+<h3>Chip select is a GPIO</h3>
+<p>An SX1262 transaction is delimited by NSS going low and then high. Renode&#x27;s SPI infrastructure does not signal the end of a transaction to the peripheral, so NSS is wired as what it physically is: a GPIO pin. On the RAK4631 that is <code>gpio1</code> pin 10, with the DIO1 interrupt on <code>gpio1</code> pin 15.</p>
+<p>These pin assignments are a property of the board and are recorded per board rather than per emulator.</p>
+<h3>SEVONPEND</h3>
+<p>Published nRF52 firmware sets <strong>SEVONPEND</strong> and executes <code>WFE</code>, which requires the core to wake when an interrupt becomes pending whether or not it is enabled to fire. The emulator&#x27;s CPU core must implement that distinction, and the wake path has three parts: the pending-interrupt query, the binding that exposes it to the core, and the call that wakes the sleeping thread. Without all three the firmware sleeps and the node is silent while appearing healthy.</p>
+<h3>Peripherals touched during boot</h3>
+<table><thead><tr><th>peripheral</th><th>why the firmware needs it</th></tr></thead><tbody><tr><td><code>TEMP</code></td><td>temperature read at start-up</td></tr><tr><td><code>CLOCK</code></td><td>HFCLK and LFCLK start, waited on before anything proceeds</td></tr><tr><td><code>SAADC</code></td><td>battery voltage</td></tr><tr><td><code>TWIM</code></td><td>I2C, for displays and sensors on some boards</td></tr><tr><td>SX1262 over SPIM</td><td>the radio</td></tr></tbody></table>
+<h2>Cost and limits</h2>
+<p>Each emulated node is a separate emulator process running in real time, costing roughly one core and 150 MB.</p>
+<p><strong>Around eight nodes is the practical ceiling on a twelve core machine.</strong> Past it nothing reports an error: boot times stretch, simulated time falls behind the wall clock, and the network appears to go quiet.</p>
+<p>Because execution is tied to the wall clock, two runs of the same seed do not produce the same result. Emulation is therefore used to verify that a release works, and <a href="native-vs-emulated.html">native firmware</a> is used for anything that is measured.</p>
+<h2>Assigning an emulated build</h2>
+<p>In the firmware library, board images are listed alongside native builds. <code>use for role</code> assigns one to every node of that role, and reports how many nodes that will be before it does. Each of those nodes becomes its own emulator.</p>
+<p><img src="images/crop-library.png" alt="The firmware library"></p>
 <footer>MeshBench documentation. Built from the running application, not from
 mock-ups. Screenshots are window-only captures; see CLAUDE.md for the rule that
 keeps them current.</footer>
