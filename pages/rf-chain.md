@@ -80,5 +80,5 @@ The biases run almost entirely one way, which is what makes the output usable:
 **treat every absolute number as a best case**. A link that fails here fails in
 reality; a link that works here may not.
 
-This is also why comparisons are worth far more than single runs. Both arms of
+Comparisons are therefore worth more than single runs. Both arms of
 an A/B are equally flattered, so the difference between them survives.

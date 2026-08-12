@@ -68,17 +68,17 @@ a { color:var(--accent); }
 <body><div class="wrap">
 <nav><h1>MeshBench</h1><a href="index.html">Overview</a><a href="getting-started.html">Getting started</a><h2 class="navsec">Guides</h2><a href="firmware-library.html">Firmware library</a><a href="firmware-development.html">Firmware development</a><a href="app-development.html">App development</a><a href="companion-bench.html">Companion bench</a><a href="fixtures.html">Shipped networks</a><a href="testing-repeaters.html">Testing a repeater</a><a href="experiments.html">Experiments</a><a href="studies.html">Studies</a><h2 class="navsec">How it works</h2><a href="architecture.html">Architecture</a><a href="native-vs-emulated.html">Native and emulated</a><a href="rf-chain.html">The RF chain</a><a href="firmware-integration.html">Running real firmware</a><a href="emulation.html">Emulating a board</a><h2 class="navsec">Reference</h2><a href="reference-cli.html">CLI</a><a href="reference-control.html">Control socket</a><a href="limits.html" class="here">Known limits</a></nav>
 <main><h1>Known limits</h1>
-<p>Kept honest deliberately. A simulator whose shortcomings are undocumented is a simulator whose results cannot be trusted, and the ones below are the reason a comparison is worth more than a single number.</p>
+<p>A simulator&#x27;s limits decide what its output can be used for. These are the reasons a comparison between two runs is worth more than either run alone.</p>
 <h2>The model is kinder than the air</h2>
 <table><thead><tr><th>absent</th><th>which way it biases</th></tr></thead><tbody><tr><td>multipath and fading</td><td>links look more stable</td></tr><tr><td>body loss and orientation</td><td>handhelds look better</td></tr><tr><td>oscillator error and drift</td><td>timing looks tighter</td></tr><tr><td>interference from outside the scenario</td><td>the band looks quieter</td></tr><tr><td>antenna pattern imperfection</td><td>siting looks more forgiving</td></tr></tbody></table>
 <p>The biases run almost entirely one way. <strong>Treat every absolute number as a best case.</strong> A link that fails here fails in reality; a link that works here may not.</p>
 <h2>Measurement floors depend on the metric</h2>
-<p>The often-quoted ±20% is the spread of <strong>reach under contention from around eight simultaneous senders</strong>, measured by running one configuration repeatedly. It is a property of that contention, not of the simulator, and it does not transfer to every measurement.</p>
+<p>The ±20% figure sometimes quoted is the spread of <strong>reach under contention from around eight simultaneous senders</strong>, measured by running one configuration repeatedly. It is a property of that contention, not of the simulator, and it does not transfer to every measurement.</p>
 <p>A one-originator flood on a 58-node network has produced an identical transmission count across eight seeds, while receptions on the very same runs varied by ±17%. Measure the control&#x27;s own spread on the metric you care about, and quote that.</p>
 <h2>Emulation is not deterministic</h2>
 <p>Emulated nodes run at the speed of the emulator, so simulated time is pinned to the wall clock. Two runs of one seed do not agree. Every CI gate and every study arm is native for this reason.</p>
 <p>Beyond about eight emulated nodes on a twelve-core machine, nothing reports an error: boots stretch, simulated time falls behind, and the symptom is a mesh gone quiet, which is exactly what a genuine RF problem looks like.</p>
-<h2>Things that fail silently</h2>
+<h2>Conditions that produce no error</h2>
 <p>Each of these changes results without reporting an error.</p>
 <p><strong>Regions that were inferred and never applied.</strong> Every node transmits, no node relays, and nothing reports an error. It reads as a mesh with no propagation.</p>
 <p><strong>A scope written without its <code>#</code>.</strong> The key on the wire is <code>sha256(&quot;#sco&quot;)</code>; <code>sha256(&quot;sco&quot;)</code> matches no repeater in existence. Every repeater receives the packet, derives a different key, and declines to forward. No error anywhere.</p>

@@ -1,8 +1,7 @@
 # Known limits
 
-Kept honest deliberately. A simulator whose shortcomings are undocumented is a
-simulator whose results cannot be trusted, and the ones below are the reason a
-comparison is worth more than a single number.
+A simulator's limits decide what its output can be used for. These are the
+reasons a comparison between two runs is worth more than either run alone.
 
 ## The model is kinder than the air
 
@@ -19,7 +18,7 @@ case.** A link that fails here fails in reality; a link that works here may not.
 
 ## Measurement floors depend on the metric
 
-The often-quoted ±20% is the spread of **reach under contention from around
+The ±20% figure sometimes quoted is the spread of **reach under contention from around
 eight simultaneous senders**, measured by running one configuration repeatedly.
 It is a property of that contention, not of the simulator, and it does not
 transfer to every measurement.
@@ -39,7 +38,7 @@ Beyond about eight emulated nodes on a twelve-core machine, nothing reports an
 error: boots stretch, simulated time falls behind, and the symptom is a mesh
 gone quiet, which is exactly what a genuine RF problem looks like.
 
-## Things that fail silently
+## Conditions that produce no error
 
 Each of these changes results without reporting an error.
 
