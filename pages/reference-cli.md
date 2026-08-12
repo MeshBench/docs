@@ -55,9 +55,7 @@ Native firmware only, deliberately: emulated nodes run on wall time, two runs of
 one seed do not agree, and a gate that flickers is worse than no gate.
 
 **It provisions the nodes before running.** Name, clock, position and regions,
-then a spread of adverts so the run has traffic. An earlier version skipped this
-and reported zero deliveries on a healthy mesh, which reads as a broken
-simulator and is a missing step.
+then a spread of adverts so the run has traffic. 
 
 ## `traffic`, a flood without a fixture
 

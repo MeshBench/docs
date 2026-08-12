@@ -41,7 +41,7 @@ gone quiet, which is exactly what a genuine RF problem looks like.
 
 ## Things that fail silently
 
-Each of these has produced a confident wrong answer here at least once.
+Each of these changes results without reporting an error.
 
 **Regions that were inferred and never applied.** Every node transmits, no node
 relays, and nothing reports an error. It reads as a mesh with no propagation.

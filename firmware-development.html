@@ -66,55 +66,67 @@ a { color:var(--accent); }
 }
 </style></head>
 <body><div class="wrap">
-<nav><h1>MeshBench</h1><a href="index.html">Overview</a><a href="getting-started.html">Getting started</a><h2 class="navsec">Guides</h2><a href="firmware-library.html">Firmware library</a><a href="firmware-development.html" class="here">Firmware development</a><a href="companion-bench.html">Companion bench</a><a href="fixtures.html">Shipped networks</a><a href="experiments.html">Experiments</a><a href="studies.html">Studies</a><h2 class="navsec">How it works</h2><a href="architecture.html">Architecture</a><a href="rf-chain.html">The RF chain</a><a href="firmware-integration.html">Running real firmware</a><a href="emulation.html">Emulating a board</a><h2 class="navsec">Reference</h2><a href="reference-cli.html">CLI</a><a href="reference-control.html">Control socket</a><a href="limits.html">Known limits</a></nav>
+<nav><h1>MeshBench</h1><a href="index.html">Overview</a><a href="getting-started.html">Getting started</a><h2 class="navsec">Guides</h2><a href="firmware-library.html">Firmware library</a><a href="firmware-development.html" class="here">Firmware development</a><a href="app-development.html">App development</a><a href="companion-bench.html">Companion bench</a><a href="fixtures.html">Shipped networks</a><a href="experiments.html">Experiments</a><a href="studies.html">Studies</a><h2 class="navsec">How it works</h2><a href="architecture.html">Architecture</a><a href="native-vs-emulated.html">Native and emulated</a><a href="rf-chain.html">The RF chain</a><a href="firmware-integration.html">Running real firmware</a><a href="emulation.html">Emulating a board</a><h2 class="navsec">Reference</h2><a href="reference-cli.html">CLI</a><a href="reference-control.html">Control socket</a><a href="limits.html">Known limits</a></nav>
 <main><h1>Firmware development</h1>
-<p>The loop this page describes is the reason MeshBench exists in its current shape: change MeshCore, and find out what your change does to a real network of three hundred nodes before it reaches anybody&#x27;s hardware.</p>
-<p><img src="images/firmware-library-annotated.png" alt="The firmware library"></p>
-<h2>The loop, end to end</h2>
-<ol class="steps"><li><strong>Change the firmware.</strong> Any local clone of MeshCore, on a branch. Nothing
-about MeshBench needs to know what you changed.
-``<code>
-cd ~/src/MeshCore
-git checkout -b fix/relay-suppression
-$EDITOR src/Dispatcher.cpp
-</code>``</li><li><strong>Build it for this machine.</strong> MeshBench runs the firmware natively, so this
-is a host build rather than a board image.
-``<code>
-meshcore-native/build.sh simple_repeater ~/builds/my-arm
-</code>`<code>
-The build produces </code>meshcore-simple_repeater-linux-amd64`.</li><li><strong>Hand it to MeshBench.</strong> With the workbench running:
-``<code>
-msim firmware import ~/builds/my-arm/meshcore-simple_repeater-linux-amd64 \
---role simple_repeater --version my-arm
-</code>`<code>
-It appears in the firmware library immediately, labelled
-</code>simple_repeater my-arm (native)`.</li><li><strong>Assign it.</strong> In the firmware library, find the row and press <strong><code>use for
-role</code></strong>. Every node of that role now runs your build. The button is scoped to
-the role because a companion asked to run a repeater build would be a
-different kind of node, not a different version.</li><li><strong>Run it against a control.</strong> See <a href="experiments.html">Experiments</a>: two arms,
-one naming <code>my-arm</code> and one naming the release you forked from, the same
-seeds, the same network.</li><li><strong>Export the report.</strong> <code>experiment.export</code> writes an HTML report with both
-arms side by side.</li></ol>
-<h2>From PlatformIO, in one keypress</h2>
-<p>If you build with PlatformIO, <code>tools/platformio/meshbench.py</code> removes steps 2 and 3 entirely. Add it to an environment:</p>
+<p>Point MeshBench at a MeshCore checkout. It builds it, loads it, and assigns it to every node of that role. Nothing is added to your checkout and nothing in it is modified.</p>
+<pre><code>meshbench dev -from ~/src/MeshCore</code></pre>
+<pre><code>building simple_repeater from /home/alex/src/MeshCore
+simple_repeater local-fix-relay-suppression (native)   0.6 MB
+  in the workbench&#x27;s firmware library
+  assigned to every simple_repeater node</code></pre>
+<p>That is the whole loop. Edit, run it again, and the network is running your change.</p>
+<h2>What the command does</h2>
+<figure>
+<svg viewBox="0 0 740 200" role="img" aria-label="From a checkout to a running mesh">
+  <defs><marker id="ar" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto">
+    <path d="M0 0 L10 4 L0 8 z" fill="var(--faint)"/></marker></defs>
+  <rect x="10" y="60" width="130" height="60" rx="8" fill="var(--card)" stroke="var(--rule)"/>
+  <text x="75" y="85" font-size="12" fill="var(--ink)" text-anchor="middle">your checkout</text>
+  <text x="75" y="103" font-size="10.5" fill="var(--dim)" text-anchor="middle">any branch, unmodified</text>
+  <path d="M145 90 L 195 90" stroke="var(--faint)" stroke-width="1.6" marker-end="url(#ar)"/>
+  <rect x="200" y="60" width="130" height="60" rx="8" fill="var(--card)" stroke="var(--rule)"/>
+  <text x="265" y="85" font-size="12" fill="var(--ink)" text-anchor="middle">host build</text>
+  <text x="265" y="103" font-size="10.5" fill="var(--dim)" text-anchor="middle">in a temp directory</text>
+  <path d="M335 90 L 385 90" stroke="var(--faint)" stroke-width="1.6" marker-end="url(#ar)"/>
+  <rect x="390" y="60" width="150" height="60" rx="8" fill="var(--card)" stroke="var(--rule)"/>
+  <text x="465" y="85" font-size="12" fill="var(--ink)" text-anchor="middle">firmware library</text>
+  <text x="465" y="103" font-size="10.5" fill="var(--dim)" text-anchor="middle">named for the git branch</text>
+  <path d="M545 90 L 595 90" stroke="var(--faint)" stroke-width="1.6" marker-end="url(#ar)"/>
+  <circle cx="640" cy="70" r="9" fill="var(--accent)" opacity=".8"/>
+  <circle cx="672" cy="88" r="9" fill="var(--accent)" opacity=".8"/>
+  <circle cx="638" cy="106" r="9" fill="var(--accent)" opacity=".8"/>
+  <circle cx="700" cy="66" r="9" fill="var(--accent)" opacity=".55"/>
+  <circle cx="702" cy="106" r="9" fill="var(--accent)" opacity=".55"/>
+  <path d="M649 74 L 663 84 M666 95 L 647 103 M681 84 L 693 70 M681 92 L 693 102"
+        stroke="var(--accent)" stroke-width="1.2" opacity=".55"/>
+  <text x="672" y="132" font-size="10.5" fill="var(--dim)" text-anchor="middle">every node of that role</text>
+</svg>
+<figcaption>The build happens in a temporary directory, so the checkout is only
+ever read. The build is named after its git branch, so two branches appear
+separately in the library rather than overwriting each other.</figcaption>
+</figure>
+<p>The first run also fetches the Crypto library MeshCore builds against, once, and caches it. There is nothing to install beforehand beyond a C++ compiler.</p>
+<h2>Watching for changes</h2>
+<pre><code>meshbench dev -from ~/src/MeshCore -watch</code></pre>
+<p>Rebuilds and reassigns whenever a source file under <code>src/</code> or <code>examples/</code> changes. Leave it running in a terminal beside your editor.</p>
+<h2>Choosing a role</h2>
+<p>MeshCore is several applications from one tree. <code>-role</code> selects which:</p>
+<table><thead><tr><th>role</th><th>node kind it runs on</th></tr></thead><tbody><tr><td><code>simple_repeater</code></td><td>simple and advanced repeaters</td></tr><tr><td><code>companion_radio</code></td><td>companions, the node a phone attaches to</td></tr><tr><td><code>simple_room_server</code></td><td>room servers</td></tr></tbody></table>
+<p>A build is assigned to the role it was built for. Assigning a repeater build to a companion would make it a different kind of node, not a different version of the same one.</p>
+<h2>Comparing your change against a baseline</h2>
+<p>The reason to run a change on three hundred nodes is to find out whether it is an improvement. That is a sweep: two arms, the same network, the same seeds, only the firmware differing.</p>
+<pre><code>meshbench dev -from ~/src/MeshCore -name my-change -assign=false</code></pre>
+<p>then, in the workbench, define a sweep whose two arms name <code>my-change</code> and the release you branched from. See <a href="experiments.html">Experiments</a>.</p>
+<p>Three things decide whether such a comparison means anything:</p>
+<p><strong>Wipe node storage between arms.</strong> A node keeps its preferences across runs, as hardware does, so a node that has run before loads its stored value rather than your changed default. The sweep does this automatically; the button in the firmware library does it by hand.</p>
+<p><strong>Give every role a build.</strong> A network with companions or a room server needs a build for each of them. Roles you did not change take the published release.</p>
+<p><strong>Include a control.</strong> Two arms built from identical source must produce identical numbers. When they do, a difference between real arms is attributable to the firmware. Every run records the checksum of each binary it attached, so &quot;which build produced this number&quot; is answerable from the results.</p>
+<h2>Versions are per role</h2>
+<p>MeshCore tags one role at a time. <code>repeater-v1.17.0</code> and <code>companion-v1.17.0</code> are different releases, and a bare <code>v1.17.0</code> matches neither.</p>
+<h2>If you build with PlatformIO</h2>
+<p>An optional post-build script hands each build over automatically, so a normal PlatformIO build appears in the library without a separate command:</p>
 <pre><code>extra_scripts = post:meshbench.py</code></pre>
-<p>After a successful build the image is handed to the running workbench over its control socket. The environment name supplies the board and the role:</p>
-<table><thead><tr><th>environment</th><th>board</th><th>role</th></tr></thead><tbody><tr><td><code>Tbeam_SX1262_repeater</code></td><td>Tbeam_SX1262</td><td>simple_repeater</td></tr><tr><td><code>Heltec_v3_companion_radio_usb</code></td><td>Heltec_v3</td><td>companion_radio</td></tr></tbody></table>
-<p>The build is named after the git branch it came from, so two local builds appear separately in the library rather than overwriting each other. If the workbench is not running the hand-over is skipped and the build still succeeds: a build should not fail because a simulator is closed.</p>
-<h2>Three things that quietly ruin a comparison</h2>
-<p>These are not hypothetical. Each one has produced a confidently wrong answer here, and each one fails silently in *both* arms, which is the worst way for a comparison to fail.</p>
-<h3>Saved node state beats a compiled default</h3>
-<p>A node keeps its preferences between runs, exactly as hardware does. A node that has run before loads its old value at boot and never reaches your changed default. Both arms then return identical numbers and your change looks inert.</p>
-<p><strong>Wipe between arms.</strong> The firmware library has a <code>wipe every node&#x27;s memory</code> button; the verb is <code>firmware.wipe</code>. Identities regenerate from the run seed, so a wipe costs nothing but the next boot.</p>
-<h3>An arm needs every role, not just the one you changed</h3>
-<p>If you point MeshBench at a directory of builds, it needs one per role. A network with companions or a room server fails to resolve otherwise, with an error about firmware on 0 of N nodes. Copy the roles you did not change in from the release cache so exactly one thing differs.</p>
-<h3>Versions are per role</h3>
-<p>Upstream tags one role at a time, so <code>companion-v1.17.0</code> and <code>repeater-v1.17.0</code> are different releases. Asking for a bare <code>v1.17.0</code> resolves nothing and reports &quot;no native builds published&quot;, which points at the release rather than at the string that caused it.</p>
-<h2>A worked example</h2>
-<p>The protocol study on this simulator used exactly this loop. One arm restored <code>rx_delay_base</code> to 10.0 in <code>MyMesh::begin()</code>; the control was the same source built from a second branch. On the 311-node Scotland and Ireland network:</p>
-<table><thead><tr><th>arm</th><th>transmissions</th><th>collisions</th><th>airtime</th></tr></thead><tbody><tr><td>control, v1.17.0</td><td>159</td><td>1345</td><td>127.1 s</td></tr><tr><td>rx delay plus relay suppression</td><td>106.7</td><td>1040</td><td>102.3 s</td></tr></tbody></table>
-<p>Delivery was unchanged. The full reports are in the reports repository.</p>
-<p><strong>Run the control twice.</strong> Two builds of identical source must produce identical numbers. If they do not, nothing else you measure that day means anything, and the cheapest way to find that out is a second control arm rather than a surprising result three hours later.</p>
+<p>The environment name supplies the board and the role, for example <code>Heltec_v3_companion_radio_usb</code>. This is a convenience: <code>meshbench dev</code> needs nothing added to your tree.</p>
 <footer>MeshBench documentation. Built from the running application, not from
 mock-ups. Screenshots are window-only captures; see CLAUDE.md for the rule that
 keeps them current.</footer>
