@@ -26,6 +26,7 @@ NAV = [
     ("companion-bench.html", "Companion bench"),
     ("fixtures.html", "Shipped networks"),
     ("experiments.html", "Experiments"),
+    ("studies.html", "Studies"),
     ("SECTION", "How it works"),
     ("architecture.html", "Architecture"),
     ("rf-chain.html", "The RF chain"),

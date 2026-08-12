@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>MeshBench - MeshBench</title>
+<title>Studies - MeshBench</title>
 <style>
 :root {
   --ink: #16191d; --dim: #5b636e; --line: #d9dee5; --bg: #ffffff;
@@ -66,22 +66,26 @@ a { color:var(--accent); }
 }
 </style></head>
 <body><div class="wrap">
-<nav><h1>MeshBench</h1><a href="index.html" class="here">Overview</a><a href="getting-started.html">Getting started</a><h2 class="navsec">Guides</h2><a href="firmware-library.html">Firmware library</a><a href="firmware-development.html">Firmware development</a><a href="companion-bench.html">Companion bench</a><a href="fixtures.html">Shipped networks</a><a href="experiments.html">Experiments</a><a href="studies.html">Studies</a><h2 class="navsec">How it works</h2><a href="architecture.html">Architecture</a><a href="rf-chain.html">The RF chain</a><a href="firmware-integration.html">Running real firmware</a><a href="emulation.html">Emulating a board</a><h2 class="navsec">Reference</h2><a href="reference-cli.html">CLI</a><a href="reference-control.html">Control socket</a><a href="limits.html">Known limits</a></nav>
-<main><h1>MeshBench</h1>
-<p>An RF-accurate MeshCore network simulator. It runs <strong>real MeshCore firmware</strong> against a <strong>sample-accurate LoRa baseband channel</strong> with real noise, so the question it answers is not &quot;would a packet get through&quot; but &quot;what actually arrived at the antenna, and why&quot;.</p>
-<p>One binary on your machine. No service to deploy, no account, nothing to configure before the first run.</p>
-<h2>What it is for</h2>
-<ul><li><strong>Network operators.</strong> Will this repeater help? What does the mesh look like</li></ul>
-<p>  if that site goes down? Import a real network from CoreScope and ask.</p>
-<ul><li><strong>Firmware developers.</strong> Does my branch relay more or less than <code>dev</code>? Build</li></ul>
-<p>  it, hand it to MeshBench, run both against the same 311-node network, and   read the difference.</p>
-<ul><li><strong>Application developers.</strong> Point your client at a simulated mesh over TCP or</li></ul>
-<p>  a virtual serial port, and break it on purpose to see how your app copes.</p>
-<h2>Start here</h2>
-<table><thead><tr><th>if you want to</th><th>read</th></tr></thead><tbody><tr><td>run it for the first time</td><td><a href="getting-started.html">Getting started</a></td></tr><tr><td>test a firmware change</td><td><a href="firmware-development.html">Firmware development</a></td></tr><tr><td>write a client against it</td><td><a href="companion-bench.html">Companion bench</a></td></tr><tr><td>use a ready-made network</td><td><a href="fixtures.html">Shipped networks</a></td></tr><tr><td>compare two configurations</td><td><a href="experiments.html">Experiments</a></td></tr><tr><td>drive it from a script</td><td><a href="reference-control.html">Control socket</a></td></tr><tr><td>know how it works inside</td><td><a href="architecture.html">Architecture</a></td></tr></tbody></table>
-<h2>What it does not do</h2>
-<p>The simulator is <strong>kinder than the air</strong>. There is no multipath, no body loss, no oscillator drift. The measured biases nearly all run one way, which is what makes a result usable: treat every absolute number as a best case, and trust the *comparison* between two runs far more than either run alone.</p>
-<p>It is a desktop application, not a web service. &quot;On the GPU&quot; always means the GPU in the machine running it, and every GPU path has a CPU path that produces the same answer more slowly.</p>
+<nav><h1>MeshBench</h1><a href="index.html">Overview</a><a href="getting-started.html">Getting started</a><h2 class="navsec">Guides</h2><a href="firmware-library.html">Firmware library</a><a href="firmware-development.html">Firmware development</a><a href="companion-bench.html">Companion bench</a><a href="fixtures.html">Shipped networks</a><a href="experiments.html">Experiments</a><a href="studies.html" class="here">Studies</a><h2 class="navsec">How it works</h2><a href="architecture.html">Architecture</a><a href="rf-chain.html">The RF chain</a><a href="firmware-integration.html">Running real firmware</a><a href="emulation.html">Emulating a board</a><h2 class="navsec">Reference</h2><a href="reference-cli.html">CLI</a><a href="reference-control.html">Control socket</a><a href="limits.html">Known limits</a></nav>
+<main><h1>Studies</h1>
+<p>A study is a question about the protocol, answered by changing MeshCore, running both versions against the same real network, and publishing what came out including the parts that did not work.</p>
+<p>They live in the <a href="https://github.com/MeshBench/meshbench-reports">meshbench-reports</a> repository, one directory per report, each a self-contained page.</p>
+<h2>How one is run here</h2>
+<ol class="steps"><li><strong>Read the firmware at a pinned tag</strong> and take the ideas from the code. An
+idea that cannot point at a line is a guess.</li><li><strong>Pre-register</strong>: mechanism, hypothesis, the metric that would show it, and
+the cost it adds, written down *before* running anything, so a result cannot
+be fished out of twelve columns afterwards.</li><li><strong>One local branch per idea</strong> on a local MeshCore clone. Nothing is pushed.</li><li><strong>Build each arm</strong> with <code>meshcore-native/build.sh</code>, and copy in the roles the
+arm does not change so exactly one thing differs.</li><li><strong>Import each build into MeshBench</strong> and run it against a control in the same
+sweep, on the same network and the same seeds.</li><li><strong>Export the report</strong> and write it up against what was predicted.</li></ol>
+<h2>The control arm is the whole game</h2>
+<p>Two arms the firmware guarantees are identical are a free reproducibility check. Build the same source from two branches, label them differently, run both.</p>
+<p>In the eight-idea series the control produced <strong>573 transmissions and 4,830 receptions in every single sweep</strong>, across seven separate sweeps run over three hours. That is what makes each arm&#x27;s difference attributable to the firmware. Had it wandered, the honest thing would have been to stop and say so rather than publish seven deltas measured against a moving baseline.</p>
+<h2>What gets published</h2>
+<p>Everything that was run, not everything that worked. A change that made the network worse is a result; a change that did nothing is a result, and usually a more interesting one, because it says the mechanism you believed in is not reachable in the shipped configuration.</p>
+<p>Three of the eight ideas in the first series changed nothing measurable, and one of those three turned out to be dead code in the shipped default rather than a bad idea.</p>
+<h2>Reading one honestly</h2>
+<ul><li>A delta smaller than the control&#x27;s own spread is not a finding.</li><li>A delta in one metric with no story in the others deserves suspicion.</li><li>Absolute numbers are a best case, because [the model is kinder than the</li></ul>
+<p>  air](limits.html). The comparison survives that; the absolute value does not.</p>
 <footer>MeshBench documentation. Built from the running application, not from
 mock-ups. Screenshots are window-only captures; see CLAUDE.md for the rule that
 keeps them current.</footer>
