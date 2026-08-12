@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Why did that packet not arrive - MeshBench</title>
+<style>
+:root {
+  --ink: #16191d; --dim: #5b636e; --line: #d9dee5; --bg: #ffffff;
+  --panel: #f5f7fa; --accent: #1f6feb; --warn: #b45309; --good: #15803d;
+  --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root { --ink:#e6e9ee; --dim:#9aa4b2; --line:#2a3038; --bg:#0f1215;
+          --panel:#171b20; --accent:#6ea8fe; --warn:#f0b429; --good:#4ade80; }
+}
+* { box-sizing: border-box; }
+body { margin:0; background:var(--bg); color:var(--ink);
+  font: 16px/1.65 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+.wrap { display:flex; align-items:flex-start; max-width:1180px; margin:0 auto; }
+nav { position:sticky; top:0; width:230px; flex:0 0 230px; padding:28px 18px;
+  border-right:1px solid var(--line); height:100vh; overflow-y:auto; }
+nav h1 { font-size:15px; letter-spacing:.08em; text-transform:uppercase;
+  color:var(--dim); margin:0 0 14px; }
+nav a { display:block; padding:5px 0; color:var(--ink); text-decoration:none; font-size:14.5px; }
+nav a:hover { color:var(--accent); }
+nav a.here { color:var(--accent); font-weight:600; }
+nav .navsec { font-size:11.5px; letter-spacing:.09em; text-transform:uppercase;
+  color:var(--dim); margin:18px 0 4px; border:0; padding:0; font-weight:600; }
+figure { margin:22px 0; }
+figure svg { max-width:100%; height:auto; display:block; }
+figcaption { color:var(--dim); font-size:13.5px; margin-top:8px; max-width:70ch; }
+.svg-ink { fill:var(--ink); } .svg-dim { fill:var(--dim); }
+.svg-line { stroke:var(--line); fill:none; } .svg-accent { stroke:var(--accent); fill:none; }
+.svg-panel { fill:var(--panel); stroke:var(--line); }
+.svg-real { fill:none; stroke:var(--good); stroke-dasharray:5 4; }
+main { flex:1 1 auto; padding:34px 40px 90px; min-width:0; }
+h1,h2,h3 { line-height:1.25; text-wrap:balance; }
+h1 { font-size:31px; margin:0 0 6px; }
+h2 { font-size:22px; margin:34px 0 10px; padding-top:14px; border-top:1px solid var(--line); }
+h3 { font-size:17px; margin:24px 0 8px; }
+p, li { max-width:70ch; }
+code { font-family:var(--mono); font-size:.9em; background:var(--panel);
+  padding:1px 5px; border-radius:4px; }
+pre { background:var(--panel); border:1px solid var(--line); border-radius:8px;
+  padding:14px 16px; overflow-x:auto; }
+pre code { background:none; padding:0; }
+img { max-width:100%; border:1px solid var(--line); border-radius:8px; display:block; margin:18px 0; }
+table { border-collapse:collapse; margin:16px 0; font-size:14.5px; display:block; overflow-x:auto; }
+th, td { border:1px solid var(--line); padding:7px 11px; text-align:left; vertical-align:top; }
+th { background:var(--panel); }
+td.num, th.num { text-align:right; font-variant-numeric:tabular-nums; }
+blockquote { margin:16px 0; padding:10px 16px; border-left:3px solid var(--warn);
+  background:var(--panel); border-radius:0 8px 8px 0; }
+blockquote p { margin:.4em 0; }
+ol.steps { counter-reset:step; list-style:none; padding-left:0; }
+ol.steps > li { counter-increment:step; position:relative; padding:0 0 4px 42px; margin:16px 0; }
+ol.steps > li::before { content:counter(step); position:absolute; left:0; top:0;
+  width:27px; height:27px; border-radius:50%; background:var(--accent); color:#fff;
+  display:flex; align-items:center; justify-content:center; font-size:14px; font-weight:600; }
+footer { color:var(--dim); font-size:13.5px; border-top:1px solid var(--line);
+  margin-top:44px; padding-top:14px; }
+a { color:var(--accent); }
+@media (max-width:820px) {
+  .wrap { display:block; } nav { position:static; width:auto; height:auto;
+    border-right:0; border-bottom:1px solid var(--line); }
+  nav a { display:inline-block; margin-right:14px; } main { padding:24px 18px 70px; }
+}
+</style></head>
+<body><div class="wrap">
+<nav><h1>MeshBench</h1><a href="index.html">Overview</a><a href="getting-started.html">Getting started</a><h2 class="navsec">Guides</h2><a href="firmware-library.html">Firmware library</a><a href="firmware-development.html">Firmware development</a><a href="app-development.html">App development</a><a href="companion-bench.html">Companion bench</a><a href="fixtures.html">Shipped networks</a><a href="importing.html">Importing a network</a><a href="testing-repeaters.html">Testing a repeater</a><a href="debugging.html" class="here">Why a packet failed</a><a href="experiments.html">Experiments</a><a href="studies.html">Studies</a><h2 class="navsec">How it works</h2><a href="architecture.html">Architecture</a><a href="native-vs-emulated.html">Native and emulated</a><a href="rf-chain.html">The RF chain</a><a href="firmware-integration.html">Running real firmware</a><a href="emulation.html">Emulating a board</a><h2 class="navsec">Reference</h2><a href="settings.html">Settings</a><a href="reference-cli.html">CLI</a><a href="reference-control.html">Control socket</a><a href="limits.html">Known limits</a></nav>
+<main><h1>Why did that packet not arrive</h1>
+<p>The event log records a cause for every reception and every failure, so the question has an answer rather than a theory.</p>
+<h2>Start in the Debug view</h2>
+<p>It arranges the panels this question needs: the packet timeline, the waterfall, consoles and link budgets, with the Inspector for whichever node is selected.</p>
+<h2>The causes, and what each means</h2>
+<table><thead><tr><th>cause</th><th>what happened</th><th>what to change</th></tr></thead><tbody><tr><td>below the demodulator floor</td><td>the signal arrived, too weak to decode</td><td>height, power, antenna, or a lower spreading factor</td></tr><tr><td>corrupted by overlap</td><td>another transmission arrived at the same time</td><td>timing, offered load, or the number of relays</td></tr><tr><td>radio was elsewhere</td><td>the node was transmitting or on another frequency</td><td>scheduling, duty cycle</td></tr><tr><td>no route</td><td>nothing relayed it</td><td>regions, <code>flood_max</code>, loop detection</td></tr><tr><td>dropped by region</td><td>the node does not hold the scope</td><td>the region map, or the scope being sent on</td></tr></tbody></table>
+<p>&quot;It did not arrive&quot; and &quot;it arrived 3 dB under the floor&quot; lead to completely different fixes, which is why the cause is recorded rather than a boolean.</p>
+<h2>Working backwards from a missing delivery</h2>
+<ol class="steps"><li><strong>Did anybody transmit it?</strong> The Events panel filtered to the origin. If
+there is no transmission, the problem is above the radio: firmware, scope,
+or a node that is not running.</li><li><strong>Did a neighbour hear it?</strong> Receptions at one hop. If not, it is a link
+budget question: check the Link panel for that pair, in both directions.</li><li><strong>Did the neighbour relay it?</strong> A reception without a following transmission
+means the firmware decided not to forward. The usual reasons are the region
+map, the hop ceiling, and loop detection.</li><li><strong>Ask the node.</strong> <code>console.type</code> runs a line on its own CLI and returns what
+it said, which is the difference between what you configured and what it
+believes.</li></ol>
+<h2>Reachability is asymmetric</h2>
+<p>A can hear B while B cannot hear A: different antennas, heights, powers and noise figures on each end. The Link panel reports both directions, and a result that gives one number for &quot;the link&quot; is hiding half the answer.</p>
+<h2>Capture the packets</h2>
+<pre><code>{&quot;id&quot;:1,&quot;method&quot;:&quot;capture.file&quot;,&quot;params&quot;:{&quot;path&quot;:&quot;/tmp/run.pcapng&quot;}}</code></pre>
+<p>Writes pcapng, which Wireshark reads with the MeshCore dissector in <code>tools/dissector/</code>. <code>capture.wireshark</code> opens a live stream instead.</p>
+<p><strong>Capture is started per session, not per run.</strong> A sweep rebuilds the engine between runs and the capture survives that, but a restarted workbench has no capture until one is started again.</p>
+<h2>Common causes that produce no error</h2>
+<ul><li><strong>Regions inferred but never applied.</strong> Everything transmits, nothing relays.</li><li><strong>A scope written without its hash.</strong> Every repeater derives a different key</li></ul>
+<p>  and declines.</p>
+<ul><li><strong>A node with no firmware version.</strong> Resolves to a build that is not</li></ul>
+<p>  published.</p>
+<ul><li><strong>Saved node preferences from an earlier run.</strong> A changed default never takes</li></ul>
+<p>  effect because the node loads its stored value.</p>
+<footer>MeshBench documentation. Built from the running application, not from
+mock-ups. Screenshots are window-only captures; see CLAUDE.md for the rule that
+keeps them current.</footer>
+</main></div></body></html>
