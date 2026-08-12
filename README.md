@@ -7,6 +7,7 @@ Not published yet. This site is private until release.
 | page | what it covers |
 |---|---|
 | `firmware-library.md` | finding, downloading and assigning firmware |
+| `companion-bench.md` | the App view: an endpoint to point a client at, and faults |
 | *to write* | every other view |
 
 ## How screenshots are made
