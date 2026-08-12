@@ -1,0 +1,78 @@
+name: pages
+
+# Builds the site from pages/*.md and publishes it.
+#
+# GitHub Pages for a private repository needs a paid plan. Until this
+# repository has one, or until it is made public at release, this workflow
+# builds the site and uploads it as an artifact so the output is still checked
+# on every push. The deploy step turns itself on the moment Pages is available.
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.12' }
+
+      - name: Build
+        run: python3 gen.py
+
+      - name: Every page in the navigation exists
+        run: |
+          missing=0
+          for f in $(grep -oE '\("[a-z0-9-]+\.html"' gen.py | tr -d '("'); do
+            [ -f "$f" ] || { echo "missing: $f"; missing=1; }
+          done
+          exit $missing
+
+      - name: No page links to a file that is not there
+        run: |
+          fail=0
+          for href in $(grep -ohE 'href="[a-z0-9-]+\.html"' *.html | sed 's/href="//;s/"//' | sort -u); do
+            [ -f "$href" ] || { echo "broken link: $href"; fail=1; }
+          done
+          for src in $(grep -ohE 'src="images/[^"]+"' *.html | sed 's/src="//;s/"//' | sort -u); do
+            [ -f "$src" ] || { echo "missing image: $src"; fail=1; }
+          done
+          exit $fail
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: site
+          path: |
+            *.html
+            images/
+
+      - uses: actions/configure-pages@v5
+        id: pages
+        continue-on-error: true
+      - uses: actions/upload-pages-artifact@v3
+        if: steps.pages.outcome == 'success'
+        with: { path: . }
+
+  deploy:
+    needs: build
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/deploy-pages@v4
+        id: deployment
+        continue-on-error: true
