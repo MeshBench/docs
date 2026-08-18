@@ -28,6 +28,7 @@ NAV = [
     ("fixtures.html", "Shipped networks"),
     ("importing.html", "Importing a network"),
     ("testing-repeaters.html", "Testing a repeater"),
+    ("sdr-observer.html", "Listening with SDR++"),
     ("debugging.html", "Why a packet failed"),
     ("experiments.html", "Experiments"),
     ("studies.html", "Studies"),
