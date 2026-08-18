@@ -120,8 +120,8 @@ is on the other end.</li></ol>
 <p>  produce signal, so a paused observer serves fresh noise-floor windows at   the pause point until the run moves again.</p>
 <ul><li><strong>8-bit IQ</strong>, as the rtl_tcp format demands: about 48 dB of visible</li></ul>
 <p>  dynamic range, the same ceiling a real RTL-SDR has.</p>
-<ul><li><strong>Resampling images.</strong> The stream is interpolated from the observer&#x27;s</li></ul>
-<p>  native rate (one sample per hertz of bandwidth) up to the client&#x27;s rate,   which leaves faint images of the narrow band repeating above it. They are   cosmetic; do not measure adjacent-band power off an observer stream.</p>
+<ul><li><strong>One channel, honestly.</strong> The stream is band-limited interpolation from</li></ul>
+<p>  the observer&#x27;s native rate (one sample per hertz of bandwidth) up to the   client&#x27;s rate, so a transmission is exactly as wide as its bandwidth and   the span either side of the channel is silent - the observer hears one   channel, and the resampler does not invent air around it.</p>
 <ul><li><strong>One client at a time</strong>, exactly as the real <code>rtl_tcp</code> behaves — a</li></ul>
 <p>  second connection is refused rather than fed interleaved samples.</p>
 <p>This is the same instrument the golden-vector experiment used from the other side: there a real dongle fed captured air into MeshBench&#x27;s receiver; here MeshBench feeds simulated air into a real client. Both directions exist so neither half of the chain has to be taken on trust.</p>

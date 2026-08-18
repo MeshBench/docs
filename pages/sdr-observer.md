@@ -89,10 +89,11 @@ it into the noise floor in real time.
   the pause point until the run moves again.
 - **8-bit IQ**, as the rtl_tcp format demands: about 48 dB of visible
   dynamic range, the same ceiling a real RTL-SDR has.
-- **Resampling images.** The stream is interpolated from the observer's
-  native rate (one sample per hertz of bandwidth) up to the client's rate,
-  which leaves faint images of the narrow band repeating above it. They are
-  cosmetic; do not measure adjacent-band power off an observer stream.
+- **One channel, honestly.** The stream is band-limited interpolation from
+  the observer's native rate (one sample per hertz of bandwidth) up to the
+  client's rate, so a transmission is exactly as wide as its bandwidth and
+  the span either side of the channel is silent - the observer hears one
+  channel, and the resampler does not invent air around it.
 - **One client at a time**, exactly as the real `rtl_tcp` behaves — a
   second connection is refused rather than fed interleaved samples.
 
