@@ -35,6 +35,7 @@ NAV = [
     ("architecture.html", "Architecture"),
     ("native-vs-emulated.html", "Native and emulated"),
     ("rf-chain.html", "The RF chain"),
+    ("golden-vectors.html", "Validated on the air"),
     ("firmware-integration.html", "Running real firmware"),
     ("emulation.html", "Emulating a board"),
     ("SECTION", "Reference"),
