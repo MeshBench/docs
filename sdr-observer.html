@@ -116,12 +116,12 @@ is on the other end.</li></ol>
 <h2>What the stream honestly is</h2>
 <ul><li><strong>Simulated time, continuously.</strong> The stream position only moves forward.</li></ul>
 <p>  If the simulation runs slower than the wall — a heavy waveform judgement,   a busy machine — the stream waits for it rather than rewinding or   repeating windows; a client sees a slower waterfall, never a striped one.   If the simulation runs much faster than real time, the stream jumps   forward rather than falling minutes behind, exactly as a real dongle   drops samples on overflow.</p>
-<ul><li><strong>A paused run streams its noise floor.</strong> Frozen time cannot honestly</li></ul>
-<p>  produce signal, so a paused observer serves fresh noise-floor windows at   the pause point until the run moves again.</p>
-<ul><li><strong>8-bit IQ</strong>, as the rtl_tcp format demands: about 48 dB of visible</li></ul>
-<p>  dynamic range, the same ceiling a real RTL-SDR has.</p>
-<ul><li><strong>One channel, honestly.</strong> The stream is band-limited interpolation from</li></ul>
-<p>  the observer&#x27;s native rate (one sample per hertz of bandwidth) up to the   client&#x27;s rate, so a transmission is exactly as wide as its bandwidth and   the span either side of the channel is silent - the observer hears one   channel, and the resampler does not invent air around it.</p>
+<ul><li><strong>A paused run streams its bare floor.</strong> Frozen time cannot honestly</li></ul>
+<p>  produce signal, so a paused observer streams nothing but its front-end   noise until the run moves again.</p>
+<ul><li><strong>The floor fills the span, like a dongle&#x27;s.</strong> The channel&#x27;s signal is</li></ul>
+<p>  band-limited to its true width; the noise across the whole client span is   the receiver&#x27;s own noise density, painted by the server the way a real   front end fills its sample rate. Signals from adjacent channels still do   not exist - the observer models one channel.</p>
+<ul><li><strong>8-bit IQ with a level control.</strong> The format&#x27;s ~48 dB is the same</li></ul>
+<p>  ceiling a real RTL-SDR has; a level control anchored to the floor keeps a   strong burst from clipping into broadband splatter, so a very hot signal   briefly presses the floor down instead - the same trade a real front end   makes with its gain.</p>
 <ul><li><strong>One client at a time</strong>, exactly as the real <code>rtl_tcp</code> behaves — a</li></ul>
 <p>  second connection is refused rather than fed interleaved samples.</p>
 <p>This is the same instrument the golden-vector experiment used from the other side: there a real dongle fed captured air into MeshBench&#x27;s receiver; here MeshBench feeds simulated air into a real client. Both directions exist so neither half of the chain has to be taken on trust.</p>

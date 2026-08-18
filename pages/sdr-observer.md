@@ -84,16 +84,19 @@ it into the noise floor in real time.
   If the simulation runs much faster than real time, the stream jumps
   forward rather than falling minutes behind, exactly as a real dongle
   drops samples on overflow.
-- **A paused run streams its noise floor.** Frozen time cannot honestly
-  produce signal, so a paused observer serves fresh noise-floor windows at
-  the pause point until the run moves again.
-- **8-bit IQ**, as the rtl_tcp format demands: about 48 dB of visible
-  dynamic range, the same ceiling a real RTL-SDR has.
-- **One channel, honestly.** The stream is band-limited interpolation from
-  the observer's native rate (one sample per hertz of bandwidth) up to the
-  client's rate, so a transmission is exactly as wide as its bandwidth and
-  the span either side of the channel is silent - the observer hears one
-  channel, and the resampler does not invent air around it.
+- **A paused run streams its bare floor.** Frozen time cannot honestly
+  produce signal, so a paused observer streams nothing but its front-end
+  noise until the run moves again.
+- **The floor fills the span, like a dongle's.** The channel's signal is
+  band-limited to its true width; the noise across the whole client span is
+  the receiver's own noise density, painted by the server the way a real
+  front end fills its sample rate. Signals from adjacent channels still do
+  not exist - the observer models one channel.
+- **8-bit IQ with a level control.** The format's ~48 dB is the same
+  ceiling a real RTL-SDR has; a level control anchored to the floor keeps a
+  strong burst from clipping into broadband splatter, so a very hot signal
+  briefly presses the floor down instead - the same trade a real front end
+  makes with its gain.
 - **One client at a time**, exactly as the real `rtl_tcp` behaves — a
   second connection is refused rather than fed interleaved samples.
 
