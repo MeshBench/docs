@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Validated on the air - MeshBench</title>
+<style>
+:root {
+  --ink: #16191d; --dim: #5b636e; --line: #d9dee5; --bg: #ffffff;
+  --panel: #f5f7fa; --accent: #1f6feb; --warn: #b45309; --good: #15803d;
+  --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root { --ink:#e6e9ee; --dim:#9aa4b2; --line:#2a3038; --bg:#0f1215;
+          --panel:#171b20; --accent:#6ea8fe; --warn:#f0b429; --good:#4ade80; }
+}
+* { box-sizing: border-box; }
+body { margin:0; background:var(--bg); color:var(--ink);
+  font: 16px/1.65 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+.wrap { display:flex; align-items:flex-start; max-width:1180px; margin:0 auto; }
+nav { position:sticky; top:0; width:230px; flex:0 0 230px; padding:28px 18px;
+  border-right:1px solid var(--line); height:100vh; overflow-y:auto; }
+nav h1 { font-size:15px; letter-spacing:.08em; text-transform:uppercase;
+  color:var(--dim); margin:0 0 14px; }
+nav a { display:block; padding:5px 0; color:var(--ink); text-decoration:none; font-size:14.5px; }
+nav a:hover { color:var(--accent); }
+nav a.here { color:var(--accent); font-weight:600; }
+nav .navsec { font-size:11.5px; letter-spacing:.09em; text-transform:uppercase;
+  color:var(--dim); margin:18px 0 4px; border:0; padding:0; font-weight:600; }
+figure { margin:22px 0; }
+figure svg { max-width:100%; height:auto; display:block; }
+figcaption { color:var(--dim); font-size:13.5px; margin-top:8px; max-width:70ch; }
+.svg-ink { fill:var(--ink); } .svg-dim { fill:var(--dim); }
+.svg-line { stroke:var(--line); fill:none; } .svg-accent { stroke:var(--accent); fill:none; }
+.svg-panel { fill:var(--panel); stroke:var(--line); }
+.svg-real { fill:none; stroke:var(--good); stroke-dasharray:5 4; }
+main { flex:1 1 auto; padding:34px 40px 90px; min-width:0; }
+h1,h2,h3 { line-height:1.25; text-wrap:balance; }
+h1 { font-size:31px; margin:0 0 6px; }
+h2 { font-size:22px; margin:34px 0 10px; padding-top:14px; border-top:1px solid var(--line); }
+h3 { font-size:17px; margin:24px 0 8px; }
+p, li { max-width:70ch; }
+code { font-family:var(--mono); font-size:.9em; background:var(--panel);
+  padding:1px 5px; border-radius:4px; }
+pre { background:var(--panel); border:1px solid var(--line); border-radius:8px;
+  padding:14px 16px; overflow-x:auto; }
+pre code { background:none; padding:0; }
+img { max-width:100%; border:1px solid var(--line); border-radius:8px; display:block; margin:18px 0; }
+table { border-collapse:collapse; margin:16px 0; font-size:14.5px; display:block; overflow-x:auto; }
+th, td { border:1px solid var(--line); padding:7px 11px; text-align:left; vertical-align:top; }
+th { background:var(--panel); }
+td.num, th.num { text-align:right; font-variant-numeric:tabular-nums; }
+blockquote { margin:16px 0; padding:10px 16px; border-left:3px solid var(--warn);
+  background:var(--panel); border-radius:0 8px 8px 0; }
+blockquote p { margin:.4em 0; }
+ol.steps { counter-reset:step; list-style:none; padding-left:0; }
+ol.steps > li { counter-increment:step; position:relative; padding:0 0 4px 42px; margin:16px 0; }
+ol.steps > li::before { content:counter(step); position:absolute; left:0; top:0;
+  width:27px; height:27px; border-radius:50%; background:var(--accent); color:#fff;
+  display:flex; align-items:center; justify-content:center; font-size:14px; font-weight:600; }
+footer { color:var(--dim); font-size:13.5px; border-top:1px solid var(--line);
+  margin-top:44px; padding-top:14px; }
+a { color:var(--accent); }
+@media (max-width:820px) {
+  .wrap { display:block; } nav { position:static; width:auto; height:auto;
+    border-right:0; border-bottom:1px solid var(--line); }
+  nav a { display:inline-block; margin-right:14px; } main { padding:24px 18px 70px; }
+}
+</style></head>
+<body><div class="wrap">
+<nav><h1>MeshBench</h1><a href="index.html">Overview</a><a href="getting-started.html">Getting started</a><h2 class="navsec">Guides</h2><a href="firmware-library.html">Firmware library</a><a href="firmware-development.html">Firmware development</a><a href="app-development.html">App development</a><a href="companion-bench.html">Companion bench</a><a href="fixtures.html">Shipped networks</a><a href="importing.html">Importing a network</a><a href="testing-repeaters.html">Testing a repeater</a><a href="sdr-observer.html">Listening with SDR++</a><a href="debugging.html">Why a packet failed</a><a href="experiments.html">Experiments</a><a href="studies.html">Studies</a><h2 class="navsec">How it works</h2><a href="architecture.html">Architecture</a><a href="native-vs-emulated.html">Native and emulated</a><a href="rf-chain.html">The RF chain</a><a href="golden-vectors.html" class="here">Validated on the air</a><a href="firmware-integration.html">Running real firmware</a><a href="emulation.html">Emulating a board</a><h2 class="navsec">Reference</h2><a href="settings.html">Settings</a><a href="reference-cli.html">CLI</a><a href="reference-control.html">Control socket</a><a href="limits.html">Known limits</a></nav>
+<main><h1>Validated on the air</h1>
+<p>How MeshBench&#x27;s LoRa coding chain was checked against a real SX1262 — not against a paper, not against another simulator, but against what an actual chip put on the air. This is the experiment behind the golden vectors in <code>internal/lora/testdata/</code>, run on 18 August 2026, and the method is repeatable whenever the chain changes.</p>
+<p>The problem it solves: the LoRa PHY&#x27;s bit-level details — the sync word, the parity equations, the whitening sequence, the CRC — are not published by Semtech. Everything anyone implements comes from reverse-engineering literature, and the implementations in the wild disagree with each other on several of them. A simulator that is merely *self-consistent* decodes its own transmissions perfectly and proves nothing. The only referee is silicon.</p>
+<h2>The rig</h2>
+<p>Two pieces of ordinary MeshCore hardware, neither modified:</p>
+<ul><li><strong>A KISS modem</strong> — MeshCore&#x27;s own <code>kiss_modem</code> firmware on an SX1262</li></ul>
+<p>  board, plugged into the dev machine over USB. Its SetHardware extensions   let MeshBench set the radio (frequency, bandwidth, SF, coding rate) and   transmit an arbitrary raw payload, and it reports <code>TxDone</code> when the frame   has left the antenna.</p>
+<ul><li><strong>An RTL-SDR on a mast</strong>, about ten metres away, exposed over the network</li></ul>
+<p>  as a standard <code>rtl_tcp</code> server. Its antenna is not even tuned for   868 MHz; at ten metres that does not matter.</p>
+<p>A repeater that normally lives next to the mast was put in monitor-only mode for the runs, so the test frames would not be relayed back over themselves.</p>
+<svg viewBox="0 0 760 240" role="img" aria-label="The golden-vector rig">
+  <rect x="14" y="58" width="170" height="96" rx="10" fill="var(--panel)" stroke="var(--accent)"/>
+  <text x="99" y="84" font-size="12.5" fill="var(--ink)" text-anchor="middle" font-weight="600">KISS modem</text>
+  <text x="99" y="102" font-size="10.5" fill="var(--dim)" text-anchor="middle">SX1262, MeshCore firmware</text>
+  <text x="99" y="118" font-size="10.5" fill="var(--dim)" text-anchor="middle">known payload, known radio</text>
+  <text x="99" y="134" font-size="10.5" fill="var(--dim)" text-anchor="middle">USB serial, KISS framing</text>
+  <path d="M196 92 q 24 -26 48 0 q 24 26 48 0" stroke="var(--accent)" stroke-width="1.8" fill="none" opacity=".85"/>
+  <path d="M204 116 q 20 -20 40 0 q 20 20 40 0" stroke="var(--accent)" stroke-width="1.4" fill="none" opacity=".5"/>
+  <text x="244" y="70" font-size="10" fill="var(--dim)" text-anchor="middle">869.618&#8201;MHz, ~10&#8201;m</text>
+  <rect x="306" y="58" width="150" height="96" rx="10" fill="var(--panel)" stroke="var(--line)"/>
+  <text x="381" y="84" font-size="12.5" fill="var(--ink)" text-anchor="middle" font-weight="600">RTL-SDR on a mast</text>
+  <text x="381" y="102" font-size="10.5" fill="var(--dim)" text-anchor="middle">rtl_tcp over the network</text>
+  <text x="381" y="118" font-size="10.5" fill="var(--dim)" text-anchor="middle">1&#8201;MS/s raw 8-bit IQ</text>
+  <text x="381" y="134" font-size="10.5" fill="var(--dim)" text-anchor="middle">offset-tuned &#8722;150&#8201;kHz</text>
+  <path d="M460 106 L 516 106" stroke="var(--accent)" stroke-width="2"/>
+  <text x="488" y="98" font-size="10" fill="var(--dim)" text-anchor="middle">TCP</text>
+  <rect x="520" y="42" width="226" height="128" rx="10" fill="var(--panel)" stroke="var(--good)"/>
+  <text x="633" y="68" font-size="12.5" fill="var(--ink)" text-anchor="middle" font-weight="600">tools/goldencap</text>
+  <text x="633" y="88" font-size="10.5" fill="var(--dim)" text-anchor="middle">channelize to one sample per chip</text>
+  <text x="633" y="104" font-size="10.5" fill="var(--dim)" text-anchor="middle">MeshBench's own receiver front end</text>
+  <text x="633" y="120" font-size="10.5" fill="var(--dim)" text-anchor="middle">demodulate every symbol</text>
+  <text x="633" y="140" font-size="11" fill="var(--good)" text-anchor="middle" font-weight="600">diff against internal/lora's encoding</text>
+  <text x="381" y="206" font-size="11.5" fill="var(--dim)" text-anchor="middle">The command path and the capture path never touch: what arrives is judged only by the air.</text>
+</svg>
+<h2>The method</h2>
+<p>One run is one commanded transmission:</p>
+<ol class="steps"><li><code>goldencap</code> programs the modem&#x27;s radio — the UK/EU narrow preset,
+869.618 MHz, 62.5 kHz, SF8, CR 4/8 — and confirms the settings took by
+reading them back.</li><li>It opens the <code>rtl_tcp</code> stream, tuned 150 kHz below the channel so the
+dongle&#x27;s DC spike stays out of the signal, and starts buffering IQ.</li><li>It transmits a known payload and waits for the modem&#x27;s <code>TxDone</code>.</li><li>It finds the burst in the capture, mixes it to baseband, decimates to one
+sample per chip — the rate every piece of MeshBench&#x27;s DSP speaks — and
+runs the simulator&#x27;s own receiver over it: preamble search, SFD lock,
+CFO correction, per-symbol FFT.</li><li>Every demodulated symbol is compared against what <code>internal/lora</code> says
+that payload should encode to. Any difference is a place where the
+simulator and the chip disagree about LoRa itself.</li></ol>
+<p>The receiver being MeshBench&#x27;s own is the point. The experiment does not ask &quot;can something decode this&quot; — it asks whether *our* transmit chain and *our* receive chain, pointed at real silicon, agree with it bit for bit.</p>
+<h2>What the air showed</h2>
+<p>The first capture&#x27;s raw structure, read window by window off the dechirped spectrum, confirmed the frame&#x27;s shape exactly as modelled — and corrected one value:</p>
+<svg viewBox="0 0 760 168" role="img" aria-label="The captured frame's structure">
+  <rect x="14" y="46" width="238" height="52" rx="6" fill="var(--panel)" stroke="var(--line)"/>
+  <text x="133" y="68" font-size="11.5" fill="var(--ink)" text-anchor="middle">32 preamble upchirps</text>
+  <text x="133" y="86" font-size="10" fill="var(--dim)" text-anchor="middle">constant bin, exactly MeshCore's length</text>
+  <rect x="256" y="46" width="120" height="52" rx="6" fill="var(--panel)" stroke="var(--warn)"/>
+  <text x="316" y="68" font-size="11.5" fill="var(--ink)" text-anchor="middle">sync word</text>
+  <text x="316" y="86" font-size="10" fill="var(--warn)" text-anchor="middle">shifts +8, +16</text>
+  <rect x="380" y="46" width="120" height="52" rx="6" fill="var(--panel)" stroke="var(--line)"/>
+  <text x="440" y="68" font-size="11.5" fill="var(--ink)" text-anchor="middle">2.25 downchirps</text>
+  <text x="440" y="86" font-size="10" fill="var(--dim)" text-anchor="middle">the SFD, as modelled</text>
+  <rect x="504" y="46" width="242" height="52" rx="6" fill="var(--panel)" stroke="var(--line)"/>
+  <text x="625" y="68" font-size="11.5" fill="var(--ink)" text-anchor="middle">data symbols</text>
+  <text x="625" y="86" font-size="10" fill="var(--dim)" text-anchor="middle">header block at SF&#8722;2, then payload blocks</text>
+  <text x="316" y="128" font-size="10.5" fill="var(--warn)" text-anchor="middle">nibble &#215; 8, whatever the SF &#8212;</text>
+  <text x="316" y="143" font-size="10.5" fill="var(--warn)" text-anchor="middle">not the SF-scaled value the literature suggested</text>
+</svg>
+<p>Then the symbol diff did something better than pass or fail: it *localised* the disagreement. Within every eight-symbol interleaver block, the first four symbols matched the simulator exactly and the last four did not. In LoRa&#x27;s diagonal interleaver, the first four columns carry the data bits of every codeword and the last four carry the parity bits — so the diff itself said: whitening, Gray coding, the interleaver and the header layout are all exactly right, and only the parity equations are wrong.</p>
+<svg viewBox="0 0 760 190" role="img" aria-label="The diff localises the disagreement to the parity columns">
+  <text x="14" y="30" font-size="11.5" fill="var(--dim)">one interleaver block, eight symbols:</text>
+  <rect x="14" y="46" width="88" height="44" rx="5" fill="var(--panel)" stroke="var(--good)"/>
+  <rect x="106" y="46" width="88" height="44" rx="5" fill="var(--panel)" stroke="var(--good)"/>
+  <rect x="198" y="46" width="88" height="44" rx="5" fill="var(--panel)" stroke="var(--good)"/>
+  <rect x="290" y="46" width="88" height="44" rx="5" fill="var(--panel)" stroke="var(--good)"/>
+  <rect x="382" y="46" width="88" height="44" rx="5" fill="var(--panel)" stroke="var(--warn)" stroke-dasharray="5 4"/>
+  <rect x="474" y="46" width="88" height="44" rx="5" fill="var(--panel)" stroke="var(--warn)" stroke-dasharray="5 4"/>
+  <rect x="566" y="46" width="88" height="44" rx="5" fill="var(--panel)" stroke="var(--warn)" stroke-dasharray="5 4"/>
+  <rect x="658" y="46" width="88" height="44" rx="5" fill="var(--panel)" stroke="var(--warn)" stroke-dasharray="5 4"/>
+  <text x="58" y="72" font-size="11" fill="var(--good)" text-anchor="middle">match</text>
+  <text x="150" y="72" font-size="11" fill="var(--good)" text-anchor="middle">match</text>
+  <text x="242" y="72" font-size="11" fill="var(--good)" text-anchor="middle">match</text>
+  <text x="334" y="72" font-size="11" fill="var(--good)" text-anchor="middle">match</text>
+  <text x="426" y="72" font-size="11" fill="var(--warn)" text-anchor="middle">differ</text>
+  <text x="518" y="72" font-size="11" fill="var(--warn)" text-anchor="middle">differ</text>
+  <text x="610" y="72" font-size="11" fill="var(--warn)" text-anchor="middle">differ</text>
+  <text x="702" y="72" font-size="11" fill="var(--warn)" text-anchor="middle">differ</text>
+  <text x="196" y="118" font-size="10.5" fill="var(--dim)" text-anchor="middle">columns 0&#8211;3: the data bits of every codeword</text>
+  <text x="196" y="134" font-size="10.5" fill="var(--good)" text-anchor="middle">whitening, Gray, interleaver, header: confirmed exact</text>
+  <text x="564" y="118" font-size="10.5" fill="var(--dim)" text-anchor="middle">columns 4&#8211;7: the parity bits</text>
+  <text x="564" y="134" font-size="10.5" fill="var(--warn)" text-anchor="middle">the Hamming equations differed from the literature</text>
+  <text x="380" y="170" font-size="11" fill="var(--dim)" text-anchor="middle">Seventy captured codewords then over-determine the real equations, and linear algebra solves them.</text>
+</svg>
+<p>With the known data nibbles on one side and the captured parity bits on the other, each parity bit is an unknown XOR of data bits — sixteen possible masks, checked against seventy observations. The chip&#x27;s answer:</p>
+<pre><code>p0 = d0 ^ d1 ^ d2        p1 = d1 ^ d2 ^ d3
+p2 = d0 ^ d1 ^ d3        p3 = d0 ^ d2 ^ d3</code></pre>
+<p>Four three-input XORs — not the textbook Hamming-plus-overall-parity that the implementation had used. The same technique, applied to the frame&#x27;s own CRC field against the known payload, settled the last convention: the payload CRC is CCITT from a zero seed over all but the final two bytes, with those two bytes then XORed straight into the result.</p>
+<p>After those three corrections — sync word, parity matrix, CRC — a real SX1262 frame decodes end to end through MeshBench&#x27;s receive chain: sync lock, frequency correction, demodulation, error correction, dewhitening, header, CRC, and the exact payload out the far side.</p>
+<h2>What the experiment fought through</h2>
+<p>Reality reviewed the tooling as thoroughly as the conventions, and each snag became a permanent improvement:</p>
+<ul><li><strong>The DC spike won the spectrum search.</strong> A chirp&#x27;s spectrum is a</li></ul>
+<p>  plateau, not a peak, so &quot;find the strongest bin&quot; landed anywhere in the   occupied band — or on the dongle&#x27;s DC offset. The search now takes the   midpoint of the occupied band, away from DC.</p>
+<ul><li><strong>Half a chip of timing smeared every bin.</strong> The decimator&#x27;s sampling</li></ul>
+<p>  phase relative to symbol boundaries is luck; one capture landed near a   half-sample and every bin read as a smear between neighbours. The tool   now tries every decimation phase and keeps the one whose frame decodes   best — sub-chip timing recovery by exhaustive search.</p>
+<ul><li><strong>A live channel damages frames.</strong> One capture came back with a single</li></ul>
+<p>  flipped bit — a collision or a fade, on a frequency other repeaters   genuinely use. A reference vector carrying channel damage would teach the   test the wrong bits, so the tool refuses to write a vector from any frame   the error correction had to repair. Recapture instead.</p>
+<ul><li><strong>The chip pads with garbage.</strong> The final interleaver block&#x27;s padding</li></ul>
+<p>  nibbles decoded to nothing deterministic — uninitialised buffer contents   no receiver ever reads. Golden comparison stops at the last block made   entirely of meaningful nibbles, and requires the whole air frame to   decode instead.</p>
+<h2>What stands afterwards</h2>
+<p>Two clean captured frames, at different payload lengths and therefore different block layouts, are checked into <code>internal/lora/testdata/</code> as golden vectors. The test suite holds the encoder to them symbol by symbol — at each symbol&#x27;s own coded rate, since reduced-rate symbols only carry their top bits — and requires each captured frame to decode to its payload with a valid CRC. The chain cannot drift from silicon without a test saying so.</p>
+<p>To repeat the experiment after a chain change, or to add vectors at other spreading factors:</p>
+<pre><code>go run ./tools/goldencap -probe
+go run ./tools/goldencap -run -payload &quot;a known payload&quot; \
+    -out capture.iq -golden internal/lora/testdata/golden-sfX-crY.json</code></pre>
+<p><code>-probe</code> says who is on the serial port and how its radio is set; <code>-run</code> does a full transmit-capture-diff; <code>-analyze</code> re-runs the analysis on a saved capture without transmitting anything.</p>
+<footer>MeshBench documentation. Built from the running application, not from
+mock-ups. Screenshots are window-only captures; see CLAUDE.md for the rule that
+keeps them current.</footer>
+</main></div></body></html>
