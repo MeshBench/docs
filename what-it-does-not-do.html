@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>What it does not do - MeshBench</title>
+<style>
+:root {
+  --ink: #16191d; --dim: #5b636e; --line: #d9dee5; --bg: #ffffff;
+  --panel: #f5f7fa; --accent: #1f6feb; --warn: #b45309; --good: #15803d;
+  --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root { --ink:#e6e9ee; --dim:#9aa4b2; --line:#2a3038; --bg:#0f1215;
+          --panel:#171b20; --accent:#6ea8fe; --warn:#f0b429; --good:#4ade80; }
+}
+* { box-sizing: border-box; }
+body { margin:0; background:var(--bg); color:var(--ink);
+  font: 16px/1.65 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+.wrap { display:flex; align-items:flex-start; max-width:1180px; margin:0 auto; }
+nav { position:sticky; top:0; width:230px; flex:0 0 230px; padding:28px 18px;
+  border-right:1px solid var(--line); height:100vh; overflow-y:auto; }
+nav h1 { font-size:15px; letter-spacing:.08em; text-transform:uppercase;
+  color:var(--dim); margin:0 0 14px; }
+nav a { display:block; padding:5px 0; color:var(--ink); text-decoration:none; font-size:14.5px; }
+nav a:hover { color:var(--accent); }
+nav a.here { color:var(--accent); font-weight:600; }
+nav .navsec { font-size:11.5px; letter-spacing:.09em; text-transform:uppercase;
+  color:var(--dim); margin:18px 0 4px; border:0; padding:0; font-weight:600; }
+figure { margin:22px 0; }
+figure svg { max-width:100%; height:auto; display:block; }
+figcaption { color:var(--dim); font-size:13.5px; margin-top:8px; max-width:70ch; }
+.svg-ink { fill:var(--ink); } .svg-dim { fill:var(--dim); }
+.svg-line { stroke:var(--line); fill:none; } .svg-accent { stroke:var(--accent); fill:none; }
+.svg-panel { fill:var(--panel); stroke:var(--line); }
+.svg-real { fill:none; stroke:var(--good); stroke-dasharray:5 4; }
+main { flex:1 1 auto; padding:34px 40px 90px; min-width:0; }
+h1,h2,h3 { line-height:1.25; text-wrap:balance; }
+h1 { font-size:31px; margin:0 0 6px; }
+h2 { font-size:22px; margin:34px 0 10px; padding-top:14px; border-top:1px solid var(--line); }
+h3 { font-size:17px; margin:24px 0 8px; }
+p, li { max-width:70ch; }
+code { font-family:var(--mono); font-size:.9em; background:var(--panel);
+  padding:1px 5px; border-radius:4px; }
+pre { background:var(--panel); border:1px solid var(--line); border-radius:8px;
+  padding:14px 16px; overflow-x:auto; }
+pre code { background:none; padding:0; }
+img { max-width:100%; border:1px solid var(--line); border-radius:8px; display:block; margin:18px 0; }
+table { border-collapse:collapse; margin:16px 0; font-size:14.5px; display:block; overflow-x:auto; }
+th, td { border:1px solid var(--line); padding:7px 11px; text-align:left; vertical-align:top; }
+th { background:var(--panel); }
+td.num, th.num { text-align:right; font-variant-numeric:tabular-nums; }
+blockquote { margin:16px 0; padding:10px 16px; border-left:3px solid var(--warn);
+  background:var(--panel); border-radius:0 8px 8px 0; }
+blockquote p { margin:.4em 0; }
+ol.steps { counter-reset:step; list-style:none; padding-left:0; }
+ol.steps > li { counter-increment:step; position:relative; padding:0 0 4px 42px; margin:16px 0; }
+ol.steps > li::before { content:counter(step); position:absolute; left:0; top:0;
+  width:27px; height:27px; border-radius:50%; background:var(--accent); color:#fff;
+  display:flex; align-items:center; justify-content:center; font-size:14px; font-weight:600; }
+footer { color:var(--dim); font-size:13.5px; border-top:1px solid var(--line);
+  margin-top:44px; padding-top:14px; }
+a { color:var(--accent); }
+@media (max-width:820px) {
+  .wrap { display:block; } nav { position:static; width:auto; height:auto;
+    border-right:0; border-bottom:1px solid var(--line); }
+  nav a { display:inline-block; margin-right:14px; } main { padding:24px 18px 70px; }
+}
+</style></head>
+<body><div class="wrap">
+<nav><h1>MeshBench</h1><a href="index.html">Overview</a><a href="getting-started.html">Getting started</a><a href="what-it-does-not-do.html" class="here">What it does not do</a><h2 class="navsec">Guides</h2><a href="firmware-library.html">Firmware library</a><a href="firmware-development.html">Firmware development</a><a href="app-development.html">App development</a><a href="companion-bench.html">Companion bench</a><a href="fixtures.html">Shipped networks</a><a href="importing.html">Importing a network</a><a href="testing-repeaters.html">Testing a repeater</a><a href="sdr-observer.html">Listening with SDR++</a><a href="debugging.html">Why a packet failed</a><a href="experiments.html">Experiments</a><a href="studies.html">Studies</a><h2 class="navsec">How it works</h2><a href="architecture.html">Architecture</a><a href="native-vs-emulated.html">Native and emulated</a><a href="waveform.html">The waveform</a><a href="rf-chain.html">The RF chain</a><a href="golden-vectors.html">Validated on the air</a><a href="firmware-integration.html">Running real firmware</a><a href="emulation.html">Emulating a board</a><h2 class="navsec">Reference</h2><a href="settings.html">Settings</a><a href="reference-cli.html">CLI</a><a href="reference-control.html">Control socket</a><a href="tools.html">External tools</a><a href="repositories.html">Repositories and licences</a></nav>
+<main><h1>What it does not do</h1>
+<p>What MeshBench does <strong>not</strong> model, does not model well, or has not yet been checked against reality. Everything here is known and deliberate; none of it is a bug report.</p>
+<p>The reason this page exists: *&quot;The simulator is kinder than the air. Say so in the UI — never let a user assume otherwise.&quot;* A simulator that does not publish its own error budget is a confident liar.</p>
+<p>Ordered by how likely each one is to change a decision someone makes on the strength of a simulation.</p>
+<p>---</p>
+<h2>0. Two RF modes, two error budgets</h2>
+<p>Since the waveform work (<a href="waveform.html">the waveform</a>) MeshBench has two reception models, chosen in Configuration under <strong>RF Simulation</strong> and stamped into every result:</p>
+<p><strong>Calculated</strong> (the default): reception is a link-budget SNR against the demodulator floor, with concurrent transmissions summed into the noise in dBm. Fast, and the mode every large scenario should use. Two known biases: any overlap counts as full-length interference however briefly it clipped the packet (pessimistic under partial collisions), and there is no capture - a strong signal is destroyed by a weak overlap the real chip would ignore (measured against waveform mode: on a dense 60-node, 6-simultaneous-sender burst, roughly half the collision-affected pairs decode under the waveform that calculated calls lost).</p>
+<p><strong>Waveform</strong>: the channel synthesises IQ, every concurrent transmission lands in the receiver&#x27;s window at its true offset, and the verdict is the full receive chain - demodulation, Gray, the diagonal deinterleaver, Hamming FEC, dewhitening, the explicit header and the payload CRC (the LoRa coding chain). What reaches MeshCore is the decoded bytes. Capture, partial overlap and interference alignment are emergent; a grazing collision that FEC can repair is repaired, and the ledger says how many codewords it cost. One remaining caveat: the receiver front end models ideal sync (plan W3 grants exact timing inside the engine). The bit-level conventions - sync word, Hamming parity matrix, whitening, header checksum, payload CRC - have been verified against a real SX1262 over the air (tools/goldencap, 2026-08-18): the sync-word chirps, the chip&#x27;s four-XOR parity equations and the CRC&#x27;s last-two-bytes quirk were all solved from captured frames and corrected in the LoRa coding chain, and two captured frames are checked in as golden vectors that the test suite holds the encoder to. Packet sensitivity brackets Semtech&#x27;s published floors in test.</p>
+<p>---</p>
+<h2>1. Physics that is absent</h2>
+<h3>1.1 No multipath — the biggest single gap</h3>
+<p>Every link is one coherent path. Real 868 MHz propagation over UK terrain arrives as many paths with different delays, and their vector sum fades in and out as anything moves.</p>
+<p><strong>Consequence.</strong> The simulator cannot produce the failure that dominates real marginal links: a path with a perfectly good median signal that drops out for hundreds of milliseconds at a time. A link MeshBench calls reliable may be unusable in practice, and there is no warning sign in the output — the SNR just looks fine.</p>
+<p><strong>Direction of error: optimistic.</strong> This is the one to say out loud to anyone planning from a result.</p>
+<p>Fixing it properly means a tapped-delay-line channel with a fading process per tap, which the sample-accurate architecture supports but nothing currently builds.</p>
+<h3>1.2 No frequency error, no oscillator drift</h3>
+<p>We demodulate against a perfect reference chirp. A real SX1262 runs on a crystal with a few ppm of error, which at 869 MHz is several kHz — a non-trivial fraction of a 125 kHz channel — plus drift with temperature over a day.</p>
+<p><strong>Consequence.</strong> Carrier frequency offset degrades real sensitivity, and it is part of why two overlapping transmissions behave the way they do. Our capture effect emerges from amplitude alone, so near-far cases are cleaner than reality.</p>
+<p><strong>Direction of error: optimistic.</strong></p>
+<h3>1.3 Bare-earth terrain only</h3>
+<p>Terrain comes from a DEM. No buildings, no trees, no clutter class, no body loss from the person holding the node.</p>
+<p><strong>Consequence.</strong> Urban and wooded paths are substantially better in simulation than in the field — for woodland at 868 MHz the difference is tens of dB, not a correction factor. A rural hilltop-to-hilltop path is the case this models well; a handheld in a town is the case it models worst.</p>
+<p><strong>Direction of error: strongly optimistic wherever anything is in the way that is not a hill.</strong></p>
+<p>Loading a building environment (Configuration&#x27;s Buildings card - a runtime pull from OpenStreetMap or Microsoft&#x27;s ML footprints, or tiles prepared with <code>tools/envgen</code>) closes part of this: each crossed building becomes a rooftop knife edge plus one wall of material loss. It is still not clutter, trees or body loss, and a pulled database inherits that database&#x27;s gaps - ML footprints carry no materials, so those buildings fall back to a regional default with the low confidence that implies. The merged pull narrows that where OSM has surveyed the building - explicit type and material override the inference - but only there; the unsurveyed majority keeps the default.</p>
+<h3>1.4 Diffraction is knife-edge, and single-mechanism</h3>
+<p>Bullington construction with the ITU-R P.526 correction — the method P.1812 and P.452 use for this problem. There is no rounded-obstacle correction and <strong>no ground reflection</strong>.</p>
+<p>This replaced a Deygout decomposition, which was wrong here in a way worth recording. Deygout recurses into the sub-paths either side of the principal edge, which is sound on a profile with distinct peaks and unsound on a smooth one: a spherical earth flattens into a parabola, and recursing on a parabola charges the same curvature once per level. Measured on flat ground at 869 MHz, loss stepped from 0 dB at 68 km to 34.7 dB at 69 km — a hard edge across a coverage raster that no terrain put there. There is now a test asserting continuity in distance, because a discontinuity here is invisible in any single path calculation and only shows up as an artefact on a map.</p>
+<p><strong>Consequence.</strong> A real hill is not a knife edge; knife-edge loss is the optimistic bound for a rounded one. Bullington reduces a whole profile to one equivalent edge and the correction term restores what that under-reads, but it is a correction, not a multi-edge calculation. Separately, a two-ray ground-reflection model matters over water, estuaries and flat farmland, and its absence can be wrong in *either* direction — constructive interference can make a real path better than we predict.</p>
+<h3>1.5 Noise is thermal AWGN and nothing else</h3>
+<p><code>N = −174 + 10·log₁₀(BW) + NF</code>. No impulsive noise, no elevated man-made noise floor, no adjacent-channel interference, no intermodulation.</p>
+<p><strong>Consequence.</strong> A node beside a switch-mode supply, a solar inverter or an EV charger sees a noise floor well above thermal. MSIM-20 adds deliberate external emitters; ambient noise is not modelled at all.</p>
+<p><strong>Direction of error: optimistic.</strong></p>
+<h3>1.6 The SDR observer sees one channel, not a band</h3>
+<p>An observer captures the modelled channel and nothing else, so its <code>SampleRateHz</code> is the simulated bandwidth. A real SDR at 2 Msps sees several hundred kHz of neighbours; ours sees empty space, because the engine never generated anything there. Adjacent channels are <strong>absent, not quiet</strong> — the waterfall will never show a neighbouring network, an ISM-band doorbell or a harmonic, because none exists to show.</p>
+<p>The receive filter in <code>Listen</code> is also a brick wall in the frequency domain. No real receiver has one, so adjacent-signal rejection is better than any hardware achieves.</p>
+<p>The stream is also resampled to whatever rate the client asks for - no SDR client offers the observer&#x27;s native rate in its menu - by windowed-sinc interpolation, which keeps a transmission exactly as wide as its bandwidth (images sit ~60 dB down, below the 8-bit format&#x27;s own floor). The floor across the rest of the span is the server&#x27;s own addition at the receiver&#x27;s noise density - a real dongle&#x27;s front end fills its span, and a silent shoulder looked synthetic - but only the in-band portion is what the verdicts hear; signals from adjacent channels still do not exist. A level control anchored to that floor keeps strong bursts from clipping into broadband splatter; a burst more than ~33 dB over the floor briefly presses the floor down instead, which is the trade a real front end makes with its gain.</p>
+<h3>1.7 Antenna patterns are analytic, not measured</h3>
+<p>Isotropic, dipole, collinear and Yagi from closed-form expressions. No measured patterns (<code>.msi</code>, NEC), no mast shadowing, no mutual coupling, no radome or feeder loss beyond a scalar, no ground-plane interaction.</p>
+<p><strong>Consequence.</strong> A real collinear on a real mast has nulls and a distorted pattern that our idealised one does not. Nothing models the mast blocking the back of its own antenna.</p>
+<p>---</p>
+<h2>2. Measured error we already know about</h2>
+<h3>2.1 The demodulator is up to 1.6 dB better than a real SX1262</h3>
+<p>Measured against Semtech&#x27;s published sensitivity, at 1% packet error over 40-symbol frames:</p>
+<table><thead><tr><th>SF</th><th>measured</th><th>Semtech</th><th>delta</th></tr></thead><tbody><tr><td>SF7</td><td>−7.45</td><td>−7.50</td><td>+0.05</td></tr><tr><td>SF8</td><td>−9.76</td><td>−10.00</td><td>+0.24</td></tr><tr><td>SF9</td><td>−13.07</td><td>−12.50</td><td><strong>−0.57</strong></td></tr><tr><td>SF10</td><td>−15.35</td><td>−15.00</td><td><strong>−0.35</strong></td></tr><tr><td>SF11</td><td>−18.62</td><td>−17.50</td><td><strong>−1.12</strong></td></tr><tr><td>SF12</td><td>−21.56</td><td>−20.00</td><td><strong>−1.56</strong></td></tr></tbody></table>
+<p>A negative delta means <strong>we decode packets a real chip would not</strong>. Our demodulator is an ideal coherent dechirp-and-FFT; a real chip has implementation loss that grows with spreading factor.</p>
+<p><strong>Consequence.</strong> Long-range SF11/SF12 links — exactly the ones people care about — are up to 1.6 dB more optimistic than the rest. That is real distance on a marginal path.</p>
+<p>This is not calibrated out, deliberately: adding a fudge factor would hide the fact that the chain is idealised. It should be corrected with a measured implementation-loss curve (MSIM-28/29), not a constant.</p>
+<h3>2.2 No CRC, no interleaving, no Gray coding, no Hamming FEC</h3>
+<p>The modem chain is chirp modulation, channel, dechirp, FFT, peak pick. Real LoRa adds whitening, Gray mapping, Hamming FEC at the configured coding rate, interleaving and a CRC.</p>
+<p><strong>Consequence.</strong> Two things. First, our symbol errors translate to packet errors differently from a real chip — FEC repairs scattered errors and interleaving spreads bursts, so a real receiver survives some noise realisations we fail and fails some we survive. Second, we have no CRC, so a &quot;received&quot; packet is one whose symbols we got right, not one that passed a real integrity check.</p>
+<p>Airtime *is* computed with the coding rate (§4.1), so timing is right even though the error behaviour is not.</p>
+<p>---</p>
+<h2>3. Firmware fidelity</h2>
+<h3>3.1 The shipped image boots, but does not yet reach its radio</h3>
+<p><strong>This entry previously said the published <code>.uf2</code> could not be run at all, because the SoftDevice needed Nordic behaviour Renode does not model. That was wrong, and measuring it disproved it.</strong></p>
+<p>The real <code>RAK_4631_repeater-v1.17.0</code> image boots through the MBR and the s140 SoftDevice and reaches its own application main loop under Renode. Three things were in the way, none of them the SoftDevice:</p>
+<ol class="steps"><li><strong>UICR is absent from Renode&#x27;s nRF52840 platform.</strong> The MBR reads
+<code>UICR.NRFFW[0]</code> to find a bootloader; Renode returns 0 for an unmapped
+region, and 0 is a valid flash address, so the MBR spends eternity handing
+over to a bootloader that is not there.</li><li><strong>Renode&#x27;s flash is zero-filled; real erased flash is <code>0xFF</code>.</strong> The MBR
+checks for exactly that pattern to decide whether an MBR parameter page
+exists. Loading the SoftDevice and the application as separate images leaves
+zeros between them, and the boot chain quietly takes the wrong branch. The
+fix is to build one pre-filled image — <code>tools/renode/merge-nrf52.py</code>.</li><li><strong>MWU is unimplemented.</strong> The SoftDevice uses the Memory Watch Unit for its
+critical sections and hits it constantly. Renode answers from the SVD, which
+is enough not to fault but is not the peripheral behaving.</li></ol>
+<p>What still does not happen is SPI traffic to the SX1262, so the shipped image has not been observed driving its radio. That is now a peripheral-coverage question — the right SPI instance for the board, and MWU — rather than a proprietary-blob question.</p>
+<p><strong>Consequence, as it actually stands.</strong> Our own SoftDevice-free build is what runs end to end today, so anything depending on the real scheduler, or on the BLE stack stealing time from the radio ISR, is still not reproduced. But the path to running stock images is open and short, which matters: downloading prebuilt firmware is meant to be the *default* experience (ADR-0020), not a stretch goal.</p>
+<h3>3.2 The SX1262 model is functional, not cycle-accurate</h3>
+<p>The Renode peripheral answers <code>GetStatus</code>, accepts configuration and carries frames. It does <strong>not</strong> model BUSY assertion timing, DIO1 interrupt latency, TCXO startup delay, image calibration time, or FIFO wrap semantics.</p>
+<p><strong>Consequence.</strong> Firmware bugs in radio state-machine timing — the class that bites hardest on real boards — will not reproduce. This also means the emulated/native cross-check (MSIM-40) currently compares two things that agree by construction on timing, which weakens it.</p>
+<h3>3.3 Native nodes cannot catch anything architecture-dependent</h3>
+<p>A native node is x86-64 or arm64, 64-bit, with a different <code>int</code> width in places, different alignment and a different FPU.</p>
+<p><strong>Concretely</strong>: the bug that blocked the ARM port for hours was the Cortex-M4F powering up with its FPU disabled. A native node cannot express that bug. This is the whole reason both backends exist, and it is why native being ~3300× faster is not a reason to delete the emulated one.</p>
+<h3>3.4 Two board families run, and the boards with front ends are not among them</h3>
+<p>nRF52840 under Renode and ESP32 under our QEMU fork, which now does model the SX1262 — <code>hw/ssi/sx1262</code> forwards SPI to the same <code>VirtualSX1262</code> a native node clocks, so an emulated node and a native one are the same radio. The wall this section used to describe is gone.</p>
+<p>What is still missing is the boards where a front-end module decides how much power reaches the antenna. The enable line crosses into the model as a GPIO (<code>radio-fem</code>), and <code>Generic_E22_sx1262</code> can exercise it under QEMU today, but <strong>the Heltec T096 cannot be run at all</strong>: it is nRF52840, so it needs Renode rather than QEMU, and of the boards shipping <code>.uf2</code> images only T-Beam Supreme S3 is ESP32-S3.</p>
+<p>That matters more than a missing board usually would, because the T096 is the board of the transmit fault MeshCore 1.17.1 fixed — firmware that never raised the enable line, so the PA&#x27;s output went through the module&#x27;s isolation instead of its gain. <strong>A study of that class of fault cannot presently be run here.</strong> No fixture shipping today contains a node with a front end at all: every node in the Scotland and Fife fixtures is a RAK4631, which has none, so the front-end path is unexercised rather than merely untested.</p>
+<h3>3.5 Forwarding policy is ours, not the repeater application&#x27;s</h3>
+<p>The native node links MeshCore&#x27;s *library* — <code>Mesh</code>, <code>Dispatcher</code>, <code>Packet</code>, <code>Identity</code> — which is where routing, retransmit timing, duty-cycle accounting and CSMA live. It does not link the repeater *application*.</p>
+<p>That matters for exactly one method. <code>MyMesh::allowPacketForward</code> in <code>examples/simple_repeater</code> enforces region transport codes, a configurable loop-detect table and several hop caps, and it needs Arduino preferences, an RTC and a filesystem to do it. Our node implements that method&#x27;s essential half: flood packets forward until the hop cap.</p>
+<p><strong>Consequence.</strong> Relay *timing* is MeshCore&#x27;s, and so is every decision about when the channel is clear. Relay *eligibility* is ours, and a network whose behaviour depends on region scoping or on the stricter loop-detect settings will behave differently here. Without any override the base class refuses to forward at all and a flood stops dead at the origin&#x27;s neighbours — which looks exactly like a network with no repeaters configured, so this is not something that can simply be left out.</p>
+<h3>3.6 BLE is ours, not the firmware&#x27;s</h3>
+<p>The Bluetooth companion is a host-side BlueZ GATT server presenting the Nordic UART Service. It is genuinely connectable from a real phone — but it is *our* implementation of the companion protocol, not MeshCore&#x27;s BLE code being exercised. Removing the SoftDevice removed the firmware&#x27;s Bluetooth stack along with it.</p>
+<p>---</p>
+<h2>4. Things that are right but narrowly</h2>
+<h3>4.1 Airtime is an estimate the firmware makes, not a simulator shortcut</h3>
+<p>Worth being explicit, because it looks like a shortcut in a simulator that models actual waveforms. How long a transmission occupies the channel is decided by the samples the engine generates — nothing consults a formula for that, and the node is *told* when its waveform ended rather than timing itself.</p>
+<p><code>getEstAirtimeFor()</code> is separate: a pure virtual MeshCore calls <strong>before</strong> transmitting, to size its CSMA backoff and spend its duty-cycle budget. Real hardware answers it with RadioLib&#x27;s <code>getTimeOnAir()</code>, so we answer it with the same calculation, checked against the Go one (MSIM-42). An estimate the firmware makes about itself, faithfully reproduced.</p>
+<p>The rest of the timing chain is weaker. CAD timing, the AGC reset interval and the noise-floor calibration interval are still the firmware&#x27;s own numbers running against a channel that does not model what those mechanisms are for.</p>
+<h3>4.2 <code>isInRecvMode()</code> is what the node can observe, not what the channel knows</h3>
+<p>The native node reports &quot;listening whenever not transmitting&quot;. A real node is also deaf during calibration, during mode transitions, and briefly after an interrupt. Reachability is therefore slightly overstated.</p>
+<h3>4.3 Position uncertainty is modelled at import, not propagated everywhere</h3>
+<p>CoreScope positions carry an uncertainty. It is stored and displayed, but it does not yet widen every downstream result the way HAM-34 does in hamreach.</p>
+<p>---</p>
+<h2>5. Scale, and what has not been measured</h2>
+<table><thead><tr><th>Workload</th><th>Measured</th><th>Where</th></tr></thead><tbody><tr><td>Demodulation, one core</td><td>~160 real-time receivers, flat across SF</td><td>MSIM-3, elite (12 cores)</td></tr><tr><td>100-node mesh, CPU only</td><td>~19× real time</td><td>MSIM-3</td></tr><tr><td>Raster, one core</td><td>50 M profile-steps/s</td><td>MSIM-3</td></tr><tr><td>Native node, lockstep</td><td>10 s simulated in 3.0 ms (<strong>3323×</strong>)</td><td>MSIM-41, elite</td></tr><tr><td>Emulated node</td><td>roughly 1× real time</td><td>MSIM-13</td></tr></tbody></table>
+<p><strong>What has not been measured, and matters:</strong></p>
+<ul><li><strong>Lockstep at scale.</strong> One native node at 1 ms ticks is 1000 socket round trips per simulated second. A 100-node scenario is 100,000 per second across 100 processes, and the 3323× figure will not survive that. The tick granularity may have to be coarsened, or nodes batched — neither is designed.</li><li><strong>GPU end to end.</strong> The dechirp kernel is validated against its CPU twin, but no full scenario has run on the GPU path.</li><li><strong>Memory at 100+ nodes.</strong> Never run.</li></ul>
+<p>The honest headline: <strong>a 20-node native scenario is comfortable today; a 100-node one is a plan, not a measurement.</strong></p>
+<p>---</p>
+<h2>6. Not yet built</h2>
+<p>Specified and ticketed, with nothing running behind them:</p>
+<table><thead><tr><th></th><th></th></tr></thead><tbody><tr><td>Antenna filters against interference</td><td>MSIM-21 — the emitter model exists (MSIM-20); per-emitter emission masks and receive filters do not</td></tr><tr><td>Instrumented firmware builds</td><td>MSIM-26</td></tr><tr><td>Calibrating excess loss from residuals</td><td>MSIM-29 — needs MSIM-28 to have data first</td></tr><tr><td>Shadow mode: live model-versus-reality</td><td>MSIM-33</td></tr><tr><td>Our own MeshCore builds in a separate MIT repo</td><td>MSIM-39 — the repo has not been created</td></tr></tbody></table>
+<p>Built since this list was first written: the desktop application (MSIM-10), the terrain cut-through view (MSIM-11), coverage rasters and planning (MSIM-34/35), terrain and boundary download (MSIM-38/37), the firmware catalogue (MSIM-13), the provider interface with CoreScope, Beacon and MQTT (MSIM-30/31/32), battery and solar (MSIM-19), external interference (MSIM-20), the MCP server (MSIM-36), the validation harness (MSIM-28), replay (MSIM-27), board profiles (MSIM-18), the multi-node console (MSIM-25), the emulated/native cross-check (MSIM-40) and a command line covering all of it (MSIM-23).</p>
+<h3>What the application does not do yet</h3>
+<p>There is a window, and it answers the question the whole project is about — pick two nodes, get both margins and a terrain cut-through explaining the verdict. What it does not have is a <strong>map</strong>. Nodes are a list, not points on terrain, and the coverage rasters that <code>meshcoresim coverage</code> writes as a PNG are not drawn in the application. That is the largest remaining gap in the product rather than in the physics.</p>
+<p>---</p>
+<h2>7. Unvalidated, which is different from unbuilt</h2>
+<p><strong>The RF model has never been checked against a real observation.</strong> Every component is tested against a published reference — Semtech&#x27;s sensitivity figures, ITU-R P.526, RadioLib&#x27;s airtime — and the GPU against its CPU twin. No part of it has been compared with a packet that actually crossed real air.</p>
+<p>The *harness* for that comparison now exists (the validation package, MSIM-28): it takes observed receptions and reports bias, spread and percentiles, counts every exclusion, and refuses to treat a silent receiver as a negative observation. What it has never had is data. Running it against a real CoreScope or Beacon export is the single highest-value unfinished item in the project.</p>
+<p>Until it does, every number here is &quot;correct according to the textbook&quot;, which is not the same as &quot;true on the hill above Aberfeldy&quot;.</p>
+<p>---</p>
+<h2>8. Legal and licensing</h2>
+<ul><li><strong>No licence chosen</strong> (MSIM-15). No <code>LICENSE</code> file, deliberately.</li><li><strong>No <code>THIRD_PARTY_NOTICES.md</code>.</strong> MeshCore (MIT), rweather/arduinolibs Crypto (MIT) and MeshCore&#x27;s vendored ed25519 all require attribution on distribution. This must exist before anything ships.</li><li><strong>Our MeshCore builds go in a separate repo</strong> under MeshCore&#x27;s own MIT licence (MSIM-39, ADR-0020), because they link MeshCore. Not yet created.</li><li><strong>Ofcom mast data terms unresolved</strong> (MSIM-20), as are the terms for whichever boundary source MSIM-37 uses.</li></ul>
+<p>---</p>
+<h2>9. Conditions that produce no error at all</h2>
+<p>Everything above is a limit of the model. This is a shorter and more dangerous list: configurations that change a result while reporting nothing wrong.</p>
+<p><strong>A region inferred and never applied.</strong> Every node transmits, no node relays, and nothing reports an error. It reads as a mesh with no propagation.</p>
+<p><strong>A scope written without its <code>#</code>.</strong> The key on the wire is <code>sha256(&quot;#sco&quot;)</code>. <code>sha256(&quot;sco&quot;)</code> matches no repeater in existence, so every repeater receives the packet, derives a different key, and declines to forward it. No error anywhere.</p>
+<p><strong>Saved node state overriding a compiled default.</strong> Both arms of a comparison return identical numbers and the change looks inert.</p>
+<p><strong>A bare version tag.</strong> MeshCore tags one role at a time, so <code>v1.17.0</code> resolves nothing while <code>repeater-v1.17.0</code> resolves.</p>
+<p><strong>More than about eight emulated nodes on a twelve-core machine.</strong> Boots stretch, simulated time falls behind the wall clock, and the symptom is a mesh gone quiet — which is what a genuine RF problem looks like.</p>
+<p><strong>A permissive fixture.</strong> More generous than the real network. This one does say so, on screen and in the first line of the test runner&#x27;s output, every time, because a quiet version of it produces exactly the flattering-but-wrong answer this document exists to prevent.</p>
+<h2>10. Measurement floors depend on the metric</h2>
+<p>The ±20% figure sometimes quoted is the spread of *reach under contention from around eight simultaneous senders*, measured by running one configuration repeatedly. It is a property of that contention, not of the simulator, and it does not transfer to every measurement.</p>
+<p>A one-originator flood on a 58-node network has produced an identical transmission count across eight seeds while receptions on those same runs varied by ±17%.</p>
+<p>Measure the control&#x27;s own spread on the metric in question, and quote that figure rather than a general one.</p>
+<h2>What this is good at</h2>
+<p>For balance, because the list above is long and the tool is not weak:</p>
+<ul><li>Rural, line-of-sight-ish, hilltop-to-hilltop VHF/UHF paths over real terrain, with honest diffraction — the case it is built for.</li><li><strong>Why</strong> a link failed, not just that it did: the terrain cut-through, the Fresnel intrusion and the link budget are all inspectable.</li><li>Comparative work — *this mast versus that one*, *five metres higher*, *SF10 versus SF12* — where systematic optimism largely cancels between the two answers being compared. This is most of what a planner actually does.</li><li>Real firmware behaviour: routing, flood suppression, duty-cycle policing and CSMA are MeshCore&#x27;s own code, not a reimplementation of it.</li></ul>
+<p>The systematic biases are almost all in one direction, which makes them usable: <strong>treat a MeshBench result as a best case.</strong> If it says a link will not work, believe it. If it says a link will work marginally, go and measure.</p>
+<footer>MeshBench documentation. Built from the running application, not from
+mock-ups. Screenshots are window-only captures; see CLAUDE.md for the rule that
+keeps them current.</footer>
+</main></div></body></html>

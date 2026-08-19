@@ -66,7 +66,7 @@ a { color:var(--accent); }
 }
 </style></head>
 <body><div class="wrap">
-<nav><h1>MeshBench</h1><a href="index.html">Overview</a><a href="getting-started.html">Getting started</a><h2 class="navsec">Guides</h2><a href="firmware-library.html">Firmware library</a><a href="firmware-development.html">Firmware development</a><a href="app-development.html">App development</a><a href="companion-bench.html">Companion bench</a><a href="fixtures.html">Shipped networks</a><a href="importing.html">Importing a network</a><a href="testing-repeaters.html">Testing a repeater</a><a href="sdr-observer.html">Listening with SDR++</a><a href="debugging.html" class="here">Why a packet failed</a><a href="experiments.html">Experiments</a><a href="studies.html">Studies</a><h2 class="navsec">How it works</h2><a href="architecture.html">Architecture</a><a href="native-vs-emulated.html">Native and emulated</a><a href="rf-chain.html">The RF chain</a><a href="golden-vectors.html">Validated on the air</a><a href="firmware-integration.html">Running real firmware</a><a href="emulation.html">Emulating a board</a><h2 class="navsec">Reference</h2><a href="settings.html">Settings</a><a href="reference-cli.html">CLI</a><a href="reference-control.html">Control socket</a><a href="limits.html">Known limits</a></nav>
+<nav><h1>MeshBench</h1><a href="index.html">Overview</a><a href="getting-started.html">Getting started</a><a href="what-it-does-not-do.html">What it does not do</a><h2 class="navsec">Guides</h2><a href="firmware-library.html">Firmware library</a><a href="firmware-development.html">Firmware development</a><a href="app-development.html">App development</a><a href="companion-bench.html">Companion bench</a><a href="fixtures.html">Shipped networks</a><a href="importing.html">Importing a network</a><a href="testing-repeaters.html">Testing a repeater</a><a href="sdr-observer.html">Listening with SDR++</a><a href="debugging.html" class="here">Why a packet failed</a><a href="experiments.html">Experiments</a><a href="studies.html">Studies</a><h2 class="navsec">How it works</h2><a href="architecture.html">Architecture</a><a href="native-vs-emulated.html">Native and emulated</a><a href="waveform.html">The waveform</a><a href="rf-chain.html">The RF chain</a><a href="golden-vectors.html">Validated on the air</a><a href="firmware-integration.html">Running real firmware</a><a href="emulation.html">Emulating a board</a><h2 class="navsec">Reference</h2><a href="settings.html">Settings</a><a href="reference-cli.html">CLI</a><a href="reference-control.html">Control socket</a><a href="tools.html">External tools</a><a href="repositories.html">Repositories and licences</a></nav>
 <main><h1>Why did that packet not arrive</h1>
 <p>The event log records a cause for every reception and every failure, so the question has an answer rather than a theory.</p>
 <h2>Start in the Debug view</h2>
@@ -90,12 +90,7 @@ believes.</li></ol>
 <p>Writes pcapng, which Wireshark reads with the MeshCore dissector in <code>tools/dissector/</code>. <code>capture.wireshark</code> opens a live stream instead.</p>
 <p><strong>Capture is started per session, not per run.</strong> A sweep rebuilds the engine between runs and the capture survives that, but a restarted workbench has no capture until one is started again.</p>
 <h2>Common causes that produce no error</h2>
-<ul><li><strong>Regions inferred but never applied.</strong> Everything transmits, nothing relays.</li><li><strong>A scope written without its hash.</strong> Every repeater derives a different key</li></ul>
-<p>  and declines.</p>
-<ul><li><strong>A node with no firmware version.</strong> Resolves to a build that is not</li></ul>
-<p>  published.</p>
-<ul><li><strong>Saved node preferences from an earlier run.</strong> A changed default never takes</li></ul>
-<p>  effect because the node loads its stored value.</p>
+<ul><li><strong>Regions inferred but never applied.</strong> Everything transmits, nothing relays.</li><li><strong>A scope written without its hash.</strong> Every repeater derives a different key and declines.</li><li><strong>A node with no firmware version.</strong> Resolves to a build that is not published.</li><li><strong>Saved node preferences from an earlier run.</strong> A changed default never takes effect because the node loads its stored value.</li></ul>
 <footer>MeshBench documentation. Built from the running application, not from
 mock-ups. Screenshots are window-only captures; see CLAUDE.md for the rule that
 keeps them current.</footer>

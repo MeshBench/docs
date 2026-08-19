@@ -66,21 +66,14 @@ a { color:var(--accent); }
 }
 </style></head>
 <body><div class="wrap">
-<nav><h1>MeshBench</h1><a href="index.html">Overview</a><a href="getting-started.html" class="here">Getting started</a><h2 class="navsec">Guides</h2><a href="firmware-library.html">Firmware library</a><a href="firmware-development.html">Firmware development</a><a href="app-development.html">App development</a><a href="companion-bench.html">Companion bench</a><a href="fixtures.html">Shipped networks</a><a href="importing.html">Importing a network</a><a href="testing-repeaters.html">Testing a repeater</a><a href="sdr-observer.html">Listening with SDR++</a><a href="debugging.html">Why a packet failed</a><a href="experiments.html">Experiments</a><a href="studies.html">Studies</a><h2 class="navsec">How it works</h2><a href="architecture.html">Architecture</a><a href="native-vs-emulated.html">Native and emulated</a><a href="rf-chain.html">The RF chain</a><a href="golden-vectors.html">Validated on the air</a><a href="firmware-integration.html">Running real firmware</a><a href="emulation.html">Emulating a board</a><h2 class="navsec">Reference</h2><a href="settings.html">Settings</a><a href="reference-cli.html">CLI</a><a href="reference-control.html">Control socket</a><a href="limits.html">Known limits</a></nav>
+<nav><h1>MeshBench</h1><a href="index.html">Overview</a><a href="getting-started.html" class="here">Getting started</a><a href="what-it-does-not-do.html">What it does not do</a><h2 class="navsec">Guides</h2><a href="firmware-library.html">Firmware library</a><a href="firmware-development.html">Firmware development</a><a href="app-development.html">App development</a><a href="companion-bench.html">Companion bench</a><a href="fixtures.html">Shipped networks</a><a href="importing.html">Importing a network</a><a href="testing-repeaters.html">Testing a repeater</a><a href="sdr-observer.html">Listening with SDR++</a><a href="debugging.html">Why a packet failed</a><a href="experiments.html">Experiments</a><a href="studies.html">Studies</a><h2 class="navsec">How it works</h2><a href="architecture.html">Architecture</a><a href="native-vs-emulated.html">Native and emulated</a><a href="waveform.html">The waveform</a><a href="rf-chain.html">The RF chain</a><a href="golden-vectors.html">Validated on the air</a><a href="firmware-integration.html">Running real firmware</a><a href="emulation.html">Emulating a board</a><h2 class="navsec">Reference</h2><a href="settings.html">Settings</a><a href="reference-cli.html">CLI</a><a href="reference-control.html">Control socket</a><a href="tools.html">External tools</a><a href="repositories.html">Repositories and licences</a></nav>
 <main><h1>Getting started</h1>
 <p>Fifteen minutes from nothing to a real 311-node network relaying real packets through real firmware.</p>
 <h2>Install</h2>
 <p>Linux is the only platform with a build today. macOS and Windows are described below with what is actually blocking each, because a plan you can read beats a blank space you have to ask about.</p>
 <h3>Linux</h3>
 <p><strong>Requirements</strong></p>
-<ul><li><strong>glibc 2.38 or newer</strong>: Ubuntu 24.04, Debian 13, Fedora 39, or anything more</li></ul>
-<p>  recent. The floor is set by a prebuilt library MeshBench links against rather   than by choice, and on an older distribution the application will not start.</p>
-<ul><li><strong>A display and a GPU.</strong> The CPU path gives the same answers more slowly, so a</li></ul>
-<p>  machine without a usable GPU loses time rather than features.</p>
-<ul><li><strong>RAM</strong>: about 500 MB for the application, plus roughly 10 MB per simulated</li></ul>
-<p>  node running real firmware. The 311-node network wants about 4 GB free.</p>
-<ul><li><strong>Disk</strong>: 200 MB for the bundle, and a cache under <code>~/.cache/meshcoresim</code> that</li></ul>
-<p>  grows with the firmware builds and map tiles you use.</p>
+<ul><li><strong>glibc 2.38 or newer</strong>: Ubuntu 24.04, Debian 13, Fedora 39, or anything more recent. The floor is set by a prebuilt library MeshBench links against rather than by choice, and on an older distribution the application will not start.</li><li><strong>A display and a GPU.</strong> The CPU path gives the same answers more slowly, so a machine without a usable GPU loses time rather than features.</li><li><strong>RAM</strong>: about 500 MB for the application, plus roughly 10 MB per simulated node running real firmware. The 311-node network wants about 4 GB free.</li><li><strong>Disk</strong>: 200 MB for the bundle, and a cache under <code>~/.cache/meshcoresim</code> that grows with the firmware builds and map tiles you use.</li></ul>
 <p><strong>Steps</strong></p>
 <ol class="steps"><li>Download <code>meshbench-linux-x86_64.tar.gz</code> from the releases page.</li><li>Unpack it anywhere you can write to.
 ``<code>
@@ -133,9 +126,7 @@ reception and miss is listed with a cause, which is the difference between
 <table><thead><tr><th>view</th><th>for</th></tr></thead><tbody><tr><td><strong>Plan</strong></td><td>build and site: import, place, drag, boundary, coverage</td></tr><tr><td><strong>Run</strong></td><td>exercise it and watch: play, schedule traffic, consoles, live feed</td></tr><tr><td><strong>Debug</strong></td><td>ask why one thing happened: packets, waterfall, consoles, budgets</td></tr><tr><td><strong>Verify</strong></td><td>check it is still true: baselines, A/B bisect, residuals</td></tr><tr><td><strong>Bench</strong></td><td>compare configurations: sweep a parameter, read what differed</td></tr><tr><td><strong>App</strong></td><td>write a client against it: an endpoint, the protocol, faults</td></tr></tbody></table>
 <p>Panels can be dragged out, docked elsewhere, or popped into their own window on a second monitor. Each view remembers its own arrangement.</p>
 <h2>Next</h2>
-<ul><li><a href="fixtures.html">Shipped networks</a> if you want a bigger or more realistic mesh.</li><li><a href="firmware-development.html">Firmware development</a> if you are changing MeshCore</li></ul>
-<p>  itself.</p>
-<ul><li><a href="companion-bench.html">Companion bench</a> if you are writing a client.</li></ul>
+<ul><li><a href="fixtures.html">Shipped networks</a> if you want a bigger or more realistic mesh.</li><li><a href="firmware-development.html">Firmware development</a> if you are changing MeshCore itself.</li><li><a href="companion-bench.html">Companion bench</a> if you are writing a client.</li></ul>
 <footer>MeshBench documentation. Built from the running application, not from
 mock-ups. Screenshots are window-only captures; see CLAUDE.md for the rule that
 keeps them current.</footer>

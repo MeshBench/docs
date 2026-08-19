@@ -17,9 +17,46 @@ import os
 import re
 import sys
 
+SYNCED = {
+    # page -> the file in the MeshBench repository it is generated from.
+    # A generated page is not edited here; tools/sync-limits.py rewrites it.
+    "what-it-does-not-do.md": "docs/shortcomings.md",
+}
+
+
+def check_synced():
+    """Fail the build if a generated page has fallen behind its source.
+
+    Only when the source is reachable: a checkout of this repository on its own
+    still builds, from what is committed. What must not happen is building
+    beside a newer source and silently publishing the older text.
+    """
+    import subprocess
+    repo = os.environ.get("MESHBENCH_REPO",
+                          os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                                       os.pardir, "meshcoresim"))
+    for page, source in SYNCED.items():
+        src = os.path.join(repo, source)
+        if not os.path.exists(src):
+            continue
+        here = os.path.join("pages", page)
+        want = subprocess.run(
+            [sys.executable, "tools/sync-limits.py", repo, "--stdout"],
+            capture_output=True, text=True)
+        if want.returncode != 0:
+            continue
+        if not os.path.exists(here) or open(here).read() != want.stdout:
+            sys.exit("%s is stale against %s\n"
+                     "run: python3 tools/sync-limits.py" % (here, src))
+
+
 NAV = [
     ("index.html", "Overview"),
     ("getting-started.html", "Getting started"),
+    # Directly under Getting started, not filed in Reference. The simulator's
+    # claim is that it is honest about being kinder than the air; a reader who
+    # cannot find the limits cannot use any other number on the site.
+    ("what-it-does-not-do.html", "What it does not do"),
     ("SECTION", "Guides"),
     ("firmware-library.html", "Firmware library"),
     ("firmware-development.html", "Firmware development"),
@@ -35,6 +72,7 @@ NAV = [
     ("SECTION", "How it works"),
     ("architecture.html", "Architecture"),
     ("native-vs-emulated.html", "Native and emulated"),
+    ("waveform.html", "The waveform"),
     ("rf-chain.html", "The RF chain"),
     ("golden-vectors.html", "Validated on the air"),
     ("firmware-integration.html", "Running real firmware"),
@@ -43,7 +81,8 @@ NAV = [
     ("settings.html", "Settings"),
     ("reference-cli.html", "CLI"),
     ("reference-control.html", "Control socket"),
-    ("limits.html", "Known limits"),
+    ("tools.html", "External tools"),
+    ("repositories.html", "Repositories and licences"),
 ]
 
 CSS = """
@@ -124,7 +163,13 @@ def render(md):
     out, lines, i = [], md.split("\n"), 0
     while i < len(lines):
         l = lines[i]
-        if l.startswith("<svg") or l.startswith("<figure"):
+        if l.startswith("<!--"):
+            # A comment, not content - the generated limits page carries one
+            # saying where it came from. Skipped rather than escaped into the
+            # body, which is what happened the first time.
+            while i < len(lines) and "-->" not in lines[i]:
+                i += 1
+        elif l.startswith("<svg") or l.startswith("<figure"):
             # Raw figure, passed through untouched. Diagrams are hand-authored
             # SVG rather than an image file so they stay sharp, stay in the
             # page's own colours, and can be diffed like text.
@@ -162,9 +207,17 @@ def render(md):
             out.append('<ol class="steps">' +
                        "".join("<li>%s</li>" % inline(x) for x in items) + "</ol>")
         elif l.startswith("- "):
+            # Continuation lines are indented, as in the ordered-list branch
+            # above. Without this a wrapped item ends at the line break, which
+            # renders any link spanning it as raw brackets.
             items = []
-            while i < len(lines) and lines[i].startswith("- "):
-                items.append(lines[i][2:]); i += 1
+            while i < len(lines) and (lines[i].startswith("- ") or
+                                      (items and lines[i].startswith("  ") and lines[i].strip())):
+                if lines[i].startswith("- "):
+                    items.append(lines[i][2:])
+                else:
+                    items[-1] += " " + lines[i].strip()
+                i += 1
             i -= 1
             out.append("<ul>" + "".join("<li>%s</li>" % inline(x) for x in items) + "</ul>")
         elif l.startswith("> "):
@@ -210,6 +263,7 @@ keeps them current.</footer>
 
 
 def main():
+    check_synced()
     here = os.path.dirname(os.path.abspath(__file__))
     src = os.path.join(here, "pages")
     n = 0

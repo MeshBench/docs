@@ -4,11 +4,32 @@ Not published yet. This site is private until release.
 
 ## What is here
 
-| page | what it covers |
+26 pages, built by `gen.py` from the markdown in `pages/`.
+
+| section | what it answers |
 |---|---|
-| `firmware-library.md` | finding, downloading and assigning firmware |
-| `companion-bench.md` | the App view: an endpoint to point a client at, and faults |
-| *to write* | every other view |
+| Getting started | install it, open it, load a network, run it |
+| **What it does not do** | what the model omits, and which way each omission biases a result |
+| Guides | one task per page: firmware, the bench, importing, debugging, experiments |
+| How it works | the architecture, the waveform, the RF chain, running real firmware |
+| Reference | settings, the CLI, the control socket, external tools, repositories and licences |
+
+*What it does not do* sits directly under Getting started rather than in
+Reference. The simulator's claim is that it is honest about being kinder than
+the air, and a reader who cannot find the limits cannot use any other number on
+the site.
+
+## Building
+
+    python3 gen.py
+
+Writes one `.html` beside `index.html` for every `.md` under `pages/`. The HTML
+is committed, so the site can be served from the repository directly.
+
+One page is generated rather than written — see **Generated pages** in
+`CLAUDE.md`:
+
+    python3 tools/sync-limits.py ../meshcoresim
 
 ## How screenshots are made
 
