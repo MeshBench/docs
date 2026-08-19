@@ -19,8 +19,7 @@ strength of a simulation.
 
 ## 0. Two RF modes, two error budgets
 
-Since the waveform work ([the waveform](waveform.html)) MeshBench has two
-reception models, chosen in Configuration under **RF Simulation** and stamped
+MeshBench has two reception models, chosen in Configuration under **RF Simulation** and stamped
 into every result:
 
 **Calculated** (the default): reception is a link-budget SNR against the
