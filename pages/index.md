@@ -1,9 +1,14 @@
 # MeshBench
 
 An RF-accurate MeshCore network simulator. It runs **real MeshCore firmware**
-against a **sample-accurate LoRa baseband channel** with real noise, so the
-question it answers is not "would a packet get through" but "what actually
-arrived at the antenna, and why".
+against a modelled radio channel, so the question it answers is not "would a
+packet get through" but "what actually arrived at the antenna, and why".
+
+Reception is decided one of two ways. **Calculated** is the default: a link
+budget against the demodulator's floor, fast enough for a national network.
+**Waveform** synthesises the actual chirps and runs a real demodulator over
+them, so capture and collision emerge from the physics rather than from a rule.
+Both price the same path; see [RF simulation](rf-simulation.html).
 
 One binary on your machine. No service to deploy, no account, nothing to
 configure before the first run.
@@ -29,6 +34,7 @@ configure before the first run.
 | compare two configurations | [Experiments](experiments.html) |
 | drive it from a script | [Control socket](reference-control.html) |
 | know how it works inside | [Architecture](architecture.html) |
+| understand how reception is decided | [RF simulation](rf-simulation.html) |
 
 ## What it does not do
 

@@ -26,6 +26,8 @@ meshbench <command> [flags]
 | `basemap` | download map tiles for an area |
 | `test` | run a fixture on real firmware and check its assertions |
 | `workbench` | open the desktop workbench |
+| `serve` | run a mesh and expose one companion to your app over TCP or a pty |
+| `dev` | build a MeshCore checkout and hand the result to the workbench |
 
 Every command takes `-h`.
 

@@ -85,7 +85,7 @@ The clock comes from the scenario rather than the host so that runs stay
 reproducible. Regions come from the node itself, because they were observed from
 real traffic and are a fact about that node.
 
-**The region half of this is shared code**, in `internal/fixture`, used by both
+**The region half of this is shared code**, in `internal/app/fixture`, used by both
 the workbench and the headless test runner. It contains the `#` asymmetry, which
 this project has paid for twice, and two copies of that rule would eventually
 disagree.

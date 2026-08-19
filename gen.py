@@ -18,9 +18,10 @@ import re
 import sys
 
 SYNCED = {
-    # page -> the file in the MeshBench repository it is generated from.
-    # A generated page is not edited here; tools/sync-limits.py rewrites it.
-    "what-it-does-not-do.md": "docs/shortcomings.md",
+    # page -> (source in the MeshBench repository, the script that renders it).
+    # These are not edited here; the script rewrites them.
+    "what-it-does-not-do.md": ("docs/shortcomings.md", "tools/sync-limits.py"),
+    "reference-control.md": ("internal/app/session", "tools/sync-verbs.py"),
 }
 
 
@@ -35,19 +36,19 @@ def check_synced():
     repo = os.environ.get("MESHBENCH_REPO",
                           os.path.join(os.path.dirname(os.path.abspath(__file__)),
                                        os.pardir, "meshcoresim"))
-    for page, source in SYNCED.items():
+    for page, (source, script) in SYNCED.items():
         src = os.path.join(repo, source)
         if not os.path.exists(src):
             continue
         here = os.path.join("pages", page)
         want = subprocess.run(
-            [sys.executable, "tools/sync-limits.py", repo, "--stdout"],
+            [sys.executable, script, repo, "--stdout"],
             capture_output=True, text=True)
         if want.returncode != 0:
             continue
         if not os.path.exists(here) or open(here).read() != want.stdout:
             sys.exit("%s is stale against %s\n"
-                     "run: python3 tools/sync-limits.py" % (here, src))
+                     "run: python3 %s" % (here, src, script))
 
 
 NAV = [
@@ -72,8 +73,9 @@ NAV = [
     ("SECTION", "How it works"),
     ("architecture.html", "Architecture"),
     ("native-vs-emulated.html", "Native and emulated"),
-    ("waveform.html", "The waveform"),
+    ("rf-simulation.html", "RF simulation"),
     ("rf-chain.html", "The RF chain"),
+    ("waveform.html", "The waveform"),
     ("golden-vectors.html", "Validated on the air"),
     ("firmware-integration.html", "Running real firmware"),
     ("emulation.html", "Emulating a board"),

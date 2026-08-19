@@ -78,23 +78,46 @@ RNG, never a stateful stream shared across goroutines.
 
 ## Where the code is
 
-```
-cmd/meshcoresim/     the binary: workbench plus the headless commands
-internal/rf/         channel: sum, delay, noise
-internal/dsp/        modulation, demodulation, FFT; CPU reference and GPU
-internal/antenna/    patterns, orientation, polarisation
-internal/terrain/    DEM tiles, profiles, diffraction
-internal/firmware/   host builds of MeshCore, the Radio shim, per-node runtime
-internal/scenario/   nodes, import, persistence, seeds
-internal/fixture/    the shipped fixture format, shared with the test runner
-internal/engine/     the simulation loop, events, assertions
-internal/capture/    pcapng, event log
-internal/sdr/        IQ export, SigMF, streaming
-internal/companion/  TCP and pty companion transports
-internal/ui/         panels
-shaders/             WGSL compute shaders
-tools/dissector/     Wireshark Lua dissector
-```
+<figure>
+<svg viewBox="0 0 760 380" role="img" aria-label="The seven layers of internal, with imports running downward only">
+  <text x="396" y="24" font-size="12.5" font-weight="600" fill="var(--ink)" text-anchor="middle">internal/ — a package imports its own layer and everything below it</text>
+
+  <rect x="96" y="46" width="600" height="38" rx="6" fill="var(--warn)" fill-opacity=".10" stroke="var(--warn)" stroke-opacity=".45"/>
+  <text x="120" y="70" font-size="13" font-weight="600" fill="var(--ink)">ui</text>
+  <text x="182" y="70" font-size="11.5" fill="var(--dim)">Gio: panels, the map, the shell</text>
+  <rect x="96" y="90" width="600" height="38" rx="6" fill="var(--warn)" fill-opacity=".10" stroke="var(--warn)" stroke-opacity=".45"/>
+  <text x="120" y="114" font-size="13" font-weight="600" fill="var(--ink)">app</text>
+  <text x="182" y="114" font-size="11.5" fill="var(--dim)">the store, the headless session, the control socket, MCP</text>
+  <rect x="96" y="134" width="600" height="38" rx="6" fill="var(--accent)" fill-opacity=".10" stroke="var(--accent)" stroke-opacity=".45"/>
+  <text x="120" y="158" font-size="13" font-weight="600" fill="var(--ink)">study</text>
+  <text x="182" y="158" font-size="11.5" fill="var(--dim)">coverage, margins, siting, why a link missed, validation</text>
+  <rect x="96" y="178" width="600" height="38" rx="6" fill="var(--accent)" fill-opacity=".10" stroke="var(--accent)" stroke-opacity=".45"/>
+  <text x="120" y="202" font-size="13" font-weight="600" fill="var(--ink)">sim</text>
+  <text x="182" y="202" font-size="11.5" fill="var(--dim)">the engine, the reception ledger, pcapng, replay</text>
+  <rect x="96" y="222" width="600" height="38" rx="6" fill="var(--good)" fill-opacity=".10" stroke="var(--good)" stroke-opacity=".45"/>
+  <text x="120" y="246" font-size="13" font-weight="600" fill="var(--ink)">world</text>
+  <text x="182" y="246" font-size="11.5" fill="var(--dim)">the scenario, live feeds, areas, basemap, the SDR observer</text>
+  <rect x="96" y="266" width="600" height="38" rx="6" fill="var(--good)" fill-opacity=".10" stroke="var(--good)" stroke-opacity=".45"/>
+  <text x="120" y="290" font-size="13" font-weight="600" fill="var(--ink)">mesh</text>
+  <text x="182" y="290" font-size="11.5" fill="var(--dim)">firmware, the radio shim, the companion protocol, packets</text>
+  <rect x="96" y="310" width="600" height="38" rx="6" fill="var(--good)" fill-opacity=".10" stroke="var(--good)" stroke-opacity=".45"/>
+  <text x="120" y="334" font-size="13" font-weight="600" fill="var(--ink)">rf</text>
+  <text x="182" y="334" font-size="11.5" fill="var(--dim)">the channel, DSP, GPU twins, LoRa coding, terrain, buildings</text>
+
+  <path d="M62 52 L 62 336" stroke="var(--rule)" stroke-width="2" fill="none"/>
+  <path d="M62 336 l -5 -9 l 10 0 z" fill="var(--rule)"/>
+  <text x="40" y="200" font-size="11" fill="var(--faint)" text-anchor="middle" transform="rotate(-90 40 200)">imports point down</text>
+
+  <text x="396" y="366" font-size="11.5" fill="var(--dim)" text-anchor="middle">So ui can reach the physics, and the physics cannot reach a widget. A test fails the build otherwise.</text>
+</svg>
+<figcaption>The order was read off the import graph rather than imposed on it.
+Making it true cost two packages that were each doing two jobs, and one
+interface moved down a level.</figcaption>
+</figure>
+
+Seven layers, and the rule is mechanical: `internal/layers_test.go` walks every
+file and fails if an import points upward, or if a package appears outside the
+seven.
 
 ## The engine loop
 

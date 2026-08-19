@@ -3,7 +3,7 @@
 How MeshBench's LoRa coding chain was checked against a real SX1262 — not
 against a paper, not against another simulator, but against what an actual
 chip put on the air. This is the experiment behind the golden vectors in
-`internal/lora/testdata/`, run on 18 August 2026, and the method is
+`internal/rf/lora/testdata/`, run on 18 August 2026, and the method is
 repeatable whenever the chain changes.
 
 The problem it solves: the LoRa PHY's bit-level details — the sync word, the
@@ -51,7 +51,7 @@ themselves.
   <text x="633" y="88" font-size="10.5" fill="var(--dim)" text-anchor="middle">channelize to one sample per chip</text>
   <text x="633" y="104" font-size="10.5" fill="var(--dim)" text-anchor="middle">MeshBench's own receiver front end</text>
   <text x="633" y="120" font-size="10.5" fill="var(--dim)" text-anchor="middle">demodulate every symbol</text>
-  <text x="633" y="140" font-size="11" fill="var(--good)" text-anchor="middle" font-weight="600">diff against internal/lora's encoding</text>
+  <text x="633" y="140" font-size="11" fill="var(--good)" text-anchor="middle" font-weight="600">diff against internal/rf/lora's encoding</text>
   <text x="381" y="206" font-size="11.5" fill="var(--dim)" text-anchor="middle">The command path and the capture path never touch: what arrives is judged only by the air.</text>
 </svg>
 
@@ -69,7 +69,7 @@ One run is one commanded transmission:
    sample per chip — the rate every piece of MeshBench's DSP speaks — and
    runs the simulator's own receiver over it: preamble search, SFD lock,
    CFO correction, per-symbol FFT.
-5. Every demodulated symbol is compared against what `internal/lora` says
+5. Every demodulated symbol is compared against what `internal/rf/lora` says
    that payload should encode to. Any difference is a place where the
    simulator and the chip disagree about LoRa itself.
 
@@ -181,7 +181,7 @@ snag became a permanent improvement:
 ## What stands afterwards
 
 Two clean captured frames, at different payload lengths and therefore
-different block layouts, are checked into `internal/lora/testdata/` as
+different block layouts, are checked into `internal/rf/lora/testdata/` as
 golden vectors. The test suite holds the encoder to them symbol by symbol —
 at each symbol's own coded rate, since reduced-rate symbols only carry
 their top bits — and requires each captured frame to decode to its payload
@@ -194,7 +194,7 @@ spreading factors:
 ```
 go run ./tools/goldencap -probe
 go run ./tools/goldencap -run -payload "a known payload" \
-    -out capture.iq -golden internal/lora/testdata/golden-sfX-crY.json
+    -out capture.iq -golden internal/rf/lora/testdata/golden-sfX-crY.json
 ```
 
 `-probe` says who is on the serial port and how its radio is set; `-run`

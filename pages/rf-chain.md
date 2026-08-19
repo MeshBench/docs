@@ -1,5 +1,9 @@
 # The RF chain
 
+This is the physics both reception models share. Which model reads the result —
+a link budget, or a real demodulator over synthesised samples — is
+[RF simulation](rf-simulation.html).
+
 What happens to a packet between one node's antenna and another's, in the order
 it happens.
 
