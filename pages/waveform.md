@@ -59,6 +59,10 @@ samples, and a test holds the sample stream and the airtime formula to
 describing the same frame. If they disagreed, the channel and the firmware's
 CSMA would drift apart silently.
 
+The coding chain accepts spreading factors 7 to 12. SF5 and SF6 use a different
+frame arrangement on the SX126x — a 6.25-symbol delimiter rather than 2.25 —
+and are rejected rather than approximated.
+
 Samples are synthesised once per packet per delivery batch and shared across
 receivers, because unit-amplitude baseband does not depend on who is listening.
 
