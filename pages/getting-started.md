@@ -90,12 +90,16 @@ directory.
 ### Building from source, any platform
 
 ```
-git clone https://github.com/A13xB0/meshcoresim
-cd meshcoresim
+git clone https://github.com/MeshBench/meshbench
+cd meshbench
 go build ./cmd/meshcoresim
 ```
 
-Needs Go 1.24 and a C toolchain with GL and X11 development headers, because the
+That produces a binary called `meshcoresim`. The release ships the same program
+as `meshbench`, and it calls itself whichever name it was run as, so the two are
+interchangeable everywhere below.
+
+Needs Go 1.25 and a C toolchain with GL and X11 development headers, because the
 UI is cgo. On Debian and Ubuntu:
 
 ```

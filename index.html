@@ -7,10 +7,17 @@
   --ink: #16191d; --dim: #5b636e; --line: #d9dee5; --bg: #ffffff;
   --panel: #f5f7fa; --accent: #1f6feb; --warn: #b45309; --good: #15803d;
   --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+  /* The diagram palette. The figures reference these by name, and every one of
+     them was undefined: a box filled with var(--card) has no fill at all, a
+     border stroked with var(--rule) is not drawn, and text in var(--faint)
+     falls back to the SVG default of black, which is invisible on the dark
+     theme. Sixty-three references across eleven figures. */
+  --card: #ffffff; --rule: #ced5de; --faint: #8a929c; --sunk: #eef1f5;
 }
 @media (prefers-color-scheme: dark) {
   :root { --ink:#e6e9ee; --dim:#9aa4b2; --line:#2a3038; --bg:#0f1215;
-          --panel:#171b20; --accent:#6ea8fe; --warn:#f0b429; --good:#4ade80; }
+          --panel:#171b20; --accent:#6ea8fe; --warn:#f0b429; --good:#4ade80;
+          --card:#1c2127; --rule:#333b45; --faint:#78828f; --sunk:#14181c; }
 }
 * { box-sizing: border-box; }
 body { margin:0; background:var(--bg); color:var(--ink);
@@ -66,15 +73,77 @@ a { color:var(--accent); }
 }
 </style></head>
 <body><div class="wrap">
-<nav><h1>MeshBench</h1><a href="index.html" class="here">Overview</a><a href="getting-started.html">Getting started</a><a href="what-it-does-not-do.html">What it does not do</a><h2 class="navsec">Guides</h2><a href="firmware-library.html">Firmware library</a><a href="firmware-development.html">Firmware development</a><a href="app-development.html">App development</a><a href="companion-bench.html">Companion bench</a><a href="fixtures.html">Shipped networks</a><a href="importing.html">Importing a network</a><a href="testing-repeaters.html">Testing a repeater</a><a href="sdr-observer.html">Listening with SDR++</a><a href="debugging.html">Why a packet failed</a><a href="experiments.html">Experiments</a><a href="studies.html">Studies</a><h2 class="navsec">How it works</h2><a href="architecture.html">Architecture</a><a href="native-vs-emulated.html">Native and emulated</a><a href="rf-simulation.html">RF simulation</a><a href="rf-chain.html">The RF chain</a><a href="waveform.html">The waveform</a><a href="golden-vectors.html">Validated on the air</a><a href="firmware-integration.html">Running real firmware</a><a href="emulation.html">Emulating a board</a><h2 class="navsec">Reference</h2><a href="settings.html">Settings</a><a href="reference-cli.html">CLI</a><a href="reference-control.html">Control socket</a><a href="tools.html">External tools</a><a href="repositories.html">Repositories and licences</a></nav>
+<nav><h1>MeshBench</h1><a href="index.html" class="here">Overview</a><a href="getting-started.html">Getting started</a><a href="what-it-does-not-do.html">What it does not do</a><h2 class="navsec">Plan a network</h2><a href="fixtures.html">Shipped networks</a><a href="importing.html">Importing a network</a><a href="debugging.html">Why a packet failed</a><a href="studies.html">Studies</a><h2 class="navsec">Develop firmware</h2><a href="firmware-library.html">Firmware library</a><a href="firmware-development.html">Firmware development</a><a href="testing-repeaters.html">Testing a repeater</a><h2 class="navsec">Build an application</h2><a href="app-development.html">App development</a><a href="companion-bench.html">Companion bench</a><a href="testing.html">Testing your own code</a><h2 class="navsec">Measure and observe</h2><a href="experiments.html">Experiments</a><a href="sdr-observer.html">Listening with SDR++</a><h2 class="navsec">How it works</h2><a href="architecture.html">Architecture</a><a href="native-vs-emulated.html">Native and emulated</a><a href="rf-simulation.html">RF simulation</a><a href="waveform.html">Waveform mode</a><a href="rf-chain.html">The RF chain</a><a href="golden-vectors.html">Golden vectors</a><a href="emulation.html">Emulation</a><a href="firmware-integration.html">Firmware integration</a><h2 class="navsec">Reference</h2><a href="settings.html">Settings</a><a href="reference-cli.html">CLI</a><a href="reference-control.html">Control socket</a><a href="resources.html">What gets downloaded</a><a href="tools.html">External tools</a><a href="quality-gates.html">What the build enforces</a><a href="repositories.html">Repositories and licences</a></nav>
 <main><h1>MeshBench</h1>
 <p>An RF-accurate MeshCore network simulator. It runs <strong>real MeshCore firmware</strong> against a modelled radio channel, so the question it answers is not &quot;would a packet get through&quot; but &quot;what actually arrived at the antenna, and why&quot;.</p>
 <p>Reception is decided one of two ways. <strong>Calculated</strong> is the default: a link budget against the demodulator&#x27;s floor, fast enough for a national network. <strong>Waveform</strong> synthesises the actual chirps and runs a real demodulator over them, so capture and collision emerge from the physics rather than from a rule. Both price the same path; see <a href="rf-simulation.html">RF simulation</a>.</p>
 <p>One binary on your machine. No service to deploy, no account, nothing to configure before the first run.</p>
+<figure>
+<svg viewBox="0 0 780 340" role="img" aria-label="Who uses MeshBench, what it gives them, and which parts are real">
+  <defs>
+    <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="var(--dim)"/>
+    </marker>
+  </defs>
+
+  <text x="86" y="18" font-size="12" font-weight="600" fill="var(--ink)" text-anchor="middle">You</text>
+
+  <rect x="12" y="34" width="148" height="52" rx="8" fill="var(--card)" stroke="var(--rule)"/>
+  <text x="86" y="55" font-size="12" fill="var(--ink)" text-anchor="middle">Planning a network</text>
+  <text x="86" y="72" font-size="10.5" fill="var(--faint)" text-anchor="middle">where does the next node go</text>
+
+  <rect x="12" y="98" width="148" height="52" rx="8" fill="var(--card)" stroke="var(--rule)"/>
+  <text x="86" y="119" font-size="12" fill="var(--ink)" text-anchor="middle">Writing firmware</text>
+  <text x="86" y="136" font-size="10.5" fill="var(--faint)" text-anchor="middle">did my branch relay more</text>
+
+  <rect x="12" y="162" width="148" height="52" rx="8" fill="var(--card)" stroke="var(--rule)"/>
+  <text x="86" y="183" font-size="12" fill="var(--ink)" text-anchor="middle">Writing an app</text>
+  <text x="86" y="200" font-size="10.5" fill="var(--faint)" text-anchor="middle">how does it cope with a bad link</text>
+
+  <path d="M164 60 H210" stroke="var(--dim)" fill="none" marker-end="url(#ar)"/>
+  <path d="M164 124 H210" stroke="var(--dim)" fill="none" marker-end="url(#ar)"/>
+  <path d="M164 188 H210" stroke="var(--dim)" fill="none" marker-end="url(#ar)"/>
+
+  <rect x="214" y="26" width="196" height="196" rx="10" fill="var(--panel)" stroke="var(--accent)" stroke-opacity=".45"/>
+  <text x="312" y="48" font-size="12.5" font-weight="600" fill="var(--ink)" text-anchor="middle">One binary</text>
+  <rect x="234" y="60" width="156" height="34" rx="6" fill="var(--card)" stroke="var(--rule)"/>
+  <text x="312" y="81" font-size="11.5" fill="var(--ink)" text-anchor="middle">the workbench</text>
+  <rect x="234" y="102" width="156" height="34" rx="6" fill="var(--card)" stroke="var(--rule)"/>
+  <text x="312" y="123" font-size="11.5" fill="var(--ink)" text-anchor="middle">the command line</text>
+  <rect x="234" y="144" width="156" height="34" rx="6" fill="var(--card)" stroke="var(--rule)"/>
+  <text x="312" y="165" font-size="11.5" fill="var(--ink)" text-anchor="middle">meshtest, in your tests</text>
+  <text x="312" y="202" font-size="10.5" fill="var(--faint)" text-anchor="middle">no service, no account,</text>
+  <text x="312" y="215" font-size="10.5" fill="var(--faint)" text-anchor="middle">nothing to configure first</text>
+
+  <path d="M414 124 H460" stroke="var(--dim)" fill="none" marker-end="url(#ar)"/>
+
+  <rect x="464" y="26" width="300" height="196" rx="10" fill="none" stroke="var(--good)" stroke-dasharray="5 4"/>
+  <text x="614" y="48" font-size="12.5" font-weight="600" fill="var(--good)" text-anchor="middle">Real, not modelled</text>
+
+  <rect x="484" y="60" width="260" height="46" rx="6" fill="var(--card)" stroke="var(--rule)"/>
+  <text x="614" y="79" font-size="11.5" fill="var(--ink)" text-anchor="middle">MeshCore&#8217;s own firmware</text>
+  <text x="614" y="95" font-size="10.5" fill="var(--faint)" text-anchor="middle">routing, flood suppression, CSMA timing</text>
+
+  <rect x="484" y="114" width="260" height="46" rx="6" fill="var(--card)" stroke="var(--rule)"/>
+  <text x="614" y="133" font-size="11.5" fill="var(--ink)" text-anchor="middle">a sample-accurate LoRa channel</text>
+  <text x="614" y="149" font-size="10.5" fill="var(--faint)" text-anchor="middle">waveforms summed, noise added</text>
+
+  <rect x="484" y="168" width="260" height="40" rx="6" fill="var(--card)" stroke="var(--rule)"/>
+  <text x="614" y="185" font-size="11.5" fill="var(--ink)" text-anchor="middle">real terrain</text>
+  <text x="614" y="200" font-size="10.5" fill="var(--faint)" text-anchor="middle">and, if you load them, buildings</text>
+
+  <rect x="12" y="248" width="752" height="72" rx="8" fill="var(--sunk)" stroke="var(--rule)"/>
+  <text x="32" y="272" font-size="12" font-weight="600" fill="var(--ink)">The channel decides nothing.</text>
+  <text x="32" y="292" font-size="11.5" fill="var(--dim)">It sums waveforms, applies path loss and adds noise. Whether a packet decodes is the demodulator&#8217;s business,</text>
+  <text x="32" y="308" font-size="11.5" fill="var(--dim)">so capture effect and partial collisions emerge from the physics instead of from a rule somebody wrote down.</text>
+</svg>
+<figcaption>Three questions, one binary, and the parts that are not a model of the
+thing but the thing itself.</figcaption>
+</figure>
 <h2>What it is for</h2>
 <ul><li><strong>Network operators.</strong> Will this repeater help? What does the mesh look like if that site goes down? Import a real network from CoreScope and ask.</li><li><strong>Firmware developers.</strong> Does my branch relay more or less than <code>dev</code>? Build it, hand it to MeshBench, run both against the same 311-node network, and read the difference.</li><li><strong>Application developers.</strong> Point your client at a simulated mesh over TCP or a virtual serial port, and break it on purpose to see how your app copes.</li></ul>
 <h2>Start here</h2>
-<table><thead><tr><th>if you want to</th><th>read</th></tr></thead><tbody><tr><td>run it for the first time</td><td><a href="getting-started.html">Getting started</a></td></tr><tr><td>test a firmware change</td><td><a href="firmware-development.html">Firmware development</a></td></tr><tr><td>write a client against it</td><td><a href="companion-bench.html">Companion bench</a></td></tr><tr><td>use a ready-made network</td><td><a href="fixtures.html">Shipped networks</a></td></tr><tr><td>compare two configurations</td><td><a href="experiments.html">Experiments</a></td></tr><tr><td>drive it from a script</td><td><a href="reference-control.html">Control socket</a></td></tr><tr><td>know how it works inside</td><td><a href="architecture.html">Architecture</a></td></tr><tr><td>understand how reception is decided</td><td><a href="rf-simulation.html">RF simulation</a></td></tr></tbody></table>
+<table><thead><tr><th>if you want to</th><th>read</th></tr></thead><tbody><tr><td>run it for the first time</td><td><a href="getting-started.html">Getting started</a></td></tr><tr><td>use a ready-made network</td><td><a href="fixtures.html">Shipped networks</a></td></tr><tr><td>bring in a real network</td><td><a href="importing.html">Importing a network</a></td></tr><tr><td>find out why a packet failed</td><td><a href="debugging.html">Why a packet failed</a></td></tr><tr><td>test a firmware change</td><td><a href="firmware-development.html">Firmware development</a></td></tr><tr><td>write a client against it</td><td><a href="app-development.html">App development</a></td></tr><tr><td>test your own firmware or app</td><td><a href="testing.html">Testing your own code</a></td></tr><tr><td>compare two configurations</td><td><a href="experiments.html">Experiments</a></td></tr><tr><td>drive it from a script</td><td><a href="reference-control.html">Control socket</a></td></tr><tr><td>know how it works inside</td><td><a href="architecture.html">Architecture</a></td></tr><tr><td>understand how reception is decided</td><td><a href="rf-simulation.html">RF simulation</a></td></tr><tr><td>know what the build refuses</td><td><a href="quality-gates.html">What the build enforces</a></td></tr></tbody></table>
 <h2>What it does not do</h2>
 <p>The simulator is <strong>kinder than the air</strong>. There is no multipath, no body loss, no oscillator drift. The measured biases nearly all run one way, which is what makes a result usable: treat every absolute number as a best case, and trust the *comparison* between two runs far more than either run alone.</p>
 <p>It is a desktop application, not a web service. &quot;On the GPU&quot; always means the GPU in the machine running it, and every GPU path has a CPU path that produces the same answer more slowly.</p>
