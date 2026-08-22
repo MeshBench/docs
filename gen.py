@@ -111,6 +111,9 @@ CSS = """
   --ink:#14131F; --dim:#6A6480; --line:#E4E0F1; --bg:#FFFFFF;
   --panel:#F5F3FA; --accent:#B93B06; --accent-mark:#E8500F; --relay:#5B3BD6;
   --warn:#8A6200; --good:#1B7A44;
+  /* what the inlined lockup reads: the mark keeps its own colours and follows
+     the page's theme, rather than being flattened to one ink. */
+  --mb-ink:#14131F; --mb-signal:#E8500F; --mb-relay:#5B3BD6; --mb-dim:#6A6480;
   --display:"MeshBench Display", ui-sans-serif, system-ui, sans-serif;
   --text:"MeshBench Text", ui-sans-serif, system-ui, sans-serif;
   --mono:"MeshBench Mono", ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
@@ -125,7 +128,8 @@ CSS = """
   :root { --ink:#F2EFF9; --dim:#9A93B8; --line:#262238; --bg:#0B0A12;
           --panel:#15131F; --accent:#FF7A3D; --accent-mark:#FF7A3D; --relay:#8E6DFF;
           --warn:#F2B705; --good:#2EBD6B;
-          --card:#15131F; --rule:#2E2A44; --faint:#7D769B; --sunk:#100E19; }
+          --card:#15131F; --rule:#2E2A44; --faint:#7D769B; --sunk:#100E19;
+          --mb-ink:#F2EFF9; --mb-signal:#FF7A3D; --mb-relay:#8E6DFF; --mb-dim:#9A93B8; }
 }
 /* Scrollbars. The default one is a wide light plate that reads as a seam
    between the navigation and the page, and it is the only chrome on the site
@@ -293,10 +297,12 @@ def render(md):
 
 
 def logo():
-    """The lockup, inlined rather than linked: it is monochrome and inherits
-    currentColor, so one file is correct in both themes and costs no request."""
+    """The lockup, inlined rather than linked. The themed file takes its colours
+    from --mb-* custom properties, so the mark keeps its orange route in both
+    themes - the monochrome file is for one ink on paper, not for a page that
+    can show colour."""
     here = os.path.dirname(os.path.abspath(__file__))
-    return open(os.path.join(here, "brand", "meshbench-logo-mono.svg")).read().strip()
+    return open(os.path.join(here, "brand", "meshbench-logo-themed.svg")).read().strip()
 
 
 def page(name, body, title):
