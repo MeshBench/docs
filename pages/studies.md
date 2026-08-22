@@ -48,4 +48,4 @@ bad idea.
 - A delta smaller than the control's own spread is not a finding.
 - A delta in one metric with no story in the others deserves suspicion.
 - Absolute numbers are a best case, because [the model is kinder than the
-  air](limits.html). The comparison survives that; the absolute value does not.
+  air](what-it-does-not-do.html). The comparison survives that; the absolute value does not.

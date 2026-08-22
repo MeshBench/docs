@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>External tools - MeshBench</title>
+<style>
+:root {
+  --ink: #16191d; --dim: #5b636e; --line: #d9dee5; --bg: #ffffff;
+  --panel: #f5f7fa; --accent: #1f6feb; --warn: #b45309; --good: #15803d;
+  --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root { --ink:#e6e9ee; --dim:#9aa4b2; --line:#2a3038; --bg:#0f1215;
+          --panel:#171b20; --accent:#6ea8fe; --warn:#f0b429; --good:#4ade80; }
+}
+* { box-sizing: border-box; }
+body { margin:0; background:var(--bg); color:var(--ink);
+  font: 16px/1.65 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+.wrap { display:flex; align-items:flex-start; max-width:1180px; margin:0 auto; }
+nav { position:sticky; top:0; width:230px; flex:0 0 230px; padding:28px 18px;
+  border-right:1px solid var(--line); height:100vh; overflow-y:auto; }
+nav h1 { font-size:15px; letter-spacing:.08em; text-transform:uppercase;
+  color:var(--dim); margin:0 0 14px; }
+nav a { display:block; padding:5px 0; color:var(--ink); text-decoration:none; font-size:14.5px; }
+nav a:hover { color:var(--accent); }
+nav a.here { color:var(--accent); font-weight:600; }
+nav .navsec { font-size:11.5px; letter-spacing:.09em; text-transform:uppercase;
+  color:var(--dim); margin:18px 0 4px; border:0; padding:0; font-weight:600; }
+figure { margin:22px 0; }
+figure svg { max-width:100%; height:auto; display:block; }
+figcaption { color:var(--dim); font-size:13.5px; margin-top:8px; max-width:70ch; }
+.svg-ink { fill:var(--ink); } .svg-dim { fill:var(--dim); }
+.svg-line { stroke:var(--line); fill:none; } .svg-accent { stroke:var(--accent); fill:none; }
+.svg-panel { fill:var(--panel); stroke:var(--line); }
+.svg-real { fill:none; stroke:var(--good); stroke-dasharray:5 4; }
+main { flex:1 1 auto; padding:34px 40px 90px; min-width:0; }
+h1,h2,h3 { line-height:1.25; text-wrap:balance; }
+h1 { font-size:31px; margin:0 0 6px; }
+h2 { font-size:22px; margin:34px 0 10px; padding-top:14px; border-top:1px solid var(--line); }
+h3 { font-size:17px; margin:24px 0 8px; }
+p, li { max-width:70ch; }
+code { font-family:var(--mono); font-size:.9em; background:var(--panel);
+  padding:1px 5px; border-radius:4px; }
+pre { background:var(--panel); border:1px solid var(--line); border-radius:8px;
+  padding:14px 16px; overflow-x:auto; }
+pre code { background:none; padding:0; }
+img { max-width:100%; border:1px solid var(--line); border-radius:8px; display:block; margin:18px 0; }
+table { border-collapse:collapse; margin:16px 0; font-size:14.5px; display:block; overflow-x:auto; }
+th, td { border:1px solid var(--line); padding:7px 11px; text-align:left; vertical-align:top; }
+th { background:var(--panel); }
+td.num, th.num { text-align:right; font-variant-numeric:tabular-nums; }
+blockquote { margin:16px 0; padding:10px 16px; border-left:3px solid var(--warn);
+  background:var(--panel); border-radius:0 8px 8px 0; }
+blockquote p { margin:.4em 0; }
+ol.steps { counter-reset:step; list-style:none; padding-left:0; }
+ol.steps > li { counter-increment:step; position:relative; padding:0 0 4px 42px; margin:16px 0; }
+ol.steps > li::before { content:counter(step); position:absolute; left:0; top:0;
+  width:27px; height:27px; border-radius:50%; background:var(--accent); color:#fff;
+  display:flex; align-items:center; justify-content:center; font-size:14px; font-weight:600; }
+footer { color:var(--dim); font-size:13.5px; border-top:1px solid var(--line);
+  margin-top:44px; padding-top:14px; }
+a { color:var(--accent); }
+@media (max-width:820px) {
+  .wrap { display:block; } nav { position:static; width:auto; height:auto;
+    border-right:0; border-bottom:1px solid var(--line); }
+  nav a { display:inline-block; margin-right:14px; } main { padding:24px 18px 70px; }
+}
+</style></head>
+<body><div class="wrap">
+<nav><h1>MeshBench</h1><a href="index.html">Overview</a><a href="getting-started.html">Getting started</a><a href="what-it-does-not-do.html">What it does not do</a><h2 class="navsec">Guides</h2><a href="firmware-library.html">Firmware library</a><a href="firmware-development.html">Firmware development</a><a href="app-development.html">App development</a><a href="companion-bench.html">Companion bench</a><a href="fixtures.html">Shipped networks</a><a href="importing.html">Importing a network</a><a href="testing-repeaters.html">Testing a repeater</a><a href="sdr-observer.html">Listening with SDR++</a><a href="debugging.html">Why a packet failed</a><a href="experiments.html">Experiments</a><a href="studies.html">Studies</a><h2 class="navsec">How it works</h2><a href="architecture.html">Architecture</a><a href="native-vs-emulated.html">Native and emulated</a><a href="rf-simulation.html">RF simulation</a><a href="rf-chain.html">The RF chain</a><a href="waveform.html">The waveform</a><a href="golden-vectors.html">Validated on the air</a><a href="firmware-integration.html">Running real firmware</a><a href="emulation.html">Emulating a board</a><h2 class="navsec">Reference</h2><a href="settings.html">Settings</a><a href="reference-cli.html">CLI</a><a href="reference-control.html">Control socket</a><a href="tools.html" class="here">External tools</a><a href="repositories.html">Repositories and licences</a></nav>
+<main><h1>External tools</h1>
+<p>MeshBench runs real MeshCore firmware. Native builds run as ordinary processes; emulated boards need an emulator and a radio server beside them. This is what it looks for, where, and why each version is pinned.</p>
+<h2>Where tools are looked for</h2>
+<p>In this order:</p>
+<ol class="steps"><li>The environment variable, if set</li><li><strong>Beside the MeshBench binary</strong></li><li><code>~/.cache/meshcoresim/tools/</code></li><li><code>PATH</code></li></ol>
+<p><code>PATH</code> is last, and on a desktop it is nearly useless. <strong>A desktop application is not launched from a shell</strong>, so it inherits neither a useful <code>PATH</code> nor any environment variables set in a shell profile. Emulation that works from a terminal and fails when launched from the desktop is this ordering being wrong.</p>
+<p>Beside-the-binary is what an installed bundle uses. The cache directory is what a development checkout uses, and is where the installer puts anything it downloads after the fact.</p>
+<h2>The tools</h2>
+<table><thead><tr><th>Tool</th><th>Environment variable</th><th>Needed for</th></tr></thead><tbody><tr><td><code>qemu-system-xtensa</code></td><td><code>MESHCORESIM_QEMU</code></td><td>emulated ESP32 nodes</td></tr><tr><td><code>renode</code></td><td><code>MESHCORESIM_RENODE</code></td><td>emulated nRF52 nodes</td></tr><tr><td><code>radioserver</code></td><td><code>MESHCORESIM_RADIO_SERVER</code></td><td>both, and nothing else</td></tr><tr><td>native firmware</td><td><code>MESHCORESIM_NATIVE</code></td><td>every native node</td></tr></tbody></table>
+<p><code>radioserver</code> is the one <strong>every</strong> emulated node needs, ESP32 or nRF52, and it is looked up before either emulator.</p>
+<p><code>MESHCORESIM_NATIVE</code> may name a <strong>directory</strong> holding one build per role, which is what a scenario mixing roles needs. Naming a single binary overrides every node regardless of role, so a mesh of repeaters and room servers quietly becomes a mesh of one application.</p>
+<h2>Why the versions are pinned</h2>
+<p><strong>QEMU</strong> must carry MeshBench&#x27;s SX1262 device and a working GPIO implementation. Upstream&#x27;s GPIO write handler is empty, and RadioLib drives chip select as an ordinary GPIO rather than through the SPI controller, so a distribution build produces a driver that reports no chip present. It must also be configured with <code>--enable-gcrypt</code>, or the <code>esp32</code> machine will not instantiate at all.</p>
+<p><strong>Renode</strong> must carry the SEVONPEND fix. Stock Renode asks whether a pending interrupt could be *taken*, which a disabled interrupt never can, so published nRF52 firmware sleeps for ever with its wake condition already true. A stock Renode will start, load, run, and then hang in exactly the place the fix addresses.</p>
+<p><strong>Native firmware versions are per-role release tags</strong>, not bare versions: <code>repeater-v1.17.0</code>, <code>companion-v1.17.0</code>, <code>room-server-v1.17.0</code>. Asking for <code>v1.17.0</code> resolves nothing and reports that no native builds were published, which points at the release rather than at the string.</p>
+<p><strong>Board images are not pinned here.</strong> They are fetched from MeshCore&#x27;s own releases at run time and cached, because they change every release and bundling them dates the installer.</p>
+<h2>What a release bundle ships</h2>
+<pre><code>meshbench                     the application
+qemu-system-xtensa            beside it, or symlinked
+renode                        beside it, or symlinked
+radioserver                   beside it</code></pre>
+<p>A <strong>symlink</strong> is correct for QEMU and a copy is not: it resolves its own path to find its data files, so a bare copy of the binary will not run. The Windows zip cannot carry a symlink at all, so nothing is linked there and the lookup searches the emulators&#x27; own unpacked layouts — <code>qemu/bin/</code> and the versioned <code>renode_*-portable/</code> — instead.</p>
+<p>The AppImage and the <code>.deb</code> carry the application and <code>radioserver</code> but not the emulators: those are 110 MB against a 26 MB AppImage. The tarball is the batteries-included download for anyone who wants them.</p>
+<h2>What is checked, and when</h2>
+<p>A missing tool is reported <strong>before</strong> a run rather than during one, and the error names all four search locations. &quot;<code>qemu-system-xtensa</code> not found&quot; on its own sends people to their package manager for a build that will not work.</p>
+<p>The firmware library only offers boards with verified emulation wiring, so a board that appears in the picker is one whose image has been watched booting. That list is deliberately short.</p>
+<footer>MeshBench documentation. Built from the running application, not from
+mock-ups. Screenshots are window-only captures; see CLAUDE.md for the rule that
+keeps them current.</footer>
+</main></div></body></html>
