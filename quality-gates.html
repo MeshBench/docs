@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>What the build enforces - MeshBench</title>
+<style>
+:root {
+  --ink: #16191d; --dim: #5b636e; --line: #d9dee5; --bg: #ffffff;
+  --panel: #f5f7fa; --accent: #1f6feb; --warn: #b45309; --good: #15803d;
+  --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+  /* The diagram palette. The figures reference these by name, and every one of
+     them was undefined: a box filled with var(--card) has no fill at all, a
+     border stroked with var(--rule) is not drawn, and text in var(--faint)
+     falls back to the SVG default of black, which is invisible on the dark
+     theme. Sixty-three references across eleven figures. */
+  --card: #ffffff; --rule: #ced5de; --faint: #8a929c; --sunk: #eef1f5;
+}
+@media (prefers-color-scheme: dark) {
+  :root { --ink:#e6e9ee; --dim:#9aa4b2; --line:#2a3038; --bg:#0f1215;
+          --panel:#171b20; --accent:#6ea8fe; --warn:#f0b429; --good:#4ade80;
+          --card:#1c2127; --rule:#333b45; --faint:#78828f; --sunk:#14181c; }
+}
+* { box-sizing: border-box; }
+body { margin:0; background:var(--bg); color:var(--ink);
+  font: 16px/1.65 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+.wrap { display:flex; align-items:flex-start; max-width:1180px; margin:0 auto; }
+nav { position:sticky; top:0; width:230px; flex:0 0 230px; padding:28px 18px;
+  border-right:1px solid var(--line); height:100vh; overflow-y:auto; }
+nav h1 { font-size:15px; letter-spacing:.08em; text-transform:uppercase;
+  color:var(--dim); margin:0 0 14px; }
+nav a { display:block; padding:5px 0; color:var(--ink); text-decoration:none; font-size:14.5px; }
+nav a:hover { color:var(--accent); }
+nav a.here { color:var(--accent); font-weight:600; }
+nav .navsec { font-size:11.5px; letter-spacing:.09em; text-transform:uppercase;
+  color:var(--dim); margin:18px 0 4px; border:0; padding:0; font-weight:600; }
+figure { margin:22px 0; }
+figure svg { max-width:100%; height:auto; display:block; }
+figcaption { color:var(--dim); font-size:13.5px; margin-top:8px; max-width:70ch; }
+.svg-ink { fill:var(--ink); } .svg-dim { fill:var(--dim); }
+.svg-line { stroke:var(--line); fill:none; } .svg-accent { stroke:var(--accent); fill:none; }
+.svg-panel { fill:var(--panel); stroke:var(--line); }
+.svg-real { fill:none; stroke:var(--good); stroke-dasharray:5 4; }
+main { flex:1 1 auto; padding:34px 40px 90px; min-width:0; }
+h1,h2,h3 { line-height:1.25; text-wrap:balance; }
+h1 { font-size:31px; margin:0 0 6px; }
+h2 { font-size:22px; margin:34px 0 10px; padding-top:14px; border-top:1px solid var(--line); }
+h3 { font-size:17px; margin:24px 0 8px; }
+p, li { max-width:70ch; }
+code { font-family:var(--mono); font-size:.9em; background:var(--panel);
+  padding:1px 5px; border-radius:4px; }
+pre { background:var(--panel); border:1px solid var(--line); border-radius:8px;
+  padding:14px 16px; overflow-x:auto; }
+pre code { background:none; padding:0; }
+img { max-width:100%; border:1px solid var(--line); border-radius:8px; display:block; margin:18px 0; }
+table { border-collapse:collapse; margin:16px 0; font-size:14.5px; display:block; overflow-x:auto; }
+th, td { border:1px solid var(--line); padding:7px 11px; text-align:left; vertical-align:top; }
+th { background:var(--panel); }
+td.num, th.num { text-align:right; font-variant-numeric:tabular-nums; }
+blockquote { margin:16px 0; padding:10px 16px; border-left:3px solid var(--warn);
+  background:var(--panel); border-radius:0 8px 8px 0; }
+blockquote p { margin:.4em 0; }
+ol.steps { counter-reset:step; list-style:none; padding-left:0; }
+ol.steps > li { counter-increment:step; position:relative; padding:0 0 4px 42px; margin:16px 0; }
+ol.steps > li::before { content:counter(step); position:absolute; left:0; top:0;
+  width:27px; height:27px; border-radius:50%; background:var(--accent); color:#fff;
+  display:flex; align-items:center; justify-content:center; font-size:14px; font-weight:600; }
+footer { color:var(--dim); font-size:13.5px; border-top:1px solid var(--line);
+  margin-top:44px; padding-top:14px; }
+a { color:var(--accent); }
+@media (max-width:820px) {
+  .wrap { display:block; } nav { position:static; width:auto; height:auto;
+    border-right:0; border-bottom:1px solid var(--line); }
+  nav a { display:inline-block; margin-right:14px; } main { padding:24px 18px 70px; }
+}
+</style></head>
+<body><div class="wrap">
+<nav><h1>MeshBench</h1><a href="index.html">Overview</a><a href="getting-started.html">Getting started</a><a href="what-it-does-not-do.html">What it does not do</a><h2 class="navsec">Plan a network</h2><a href="fixtures.html">Shipped networks</a><a href="importing.html">Importing a network</a><a href="debugging.html">Why a packet failed</a><a href="studies.html">Studies</a><h2 class="navsec">Develop firmware</h2><a href="firmware-library.html">Firmware library</a><a href="firmware-development.html">Firmware development</a><a href="testing-repeaters.html">Testing a repeater</a><h2 class="navsec">Build an application</h2><a href="app-development.html">App development</a><a href="companion-bench.html">Companion bench</a><a href="testing.html">Testing your own code</a><h2 class="navsec">Measure and observe</h2><a href="experiments.html">Experiments</a><a href="sdr-observer.html">Listening with SDR++</a><h2 class="navsec">How it works</h2><a href="architecture.html">Architecture</a><a href="native-vs-emulated.html">Native and emulated</a><a href="rf-simulation.html">RF simulation</a><a href="waveform.html">Waveform mode</a><a href="rf-chain.html">The RF chain</a><a href="golden-vectors.html">Golden vectors</a><a href="emulation.html">Emulation</a><a href="firmware-integration.html">Firmware integration</a><h2 class="navsec">Reference</h2><a href="settings.html">Settings</a><a href="reference-cli.html">CLI</a><a href="reference-control.html">Control socket</a><a href="resources.html">What gets downloaded</a><a href="tools.html">External tools</a><a href="quality-gates.html" class="here">What the build enforces</a><a href="repositories.html">Repositories and licences</a></nav>
+<main><h1>What the build enforces</h1>
+<p>MeshBench&#x27;s limits are mechanical rather than advisory, because taste does not survive scale. This is what actually fails a build, what only reports, and why each one exists.</p>
+<h2>On every pull request</h2>
+<table><thead><tr><th>gate</th><th>what it refuses</th></tr></thead><tbody><tr><td><code>gofmt -l</code></td><td>any file not formatted</td></tr><tr><td><code>go vet</code></td><td>the compiler&#x27;s own suspicions</td></tr><tr><td><code>golangci-lint</code> + ratchet</td><td>any *increase* in findings — see below</td></tr><tr><td><code>go test ./...</code></td><td>a failing test, across four parallel shards</td></tr><tr><td>conflict markers</td><td><code>&lt;&lt;&lt;&lt;&lt;&lt;&lt;</code>, <code>=======</code> or <code>&gt;&gt;&gt;&gt;&gt;&gt;&gt;</code> committed in source</td></tr><tr><td>file length</td><td>over 500 lines without an exemption naming its reason</td></tr><tr><td>tracked build artifacts</td><td>a compiled binary or coverage profile in the index</td></tr><tr><td>the layout map</td><td>a package with no entry, or an entry with no package</td></tr><tr><td>the licence inventory</td><td>a dependency change that has not regenerated it</td></tr></tbody></table>
+<p>The last three are recent, and each was added after the thing it checks had already gone wrong once.</p>
+<h2>The lint ratchet</h2>
+<p>Twenty linters run, not the eight that ran historically and not all 104. The enabled set is those whose findings are worth acting on here, each with its reason recorded in <code>.golangci.yml</code>.</p>
+<p>Running the bug-class linters for the first time produced 477 findings. Turning that into a red build would have meant 477 unreviewed changes at once, so the count is held at a baseline instead:</p>
+<pre><code>tools/lint-ratchet.sh            compare against the baseline
+tools/lint-ratchet.sh --update   rewrite it, after clearing something</code></pre>
+<p>A <strong>new</strong> finding fails the pull request that introduces it. The backlog is cleared deliberately, one class at a time, and each clearing tightens <code>.golangci-baseline.txt</code> in the same commit as the fix that earned it.</p>
+<p>Four <code>gosec</code> rules are excluded with the reason stated in the file. <code>G115</code>, integer overflow on conversion, is the notable one: in the RF packages those need auditing by hand rather than by rule, because a truncated sample index produces a plausible waterfall and slightly wrong sensitivity, which no automatic check distinguishes from a safe cast.</p>
+<p><strong>The linter version matters.</strong> Different versions disagree about this tree by tens of findings, so the baseline is only meaningful against the version <code>ci.yml</code> pins. Use that one.</p>
+<h2>The race detector</h2>
+<p>Not on every push — it multiplies an already slow suite by enough that the wait becomes the thing people notice about the pipeline, and a check nobody waits for is a check that gets worked around.</p>
+<p>It runs when a <code>v*</code> tag is pushed, which is the moment it matters and the moment nobody is waiting on the answer, and on request from the Actions tab. It has earned that: a GPU-probe race crashed every startup, and nothing else was going to find it.</p>
+<h2>SonarQube</h2>
+<p>Run on demand rather than in CI, because a second gate to satisfy before a merge is a second thing to work around. This one is for reading.</p>
+<p>It covers what a per-file linter cannot measure: cognitive complexity per function, duplication found across the whole tree rather than thresholded, and coverage readable per package instead of as one number. It found a duplicated <code>switch</code> case that twenty Go linters had not.</p>
+<h2>What only reports</h2>
+<p>Some limits are stated but not enforced, and it is worth knowing which.</p>
+<p>Function length is a <strong>soft</strong> 50 lines and 256 functions exceed it; enforcing that would be inventing a rule rather than mechanising one. Nesting depth has partial cover from the linter set. One type per panel file has four known violations and wants those fixed before it can be a gate.</p>
+<h2>The release pipeline is checked separately, and less</h2>
+<p><code>package.yml</code> runs only on a tag push or a manual dispatch. <strong>Nothing in a pull request exercises it</strong>, which is worth stating plainly because it has bitten: two independent breakages sat in it for days behind eleven days of green checks, and both were found only by dispatching it deliberately.</p>
+<p>If a change touches the release pipeline, dispatch it and read the result. A green tick on the pull request is evidence about <code>ci.yml</code> and nothing else.</p>
+<footer>MeshBench documentation. Built from the running application, not from
+mock-ups. Screenshots are window-only captures; see CLAUDE.md for the rule that
+keeps them current.</footer>
+</main></div></body></html>

@@ -58,32 +58,48 @@ NAV = [
     # claim is that it is honest about being kinder than the air; a reader who
     # cannot find the limits cannot use any other number on the site.
     ("what-it-does-not-do.html", "What it does not do"),
-    ("SECTION", "Guides"),
-    ("firmware-library.html", "Firmware library"),
-    ("firmware-development.html", "Firmware development"),
-    ("app-development.html", "App development"),
-    ("companion-bench.html", "Companion bench"),
+
+    # The guides are grouped by who is reading rather than by subject, because
+    # the three arrive with different questions and a flat list of thirteen
+    # made each of them read the other two. The groups match the three the
+    # front page opens with.
+    ("SECTION", "Plan a network"),
     ("fixtures.html", "Shipped networks"),
     ("importing.html", "Importing a network"),
-    ("testing-repeaters.html", "Testing a repeater"),
-    ("sdr-observer.html", "Listening with SDR++"),
     ("debugging.html", "Why a packet failed"),
-    ("experiments.html", "Experiments"),
     ("studies.html", "Studies"),
+
+    ("SECTION", "Develop firmware"),
+    ("firmware-library.html", "Firmware library"),
+    ("firmware-development.html", "Firmware development"),
+    ("testing-repeaters.html", "Testing a repeater"),
+
+    ("SECTION", "Build an application"),
+    ("app-development.html", "App development"),
+    ("companion-bench.html", "Companion bench"),
+    ("testing.html", "Testing your own code"),
+
+    ("SECTION", "Measure and observe"),
+    ("experiments.html", "Experiments"),
+    ("sdr-observer.html", "Listening with SDR++"),
+
     ("SECTION", "How it works"),
     ("architecture.html", "Architecture"),
     ("native-vs-emulated.html", "Native and emulated"),
     ("rf-simulation.html", "RF simulation"),
+    ("waveform.html", "Waveform mode"),
     ("rf-chain.html", "The RF chain"),
-    ("waveform.html", "The waveform"),
-    ("golden-vectors.html", "Validated on the air"),
-    ("firmware-integration.html", "Running real firmware"),
-    ("emulation.html", "Emulating a board"),
+    ("golden-vectors.html", "Golden vectors"),
+    ("emulation.html", "Emulation"),
+    ("firmware-integration.html", "Firmware integration"),
+
     ("SECTION", "Reference"),
     ("settings.html", "Settings"),
     ("reference-cli.html", "CLI"),
     ("reference-control.html", "Control socket"),
+    ("resources.html", "What gets downloaded"),
     ("tools.html", "External tools"),
+    ("quality-gates.html", "What the build enforces"),
     ("repositories.html", "Repositories and licences"),
 ]
 
@@ -92,10 +108,17 @@ CSS = """
   --ink: #16191d; --dim: #5b636e; --line: #d9dee5; --bg: #ffffff;
   --panel: #f5f7fa; --accent: #1f6feb; --warn: #b45309; --good: #15803d;
   --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+  /* The diagram palette. The figures reference these by name, and every one of
+     them was undefined: a box filled with var(--card) has no fill at all, a
+     border stroked with var(--rule) is not drawn, and text in var(--faint)
+     falls back to the SVG default of black, which is invisible on the dark
+     theme. Sixty-three references across eleven figures. */
+  --card: #ffffff; --rule: #ced5de; --faint: #8a929c; --sunk: #eef1f5;
 }
 @media (prefers-color-scheme: dark) {
   :root { --ink:#e6e9ee; --dim:#9aa4b2; --line:#2a3038; --bg:#0f1215;
-          --panel:#171b20; --accent:#6ea8fe; --warn:#f0b429; --good:#4ade80; }
+          --panel:#171b20; --accent:#6ea8fe; --warn:#f0b429; --good:#4ade80;
+          --card:#1c2127; --rule:#333b45; --faint:#78828f; --sunk:#14181c; }
 }
 * { box-sizing: border-box; }
 body { margin:0; background:var(--bg); color:var(--ink);

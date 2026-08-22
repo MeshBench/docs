@@ -7,10 +7,17 @@
   --ink: #16191d; --dim: #5b636e; --line: #d9dee5; --bg: #ffffff;
   --panel: #f5f7fa; --accent: #1f6feb; --warn: #b45309; --good: #15803d;
   --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+  /* The diagram palette. The figures reference these by name, and every one of
+     them was undefined: a box filled with var(--card) has no fill at all, a
+     border stroked with var(--rule) is not drawn, and text in var(--faint)
+     falls back to the SVG default of black, which is invisible on the dark
+     theme. Sixty-three references across eleven figures. */
+  --card: #ffffff; --rule: #ced5de; --faint: #8a929c; --sunk: #eef1f5;
 }
 @media (prefers-color-scheme: dark) {
   :root { --ink:#e6e9ee; --dim:#9aa4b2; --line:#2a3038; --bg:#0f1215;
-          --panel:#171b20; --accent:#6ea8fe; --warn:#f0b429; --good:#4ade80; }
+          --panel:#171b20; --accent:#6ea8fe; --warn:#f0b429; --good:#4ade80;
+          --card:#1c2127; --rule:#333b45; --faint:#78828f; --sunk:#14181c; }
 }
 * { box-sizing: border-box; }
 body { margin:0; background:var(--bg); color:var(--ink);
@@ -66,7 +73,7 @@ a { color:var(--accent); }
 }
 </style></head>
 <body><div class="wrap">
-<nav><h1>MeshBench</h1><a href="index.html">Overview</a><a href="getting-started.html">Getting started</a><a href="what-it-does-not-do.html">What it does not do</a><h2 class="navsec">Guides</h2><a href="firmware-library.html">Firmware library</a><a href="firmware-development.html">Firmware development</a><a href="app-development.html">App development</a><a href="companion-bench.html">Companion bench</a><a href="fixtures.html">Shipped networks</a><a href="importing.html">Importing a network</a><a href="testing-repeaters.html">Testing a repeater</a><a href="sdr-observer.html">Listening with SDR++</a><a href="debugging.html">Why a packet failed</a><a href="experiments.html">Experiments</a><a href="studies.html">Studies</a><h2 class="navsec">How it works</h2><a href="architecture.html">Architecture</a><a href="native-vs-emulated.html">Native and emulated</a><a href="rf-simulation.html">RF simulation</a><a href="rf-chain.html">The RF chain</a><a href="waveform.html">The waveform</a><a href="golden-vectors.html">Validated on the air</a><a href="firmware-integration.html">Running real firmware</a><a href="emulation.html">Emulating a board</a><h2 class="navsec">Reference</h2><a href="settings.html" class="here">Settings</a><a href="reference-cli.html">CLI</a><a href="reference-control.html">Control socket</a><a href="tools.html">External tools</a><a href="repositories.html">Repositories and licences</a></nav>
+<nav><h1>MeshBench</h1><a href="index.html">Overview</a><a href="getting-started.html">Getting started</a><a href="what-it-does-not-do.html">What it does not do</a><h2 class="navsec">Plan a network</h2><a href="fixtures.html">Shipped networks</a><a href="importing.html">Importing a network</a><a href="debugging.html">Why a packet failed</a><a href="studies.html">Studies</a><h2 class="navsec">Develop firmware</h2><a href="firmware-library.html">Firmware library</a><a href="firmware-development.html">Firmware development</a><a href="testing-repeaters.html">Testing a repeater</a><h2 class="navsec">Build an application</h2><a href="app-development.html">App development</a><a href="companion-bench.html">Companion bench</a><a href="testing.html">Testing your own code</a><h2 class="navsec">Measure and observe</h2><a href="experiments.html">Experiments</a><a href="sdr-observer.html">Listening with SDR++</a><h2 class="navsec">How it works</h2><a href="architecture.html">Architecture</a><a href="native-vs-emulated.html">Native and emulated</a><a href="rf-simulation.html">RF simulation</a><a href="waveform.html">Waveform mode</a><a href="rf-chain.html">The RF chain</a><a href="golden-vectors.html">Golden vectors</a><a href="emulation.html">Emulation</a><a href="firmware-integration.html">Firmware integration</a><h2 class="navsec">Reference</h2><a href="settings.html" class="here">Settings</a><a href="reference-cli.html">CLI</a><a href="reference-control.html">Control socket</a><a href="resources.html">What gets downloaded</a><a href="tools.html">External tools</a><a href="quality-gates.html">What the build enforces</a><a href="repositories.html">Repositories and licences</a></nav>
 <main><h1>Settings</h1>
 <p>Everything that changes what a run does, grouped by what it affects.</p>
 <h2>Radio presets</h2>
