@@ -31,6 +31,18 @@
           --warn:#F2B705; --good:#2EBD6B;
           --card:#15131F; --rule:#2E2A44; --faint:#7D769B; --sunk:#100E19; }
 }
+/* Scrollbars. The default one is a wide light plate that reads as a seam
+   between the navigation and the page, and it is the only chrome on the site
+   not wearing the palette. Thin, transparent track, thumb in the rule colour. */
+* { scrollbar-width: thin; scrollbar-color: var(--line) transparent; }
+::-webkit-scrollbar { width: 9px; height: 9px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--line); border-radius: 5px;
+  border: 2px solid transparent; background-clip: padding-box; }
+::-webkit-scrollbar-thumb:hover { background: var(--dim); background-clip: padding-box; }
+::-webkit-scrollbar-corner { background: transparent; }
+nav { scrollbar-color: var(--line) transparent; }
+nav:not(:hover) { scrollbar-color: transparent transparent; }
 * { box-sizing: border-box; }
 body { margin:0; background:var(--bg); color:var(--ink);
   font: 16px/1.65 var(--text); -webkit-font-smoothing:antialiased; }
