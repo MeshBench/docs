@@ -16,7 +16,7 @@ does not.
 
 <!-- BEGIN GENERATED VERBS -->
 
-There are 188, grouped by what they are for rather than alphabetically.
+There are 191, grouped by what they are for rather than alphabetically.
 
 **Driving a run** — `log.path` · `logs.export` · `panel.close` · `panel.dock` · `panel.open` · `session.describe` · `session.status` · `sim.faster` · `sim.inject` · `sim.kind` · `sim.pause` · `sim.play` · `sim.reset` · `sim.run` · `sim.seed` · `sim.settle` · `sim.slower` · `sim.speed` · `sim.start` · `sim.state` · `sim.step` · `sim.toggle` · `ui.said` · `ui.scale` · `ui.state` · `view.delete` · `view.list` · `view.load` · `view.save` · `window.close` · `window.open`
 
@@ -32,7 +32,7 @@ There are 188, grouped by what they are for rather than alphabetically.
 
 **Analysis** — `coverage.clear` · `coverage.combined` · `coverage.compute` · `coverage.failed` · `coverage.map` · `coverage.resolution` · `coverage.set` · `coverage.start` · `environ.failed` · `environ.fetch` · `environ.fetched` · `environ.list` · `link.pair` · `link.profile` · `plan.failed` · `plan.routes` · `plan.set` · `rf.environment` · `rf.mode` · `rf.realism` · `rf.toggle` · `terrain.cache` · `terrain.prefetch` · `terrain.shade` · `validate.calibrate` · `validate.compare` · `validate.failed` · `validate.fetch` · `validate.uncalibrate`
 
-**Everything else** — `app.quit` · `assert.add` · `assert.check` · `board.matrix` · `board.probe` · `events.dump` · `events.recent` · `gpu.set` · `gpu.state` · `job.cancel` · `job.done` · `job.progress` · `layout.reset` · `links.recompute` · `links.set` · `packet.close` · `packet.open` · `panels.list` · `radio.preset` · `resource.fetch` · `resource.fetched` · `resource.licence` · `resource.licence.hide` · `resource.list` · `resource.remove` · `study.margin` · `tool.set` · `waterfall.capture` · `workspace.set`
+**Everything else** — `app.quit` · `assert.add` · `assert.check` · `board.key` · `board.matrix` · `board.press` · `board.probe` · `board.touch` · `events.dump` · `events.recent` · `gpu.set` · `gpu.state` · `job.cancel` · `job.done` · `job.progress` · `layout.reset` · `links.recompute` · `links.set` · `packet.close` · `packet.open` · `panels.list` · `radio.preset` · `resource.fetch` · `resource.fetched` · `resource.licence` · `resource.licence.hide` · `resource.list` · `resource.remove` · `study.margin` · `tool.set` · `waterfall.capture` · `workspace.set`
 
 <!-- END GENERATED VERBS -->
 
