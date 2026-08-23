@@ -78,6 +78,7 @@ NAV = [
     ("app-development.html", "App development"),
     ("companion-bench.html", "Companion bench"),
     ("testing.html", "Testing your own code"),
+    ("scripting.html", "Scripting a session"),
 
     ("SECTION", "Measure and observe"),
     ("experiments.html", "Experiments"),

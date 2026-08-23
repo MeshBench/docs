@@ -16,15 +16,15 @@ does not.
 
 <!-- BEGIN GENERATED VERBS -->
 
-There are 191, grouped by what they are for rather than alphabetically.
+There are 200, grouped by what they are for rather than alphabetically.
 
 **Driving a run** — `log.path` · `logs.export` · `panel.close` · `panel.dock` · `panel.open` · `session.describe` · `session.status` · `sim.faster` · `sim.inject` · `sim.kind` · `sim.pause` · `sim.play` · `sim.reset` · `sim.run` · `sim.seed` · `sim.settle` · `sim.slower` · `sim.speed` · `sim.start` · `sim.state` · `sim.step` · `sim.toggle` · `ui.said` · `ui.scale` · `ui.state` · `view.delete` · `view.list` · `view.load` · `view.save` · `window.close` · `window.open`
 
-**Nodes and the map** — `map.basemap` · `map.centre` · `map.filter` · `map.fit` · `map.layer` · `map.layers` · `map.zoom` · `node.energy` · `node.provisioning` · `node.radio` · `node.reflashed` · `node.start` · `node.stop` · `node.truerf` · `node.window` · `nodes.delete` · `nodes.list` · `nodes.move` · `nodes.place` · `nodes.regions` · `nodes.select` · `nodes.stats`
+**Nodes and the map** — `map.basemap` · `map.centre` · `map.filter` · `map.fit` · `map.layer` · `map.layers` · `map.zoom` · `node.energy` · `node.provisioning` · `node.radio` · `node.reflashed` · `node.start` · `node.stop` · `node.truerf` · `node.window` · `nodes.delete` · `nodes.keep` · `nodes.list` · `nodes.move` · `nodes.near` · `nodes.place` · `nodes.regions` · `nodes.search` · `nodes.select` · `nodes.stats`
 
-**Building a network** — `boundary.accept` · `boundary.prune` · `boundary.remove` · `boundary.set` · `feed.failed` · `feed.pull` · `feed.set` · `feed.stop` · `import.commit` · `import.describe` · `import.failed` · `import.fetch` · `import.set` · `infer.apply` · `infer.result` · `infer.run` · `project.list` · `project.new` · `project.open` · `project.save`
+**Building a network** — `boundary.accept` · `boundary.list` · `boundary.load` · `boundary.prune` · `boundary.remove` · `boundary.set` · `feed.failed` · `feed.pull` · `feed.set` · `feed.stop` · `import.commit` · `import.describe` · `import.failed` · `import.fetch` · `import.set` · `infer.apply` · `infer.progress` · `infer.result` · `infer.run` · `project.list` · `project.new` · `project.open` · `project.save`
 
-**Firmware and provisioning** — `console.cli` · `console.read` · `console.type` · `firmware.delete` · `firmware.download` · `firmware.failed` · `firmware.import` · `firmware.installed` · `firmware.library` · `firmware.needed` · `firmware.published` · `firmware.set` · `firmware.start` · `firmware.started` · `firmware.state` · `firmware.wipe` · `fleet.replies` · `fleet.send` · `provisioning.apply` · `provisioning.get` · `provisioning.set`
+**Firmware and provisioning** — `console.cli` · `console.read` · `console.type` · `firmware.build` · `firmware.built` · `firmware.delete` · `firmware.download` · `firmware.failed` · `firmware.import` · `firmware.installed` · `firmware.library` · `firmware.needed` · `firmware.published` · `firmware.set` · `firmware.start` · `firmware.started` · `firmware.state` · `firmware.wipe` · `fleet.replies` · `fleet.send` · `provisioning.apply` · `provisioning.get` · `provisioning.set`
 
 **Experiments and sweeps** — `bench.drop` · `bench.refresh` · `bench.serve` · `bench.stray` · `experiment.base` · `experiment.compare` · `experiment.define` · `experiment.export` · `experiment.finished` · `experiment.results` · `experiment.seeds` · `experiment.senders` · `experiment.start` · `experiment.state` · `experiment.stop` · `experiment.vary` · `run.save` · `schedule.add` · `schedule.clear` · `sweep.run` · `sweep.set`
 
@@ -32,7 +32,7 @@ There are 191, grouped by what they are for rather than alphabetically.
 
 **Analysis** — `coverage.clear` · `coverage.combined` · `coverage.compute` · `coverage.failed` · `coverage.map` · `coverage.resolution` · `coverage.set` · `coverage.start` · `environ.failed` · `environ.fetch` · `environ.fetched` · `environ.list` · `link.pair` · `link.profile` · `plan.failed` · `plan.routes` · `plan.set` · `rf.environment` · `rf.mode` · `rf.realism` · `rf.toggle` · `terrain.cache` · `terrain.prefetch` · `terrain.shade` · `validate.calibrate` · `validate.compare` · `validate.failed` · `validate.fetch` · `validate.uncalibrate`
 
-**Everything else** — `app.quit` · `assert.add` · `assert.check` · `board.key` · `board.matrix` · `board.press` · `board.probe` · `board.touch` · `events.dump` · `events.recent` · `gpu.set` · `gpu.state` · `job.cancel` · `job.done` · `job.progress` · `layout.reset` · `links.recompute` · `links.set` · `packet.close` · `packet.open` · `panels.list` · `radio.preset` · `resource.fetch` · `resource.fetched` · `resource.licence` · `resource.licence.hide` · `resource.list` · `resource.remove` · `study.margin` · `tool.set` · `waterfall.capture` · `workspace.set`
+**Everything else** — `app.quit` · `assert.add` · `assert.check` · `board.key` · `board.matrix` · `board.press` · `board.probe` · `board.screen` · `board.touch` · `events.dump` · `events.recent` · `gpu.set` · `gpu.state` · `job.cancel` · `job.done` · `job.progress` · `layout.reset` · `links.recompute` · `links.set` · `packet.close` · `packet.open` · `panels.list` · `radio.preset` · `resource.fetch` · `resource.fetched` · `resource.licence` · `resource.licence.hide` · `resource.list` · `resource.remove` · `study.margin` · `tool.set` · `waterfall.capture` · `workspace.set`
 
 <!-- END GENERATED VERBS -->
 
