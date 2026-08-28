@@ -87,7 +87,7 @@ const EXAMPLES = [
   id:"blank-setup", n:1, title:"A board on show",
   tag:"Example 1 · needs a display",
   purpose:"A blank setup, one companion set to a LilyGo T-Deck running wadamesh, and its own window left open on the Hardware tab so the board draws its screen.",
-  needs:["a display","a firmware download the first time"],
+  needs:["a display","a wadamesh image to import"],
   phases:[
     { label:"Open the workbench, start a project",
       note:"Launch opens the desktop application and returns a handle to it; the with/defer closes it on the way out. project.new starts an empty scenario centred on a place.",
@@ -96,10 +96,10 @@ const EXAMPLES = [
 python:`with Workbench.launch() as wb:
     wb.project.new(place="Fife")`,
 go:`wb, err := meshbench.Launch(ctx)
-must(err)
+if err != nil { log.Fatal(err) }
 defer func() { _ = wb.Close() }()
 
-must(wb.Project().New(ctx, "Fife"))`}},
+if err := wb.Project().New(ctx, "Fife"); err != nil { log.Fatal(err) }`}},
     { label:"Place a companion, as a T-Deck",
       note:"One node, of kind companion, at a coordinate, on a board. The board is what makes this an emulated T-Deck rather than a host build — it is why there is a screen to show at the end.",
       docs:[D("getting-started.html","Placing nodes"), D("firmware-library.html","Boards")],
@@ -115,26 +115,31 @@ go:`deck, err := wb.Nodes().Place(ctx, meshbench.Placement{
     Name: "Deck", Kind: meshbench.Companion,
     Lat: 56.19, Lon: -3.17, Board: board, // BoardLilyGoTDeck
 })
-must(err)`}},
-    { label:"Find the firmware, downloading it if absent",
-      note:"Look the build up by name against whatever the catalogue holds, rather than pinning a version typed here that goes stale. If it is not on this machine yet, download it and wait for the download to finish.",
-      docs:[D("firmware-library.html","Firmware library"), D("importing.html","Downloading a build")],
+if err != nil { log.Fatal(err) }`}},
+    { label:"Find the firmware, importing it if absent",
+      note:"Look the build up by name against whatever the library holds, rather than pinning a version typed here that goes stale. wadamesh is imported, not downloaded \u2014 it is not in the catalogue \u2014 so if the build is not on this machine yet, import a built image for it: point WADAMESH_IMAGE at one, or import it in the workbench by hand first. Its role is companion_radio_usb, the USB companion a board image carries.",
+      docs:[D("firmware-library.html","Firmware library"), D("importing.html","Importing a build")],
       code:{
 python:`wb.firmware.scan()
 try:
     build = wb.firmware.find(WADAMESH, board=BOARD)
 except NotFound:
-    wb.firmware.download("companion", WADAMESH, board=BOARD)
-    wb.wait_idle(timedelta(minutes=10))
-    build = wb.firmware.find(WADAMESH, board=BOARD)`,
-go:`must(wb.Firmware().Scan(ctx))
-build, err := wb.Firmware().Find(ctx, wadamesh, board)
+    # wadamesh is imported, not in the download catalogue.
+    if not WADAMESH_IMAGE:
+        sys.exit("wadamesh is not in the library; set "
+                 "WADAMESH_IMAGE to a built image, or import one first")
+    build = wb.firmware.import_(
+        WADAMESH_IMAGE, Role.COMPANION_RADIO_USB, board=BOARD, label=WADAMESH)`,
+go:`build, err := wb.Firmware().Find(ctx, wadamesh, board)
 if errors.Is(err, meshbench.ErrNotFound) {
-    must(wb.Firmware().Download(ctx, "companion", wadamesh, board))
-    must(wb.WaitIdle(ctx, 10*time.Minute))
-    build, err = wb.Firmware().Find(ctx, wadamesh, board)
-}
-must(err)`}},
+    // wadamesh is imported, not in the download catalogue.
+    image := os.Getenv("WADAMESH_IMAGE")
+    if image == "" {
+        log.Fatal("wadamesh is not in the library; set WADAMESH_IMAGE to a built image, or import one first")
+    }
+    build, err = wb.Firmware().Import(ctx, image,
+        meshbench.RoleCompanionRadioUSB, board, wadamesh)
+}`}},
     { label:"Pin it, start, wait for the board to boot",
       note:"Setting firmware on a node stops it, provisions it and starts it. On a board that means booting an emulator, which is why the wait is generous.",
       docs:[D("scripting.html","Bringing a run up"), D("emulation.html","Emulation")],
@@ -143,10 +148,10 @@ python:`deck.firmware = build          # stop, provision, start
 
 wb.sim.start()
 deck.wait_running(timedelta(minutes=5))`,
-go:`must(deck.SetFirmware(ctx, build, true)) // stop, provision, start
+go:`if err := deck.SetFirmware(ctx, build, true); err != nil { log.Fatal(err) } // stop, provision, start
 
-must(wb.Sim().Start(ctx))
-must(deck.WaitRunning(ctx, 5*time.Minute))`}},
+if err := wb.Sim().Start(ctx); err != nil { log.Fatal(err) }
+if err := deck.WaitRunning(ctx, 5*time.Minute); err != nil { log.Fatal(err) }`}},
     { label:"Open the node's window on Hardware",
       note:"The Hardware tab is where the board draws its own screen — the whole reason for making this node a T-Deck. The window is held open only for someone looking at it: piped or in CI, there is nobody to press enter.",
       docs:[D("app-development.html","Node windows"), D("testing-repeaters.html","Watching a board")],
@@ -157,7 +162,7 @@ print(f"{deck.name} is up on {build}; window open on {tab}")
 if sys.stdin.isatty():
     input("press enter to close the workbench ")`,
 go:`tab, err := wb.Window(ctx, deck.Name(), meshbench.TabHardware)
-must(err)
+if err != nil { log.Fatal(err) }
 fmt.Printf("%s is up on %s; window open on %s\\n",
     deck.Name(), build.Describe(), tab)
 
@@ -183,13 +188,13 @@ python:`with Workbench.attach_or_launch() as wb:
 
     wb.sim.pause()   # stop the clock before touching anything`,
 go:`wb, err := meshbench.AttachOrLaunch(ctx)
-must(err)
+if err != nil { log.Fatal(err) }
 defer func() { _ = wb.Close() }()
 
-must(wb.Sim().Pause(ctx)) // stop the clock first
+if err := wb.Sim().Pause(ctx); err != nil { log.Fatal(err) } // stop the clock first
 
 nodes, err := wb.Nodes().List(ctx)
-must(err)
+if err != nil { log.Fatal(err) }
 already := len(nodes) == len(keep)
 for _, n := range nodes {
     if _, want := keep[n.Name]; !want { already = false; break }
@@ -208,21 +213,21 @@ python:`if not already:
     wb.nodes.keep(*KEEP)
     wb.wait_idle(timedelta(minutes=10))`,
 go:`if !already {
-    must(wb.Project().Open(ctx, "fife-strict"))
+    if err := wb.Project().Open(ctx, "fife-strict"); err != nil { log.Fatal(err) }
     have, err := wb.Nodes().List(ctx)
-    must(err)
+    if err != nil { log.Fatal(err) }
     for _, name := range want { // sorted keys of keep
         at := keep[name]
         if containsName(have, name) {
-            must(wb.Node(name).Move(ctx, at[0], at[1]))
+            if err := wb.Node(name).Move(ctx, at[0], at[1]); err != nil { log.Fatal(err) }
             continue
         }
         _, err := wb.Nodes().Place(ctx, meshbench.Placement{
             Name: name, Kind: meshbench.Companion, Lat: at[0], Lon: at[1]})
-        must(err)
+        if err != nil { log.Fatal(err) }
     }
-    must(wb.Nodes().Keep(ctx, want...))
-    must(wb.WaitIdle(ctx, 10*time.Minute))
+    if err := wb.Nodes().Keep(ctx, want...); err != nil { log.Fatal(err) }
+    if err := wb.WaitIdle(ctx, 10*time.Minute); err != nil { log.Fatal(err) }
 }`}},
     { label:"Build both roles from the checkout",
       note:"Both roles come out of one build invocation, deliberately: two arms built at different moments measure the build process, not the firmware. A repeater built against a stale shim once spoke a different console protocol and looked broken.",
@@ -233,7 +238,7 @@ python:`# meshbench dev -from <checkout> -role <role> -name <name>,
 builds = build_from_checkout(checkout, wb)`,
 go:`// Both roles in one call; the client waits for the build.
 built, err := wb.Firmware().BuildAndWait(ctx, checkout, 30*time.Minute)
-must(err)
+if err != nil { log.Fatal(err) }
 if len(built) == 0 {
     log.Fatal("the build produced nothing the library can see")
 }`}},
@@ -254,11 +259,11 @@ for _, n := range nodes {
     role := meshbench.RoleSimpleRepeater
     if n.Kind == meshbench.Companion { role = meshbench.RoleCompanionRadio }
     for _, b := range built {
-        if b.Role == role { must(wb.Node(n.Name).SetFirmware(ctx, b, true)) }
+        if b.Role == role { if err := wb.Node(n.Name).SetFirmware(ctx, b, true); err != nil { log.Fatal(err) } }
     }
 }
-must(wb.Sim().Start(ctx))
-must(wb.Firmware().WaitStarted(ctx, 10*time.Minute))`}}
+if err := wb.Sim().Start(ctx); err != nil { log.Fatal(err) }
+if err := wb.Firmware().WaitStarted(ctx, 10*time.Minute); err != nil { log.Fatal(err) }`}}
   ]
 },
 {
@@ -276,13 +281,13 @@ python:`with Workbench.launch() as wb:
     wb.nodes.place_many(MESH)   # R1, R2, C1, C2
     wb.wait_idle(timedelta(minutes=10))`,
 go:`wb, err := meshbench.Launch(ctx)
-must(err)
+if err != nil { log.Fatal(err) }
 defer func() { _ = wb.Close() }()
 
-must(wb.Project().New(ctx, "Fife"))
+if err := wb.Project().New(ctx, "Fife"); err != nil { log.Fatal(err) }
 _, err = wb.Nodes().PlaceMany(ctx, mesh) // R1, R2, C1, C2
-must(err)
-must(wb.WaitIdle(ctx, 10*time.Minute))`,
+if err != nil { log.Fatal(err) }
+if err := wb.WaitIdle(ctx, 10*time.Minute); err != nil { log.Fatal(err) }`,
 node:`const wb = await Workbench.attach();
 await wb.hello();
 
@@ -294,9 +299,9 @@ for (const node of MESH) await wb.call("nodes.place", node);`}},
       code:{
 python:`wb.nodes["C1"].board = Board.LILYGO_TDECK
 wb.firmware.use_what_is_here()`,
-go:`must(wb.Node("C1").SetBoard(ctx, meshbench.BoardLilyGoTDeck))
+go:`if err := wb.Node("C1").SetBoard(ctx, meshbench.BoardLilyGoTDeck); err != nil { log.Fatal(err) }
 _, err = wb.Firmware().UseWhatIsHere(ctx)
-must(err)`,
+if err != nil { log.Fatal(err) }`,
 node:`await wb.call("node.set_board", { node: "C1", board: "LilyGo_TDeck" });
 // resolve the newest on-disk build for each needed role:
 const { builds = [] } = await wb.call("firmware.library");
@@ -316,10 +321,10 @@ python:`wb.schedule.add(
     at=timedelta(seconds=5),
     every=timedelta(seconds=20),
 )`,
-go:`must(wb.Schedule().Add(ctx, meshbench.Send{
+go:`if err := wb.Schedule().Add(ctx, meshbench.Send{
     Node: "C2", Command: "public hello",
     At: 5 * time.Second, Every: 20 * time.Second,
-}))`,
+}); err != nil { log.Fatal(err) }`,
 node:`await wb.call("schedule.add", {
   node: "C2", command: "public hello",
   at_ms: 5_000, every_ms: 20_000,
@@ -334,9 +339,9 @@ wb.sim.run(timedelta(minutes=10), wait=timedelta(minutes=60))
 
 received = [e for e in wb.events.recent(1000) if e.class_ == Class.RECEIVED]
 print(f"{wb.events.total()} events, {len(received)} receptions in the tail")`,
-go:`must(wb.Sim().Start(ctx))
-must(wb.Firmware().WaitStarted(ctx, 10*time.Minute))
-must(wb.Sim().Run(ctx, 10*time.Minute, time.Hour))
+go:`if err := wb.Sim().Start(ctx); err != nil { log.Fatal(err) }
+if err := wb.Firmware().WaitStarted(ctx, 10*time.Minute); err != nil { log.Fatal(err) }
+if err := wb.Sim().Run(ctx, 10*time.Minute, time.Hour); err != nil { log.Fatal(err) }
 
 events, _ := wb.Events().Recent(ctx, 1000)
 received := 0
@@ -438,7 +443,7 @@ go:`stockVersion, localPath := os.Args[1], os.Args[2]
 
 wb, err := meshbench.Launch(ctx,
     meshbench.Fixture("fife-strict"), meshbench.Seed(seed))
-must(err)
+if err != nil { log.Fatal(err) }
 defer func() { _ = wb.Close() }()`}},
     { label:"Find the stock build, import the changed one",
       note:"Import under the application role name the verbs are keyed on, not the catalogue's shorter one: a build imported under a role no node has is a build nothing will ever run.",
@@ -447,10 +452,10 @@ defer func() { _ = wb.Close() }()`}},
 python:`stock = wb.firmware.find(stock_version)
 changed = wb.firmware.import_(local_path, Role.SIMPLE_REPEATER)`,
 go:`stock, err := wb.Firmware().Find(ctx, stockVersion, "")
-must(err)
+if err != nil { log.Fatal(err) }
 changed, err := wb.Firmware().Import(ctx, localPath,
     meshbench.RoleSimpleRepeater, "", "")
-must(err)`}},
+if err != nil { log.Fatal(err) }`}},
     { label:"Stock on A, changed on B, run",
       note:"Two nodes far enough apart to be independently interesting, one on each build. Setting firmware restarts each of them.",
       docs:[D("scripting.html","Bringing a run up"), D("app-development.html","The firmware control")],
@@ -464,12 +469,12 @@ wb.firmware.wait_started(timedelta(minutes=15))
 wb.sim.run(timedelta(minutes=5), wait=timedelta(minutes=60))`,
 go:`nodes, _ := wb.Nodes().List(ctx)
 a, b := wb.Node(nodes[0].Name), wb.Node(nodes[1].Name)
-must(a.SetFirmware(ctx, stock, true))
-must(b.SetFirmware(ctx, changed, true))
+if err := a.SetFirmware(ctx, stock, true); err != nil { log.Fatal(err) }
+if err := b.SetFirmware(ctx, changed, true); err != nil { log.Fatal(err) }
 
-must(wb.Sim().Start(ctx))
-must(wb.Firmware().WaitStarted(ctx, 15*time.Minute))
-must(wb.Sim().Run(ctx, 5*time.Minute, time.Hour))`}},
+if err := wb.Sim().Start(ctx); err != nil { log.Fatal(err) }
+if err := wb.Firmware().WaitStarted(ctx, 15*time.Minute); err != nil { log.Fatal(err) }
+if err := wb.Sim().Run(ctx, 5*time.Minute, time.Hour); err != nil { log.Fatal(err) }`}},
     { label:"Compare per node — and don't over-read it",
       note:"Per node, because the whole point is which of the two behaved differently; a total would hide it. And one run of one seed is one draw: a difference here is a hypothesis, not a result. Vary the seed with the experiment verbs before believing anything.",
       docs:[D("experiments.html","Experiments"), D("what-it-does-not-do.html","What a result is")],
@@ -511,11 +516,11 @@ if len(os.Args) > 1 { area = os.Args[1] }
 if len(os.Args) > 2 { wanted = os.Args[2] }
 
 wb, err := meshbench.Launch(ctx)
-must(err)
+if err != nil { log.Fatal(err) }
 defer func() { _ = wb.Close() }()
 
 studying, err := wb.Boundary().Use(ctx, area)
-must(err)
+if err != nil { log.Fatal(err) }
 fmt.Println("studying", strings.Join(studying, ", "))`}},
     { label:"Pull the feed — fetch, commit, infer, apply",
       note:"One call fetches the nodes, commits them, reads a week of traffic and applies the regions it implies. Skip that last step and nothing ever relays — it is the step that gets forgotten.",
@@ -524,9 +529,9 @@ fmt.Println("studying", strings.Join(studying, ", "))`}},
 python:`print(wb.live.pull(FEED))
 wb.wait_idle()`,
 go:`found, err := wb.Live().Pull(ctx, feed, 0, 0)
-must(err)
+if err != nil { log.Fatal(err) }
 fmt.Println(found)
-must(wb.WaitIdle(ctx, time.Hour))`}},
+if err := wb.WaitIdle(ctx, time.Hour); err != nil { log.Fatal(err) }`}},
     { label:"Find a node by name, bring it up",
       note:"The node is searched for, not typed: names on a real mesh carry emoji, so the name you know is only part of the real one. Then pin firmware and start.",
       docs:[D("scripting.html","Finding a node"), D("reference-control.html","nodes.find")],
@@ -538,14 +543,14 @@ wb.firmware.use_what_is_here()
 wb.sim.start()
 wb.firmware.wait_started()`,
 go:`node, err := wb.Nodes().Find(ctx, wanted)
-must(err)
+if err != nil { log.Fatal(err) }
 all, _ := wb.Nodes().List(ctx)
 fmt.Printf("%s is %q, one of %d\\n", wanted, node.Name(), len(all))
 
 _, err = wb.Firmware().UseWhatIsHere(ctx)
-must(err)
-must(wb.Sim().Start(ctx))
-must(wb.Firmware().WaitStarted(ctx, 0))`}},
+if err != nil { log.Fatal(err) }
+if err := wb.Sim().Start(ctx); err != nil { log.Fatal(err) }
+if err := wb.Firmware().WaitStarted(ctx, 0); err != nil { log.Fatal(err) }`}},
     { label:"Ask it to advert, count who heard",
       note:"Ask, rather than send and then read: reading straight after sending reads the moment before the command went out. Then run two minutes and count the nodes that heard the advert directly.",
       docs:[D("scripting.html","Two consoles"), D("debugging.html","Who heard what")],
@@ -557,9 +562,9 @@ heard = {e.to for e in wb.events.recent(2000)
          if e.class_ == Class.RECEIVED and e.from_ == node.name}
 print(f"{len(heard)} of {len(wb.nodes) - 1} others heard it directly")`,
 go:`reply, err := node.Console().Ask(ctx, "advert", 100)
-must(err)
+if err != nil { log.Fatal(err) }
 fmt.Println(reply)
-must(wb.Sim().Run(ctx, 2*time.Minute, time.Hour))
+if err := wb.Sim().Run(ctx, 2*time.Minute, time.Hour); err != nil { log.Fatal(err) }
 
 events, _ := wb.Events().Recent(ctx, 2000)
 heard := map[string]bool{}
@@ -585,7 +590,7 @@ python:`subprocess.run(["pio", "run", "-e", PIO_ENV],
                cwd=WADAMESH, check=True)`,
 go:`build := exec.CommandContext(ctx, "pio", "run", "-e", pioEnv)
 build.Dir, build.Stdout, build.Stderr = repo, os.Stdout, os.Stderr
-must(build.Run())`}},
+if err := build.Run(); err != nil { log.Fatal(err) }`}},
     { label:"Attach, pause, ensure the node exists",
       note:"Not a context manager here: closing owns the process it started, and the point is to leave the window up. Pause first — swapping firmware under a running clock stops the node while its neighbours carry on, and nothing accounts for the gap.",
       docs:[D("scripting.html","Two clocks"), D("scripting.html","Re-running")],
@@ -600,19 +605,19 @@ if NODE not in wb.nodes:
 node = wb.nodes[NODE]
 old = node.build`,
 go:`wb, err := meshbench.AttachOrLaunch(ctx)
-must(err)
-must(wb.Sim().Pause(ctx))
+if err != nil { log.Fatal(err) }
+if err := wb.Sim().Pause(ctx); err != nil { log.Fatal(err) }
 
 if _, err := wb.Nodes().Get(ctx, node); err != nil {
-    must(wb.Project().New(ctx, "Fife"))
+    if err := wb.Project().New(ctx, "Fife"); err != nil { log.Fatal(err) }
     _, err := wb.Nodes().Place(ctx, meshbench.Placement{
         Name: node, Kind: meshbench.Companion,
         Lat: 56.20, Lon: -3.20, Board: board})
-    must(err)
+    if err != nil { log.Fatal(err) }
 }
 n := wb.Node(node)
 old, hadOne, err := n.Build(ctx)
-must(err)`}},
+if err != nil { log.Fatal(err) }`}},
     { label:"Import the fresh image, swap it in",
       note:"Import with no label, so it is stamped with the time: two runs are two builds rather than one quietly overwriting the other. Setting it stops the node, provisions it and starts it.",
       docs:[D("firmware-library.html","Importing a build"), D("importing.html","Board images")],
@@ -621,9 +626,9 @@ python:`new = wb.firmware.import_(str(IMAGE), ROLE, board=BOARD)
 node.firmware = new     # stop, provision, start
 node.wait_running()`,
 go:`fresh, err := wb.Firmware().Import(ctx, image, role, board, "")
-must(err)
-must(n.SetFirmware(ctx, fresh, true)) // stop, provision, start
-must(n.WaitRunning(ctx, 0))`}},
+if err != nil { log.Fatal(err) }
+if err := n.SetFirmware(ctx, fresh, true); err != nil { log.Fatal(err) } // stop, provision, start
+if err := n.WaitRunning(ctx, 0); err != nil { log.Fatal(err) }`}},
     { label:"Delete the old build, open Hardware, run",
       note:"Only now it is on the new one is the old build safe to delete — a pin nothing can honour does not fail until the node next starts. Then open the Hardware window and let it boot.",
       docs:[D("firmware-library.html","Deleting a build"), D("app-development.html","Node windows")],
@@ -637,12 +642,12 @@ wb.sim.run(timedelta(seconds=30))
 print(f"{node} is running {node.firmware}")`,
 go:`if hadOne && old.Version != fresh.Version {
     _, err := wb.Firmware().Delete(ctx, old)
-    must(err)
+    if err != nil { log.Fatal(err) }
 }
 _, err = wb.Window(ctx, node, meshbench.TabHardware)
-must(err)
-must(wb.Sim().Play(ctx))
-must(wb.Sim().Run(ctx, 30*time.Second, 30*time.Minute))
+if err != nil { log.Fatal(err) }
+if err := wb.Sim().Play(ctx); err != nil { log.Fatal(err) }
+if err := wb.Sim().Run(ctx, 30*time.Second, 30*time.Minute); err != nil { log.Fatal(err) }
 fmt.Printf("%s is running %s\\n", node, fresh.Version)`}}
   ]
 }
