@@ -10,7 +10,10 @@ it is.
 |---|---|
 | `MeshBench/meshbench` | MeshBench itself |
 | `MeshBench/meshcore-native` | host builds of MeshCore, the virtual SX1262, the bridge and `radioserver` |
+| `MeshBench/meshbench-docs` | this site |
 | `MeshBench/meshbench-reports` | published studies |
+| `MeshBench/meshbench-scripting-skills` | agent skills for driving and scripting a workbench |
+| `MeshBench/meshbench-dev-skills` | agent skills for developing MeshBench |
 | `MeshBench/qemu` | QEMU with an SX1262 device |
 | `MeshBench/tlib` | the CPU library, with the SEVONPEND fix |
 | `MeshBench/renode-infrastructure` | the C# half of that fix |

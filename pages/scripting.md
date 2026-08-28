@@ -5,17 +5,19 @@ builds or imports a network, brings the firmware up, runs the clock, and reads
 what happened — the same code path a person clicks, so a driven session shows
 its work on screen.
 
-There are two clients, in Python and in Go. They are peers: neither wraps the
-other, and both speak the control socket directly.
+There are three clients, in Python, Go and Node. They are peers: none wraps
+another, and each speaks the control socket directly.
 
 ```
-clients/python/meshbench     clients/go/meshbench
-clients/python/examples      clients/go/examples
+pkg/client-python/meshbench     pkg/client-go/meshbench     pkg/client-js
 ```
 
 Python is the one most scripts are written in — MeshCore's tooling is Python,
-and a firmware developer writing a regression test reaches for pytest. Go is
-the reference implementation. Each ships the same seven runnable examples.
+and a firmware developer writing a regression test reaches for pytest. Go is the
+reference implementation. Node is one ES module with no dependencies, for a
+companion app or a dashboard in the JavaScript world. The Python and Go clients
+ship the same seven runnable examples; the [cookbook](cookbook.html) indexes
+them.
 
 ## Opening a session
 
