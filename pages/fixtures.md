@@ -8,7 +8,7 @@ one of these is a result about a real topology rather than about a lattice.
 |---|---|---|---|---|
 | `fixture-fife` | Fife | 58 | 46 | 9 |
 | `fixture-scotland` | Scotland | 161 | 142 | 16 |
-| `fixture-scotland-ireland` | Scotland and Ireland | 311 | 273 | 35 |
+| `fixture-scotland-ireland` | Scotland, Ireland and Northern Ireland | 378 | 336 | 39 |
 
 Each carries one of every node kind that exists: simple repeater, advanced
 repeater, companion, room server, SDR observer and emitter. The imported network
@@ -21,7 +21,7 @@ other four are placed, and they hold the regions their nearest neighbours hold.
 2. Choose a fixture. `-strict` or `-permissive`; read the next section before
    choosing.
 3. `Simulation` then `Start firmware`, and wait for the count to reach the node
-   total. At 311 nodes this takes a minute and about 3 GB.
+   total. At 378 nodes this takes a minute and about 4 GB.
 4. Press play.
 
 From a script:
