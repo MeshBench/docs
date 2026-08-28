@@ -2,32 +2,21 @@
 #cookbook-app{
   --cb-relay-soft:#efeafd; --cb-signal-soft:#fbe7dd;
   --cb-kw:#8E3BD6; --cb-str:#1B7A44; --cb-com:#837C9C; --cb-num:#B93B06; --cb-fn:#2160C4;
-  display:grid; grid-template-columns:210px 1fr; gap:26px; align-items:start;
-  margin:22px 0 4px; font-family:var(--text);
+  display:block; margin:22px 0 4px; font-family:var(--text);
 }
 @media (prefers-color-scheme:dark){#cookbook-app{
   --cb-relay-soft:#1e1836; --cb-signal-soft:#2a160c;
   --cb-kw:#C9A7FF; --cb-str:#5BD79B; --cb-com:#7D769B; --cb-num:#FFA36B; --cb-fn:#7FB0FF;
 }}
-@media(max-width:760px){#cookbook-app{grid-template-columns:1fr}}
 
-#cookbook-app .cb-rail{position:sticky;top:12px}
-#cookbook-app .cb-rail h3{font-family:var(--mono);font-weight:700;font-size:11px;
-  letter-spacing:.14em;text-transform:uppercase;color:var(--faint);margin:0 0 10px 3px}
-#cookbook-app .cb-list{display:flex;flex-direction:column;gap:2px}
-#cookbook-app .cb-link{display:flex;gap:10px;align-items:baseline;padding:8px 10px;
-  border-radius:9px;cursor:pointer;border:1px solid transparent;text-align:left;background:none;
-  font-family:var(--text);color:var(--ink);font-size:14px;width:100%}
-#cookbook-app .cb-link:hover{background:var(--panel)}
-#cookbook-app .cb-link.on{background:var(--panel);border-color:var(--line)}
-#cookbook-app .cb-link .cb-n{font-family:var(--mono);font-size:12px;color:var(--relay);
-  font-weight:700;flex:none;width:13px}
+#cookbook-app .cb-tabs{display:flex;flex-wrap:wrap;gap:7px;margin:0 0 20px}
+#cookbook-app .cb-link{display:inline-flex;gap:8px;align-items:baseline;padding:7px 13px;
+  border-radius:999px;cursor:pointer;border:1px solid var(--line);background:var(--panel);
+  font-family:var(--text);color:var(--dim);font-size:13.5px;line-height:1.2}
+#cookbook-app .cb-link:hover{color:var(--ink);border-color:var(--faint)}
+#cookbook-app .cb-link.on{color:var(--ink);background:var(--bg);border-color:var(--accent-mark);font-weight:600}
+#cookbook-app .cb-link .cb-n{font-family:var(--mono);font-size:12px;color:var(--relay);font-weight:700}
 #cookbook-app .cb-link.on .cb-n{color:var(--accent-mark)}
-@media(max-width:760px){
-  #cookbook-app .cb-rail{position:static;border-bottom:1px solid var(--line);padding-bottom:10px}
-  #cookbook-app .cb-list{flex-direction:row;overflow-x:auto;gap:5px}
-  #cookbook-app .cb-link{white-space:nowrap;width:auto}
-}
 
 #cookbook-app .cb-body{min-width:0}
 #cookbook-app .cb-exhead{margin-bottom:16px}
@@ -85,7 +74,7 @@
 </style>
 
 <div id="cookbook-app">
-  <nav class="cb-rail"><h3>Examples</h3><div class="cb-list" id="cb-list"></div></nav>
+  <div class="cb-tabs" id="cb-list"></div>
   <div class="cb-body" id="cb-main"></div>
 </div>
 
@@ -682,18 +671,43 @@ function highlight(code, lang){
   }).join("\n");
 }
 
-const state = {ex: EXAMPLES[0].id, lang: "python"};
+const state = {ex: EXAMPLES[0].id, lang: "python", open: {0:true}};
 const listEl = document.getElementById("cb-list");
 const mainEl = document.getElementById("cb-main");
 function hasNode(ex){return ex.phases.some(p=>p.code.node)}
+function lname(l){return {python:"Python",go:"Go",node:"Node"}[l]}
 
 EXAMPLES.forEach(ex=>{
   const b=document.createElement("button");
   b.className="cb-link"; b.dataset.id=ex.id;
   b.innerHTML='<span class="cb-n">'+ex.n+'</span><span>'+ex.title+'</span>';
-  b.onclick=()=>{state.ex=ex.id; if(state.lang==="node" && !hasNode(ex)) state.lang="python"; render();};
+  b.onclick=()=>{ if(state.ex===ex.id) return;
+    state.ex=ex.id; state.open={0:true};
+    if(state.lang==="node" && !hasNode(ex)) state.lang="python"; render(); };
   listEl.appendChild(b);
 });
+
+function codeHTML(p, lang){
+  const code = p.code[lang];
+  return code ? '<pre><code>'+highlight(code, lang)+'</code></pre>'
+    : '<div class="cb-na">No '+lname(lang)+' example for this step yet — Python and Go show it. The Node client is being filled in for the other examples.</div>';
+}
+
+// Swap the code in place: the open steps and the scroll position stay put.
+function setLang(lang){
+  const ex = EXAMPLES.find(e=>e.id===state.ex);
+  state.lang = lang;
+  mainEl.querySelectorAll(".cb-seg button").forEach(b=>b.classList.toggle("on", b.dataset.lang===lang));
+  mainEl.querySelectorAll(".cb-phase").forEach(ph=>{
+    ph.querySelector(".cb-code").innerHTML = codeHTML(ex.phases[+ph.dataset.i], lang);
+  });
+}
+function applyOpen(){
+  mainEl.querySelectorAll(".cb-phase").forEach(ph=>{
+    const o = !!state.open[+ph.dataset.i];
+    ph.classList.toggle("closed", !o); ph.classList.toggle("lit", o);
+  });
+}
 
 function render(){
   const ex = EXAMPLES.find(e=>e.id===state.ex);
@@ -703,33 +717,27 @@ function render(){
     return '<button data-lang="'+id+'"'+(state.lang===id?' class="on"':'')+(avail?'':' disabled')+'>'+label+'</button>';
   }).join("");
   const phases = ex.phases.map((p,i)=>{
-    const code = p.code[state.lang];
-    const body = code
-      ? '<pre><code>'+highlight(code, state.lang)+'</code></pre>'
-      : '<div class="cb-na">No '+lname(state.lang)+' example for this step yet — Python and Go show it. The Node client is being filled in for the other examples.</div>';
+    const opened = !!state.open[i];
     const docs = (p.docs||[]).map(d=>'<a href="'+d.href+'">'+d.text+'</a>').join("");
-    return '<section class="cb-phase closed">'+
+    return '<section class="cb-phase'+(opened?' lit':' closed')+'" data-i="'+i+'">'+
       '<div class="cb-phh"><span class="cb-num">'+(i+1)+'</span>'+
         '<span class="cb-pht"><b>'+p.label+'</b><span>'+p.note+'</span></span>'+
         '<span class="cb-chev">▾</span></div>'+
-      '<div class="cb-pbody">'+(docs?'<div class="cb-docs">'+docs+'</div>':'')+body+'</div>'+
+      '<div class="cb-pbody">'+(docs?'<div class="cb-docs">'+docs+'</div>':'')+
+        '<div class="cb-code">'+codeHTML(p, state.lang)+'</div></div>'+
     '</section>';
   }).join("");
   mainEl.innerHTML =
     '<div class="cb-exhead"><div class="cb-tag">'+ex.tag+'</div><h3>'+ex.title+'</h3>'+
       '<p>'+ex.purpose+'</p><div class="cb-needs">'+ex.needs.map(n=>'<span class="cb-need">'+n+'</span>').join("")+'</div></div>'+
     '<div class="cb-bar"><div class="cb-seg">'+langBtns+'</div>'+
-      '<span class="cb-hint">the same example — flip the language to compare it <b>line for line</b></span></div>'+
+      '<span class="cb-hint">the same example — flip the language and it stays on your step, <b>line for line</b></span></div>'+
     phases;
-  const first = mainEl.querySelector(".cb-phase"); if(first){first.classList.remove("closed"); first.classList.add("lit");}
-  mainEl.querySelectorAll(".cb-seg button").forEach(b=>{ if(!b.disabled) b.onclick=()=>{state.lang=b.dataset.lang; render();}; });
+  mainEl.querySelectorAll(".cb-seg button").forEach(b=>{ if(!b.disabled) b.onclick=()=>setLang(b.dataset.lang); });
   mainEl.querySelectorAll(".cb-phh").forEach(h=>{
-    h.onclick=()=>{const ph=h.parentElement; const wasClosed=ph.classList.contains("closed");
-      mainEl.querySelectorAll(".cb-phase").forEach(p=>p.classList.remove("lit"));
-      ph.classList.toggle("closed"); if(wasClosed){ph.classList.remove("closed"); ph.classList.add("lit");} };
+    h.onclick=()=>{ const idx=+h.parentElement.dataset.i; state.open[idx]=!state.open[idx]; applyOpen(); };
   });
 }
-function lname(l){return {python:"Python",go:"Go",node:"Node"}[l]}
 render();
 })();
 </script>
