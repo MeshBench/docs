@@ -13,6 +13,7 @@ images, bold, inline code - so the generator stays readable and nothing here
 depends on a package that has to be installed before the docs will build.
 """
 import html
+import json
 import os
 import re
 import sys
@@ -131,13 +132,17 @@ CSS = """
      falls back to the SVG default of black, which is invisible on the dark
      theme. Sixty-three references across eleven figures. */
   --card: #FFFFFF; --rule: #DCD6EE; --faint: #837C9C; --sunk: #EEEBF7;
+  /* Code tokens - the cookbook widget's palette, promoted site-wide so every
+     code block on the site is coloured the same way. */
+  --tok-kw:#8E3BD6; --tok-str:#1B7A44; --tok-com:#837C9C; --tok-num:#B93B06; --tok-fn:#2160C4;
 }
 @media (prefers-color-scheme: dark) {
   :root { --ink:#F2EFF9; --dim:#9A93B8; --line:#262238; --bg:#0B0A12;
           --panel:#15131F; --accent:#FF7A3D; --accent-mark:#FF7A3D; --relay:#8E6DFF;
           --warn:#F2B705; --good:#2EBD6B;
           --card:#15131F; --rule:#2E2A44; --faint:#7D769B; --sunk:#100E19;
-          --mb-ink:#F2EFF9; --mb-signal:#FF7A3D; --mb-relay:#8E6DFF; --mb-dim:#9A93B8; }
+          --mb-ink:#F2EFF9; --mb-signal:#FF7A3D; --mb-relay:#8E6DFF; --mb-dim:#9A93B8;
+          --tok-kw:#C9A7FF; --tok-str:#5BD79B; --tok-com:#7D769B; --tok-num:#FFA36B; --tok-fn:#7FB0FF; }
 }
 /* Scrollbars. The default one is a wide light plate that reads as a seam
    between the navigation and the page, and it is the only chrome on the site
@@ -203,13 +208,154 @@ footer { color:var(--dim); font-size:13.5px; border-top:1px solid var(--line);
   margin-top:44px; padding-top:14px; }
 a { color:var(--accent); text-underline-offset:2px; }
 :focus-visible { outline:2px solid var(--accent); outline-offset:2px; border-radius:3px; }
+.tok-kw { color:var(--tok-kw); } .tok-str { color:var(--tok-str); }
+.tok-com { color:var(--tok-com); font-style:italic; } .tok-num { color:var(--tok-num); }
+.tok-fn { color:var(--tok-fn); }
+.codewrap { position:relative; }
+.codewrap .copy { position:absolute; top:8px; right:8px; border:1px solid var(--line);
+  background:var(--bg); color:var(--dim); font:12px var(--mono); padding:3px 10px;
+  border-radius:6px; cursor:pointer; opacity:0; transition:opacity .15s ease, color .15s ease; }
+.codewrap:hover .copy, .codewrap:focus-within .copy { opacity:1; }
+.codewrap .copy:hover { color:var(--accent); border-color:var(--accent); }
+h2 .hl, h3 .hl { opacity:0; margin-left:8px; font-size:.72em; font-weight:400;
+  text-decoration:none; color:var(--dim); transition:opacity .12s ease; }
+h2:hover .hl, h3:hover .hl, h2 .hl:focus-visible, h3 .hl:focus-visible { opacity:1; }
+/* On this page - a quiet rail on wide screens, from the page's own h2s. */
+.toc { position:sticky; top:0; width:190px; flex:0 0 190px; padding:40px 0 30px 20px;
+  max-height:100vh; overflow-y:auto; font-size:13px; }
+.toc .tochead { font-family:var(--display); font-size:11px; letter-spacing:.11em;
+  text-transform:uppercase; color:var(--dim); font-weight:700; margin:0 0 8px; }
+.toc a { display:block; padding:3px 0 3px 10px; color:var(--dim); text-decoration:none;
+  border-left:2px solid var(--line); transition:color .12s ease, border-color .12s ease; }
+.toc a:hover { color:var(--accent); }
+.toc a.on { color:var(--ink); border-left-color:var(--accent-mark); }
+@media (max-width:1120px) { .toc { display:none; } }
+/* Where to go next - the two neighbours in the reading order. */
+.pagenav { display:flex; justify-content:space-between; gap:14px; margin-top:40px;
+  border-top:1px solid var(--line); padding-top:16px; }
+.pagenav a { max-width:46%; text-decoration:none; color:var(--ink); font-size:14.5px;
+  padding:10px 14px; border:1px solid var(--line); border-radius:8px;
+  transition:border-color .15s ease; }
+.pagenav a:hover { border-color:var(--accent); }
+.pagenav a span { display:block; font-size:11.5px; color:var(--dim);
+  font-family:var(--display); letter-spacing:.08em; text-transform:uppercase; }
+.pagenav a.next { margin-left:auto; text-align:right; }
+/* Search - a box in the navigation, answers as you type, all local. */
+.search { position:relative; margin:0 0 16px; }
+.search input { width:100%; border:1px solid var(--line); border-radius:7px;
+  background:var(--panel); color:var(--ink); font:13.5px var(--text);
+  padding:6px 10px; transition:border-color .15s ease; }
+.search input:focus { outline:none; border-color:var(--accent); }
+.search input::placeholder { color:var(--dim); }
+.search .hits { position:absolute; z-index:30; left:0; right:-40px; top:34px;
+  background:var(--bg); border:1px solid var(--line); border-radius:9px;
+  box-shadow:0 8px 26px rgba(0,0,0,.13); max-height:330px; overflow-y:auto;
+  display:none; }
+.search .hits.open { display:block; }
+.search .hits a { display:block; padding:8px 12px; border-bottom:1px solid var(--line);
+  font-size:13px; color:var(--ink); text-decoration:none; }
+.search .hits a:last-child { border-bottom:0; }
+.search .hits a em { color:var(--dim); font-style:normal; display:block; font-size:12px; }
+.search .hits a.sel, .search .hits a:hover { background:var(--panel); }
+.search kbd { position:absolute; right:8px; top:6px; color:var(--dim);
+  border:1px solid var(--line); border-radius:4px; font:11px var(--mono);
+  padding:0 5px; pointer-events:none; }
+.skip { position:absolute; left:-9999px; top:0; background:var(--accent); color:#fff;
+  padding:8px 14px; border-radius:0 0 8px 0; z-index:40; }
+.skip:focus { left:0; }
+.menu-toggle { display:none; }
+@media (prefers-reduced-motion: no-preference) {
+  html { scroll-behavior:smooth; }
+  main > h1 { animation:rise .28s ease both; }
+  @keyframes rise { from { opacity:0; transform:translateY(4px); } to { opacity:1; transform:none; } }
+}
 @media (max-width:820px) {
   .wrap { display:block; } nav { position:static; width:auto; height:auto;
-    border-right:0; border-bottom:1px solid var(--line); }
+    border-right:0; border-bottom:1px solid var(--line); padding-bottom:14px; }
   nav .brand svg { width:140px; }
   nav a { display:inline-block; margin-right:14px; } main { padding:24px 18px 70px; }
+  .menu-toggle { display:inline-block; border:1px solid var(--line); background:var(--panel);
+    color:var(--ink); font:13px var(--display); font-weight:700; letter-spacing:.05em;
+    padding:6px 13px; border-radius:7px; cursor:pointer; margin-bottom:6px; }
+  nav .navlinks { display:none; }
+  nav .navlinks.open { display:block; }
+  .search .hits { right:0; }
+  .pagenav { flex-wrap:wrap; } .pagenav a { max-width:100%; }
 }
 """
+
+
+KEYWORDS = {
+    "go": r"\b(func|for|if|else|range|return|var|const|struct|package|import|"
+          r"defer|go|map|chan|type|nil|true|false|break|continue|switch|case|select)\b",
+    "python": r"\b(with|as|for|in|if|else|elif|try|except|finally|return|def|"
+              r"import|from|not|and|or|is|None|True|False|print|class|while|"
+              r"lambda|raise|pass|yield|assert)\b",
+    "js": r"\b(const|let|var|for|of|in|if|else|return|async|await|function|"
+          r"new|import|from|export|null|undefined|true|false|throw|try|catch|class)\b",
+}
+
+
+def guess_lang(code):
+    """Which language a bare fence holds, from strong signals only - a wrong
+    guess paints prose, so anything unsure stays plain."""
+    if re.search(r"^\s*(func |package |type \w+ struct|\w+, err :?=|if err != nil)", code, re.M):
+        return "go"
+    if re.search(r"^\s*(def |import \w|from \w+ import|with Workbench|elif )", code, re.M):
+        return "python"
+    if re.search(r"^\s*(const \w+ = |await |import \{|export )", code, re.M):
+        return "js"
+    if re.search(r"^\s*[$] ", code, re.M) or re.match(r"^(go run|go test|python3?|pip|git|gh|meshbench)\b", code):
+        return "console"
+    if re.match(r"^\s*\{\s*\"", code):
+        return "json"
+    return ""
+
+
+def highlight_code(code, lang):
+    """Colour a fenced block at build time, so nothing flashes and nothing runs.
+    The same small tokenizer as the cookbook widget, in Python: comments,
+    strings, numbers, keywords, calls - enough to carry the eye, no more."""
+    lang = {"bash": "console", "sh": "console", "node": "js",
+            "javascript": "js"}.get(lang, lang) or guess_lang(code)
+    esc = html.escape(code)
+    if lang == "console":
+        # Command lines get their comments dimmed; output stays plain.
+        return re.sub(r"(#.*)$", r'<span class="tok-com">\1</span>', esc, flags=re.M)
+    if lang == "json":
+        # Strings then numbers; the wire examples are one object per line.
+        out = re.sub(r"(&quot;.*?&quot;)", r'<span class="tok-str">\1</span>', esc)
+        return re.sub(r"(?<![\w-])(-?\d+(?:\.\d+)?)\b",
+                      r'<span class="tok-num">\1</span>', out)
+    kw = KEYWORDS.get(lang)
+    if not kw:
+        return esc
+    com = "#" if lang == "python" else "//"
+    out = []
+    for line in esc.split("\n"):
+        ci = line.find(com)
+        head, tail = line, ""
+        # Only a comment when the marker is not inside a string: an even count
+        # of quotes before it is the cheap test that holds for these snippets.
+        if ci >= 0 and line[:ci].count("&quot;") % 2 == 0:
+            head, tail = line[:ci], '<span class="tok-com">%s</span>' % line[ci:]
+        head = re.sub(r"(&quot;.*?&quot;|&#x27;.*?&#x27;|`[^`]*`)",
+                      r'<span class="tok-str">\1</span>', head)
+        head = re.sub(r"\b(\d+(?:\.\d+)?)\b", r'<span class="tok-num">\1</span>', head)
+        head = re.sub(kw, lambda m: '<span class="tok-kw">%s</span>' % m.group(0), head)
+        head = re.sub(r"(?<![>\w])([A-Za-z_][A-Za-z0-9_]*)(\()",
+                      r'<span class="tok-fn">\1</span>\2', head)
+        out.append(head + tail)
+    return "\n".join(out)
+
+
+def code_block(code, lang):
+    """A fenced block: highlighted, and carrying its copy button. The raw text
+    the button copies is the code itself, taken from the element, not a second
+    copy that could drift."""
+    return ('<div class="codewrap"><pre><code>%s</code></pre>'
+            '<button class="copy" type="button" aria-label="Copy this code">copy</button></div>'
+            % highlight_code(code, lang))
 
 
 def inline(t):
@@ -250,11 +396,12 @@ def render(md):
                 body.append(lines[i])
             out.append("\n".join(body))
         elif l.startswith("```"):
+            lang = l[3:].strip()
             i += 1
             body = []
             while i < len(lines) and not lines[i].startswith("```"):
-                body.append(html.escape(lines[i])); i += 1
-            out.append("<pre><code>" + "\n".join(body) + "</code></pre>")
+                body.append(lines[i]); i += 1
+            out.append(code_block("\n".join(body), lang))
         elif l.startswith("|") and i + 1 < len(lines) and set(lines[i+1]) <= set("|- :"):
             head = [c.strip() for c in l.strip("|").split("|")]
             i += 2
@@ -297,9 +444,9 @@ def render(md):
             i -= 1
             out.append("<blockquote><p>" + inline(" ".join(body)) + "</p></blockquote>")
         elif l.startswith("### "):
-            out.append('<h3 id="%s">%s</h3>' % (slug(l[4:]), inline(l[4:])))
+            out.append('<h3 id="%s">%s<a class="hl" href="#%s" aria-label="Link to this section">#</a></h3>' % (slug(l[4:]), inline(l[4:]), slug(l[4:])))
         elif l.startswith("## "):
-            out.append('<h2 id="%s">%s</h2>' % (slug(l[3:]), inline(l[3:])))
+            out.append('<h2 id="%s">%s<a class="hl" href="#%s" aria-label="Link to this section">#</a></h2>' % (slug(l[3:]), inline(l[3:]), slug(l[3:])))
         elif l.startswith("# "):
             out.append("<h1>%s</h1>" % inline(l[2:]))
         elif l.strip():
@@ -321,36 +468,221 @@ def logo():
     return open(os.path.join(here, "brand", "meshbench-logo-themed.svg")).read().strip()
 
 
+SCRIPT = """
+(function(){
+  document.querySelectorAll(".codewrap").forEach(function(w){
+    var b = w.querySelector(".copy");
+    b.addEventListener("click", function(){
+      navigator.clipboard.writeText(w.querySelector("code").innerText).then(function(){
+        b.textContent = "copied";
+        setTimeout(function(){ b.textContent = "copy"; }, 1200);
+      });
+    });
+  });
+  var mt = document.querySelector(".menu-toggle");
+  if (mt) mt.addEventListener("click", function(){
+    var open = document.querySelector(".navlinks").classList.toggle("open");
+    mt.setAttribute("aria-expanded", open ? "true" : "false");
+  });
+  var spy = document.querySelectorAll(".toc a[data-t]");
+  if (spy.length && "IntersectionObserver" in window){
+    var map = {}, cur = null;
+    spy.forEach(function(a){ map[a.getAttribute("data-t")] = a; });
+    var io = new IntersectionObserver(function(es){
+      es.forEach(function(e){
+        if (!e.isIntersecting) return;
+        if (cur) cur.classList.remove("on");
+        cur = map[e.target.id];
+        if (cur) cur.classList.add("on");
+      });
+    }, {rootMargin: "0px 0px -72% 0px"});
+    document.querySelectorAll("main h2[id]").forEach(function(h){ io.observe(h); });
+  }
+  var box = document.getElementById("q"), hits = document.getElementById("hits");
+  if (!box) return;
+  var idx = null, sel = -1;
+  function load(cb){
+    if (idx){ cb(); return; }
+    fetch("search-index.json").then(function(r){ return r.json(); })
+      .then(function(d){ idx = d; cb(); });
+  }
+  function esc(t){ return t.replace(/[&<>"]/g, function(c){
+    return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]; }); }
+  function paint(out){
+    hits.innerHTML = out.map(function(o){
+      return '<a href="' + o.u + '">' + esc(o.title) +
+        (o.h ? "<em>" + esc(o.h) + "</em>" : "") + "</a>";
+    }).join("");
+    hits.classList.toggle("open", out.length > 0);
+    sel = -1;
+  }
+  function run(){
+    var q = box.value.trim().toLowerCase();
+    if (q.length < 2){ hits.classList.remove("open"); hits.innerHTML = ""; return; }
+    load(function(){
+      var out = [];
+      idx.forEach(function(p){
+        var best = 0, at = null;
+        if (p.title.toLowerCase().indexOf(q) >= 0) best = 3;
+        p.sections.forEach(function(s){
+          if (s.h.toLowerCase().indexOf(q) >= 0){ if (best < 2){ best = 2; at = s; } }
+          else if (s.t.indexOf(q) >= 0){ if (best < 1){ best = 1; at = s; } }
+        });
+        if (best) out.push({u: p.u + (at ? "#" + at.id : ""), title: p.title,
+                            h: at ? at.h : "", score: best});
+      });
+      out.sort(function(a, b){ return b.score - a.score; });
+      paint(out.slice(0, 9));
+    });
+  }
+  box.addEventListener("input", run);
+  box.addEventListener("keydown", function(e){
+    var as = hits.querySelectorAll("a");
+    if (e.key === "Escape"){ hits.classList.remove("open"); box.blur(); }
+    if (!as.length) return;
+    if (e.key === "ArrowDown" || e.key === "ArrowUp"){
+      e.preventDefault();
+      sel = (sel + (e.key === "ArrowDown" ? 1 : as.length - 1)) % as.length;
+      as.forEach(function(a, j){ a.classList.toggle("sel", j === sel); });
+    }
+    if (e.key === "Enter"){ (as[sel >= 0 ? sel : 0]).click(); }
+  });
+  document.addEventListener("keydown", function(e){
+    if (e.key === "/" && document.activeElement.tagName !== "INPUT"){
+      e.preventDefault(); box.focus();
+    }
+  });
+  document.addEventListener("click", function(e){
+    if (!e.target.closest(".search")) hits.classList.remove("open");
+  });
+})();
+"""
+
+
 def page(name, body, title):
-    nav = "".join(
+    navlinks = "".join(
         '<h2 class="navsec">%s</h2>' % t if h == "SECTION"
         else '<a href="%s"%s>%s</a>' % (h, ' class="here"' if h == name else "", t)
         for h, t in NAV)
+    # The first paragraph is the page's own summary, and becomes the
+    # description a search result or a link preview shows for it.
+    m = re.search(r"<p>(.*?)</p>", body, re.S)
+    desc = ""
+    if m:
+        desc = html.unescape(re.sub(r"<[^>]+>", "", m.group(1)))
+        desc = re.sub(r"\s+", " ", desc).strip()
+        if len(desc) > 158:
+            desc = desc[:158].rsplit(" ", 1)[0] + "\u2026"
+    # On this page: the h2s, as a quiet rail on wide screens. Three is the
+    # threshold - below that the rail says less than the scrollbar does.
+    heads = [(hid, re.sub(r"<[^>]+>", "", txt)) for hid, txt in
+             re.findall(r'<h2 id="([^"]+)">(.*?)<a class="hl"', body)]
+    toc = ""
+    if len(heads) >= 3:
+        toc = ('<aside class="toc" aria-label="On this page">'
+               '<p class="tochead">On this page</p>%s</aside>' % "".join(
+                   '<a href="#%s" data-t="%s">%s</a>' % (h, h, t) for h, t in heads))
+    # The two neighbours in the reading order the navigation defines.
+    order = [(h, t) for h, t in NAV if h != "SECTION"]
+    at = next((j for j, (h, _) in enumerate(order) if h == name), None)
+    parts = []
+    if at is not None and at > 0:
+        parts.append('<a class="prev" href="%s"><span>previous</span>%s</a>'
+                     % order[at - 1])
+    if at is not None and at + 1 < len(order):
+        parts.append('<a class="next" href="%s"><span>next</span>%s</a>'
+                     % order[at + 1])
+    pagenav = '<div class="pagenav">%s</div>' % "".join(parts) if parts else ""
     return """<!doctype html>
 <html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>%s - MeshBench</title>
+<meta name="description" content="%s">
 <link rel="icon" href="brand/favicon.svg" type="image/svg+xml">
 <meta name="theme-color" content="#0B0A12">
 <meta property="og:title" content="%s - MeshBench">
+<meta property="og:description" content="%s">
 <meta property="og:type" content="website">
 <meta property="og:image" content="brand/meshbench-card-1200x630.png">
 <style>%s</style></head>
-<body><div class="wrap">
-<nav><a class="brand" href="index.html" aria-label="MeshBench">%s</a>%s</nav>
-<main>%s
+<body><a class="skip" href="#content">Skip to content</a><div class="wrap">
+<nav aria-label="Site"><a class="brand" href="index.html" aria-label="MeshBench">%s</a>
+<button class="menu-toggle" type="button" aria-expanded="false">Menu</button>
+<div class="search"><input id="q" type="search" placeholder="Search the docs"
+ autocomplete="off" aria-label="Search the documentation"><kbd>/</kbd>
+<div class="hits" id="hits"></div></div>
+<div class="navlinks">%s</div></nav>
+<main id="content">%s
+%s
 <footer>MeshBench documentation. Built from the running application, not from
 mock-ups. Screenshots are window-only captures; see CLAUDE.md for the rule that
-keeps them current.</footer>
-</main></div></body></html>
-""" % (html.escape(title), html.escape(title), CSS, logo(), nav, body)
+keeps them current. <a href="https://github.com/MeshBench/meshbench-docs/blob/main/pages/%s">Edit this page</a>.</footer>
+</main>%s</div><script>%s</script></body></html>
+""" % (html.escape(title), html.escape(desc), html.escape(title),
+       html.escape(desc), CSS, logo(), navlinks, body, pagenav,
+       name[:-5] + ".md", toc, SCRIPT)
+
+
+def check_links(built):
+    """Every internal link must land: on a page that exists, and - when it
+    carries an anchor - on an id that page actually renders. The docs site's
+    version of a compiler error, run on every build."""
+    here = os.path.dirname(os.path.abspath(__file__))
+    ids = {out: set(re.findall(r'id="([^"]+)"', body))
+           for _, out, _, _, body in built}
+    bad = []
+    # Two headings slugging to one id: the second is unreachable, and any link
+    # to it lands on the first without a sound.
+    for _, out, _, _, body in built:
+        hids = re.findall(r'<h[123] id="([^"]+)"', body)
+        for dup in sorted({h for h in hids if hids.count(h) > 1}):
+            bad.append("%s: two headings share id #%s" % (out, dup))
+    for f, out, _, md, _ in built:
+        prose = re.sub(r"```.*?```", "", md, flags=re.S)
+        for m in re.finditer(r"!?\[[^\]]*\]\(([^)\s]+)\)", prose):
+            t = m.group(1)
+            if t.startswith(("http://", "https://", "mailto:")):
+                continue
+            page_part, _, anchor = t.partition("#")
+            if page_part.startswith("images/") or page_part.startswith("brand/"):
+                if not os.path.exists(os.path.join(here, page_part)):
+                    bad.append("%s -> %s (missing file)" % (f, t))
+                continue
+            target = page_part or out
+            if target not in ids:
+                bad.append("%s -> %s (no such page)" % (f, t))
+            elif anchor and anchor not in ids[target]:
+                bad.append("%s -> %s (no such anchor)" % (f, t))
+    if bad:
+        sys.exit("broken links:\n  " + "\n  ".join(bad))
+
+
+def write_search_index(here, built):
+    """What the navigation's search box answers from: every page's title, its
+    sections, and enough of each section's text to match on. Plain JSON beside
+    the pages, fetched once on the first keystroke."""
+    index = []
+    for _, out, title, _, body in built:
+        flat = re.sub(r"<(script|style|svg)[^>]*>.*?</\1>", " ", body, flags=re.S)
+        secs = [{"id": m.group(2),
+                 "h": re.sub(r"<[^>]+>", "", m.group(3)),
+                 "start": m.start()}
+                for m in re.finditer(r'<h([23]) id="([^"]+)">(.*?)<a class="hl"', flat)]
+        for j, sec in enumerate(secs):
+            end = secs[j + 1]["start"] if j + 1 < len(secs) else len(flat)
+            txt = html.unescape(re.sub(r"<[^>]+>", " ", flat[sec["start"]:end]))
+            sec["t"] = re.sub(r"\s+", " ", txt).lower()[:600]
+            del sec["start"]
+        index.append({"u": out, "title": title, "sections": secs})
+    open(os.path.join(here, "search-index.json"), "w").write(
+        json.dumps(index, separators=(",", ":")))
 
 
 def main():
     check_synced()
     here = os.path.dirname(os.path.abspath(__file__))
     src = os.path.join(here, "pages")
-    n = 0
+    built = []
     for f in sorted(os.listdir(src)):
         if not f.endswith(".md"):
             continue
@@ -366,9 +698,11 @@ def main():
         if os.path.exists(app):
             body = body.replace("<p>{{app}}</p>", open(app).read())
         open(os.path.join(here, out), "w").write(page(out, body, title))
-        n += 1
+        built.append((f, out, title, md, body))
         print("wrote", out)
-    print(n, "pages")
+    check_links(built)
+    write_search_index(here, built)
+    print(len(built), "pages")
 
 
 main()

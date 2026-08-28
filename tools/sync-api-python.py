@@ -16,7 +16,7 @@ import os
 import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from apidoc_common import repo_arg, rst_to_md, emit  # noqa: E402
+from apidoc_common import anchor, repo_arg, rst_to_md, emit  # noqa: E402
 
 PAGE = "reference-python.md"
 PKG = os.path.join("pkg", "client-python", "meshbench")
@@ -160,7 +160,7 @@ def render_behavior(cls):
             prefix = "staticmethod "
         elif "property" in d:
             prefix = "property "
-        out.append("### `%s%s`" % (prefix, signature(node)))
+        out.append("### `%s%s.%s`" % (prefix, cls.name, signature(node)))
         if doc(node):
             out.append(doc(node))
     return "\n\n".join(out)
@@ -209,7 +209,8 @@ def render_value(cls):
 
 
 def render_func(fn):
-    out = ["### `%s`" % signature(fn)]
+    out = ["### `%s`" % fn.name,
+           "```python\n%s\n```" % signature(fn)]
     if doc(fn):
         out.append(doc(fn))
     return "\n\n".join(out)
@@ -220,7 +221,7 @@ def toc(groups):
     for title, names in groups:
         if not names:
             continue
-        links = " · ".join("[%s](#%s)" % (n, n.lower()) for n in names)
+        links = " · ".join("[%s](#%s)" % (n, anchor(n)) for n in names)
         lines.append("**%s** · %s" % (title, links))
     return "\n\n".join(lines)
 

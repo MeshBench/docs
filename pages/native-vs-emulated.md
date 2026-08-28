@@ -18,7 +18,7 @@ work.
   </defs>
 
   <text x="180" y="20" font-size="13" font-weight="600" fill="var(--ink)" text-anchor="middle">Native</text>
-  <text x="180" y="38" font-size="11.5" fill="var(--dim)" text-anchor="middle">MeshCore compiled for your computer</text>
+  <text x="180" y="38" font-size="11.5" fill="var(--dim)" text-anchor="middle">MeshCore compiled for the host machine</text>
   <rect x="40" y="50" width="280" height="230" rx="10" fill="url(#ng)" stroke="var(--accent)" stroke-opacity=".5"/>
   <rect x="62" y="70" width="236" height="40" rx="6" fill="var(--card)" stroke="var(--rule)"/>
   <text x="180" y="95" font-size="12" fill="var(--ink)" text-anchor="middle">MeshCore application</text>
@@ -56,7 +56,7 @@ reached over an emulated SPI bus.</figcaption>
 
 | | native | emulated |
 |---|---|---|
-| what is compiled | MeshCore, for your computer | nothing; the released `.bin` runs as published |
+| what is compiled | MeshCore, for the host | nothing; the released `.bin` runs as published |
 | the radio | a shim linked where the SPI transport would be | an SX1262 model over an emulated SPI bus |
 | speed | faster than real time on a small network | wall time, always |
 | same seed, same result | yes | no |
@@ -64,7 +64,7 @@ reached over an emulated SPI bus.</figcaption>
 | how many nodes | hundreds | eight, on a twelve core machine |
 | answers | how does this change behave on a network | does this release work on this board |
 
-**Use native for anything you intend to measure.** Comparisons, regression
+**Native is the arm to measure with.** Comparisons, regression
 gates, protocol studies, coverage questions. Repeatability is the point: the
 same seed and the same scenario give the same answer, so a difference between
 two runs is a difference between the two firmwares.

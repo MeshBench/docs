@@ -15,21 +15,21 @@ There are three ways in, and they differ in who drives the run.
   </defs>
 
   <rect x="12" y="20" width="228" height="118" rx="9" fill="var(--card)" stroke="var(--rule)"/>
-  <text x="126" y="44" font-size="12.5" font-weight="600" fill="var(--ink)" text-anchor="middle">meshcoresim test</text>
+  <text x="126" y="44" font-size="12.5" font-weight="600" fill="var(--ink)" text-anchor="middle">meshbench test</text>
   <text x="126" y="64" font-size="11" fill="var(--dim)" text-anchor="middle">the fixture drives</text>
   <text x="126" y="88" font-size="11" fill="var(--faint)" text-anchor="middle">a network, a schedule and</text>
   <text x="126" y="103" font-size="11" fill="var(--faint)" text-anchor="middle">assertions, in one file</text>
   <text x="126" y="126" font-size="11" fill="var(--accent)" text-anchor="middle">JUnit XML for CI</text>
 
   <rect x="266" y="20" width="228" height="118" rx="9" fill="var(--card)" stroke="var(--rule)"/>
-  <text x="380" y="44" font-size="12.5" font-weight="600" fill="var(--ink)" text-anchor="middle">meshtest</text>
-  <text x="380" y="64" font-size="11" fill="var(--dim)" text-anchor="middle">your Go test drives</text>
+  <text x="380" y="44" font-size="12.5" font-weight="600" fill="var(--ink)" text-anchor="middle">the clients</text>
+  <text x="380" y="64" font-size="11" fill="var(--dim)" text-anchor="middle">your test drives, in Go or Python</text>
   <text x="380" y="88" font-size="11" fill="var(--faint)" text-anchor="middle">time only moves when you</text>
   <text x="380" y="103" font-size="11" fill="var(--faint)" text-anchor="middle">ask, so nothing races a clock</text>
   <text x="380" y="126" font-size="11" fill="var(--accent)" text-anchor="middle">assert on what was heard</text>
 
   <rect x="520" y="20" width="228" height="118" rx="9" fill="var(--card)" stroke="var(--rule)"/>
-  <text x="634" y="44" font-size="12.5" font-weight="600" fill="var(--ink)" text-anchor="middle">meshcoresim serve</text>
+  <text x="634" y="44" font-size="12.5" font-weight="600" fill="var(--ink)" text-anchor="middle">meshbench serve</text>
   <text x="634" y="64" font-size="11" fill="var(--dim)" text-anchor="middle">your application drives</text>
   <text x="634" y="88" font-size="11" fill="var(--faint)" text-anchor="middle">an address to point a client</text>
   <text x="634" y="103" font-size="11" fill="var(--faint)" text-anchor="middle">at, in any language</text>
@@ -49,10 +49,10 @@ There are three ways in, and they differ in who drives the run.
 ## A fixture with assertions
 
 A fixture is a network, an optional traffic schedule and a list of claims about
-what should happen. `meshcoresim test` runs it and reports which claims held.
+what should happen. `meshbench test` runs it and reports which claims held.
 
 ```
-meshcoresim test -fixture fife-strict -for 60000
+meshbench test -fixture fife-strict -for 60000
 ```
 
 ```
@@ -72,68 +72,81 @@ For a pipeline, `-junit report.xml` writes a report most CI systems display
 natively, and `-offline` refuses to download anything and says what is missing
 instead — which is what a runner with a warm cache and no egress should do.
 
-## A Go test
+## A test in Go or Python
 
-`meshtest` runs a network inside a Go test. Every node runs MeshCore's firmware
-and the frames cross the same channel, so a packet that would be lost on a
-hillside is lost in the test.
+The [Go client](reference-go.html) opens a headless session inside a test: no
+window, no GPU, and the run belongs to the test that started it. Every node
+runs MeshCore's firmware and the frames cross the same channel, so a packet
+that would be lost on a hillside is lost in the test.
 
 ```go
-import "github.com/MeshBench/meshbench/meshtest"
+import "github.com/MeshBench/meshbench/pkg/client-go/meshbench"
 
-func TestMyAppSurvivesAQuietMesh(t *testing.T) {
-    m, err := meshtest.Start(context.Background(), meshtest.Options{})
+func TestTheFloodReaches(t *testing.T) {
+    ctx := context.Background()
+    wb, err := meshbench.Headless(ctx,
+        meshbench.Fixture("fife-strict"), meshbench.Seed(7))
     if err != nil {
         t.Fatal(err)
     }
-    defer m.Close()
+    defer wb.Close()
 
-    conn, err := net.Dial("tcp", m.Endpoint())   // your client, unmodified
+    if err := wb.Sim().Start(ctx); err != nil {
+        t.Fatal(err)
+    }
+    if err := wb.Firmware().WaitStarted(ctx, 0); err != nil {
+        t.Fatal(err)
+    }
+    if err := wb.Sim().Run(ctx, 30*time.Second, 10*time.Minute); err != nil {
+        t.Fatal(err)
+    }
+
+    events, err := wb.Events().Recent(ctx, 2000)
     if err != nil {
         t.Fatal(err)
     }
-    defer conn.Close()
-    go io.Copy(io.Discard, conn)                 // something must read it
-
-    if err := m.Advance(30 * time.Second); err != nil {
-        t.Fatal(err)
-    }
-    if len(m.Received("")) == 0 {
+    if len(events) == 0 {
         t.Fatal("nothing was heard anywhere in thirty seconds")
     }
 }
 ```
 
-Two properties make it a test rather than a demonstration.
+The [Python client](reference-python.html) ships a pytest plugin: ask for the
+`meshbench` fixture and a headless session is started once and shared across
+the whole test session, because booting real firmware on a mesh costs minutes
+and a suite should pay it once.
 
-**Time is yours.** Nothing advances until `Advance` is called, so a test is not
-racing a wall clock and needs no `sleep` to be reliable. Advance exactly as far
-as the behaviour needs, then assert.
+```python
+from datetime import timedelta
 
-**It is deterministic.** The same seed and fixture produce the same run on every
-machine, so a failure can be handed to somebody else and reproduced.
+def test_the_flood_reaches(meshbench):
+    meshbench.project.open("fife-strict")
+    meshbench.sim.start()
+    meshbench.firmware.wait_started()
+    meshbench.sim.run(timedelta(seconds=30))
+    assert meshbench.events.total() > 0
+```
 
-`Received` reports failed receptions as well as successful ones, marked. A test
-that counts only successes cannot tell a quiet mesh from a colliding one.
+Two properties make these tests rather than demonstrations.
 
-### Whatever attaches must read
+**Time is the test's.** `sim.run` advances simulated time exactly as far as the
+behaviour needs, so nothing races a wall clock and no `sleep` is needed to be
+reliable. Run, then assert.
 
-A client that connects to the endpoint and never reads fills the link's buffer,
-and the mesh slows to a stop behind it. Sixty seconds of simulated time did not
-finish in two and a half minutes of real time; the same sixty take about seven
-once the connection is being drained.
+**They are deterministic.** The same seed and fixture produce the same run on
+every machine, so a failure can be handed to somebody else and reproduced.
 
-It stops quietly, which is the difficulty — a stalled mesh looks exactly like a
-mesh with nothing to say. Anything that pauses a client mid-test, a debugger
-breakpoint included, will do this.
+The event log reports failed receptions as well as successful ones, each with a
+cause. A test that counts only successes cannot tell a quiet mesh from a
+colliding one.
 
 ## An application in any language
 
-`meshcoresim serve` needs no Go at all. It prints an address; a client points at
+`meshbench serve` needs no Go at all. It prints an address; a client points at
 it and cannot tell the difference from a radio.
 
 ```
-meshcoresim serve
+meshbench serve
 ```
 
 ```
@@ -142,6 +155,13 @@ meshcoresim serve
 
   Point your client at that. Ctrl-C to stop.
 ```
+
+### Whatever attaches must read
+
+A client that connects to the endpoint and never reads fills the link's buffer,
+and the mesh slows to a stop behind it — quietly, which is the difficulty: a
+stalled mesh looks exactly like a mesh with nothing to say. Anything that
+pauses a client mid-run, a debugger breakpoint included, will do this.
 
 `-serial` exposes a virtual serial device instead, for a client that speaks to a
 USB radio and should not have to learn a socket. A Bluetooth peripheral is
@@ -157,7 +177,7 @@ Point MeshBench at a MeshCore checkout and it builds and runs that instead of a
 published release:
 
 ```
-meshcoresim dev /path/to/MeshCore
+meshbench dev /path/to/MeshCore
 ```
 
 The comparison that matters is usually between two builds rather than against an

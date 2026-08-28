@@ -74,7 +74,7 @@ One run is one commanded transmission:
    simulator and the chip disagree about LoRa itself.
 
 The receiver being MeshBench's own is the point. The experiment does not ask
-"can something decode this" — it asks whether *our* transmit chain and *our*
+"can something decode this" — it asks whether *MeshBench's* transmit chain and *MeshBench's*
 receive chain, pointed at real silicon, agree with it bit for bit.
 
 ## What the air showed
@@ -142,8 +142,8 @@ p0 = d0 ^ d1 ^ d2        p1 = d1 ^ d2 ^ d3
 p2 = d0 ^ d1 ^ d3        p3 = d0 ^ d2 ^ d3
 ```
 
-Four three-input XORs — not the textbook Hamming-plus-overall-parity that
-the implementation had used. The same technique, applied to the frame's own
+Four three-input XORs — not the textbook Hamming-plus-overall-parity a
+first implementation reaches for. The same technique, applied to the frame's own
 CRC field against the known payload, settled the last convention: the
 payload CRC is CCITT from a zero seed over all but the final two bytes,
 with those two bytes then XORed straight into the result.
@@ -153,27 +153,27 @@ SX1262 frame decodes end to end through MeshBench's receive chain: sync
 lock, frequency correction, demodulation, error correction, dewhitening,
 header, CRC, and the exact payload out the far side.
 
-## What the experiment fought through
+## What the capture tooling defends against
 
-Reality reviewed the tooling as thoroughly as the conventions, and each
-snag became a permanent improvement:
+A live capture can mislead in four specific ways, and the tooling defends
+against each:
 
-- **The DC spike won the spectrum search.** A chirp's spectrum is a
-  plateau, not a peak, so "find the strongest bin" landed anywhere in the
-  occupied band — or on the dongle's DC offset. The search now takes the
+- **A DC spike beats a chirp in a naive spectrum search.** A chirp's
+  spectrum is a plateau, not a peak, so "find the strongest bin" lands
+  anywhere in the occupied band — or on the dongle's DC offset. The search now takes the
   midpoint of the occupied band, away from DC.
-- **Half a chip of timing smeared every bin.** The decimator's sampling
-  phase relative to symbol boundaries is luck; one capture landed near a
-  half-sample and every bin read as a smear between neighbours. The tool
+- **Half a chip of timing smears every bin.** The decimator's sampling
+  phase relative to symbol boundaries is luck; near a half-sample, every
+  bin reads as a smear between neighbours. The tool
   now tries every decimation phase and keeps the one whose frame decodes
   best — sub-chip timing recovery by exhaustive search.
-- **A live channel damages frames.** One capture came back with a single
-  flipped bit — a collision or a fade, on a frequency other repeaters
-  genuinely use. A reference vector carrying channel damage would teach the
+- **A live channel damages frames.** A single flipped bit — a collision
+  or a fade, on a frequency other repeaters genuinely use — is enough. A
+  reference vector carrying channel damage would teach the
   test the wrong bits, so the tool refuses to write a vector from any frame
   the error correction had to repair. Recapture instead.
 - **The chip pads with garbage.** The final interleaver block's padding
-  nibbles decoded to nothing deterministic — uninitialised buffer contents
+  nibbles decode to nothing deterministic — uninitialised buffer contents
   no receiver ever reads. Golden comparison stops at the last block made
   entirely of meaningful nibbles, and requires the whole air frame to
   decode instead.

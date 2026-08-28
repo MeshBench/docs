@@ -155,4 +155,4 @@ In the firmware library, board images are listed alongside native builds. `use
 for role` assigns one to every node of that role, and reports how many nodes
 that will be before it does. Each of those nodes becomes its own emulator.
 
-![The firmware library](images/crop-library.png)
+![The firmware library, emulated builds included](images/firmware-library.png)

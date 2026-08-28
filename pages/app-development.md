@@ -68,7 +68,7 @@ The **Companion bench** panel, in the App view, does the same thing with a
 button, and adds what a terminal cannot: the protocol decoded in both
 directions, whether a client is attached, and faults on demand.
 
-![The Companion bench](images/companion-bench-annotated.png)
+![The App view: the Companion bench beside the live event counters and a node's console](images/view-app.png)
 
 **Drop every client connection** takes the listener away with the connection, so
 the device disappears the way an unplugged cable does. An application that
@@ -89,12 +89,11 @@ drive, checks the network's own assertions, writes JUnit and exits non-zero if
 anything failed. Everything is native firmware, so the same seed gives the same
 run and a failure is reproducible.
 
-Note the command is `meshcoresim`, not `meshbench` — the binary is named for the
-simulator it runs.
-
-If your application is written in Go, `meshtest` gives the same thing without a
-subprocess: a mesh inside the test, an endpoint to dial, and time that only
-moves when the test says so. [Testing your own code](testing.html) covers both.
+If your application is written in Go or Python, the
+[clients](scripting.html) give the same thing without leaving the test: a
+headless session the test owns, a clock it advances, and `bench.serve` to
+expose a companion endpoint to dial.
+[Testing your own code](testing.html) covers both arrangements.
 
 ## What differs from hardware
 

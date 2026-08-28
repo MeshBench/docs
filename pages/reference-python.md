@@ -28,7 +28,7 @@ Every class the client exports, its methods, and the shape of each call - genera
 
 **Errors** · [BadParams](#badparams) · [Closing](#closing) · [Conflict](#conflict) · [MeshbenchError](#meshbencherror) · [NotFound](#notfound) · [ProtocolMismatch](#protocolmismatch) · [Refused](#refused) · [Timeout](#timeout) · [Unavailable](#unavailable) · [UnknownVerb](#unknownverb)
 
-**Module functions** · [default_address](#default_address) · [subscribe](#subscribe)
+**Module functions** · [default_address](#default-address) · [subscribe](#subscribe)
 
 ## Workbench
 
@@ -39,21 +39,21 @@ started and stop it on the way out; `attach` never does - a script must not
 be able to close the workbench somebody is looking at by falling off the
 end of a `with`.
 
-### `classmethod attach(cls, socket: str | None = None, timeout: float = 300.0) -> Workbench`
+### `classmethod Workbench.attach(cls, socket: str | None = None, timeout: float = 300.0) -> Workbench`
 
 Connect to a workbench that is already running.
 
-### `classmethod headless(cls, fixture: str | None = None, seed: int | None = None, socket: str | None = None, binary: str | None = None, extra: list[str] | None = None, start_timeout: float = 90.0, stderr: Any = None) -> Workbench`
+### `classmethod Workbench.headless(cls, fixture: str | None = None, seed: int | None = None, socket: str | None = None, binary: str | None = None, extra: list[str] | None = None, start_timeout: float = 90.0, stderr: Any = None) -> Workbench`
 
 Start a session with no window, and own it.
 
 The one to use from a test or from CI: no display, no GPU, no toolkit.
 
-### `classmethod launch(cls, **kw) -> Workbench`
+### `classmethod Workbench.launch(cls, **kw) -> Workbench`
 
 Open the desktop workbench and own it. Needs a display.
 
-### `classmethod attach_or_headless(cls, **kw) -> Workbench`
+### `classmethod Workbench.attach_or_headless(cls, **kw) -> Workbench`
 
 Use the session that is running, or start one with no window.
 
@@ -65,24 +65,24 @@ it running at the end; starting one does own it and stops it. A script
 that wants the session to survive should attach to a session started
 separately.
 
-### `classmethod attach_or_launch(cls, **kw) -> Workbench`
+### `classmethod Workbench.attach_or_launch(cls, **kw) -> Workbench`
 
 Use the session that is running, or open the desktop workbench.
 
 The windowed half of the pair, so a re-run can put something back on
 screen. Needs a display.
 
-### `close() -> None`
+### `Workbench.close() -> None`
 
 Hang up, and stop the process if this client started it.
 
-### `property owns_process() -> bool`
+### `property Workbench.owns_process() -> bool`
 
 Whether closing this will stop the workbench.
 
-### `property is_headless() -> bool`
+### `property Workbench.is_headless() -> bool`
 
-### `call(verb: str, params: Any = None) -> Any`
+### `Workbench.call(verb: str, params: Any = None) -> Any`
 
 Run one verb and return its result.
 
@@ -90,7 +90,7 @@ Public and documented, not an escape hatch to be ashamed of: the shaped
 API will never cover all 213 verbs, and a verb added tomorrow should be
 usable today.
 
-### `subscribe(*topics: str) -> Subscription`
+### `Workbench.subscribe(*topics: str) -> Subscription`
 
 Stream server-pushed notifications for the given topics, rather than
 polling. Opens a second connection to this same workbench, so closing
@@ -100,45 +100,45 @@ Topics today: "status" (a new console line) and "snapshot" (a compact
 summary after each publish, coalesced by the server so a busy run cannot
 flood a slow reader).
 
-### `checkpoint(name: str) -> dict[str, Any]`
+### `Workbench.checkpoint(name: str) -> dict[str, Any]`
 
 Freeze the whole session under a name - the network, how it is being
 run, and where the clock had got to - so it can be taken back here.
 
-### `restore(name: str) -> dict[str, Any]`
+### `Workbench.restore(name: str) -> dict[str, Any]`
 
 Rebuild a checkpoint and replay to the moment it was taken. Returns
 as soon as the replay is under way; the sim reaching target_ms is when
 it has actually arrived. Deterministic, so it comes back to exactly
 where it was - at the cost of the replay taking the run's own time.
 
-### `checkpoints() -> list[str]`
+### `Workbench.checkpoints() -> list[str]`
 
 What can be restored, by name.
 
-### `snapshot() -> dict[str, Any]`
+### `Workbench.snapshot() -> dict[str, Any]`
 
 The whole session as the socket summarises it.
 
-### `describe() -> dict[str, Any]`
+### `Workbench.describe() -> dict[str, Any]`
 
 The cheap summary: nodes, seed, time, whether it is playing.
 
-### `journal() -> dict[str, Any]`
+### `Workbench.journal() -> dict[str, Any]`
 
 Every command this workbench has been driven with, newest last, and
 when the process started - so a session picked up cold can be told how
 the world got here, and whether it has been restarted.
 
-### `verbs() -> list[str]`
+### `Workbench.verbs() -> list[str]`
 
 Every method this build answers.
 
-### `say(text: str) -> None`
+### `Workbench.say(text: str) -> None`
 
 Leave a line in the session's log, for whoever is watching.
 
-### `keep_above(on: bool | None = None) -> bool`
+### `Workbench.keep_above(on: bool | None = None) -> bool`
 
 Whether a panel opened in its own window stays above the main one.
 
@@ -154,7 +154,7 @@ the main window. Somebody who would rather have the compositor's own
 windows turns this off. On macOS and Windows always-on-top costs
 nothing and the preference does not apply.
 
-### `window(node: str | Node, tab: Tab | str = '') -> str`
+### `Workbench.window(node: str | Node, tab: Tab | str = '') -> str`
 
 Open a node's own window, on a named tab.
 
@@ -166,44 +166,44 @@ Tabs are named as they are on the strip - Console, Companion, SDR,
 Settings, Radio, Stats, Activity, Connect, Hardware. Returns the one it
 opened on.
 
-### `property nodes() -> Nodes`
+### `property Workbench.nodes() -> Nodes`
 
-### `node(name: str) -> Node`
+### `Workbench.node(name: str) -> Node`
 
 A handle, without checking it exists - so one can be named before
 it is placed. Every method on it will say so if it does not.
 
-### `property schedule() -> Schedule`
+### `property Workbench.schedule() -> Schedule`
 
-### `property assertions() -> Assertions`
+### `property Workbench.assertions() -> Assertions`
 
-### `property sim() -> Sim`
+### `property Workbench.sim() -> Sim`
 
-### `property project() -> Project`
+### `property Workbench.project() -> Project`
 
-### `property firmware() -> Firmware`
+### `property Workbench.firmware() -> Firmware`
 
-### `property events() -> Events`
+### `property Workbench.events() -> Events`
 
-### `property boundary() -> Boundary`
+### `property Workbench.boundary() -> Boundary`
 
 The study area: which nodes are in the question being asked. Set it
 before importing, because the import filters at fetch time.
 
-### `property live() -> Live`
+### `property Workbench.live() -> Live`
 
 A live deployment feed - CoreScope and the rest - and the import
 chain that brings one in.
 
-### `console(node: str) -> Console`
+### `Workbench.console(node: str) -> Console`
 
-### `job(job_id: str) -> Job`
+### `Workbench.job(job_id: str) -> Job`
 
-### `jobs() -> list[dict[str, Any]]`
+### `Workbench.jobs() -> list[dict[str, Any]]`
 
 Everything long-running that is in flight.
 
-### `wait_for_nodes(timeout: timedelta = JOB_WAIT) -> None`
+### `Workbench.wait_for_nodes(timeout: timedelta = JOB_WAIT) -> None`
 
 Wait until the session has a network in it.
 
@@ -211,7 +211,7 @@ For a fixture opened at startup, which happens on a worker: the socket
 answers first, so everything asked before the open lands describes an
 empty session and is believed.
 
-### `wait_idle(timeout: timedelta = JOB_WAIT) -> None`
+### `Workbench.wait_idle(timeout: timedelta = JOB_WAIT) -> None`
 
 Wait for every job to finish.
 
@@ -222,14 +222,14 @@ they end and some are only marked - infer.run's is marked - so waiting
 for the list to empty waits forever on half of them. That is a
 difference between the verbs, not something a caller should know.
 
-### `node_stats() -> list[NodeStat]`
+### `Workbench.node_stats() -> list[NodeStat]`
 
 Sample every node and return what it found.
 
 A sample, not a read: it costs a /proc read per node, which is why the
 window only does it while somebody is looking at the panel.
 
-### `provenance() -> Provenance`
+### `Workbench.provenance() -> Provenance`
 
 What this session's measurements are being made under.
 
@@ -241,7 +241,7 @@ client is not entitled to make.
 
 Opening, saving, and starting over. Live.
 
-### `new(place: str | None = None) -> None`
+### `Project.new(place: str | None = None) -> None`
 
 An empty network.
 
@@ -249,26 +249,26 @@ With a place it becomes the study area and the map is framed on it,
 because those are the same wish - and because a blank network with no
 place is a map in the middle of the Atlantic.
 
-### `open(path: str) -> None`
+### `Project.open(path: str) -> None`
 
-### `save(name: str) -> str`
+### `Project.save(name: str) -> str`
 
 Write it out.
 
 Worth doing before anything that might restart the process: the
 scenario lives in the process, not on disk.
 
-### `list() -> list[str]`
+### `Project.list() -> list[str]`
 
 ## Nodes
 
 The collection. Live: every call reads the session.
 
-### `list() -> list[NodeInfo]`
+### `Nodes.list() -> list[NodeInfo]`
 
-### `info(name: str) -> NodeInfo`
+### `Nodes.info(name: str) -> NodeInfo`
 
-### `search(query: str, limit: int = 10) -> list[NameMatch]`
+### `Nodes.search(query: str, limit: int = 10) -> list[NameMatch]`
 
 Find nodes by name, best first, when you cannot type the name.
 
@@ -282,7 +282,7 @@ Returns an empty list rather than raising: "nothing matched" is an
 answer, and the caller usually wants to widen the query rather than
 handle an exception.
 
-### `find(query: str, least: float = 0.5) -> Node`
+### `Nodes.find(query: str, least: float = 0.5) -> Node`
 
 The one node a search meant, or a refusal naming what it did find.
 
@@ -291,7 +291,7 @@ act on. Taking the top result unconditionally is how a script ends up
 sending an advert from a node that merely shared a word with what was
 asked for, and it does that silently.
 
-### `near(node: Node | str, count: int = 0) -> list[Node]`
+### `Nodes.near(node: Node | str, count: int = 0) -> list[Node]`
 
 The nodes closest to this one, nearest first.
 
@@ -299,9 +299,9 @@ Trimming an imported deployment to a neighbourhood is the first thing
 anybody does with one, and the distance is the workbench's own - the
 same great circle its path losses use.
 
-### `of_kind(kind: str) -> list[Node]`
+### `Nodes.of_kind(kind: str) -> list[Node]`
 
-### `place(name: str, kind: Kind | str = Kind.SIMPLE_REPEATER, lat: float = 0.0, lon: float = 0.0, height_m: float | None = None, tx_dbm: float | None = None, board: Board | str | None = None) -> Node`
+### `Nodes.place(name: str, kind: Kind | str = Kind.SIMPLE_REPEATER, lat: float = 0.0, lon: float = 0.0, height_m: float | None = None, tx_dbm: float | None = None, board: Board | str | None = None) -> Node`
 
 Put one node down.
 
@@ -309,7 +309,7 @@ It inherits its neighbours' regions and their firmware, because
 somebody dropping a repeater on a map is adding a repeater to this
 network, not choosing a firmware strategy.
 
-### `place_many(placements: list[dict]) -> list[Node]`
+### `Nodes.place_many(placements: list[dict]) -> list[Node]`
 
 Put several down, then measure the links once.
 
@@ -317,7 +317,7 @@ One warm at the end rather than one per node: nodes.place re-measures
 the matrix each time, and on a national network that is minutes
 repeated.
 
-### `delete(*nodes: Node | str) -> None`
+### `Nodes.delete(*nodes: Node | str) -> None`
 
 Remove them, in one rebuild.
 
@@ -325,38 +325,38 @@ All or none: a name that is not there refuses and removes nothing,
 because half a deletion leaves a scenario nobody described and no way
 to tell which half survived without asking again.
 
-### `keep(*nodes: Node | str) -> None`
+### `Nodes.keep(*nodes: Node | str) -> None`
 
 Delete everything these do not name.
 
 The complement is worked out at the workbench rather than here, so it
 cannot be computed against a list that changed in between.
 
-### `select(*nodes: Node | str, add: bool = False) -> None`
+### `Nodes.select(*nodes: Node | str, add: bool = False) -> None`
 
-### `selected() -> list[str]`
+### `Nodes.selected() -> list[str]`
 
-### `stats() -> list[NodeStat]`
+### `Nodes.stats() -> list[NodeStat]`
 
 ## Node
 
 One node. Live: a handle, not a copy - it holds a name and asks.
 
-### `property info() -> NodeInfo`
+### `property Node.info() -> NodeInfo`
 
-### `property stat() -> NodeStat | None`
+### `property Node.stat() -> NodeStat | None`
 
-### `property running() -> bool`
+### `property Node.running() -> bool`
 
-### `property state() -> str`
+### `property Node.state() -> str`
 
-### `start() -> None`
+### `Node.start() -> None`
 
-### `stop() -> None`
+### `Node.stop() -> None`
 
-### `delete() -> None`
+### `Node.delete() -> None`
 
-### `output(source: str = 'serial', lines: int = 200) -> list[str]`
+### `Node.output(source: str = 'serial', lines: int = 200) -> list[str]`
 
 What this node printed, from one of four voices.
 
@@ -368,21 +368,21 @@ the radio model's log.
 The lines, not a count of them: a board that has gone quiet is read
 by looking at what it last said.
 
-### `property device() -> Device`
+### `property Node.device() -> Device`
 
 This node as a device to drive: its screen, buttons and panel. All
 of it works headless - the display is the framebuffer the controller
 holds, not a picture of the desktop. Distinct from `board`, which is
 the model name this hardware is.
 
-### `radio() -> dict[str, Any]`
+### `Node.radio() -> dict[str, Any]`
 
 What this node's radio is set to - the same thing the workbench
 shows under Radio. What the model assumes, and, for a node that is
 running, what it reports back and where the two differ. Left as a dict
 because a repeater and a companion answer it differently.
 
-### `wipe() -> None`
+### `Node.wipe() -> None`
 
 Put this board back to factory: its flash, its card, its files.
 
@@ -391,7 +391,7 @@ node configured into a corner stays there until this is called. Refused
 while it is running, rather than rewriting a flash underneath the
 emulator holding it.
 
-### `card(*, fitted: bool | None = None, file: str | None = None, wipe: bool = False) -> CardSlot`
+### `Node.card(*, fitted: bool | None = None, file: str | None = None, wipe: bool = False) -> CardSlot`
 
 What is in this node's card slot, and changing it.
 
@@ -408,7 +408,7 @@ A firmware marked as needing a card fills the slot whatever this says,
 because a build that keeps its settings there boots into nothing
 without one.
 
-### `output_window(source: str = 'serial') -> None`
+### `Node.output_window(source: str = 'serial') -> None`
 
 Open one of this node's logs in a window of its own.
 
@@ -416,14 +416,14 @@ A tab is one pane. What people do while a board is misbehaving is watch
 its screen and two of its logs together - what the board printed beside
 what the emulator said about running it - and that needs windows.
 
-### `move(lat: float, lon: float) -> None`
+### `Node.move(lat: float, lon: float) -> None`
 
 Put it somewhere else. The physics moves with it: cached losses for
 this node are forgotten.
 
-### `set_regions(*regions: str) -> None`
+### `Node.set_regions(*regions: str) -> None`
 
-### `set_firmware(build: Build | str, apply: bool = True) -> None`
+### `Node.set_firmware(build: Build | str, apply: bool = True) -> None`
 
 Change what it runs.
 
@@ -433,7 +433,7 @@ its old build is the control somebody presses twice and then distrusts.
 Pass apply=False to record it for the next start instead - and know
 that is what you have done.
 
-### `property build() -> Build | None`
+### `property Node.build() -> Build | None`
 
 The build this node runs, or None if it is pinned to nothing.
 
@@ -441,18 +441,18 @@ The whole row rather than the version string, because deleting a build
 or comparing two needs its path and its board, and reassembling those
 from a version is the kind of guesswork that deletes the wrong file.
 
-### `property firmware() -> str`
+### `property Node.firmware() -> str`
 
-### `firmware(build: Build | str) -> None`
+### `Node.firmware(build: Build | str) -> None`
 
-### `property board() -> str`
+### `property Node.board() -> str`
 
 What this node is, by board profile name.
 
 From the network rather than from the statistics: a stopped node has
 hardware just as surely as a running one.
 
-### `board(name: Board | str) -> None`
+### `Node.board(name: Board | str) -> None`
 
 What hardware this node is.
 
@@ -461,31 +461,31 @@ re-warms - and it clears a firmware pin made for a different board,
 because that image cannot run on this one and a pin nobody can honour
 reads as a configured node right up until it refuses to start.
 
-### `set_true_rf(on: bool = True) -> None`
+### `Node.set_true_rf(on: bool = True) -> None`
 
 Take waveform verdicts whatever the run's mode - the hybrid flag,
 for measuring one node honestly inside a cheap run.
 
-### `inject() -> None`
+### `Node.inject() -> None`
 
 Originate a packet without firmware.
 
 It exercises the radio model and the channel; what it does not exercise
 is relaying, which is a firmware behaviour and needs a firmware.
 
-### `provisioning() -> list[str]`
+### `Node.provisioning() -> list[str]`
 
 What this node is told at boot, in the console's own words.
 
-### `serve(over: Transport = Transport.TCP) -> str`
+### `Node.serve(over: Transport = Transport.TCP) -> str`
 
 Hand this companion to a real client, and say where to point it.
 
-### `unserve() -> None`
+### `Node.unserve() -> None`
 
-### `property console() -> Console`
+### `property Node.console() -> Console`
 
-### `wait_running(timeout: timedelta = FIRMWARE_WAIT) -> None`
+### `Node.wait_running(timeout: timedelta = FIRMWARE_WAIT) -> None`
 
 Wait for its firmware process to be up.
 
@@ -496,13 +496,13 @@ simulated time. Starting a process is real work on the real machine.
 
 The clock, and the run. Live.
 
-### `state() -> SimState`
+### `Sim.state() -> SimState`
 
-### `property playing() -> bool`
+### `property Sim.playing() -> bool`
 
-### `property now_ms() -> int`
+### `property Sim.now_ms() -> int`
 
-### `start(firmware_wait: timedelta = FIRMWARE_WAIT, wait: timedelta = JOB_WAIT) -> None`
+### `Sim.start(firmware_wait: timedelta = FIRMWARE_WAIT, wait: timedelta = JOB_WAIT) -> None`
 
 Bring the run up: wait out the warm, start every node, and play.
 
@@ -519,33 +519,33 @@ the mesh started, plays with fifty-six of them down, and says nothing.
 So this asks for the three things it actually wants, in order, and
 checks each one.
 
-### `play() -> None`
+### `Sim.play() -> None`
 
-### `pause() -> None`
+### `Sim.pause() -> None`
 
-### `step() -> None`
+### `Sim.step() -> None`
 
-### `reset() -> None`
+### `Sim.reset() -> None`
 
-### `settle(steps: int = 60) -> None`
+### `Sim.settle(steps: int = 60) -> None`
 
 Step a paused run, which is how a command gets the time it needs to
 be answered without starting the clock.
 
-### `property seed() -> int`
+### `property Sim.seed() -> int`
 
-### `seed(value: int) -> None`
+### `Sim.seed(value: int) -> None`
 
 Fix the run. Same seed, same scenario, same result - which is what
 makes a *changed* result mean something.
 
-### `property step_ms() -> int`
+### `property Sim.step_ms() -> int`
 
-### `step_ms(value: int) -> None`
+### `Sim.step_ms(value: int) -> None`
 
-### `set_real_firmware(on: bool = True) -> None`
+### `Sim.set_real_firmware(on: bool = True) -> None`
 
-### `run(simulated: timedelta, wait: timedelta = RUN_WAIT) -> None`
+### `Sim.run(simulated: timedelta, wait: timedelta = RUN_WAIT) -> None`
 
 Advance the mesh's own clock by this much, and wait for it.
 
@@ -558,11 +558,11 @@ Two clocks, one call, and they are not the same one:
   deal more than five of yours, which is why it is separate and
   generous.
 
-### `wait_stopped(timeout: timedelta = RUN_WAIT) -> None`
+### `Sim.wait_stopped(timeout: timedelta = RUN_WAIT) -> None`
 
 Wait for a run to end. `timeout` is wall clock.
 
-### `wait_until(at: timedelta, timeout: timedelta = RUN_WAIT) -> None`
+### `Sim.wait_until(at: timedelta, timeout: timedelta = RUN_WAIT) -> None`
 
 Wait for the mesh's clock to reach a moment.
 
@@ -572,25 +572,25 @@ Wait for the mesh's clock to reach a moment.
 
 What this machine can run, and what it is running. Live.
 
-### `library() -> list[Build]`
+### `Firmware.library() -> list[Build]`
 
-### `on_disk() -> list[Build]`
+### `Firmware.on_disk() -> list[Build]`
 
 Only the ones this machine holds, which is the only thing that
 decides what a node can run. A build that failed to download and one in
 daily use look identical from anywhere else.
 
-### `find(version: str, board: Board | str = '') -> Build`
+### `Firmware.find(version: str, board: Board | str = '') -> Build`
 
 One build, by version and - where the version alone is ambiguous,
 which it is for every board image - by board.
 
-### `scan() -> None`
+### `Firmware.scan() -> None`
 
 Ask the catalogue what is published, which is how a build nobody has
 downloaded becomes offerable.
 
-### `download(role: str, version: str, board: Board | str = '') -> None`
+### `Firmware.download(role: str, version: str, board: Board | str = '') -> None`
 
 Fetch a published build.
 
@@ -599,7 +599,7 @@ deliberately: this one names a published release asset, and the
 catalogue's own spellings are not always the application names the
 verbs are keyed on.
 
-### `import_(path: str, role: str, board: str = '', label: str = '') -> Build`
+### `Firmware.import_(path: str, role: str, board: str = '', label: str = '') -> Build`
 
 Take a build from a path - the one way a locally built image gets
 into the library.
@@ -609,7 +609,7 @@ Left out it is a timestamp, so importing twice gives two builds rather
 than one that quietly replaced the other - which matters the moment you
 want to put the new one on a node and delete the old.
 
-### `delete(build: Build) -> str`
+### `Firmware.delete(build: Build) -> str`
 
 Remove a build from the cache, and say what was removed.
 
@@ -618,7 +618,7 @@ cache. A build nodes are still pinned to will go: they keep the pin,
 which then cannot be honoured and fails at start - so move them onto
 the replacement first.
 
-### `details(build: Build | str, board: Board | str = '', role: Role | str = '') -> BuildDetails`
+### `Firmware.details(build: Build | str, board: Board | str = '', role: Role | str = '') -> BuildDetails`
 
 Everything known about one build: where it is, what it is, and what
 has been decided about it.
@@ -627,7 +627,7 @@ Takes a Build or a bare label. A label alone is refused when it names
 more than one build - the same image imported for two boards, say -
 because acting on the wrong one is a rename of somebody else's image.
 
-### `update(build: Build | str, *, board: Board | str = '', role: Role | str = '', label: str | None = None, new_role: Role | str | None = None, new_board: Board | str | None = None, coproc_at_reset: bool | None = None, card_required: bool | None = None, notes: str | None = None) -> BuildDetails`
+### `Firmware.update(build: Build | str, *, board: Board | str = '', role: Role | str = '', label: str | None = None, new_role: Role | str | None = None, new_board: Board | str | None = None, coproc_at_reset: bool | None = None, card_required: bool | None = None, notes: str | None = None) -> BuildDetails`
 
 Rename a build, move it to another board or role, or change how it
 is run.
@@ -642,11 +642,11 @@ Every argument left out is left alone, which is why they default to
 None rather than to "" or False: "leave this setting" and "turn it
 off" are different answers.
 
-### `window(build: Build | str, board: Board | str = '', role: Role | str = '') -> None`
+### `Firmware.window(build: Build | str, board: Board | str = '', role: Role | str = '') -> None`
 
 Open the build's own window - what a click on a library row does.
 
-### `build(checkout: str, role: Role | str = '', label: str = '', wait: timedelta = JOB_WAIT) -> list[Build]`
+### `Firmware.build(checkout: str, role: Role | str = '', label: str = '', wait: timedelta = JOB_WAIT) -> list[Build]`
 
 Compile a MeshCore checkout and put the results in the library.
 
@@ -660,7 +660,7 @@ here is the thing that builds them together.
 Blocks until it is done - a MeshCore build is a minute or two per
 role - and returns what the library now holds that was built locally.
 
-### `use_what_is_here() -> dict[Role, Build]`
+### `Firmware.use_what_is_here() -> dict[Role, Build]`
 
 Pin every role that needs one to the newest build on this machine.
 
@@ -673,9 +673,9 @@ Refuses by name when a role has nothing, because "no companion build"
 is a thing to go and fix rather than a reason to start a mesh with a
 silent hole in it.
 
-### `use_for_role(role: Role, build: Build | str) -> None`
+### `Firmware.use_for_role(role: Role, build: Build | str) -> None`
 
-### `start() -> None`
+### `Firmware.start() -> None`
 
 Bring up firmware on every node.
 
@@ -684,14 +684,14 @@ not with what is up. It was synchronous once, and on 155 nodes that
 froze the window and the socket together for as long as it was left -
 which read as a crash and was reported as one.
 
-### `state() -> dict[str, Any]`
+### `Firmware.state() -> dict[str, Any]`
 
-### `needed() -> list[dict[str, Any]]`
+### `Firmware.needed() -> list[dict[str, Any]]`
 
 The roles with nodes and no build pinned, with what could be. A run
 refuses to start until every one is answered.
 
-### `wait_started(timeout: timedelta = FIRMWARE_WAIT) -> None`
+### `Firmware.wait_started(timeout: timedelta = FIRMWARE_WAIT) -> None`
 
 Wait for every node's firmware to be up. `timeout` is wall clock.
 
@@ -719,9 +719,9 @@ reads exactly like a command that ran and did nothing.
 So this picks the right one from the node's kind. A caller should not have
 to know, and every caller that did know got it wrong at least once.
 
-### `send(line: str) -> None`
+### `Console.send(line: str) -> None`
 
-### `read() -> list[str]`
+### `Console.read() -> list[str]`
 
 The scrollback, newest last.
 
@@ -731,7 +731,7 @@ text, and every use of it fails somewhere further along. The tail is
 the last 200; a node up for an hour has thousands and nobody reads the
 first one.
 
-### `ask(line: str, steps: int = 100) -> str`
+### `Console.ask(line: str, steps: int = 100) -> str`
 
 Send a line and wait for the node to answer it.
 
@@ -745,7 +745,7 @@ was broken. This gives the mesh its own time first.
 
 What the engine has done. Live.
 
-### `recent(limit: int = 50) -> list[Event]`
+### `Events.recent(limit: int = 50) -> list[Event]`
 
 The tail.
 
@@ -754,13 +754,13 @@ run has millions. A script that needs all of them dumps per round -
 reading only the tail after a busy flood samples the most congested
 moment of it, which is a mistake already made once here.
 
-### `total() -> int`
+### `Events.total() -> int`
 
-### `dump(path: str) -> int`
+### `Events.dump(path: str) -> int`
 
 Write every event held to a file, one JSON object per line.
 
-### `wait(kind: str = '', from_: str = '', to: str = '', timeout: timedelta = EVENT_WAIT) -> Event`
+### `Events.wait(kind: str = '', from_: str = '', to: str = '', timeout: timedelta = EVENT_WAIT) -> Event`
 
 Wait for an event to match, and return it.
 
@@ -768,7 +768,7 @@ Wait for an event to match, and return it.
 
 The study area, however you have it. Live.
 
-### `use(area: str | Path, name: str = '') -> list[str]`
+### `Boundary.use(area: str | Path, name: str = '') -> list[str]`
 
 Take a study area from a place name or from GeoJSON.
 
@@ -779,21 +779,21 @@ area in the study, which is the only thing the caller wanted to say.
 `name` renames a single loaded polygon, so a file called
 `export(3).geojson` can still join the study as "Tay catchment".
 
-### `search(query: str) -> list[str]`
+### `Boundary.search(query: str) -> list[str]`
 
 Places matching a name, best first. Needs the network.
 
 Returns names rather than geometry: the geometry stays at the
 workbench, and the name is what accept takes.
 
-### `accept(name: str) -> str`
+### `Boundary.accept(name: str) -> str`
 
 Take one of the search results into the study area.
 
 Areas union rather than replace: a study is often two council areas
 rather than one.
 
-### `load(source: str | Path | dict, name: str = '') -> list[str]`
+### `Boundary.load(source: str | Path | dict, name: str = '') -> list[str]`
 
 Take a study area from GeoJSON: a path, a document, or a dict.
 
@@ -805,18 +805,18 @@ The one way to study an area nothing has an administrative name for -
 a catchment, a valley, the bit north of the river - and the only one
 that works with no network at all.
 
-### `list() -> list[str]`
+### `Boundary.list() -> list[str]`
 
 What the study area is made of.
 
-### `remove(name: str) -> None`
+### `Boundary.remove(name: str) -> None`
 
 Take one area back out.
 
 Changes what is measured, never what is loaded: the nodes stay until
 something prunes them.
 
-### `prune(margin_km: float | None = None) -> int`
+### `Boundary.prune(margin_km: float | None = None) -> int`
 
 Delete the nodes outside the study area, and say how many went.
 
@@ -828,7 +828,7 @@ inside, and dropping it makes the inside look quieter than it is.
 
 A live feed, and the deployment it describes. Live in both senses.
 
-### `pull(url: str, strategy: Strategy = Strategy.REPLACE, window: timedelta = DEFAULT_WINDOW, wait: timedelta = JOB_WAIT) -> ImportPreview`
+### `Live.pull(url: str, strategy: Strategy = Strategy.REPLACE, window: timedelta = DEFAULT_WINDOW, wait: timedelta = JOB_WAIT) -> ImportPreview`
 
 Fetch, commit, read the traffic, and apply what it implies.
 
@@ -840,7 +840,7 @@ Returns what the fetch found. Link measurement is still running when
 this returns on anything but a small mesh, so follow it with
 `wb.wait_idle()` before starting a run.
 
-### `set_source(url: str) -> str`
+### `Live.set_source(url: str) -> str`
 
 Point at a feed without reading it, and say how it was tidied.
 
@@ -849,11 +849,11 @@ to read back and the session offers no way to ask what its source
 currently is. One that answered from a value this object happened to
 remember would be right until anything else set it.
 
-### `fetch(url: str = '') -> ImportPreview`
+### `Live.fetch(url: str = '') -> ImportPreview`
 
 Read the deployment and say what would change, changing nothing.
 
-### `commit(strategy: Strategy = Strategy.REPLACE) -> int`
+### `Live.commit(strategy: Strategy = Strategy.REPLACE) -> int`
 
 Apply the fetched nodes to the scenario.
 
@@ -864,7 +864,7 @@ Measuring the links afterwards is a job rather than part of this call -
 676 nodes is 228,000 terrain paths over real ground - so this returns
 while that is still running.
 
-### `infer(window: timedelta = DEFAULT_WINDOW, wait: timedelta = JOB_WAIT) -> None`
+### `Live.infer(window: timedelta = DEFAULT_WINDOW, wait: timedelta = JOB_WAIT) -> None`
 
 Read the feed's recent traffic to work out what each node holds.
 
@@ -875,7 +875,7 @@ regions are unknown forwards nothing, and nothing says so.
 here for it. A week of ScotMesh is around 150,000 packets and several
 minutes of paging.
 
-### `apply_regions() -> int`
+### `Live.apply_regions() -> int`
 
 Put the inferred regions onto the nodes, and say how many took one.
 
@@ -886,22 +886,22 @@ silent until this runs.
 
 What has to be true for a run to have passed. Live.
 
-### `delivered(at_least: int, within: timedelta | None = None) -> None`
+### `Assertions.delivered(at_least: int, within: timedelta | None = None) -> None`
 
 At least this many nodes received something.
 
-### `sent(node: str | Node = '', at_least: int = 0, at_most: int = 0, within: timedelta | None = None) -> None`
+### `Assertions.sent(node: str | Node = '', at_least: int = 0, at_most: int = 0, within: timedelta | None = None) -> None`
 
 This node - or the whole mesh - transmitted within these bounds.
 
 at_most is the interesting one: it is how a relay-suppression change is
 held to not having made the mesh chattier.
 
-### `add(kind: str, node: str | Node = '', at_least: int = 0, at_most: int = 0, max_pct: float = 0.0, within: timedelta | None = None) -> int`
+### `Assertions.add(kind: str, node: str | Node = '', at_least: int = 0, at_most: int = 0, max_pct: float = 0.0, within: timedelta | None = None) -> int`
 
 The general form, for a kind this package has no name for yet.
 
-### `check() -> Report`
+### `Assertions.check() -> Report`
 
 Measure every assertion against the run so far.
 
@@ -913,7 +913,7 @@ publish.
 
 What the mesh is told to send, and when. Live.
 
-### `add(node: str | Node, command: str, at: timedelta | None = None, every: timedelta | None = None) -> int`
+### `Schedule.add(node: str | Node, command: str, at: timedelta | None = None, every: timedelta | None = None) -> int`
 
 Have a node send something, once or repeatedly.
 
@@ -924,7 +924,7 @@ script should have to.
 Repeating traffic has worked all along and nothing said so, which to
 somebody writing a script is the same as it not existing.
 
-### `clear() -> int`
+### `Schedule.clear() -> int`
 
 Forget all of them.
 
@@ -934,41 +934,41 @@ One running node's board, as a device to drive.
 
 A handle, not a copy: it holds a name and asks.
 
-### `screen() -> Screen`
+### `Device.screen() -> Screen`
 
 What the display is showing, as numbers. Works headless - it reads
 the framebuffer the controller holds, not the desktop.
 
-### `screenshot() -> Shot`
+### `Device.screenshot() -> Shot`
 
 Write the display to a PNG and return where it landed. The frame is
 exactly what the controller holds, at the size it holds it.
 
-### `press(pin: int, down: bool = True) -> None`
+### `Device.press(pin: int, down: bool = True) -> None`
 
 Hold a button pin down, or release it. Held rather than clicked
 because the firmware cares: MeshCore wakes a sleeping display on a
 press and powers off on a long one, so time the release yourself - or
 use tap, which does not hold.
 
-### `tap(pin: int) -> None`
+### `Device.tap(pin: int) -> None`
 
 Press a button and let go - the ordinary click.
 
-### `type(text: str) -> None`
+### `Device.type(text: str) -> None`
 
 Enter text at the board's own keyboard, a character at a time -
 which is what the keyboard sends and what the firmware polls for.
 
-### `touch(x: int, y: int, down: bool = True) -> None`
+### `Device.touch(x: int, y: int, down: bool = True) -> None`
 
 Put a finger on the panel at a point, or lift it off.
 
-### `tap_at(x: int, y: int) -> None`
+### `Device.tap_at(x: int, y: int) -> None`
 
 Touch a point and lift off - a tap on the panel.
 
-### `wait_screen(timeout: timedelta = DEFAULT_SCREEN_WAIT) -> Screen`
+### `Device.wait_screen(timeout: timedelta = DEFAULT_SCREEN_WAIT) -> Screen`
 
 Wait until the display changes from what it shows now, and return the
 new frame; raise with what it was still showing if the timeout runs out.
@@ -987,15 +987,15 @@ Iterate it for events; it blocks until the next one arrives and ends when
 the workbench hangs up. Use it as a context manager, or call close, so the
 extra connection does not outlive the interest.
 
-### `close() -> None`
+### `Subscription.close() -> None`
 
 ## Job
 
 A long operation the workbench is doing. Live: a handle to an id.
 
-### `info() -> JobInfo | None`
+### `Job.info() -> JobInfo | None`
 
-### `cancel() -> None`
+### `Job.cancel() -> None`
 
 Stop it, where whoever started it left a way to.
 
@@ -1003,7 +1003,7 @@ A job with no cancel refuses by name rather than silently doing
 nothing: an operator who asked deserves to be told, not left watching a
 bar that carries on.
 
-### `wait(timeout: timedelta = JOB_WAIT) -> None`
+### `Job.wait(timeout: timedelta = JOB_WAIT) -> None`
 
 Wait for it to finish, and raise if it finished badly.
 
@@ -1464,11 +1464,19 @@ is supposed to have caught first, so seeing this is worth looking into.
 
 ## Module functions
 
-### `default_address() -> str`
+### `default_address`
+
+```python
+default_address() -> str
+```
 
 Where a workbench answers on this operating system unless told otherwise.
 
-### `subscribe(*topics: str, address: str | None = None) -> Subscription`
+### `subscribe`
+
+```python
+subscribe(*topics: str, address: str | None = None) -> Subscription
+```
 
 Open a subscription to the given topics - "status", "snapshot", and
 whatever else the workbench publishes.

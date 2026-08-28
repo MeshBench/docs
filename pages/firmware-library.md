@@ -3,21 +3,21 @@
 Every build MeshBench knows about, whether it is on this machine or merely
 published, and what each node is running.
 
-![The firmware library](images/firmware-library-annotated.png)
+![The firmware library: every build, its role, size and how many nodes run it](images/firmware-library.png)
 
-The three marks, in order.
+Three parts of it, in reading order.
 
-**1. Filters and search.** `on disk only` hides everything that would need a
+**Filters and search.** `on disk only` hides everything that would need a
 download, `boards only` hides the host builds, `native only` does the reverse.
 The search box matches role, version or board, because those are the three
 things people actually look for: they type `1.17`, or `companion`, or the board
 on the desk.
 
-**2. The key.** `native` in green is a build compiled for this machine.
+**The key.** `native` in green is a build compiled for this machine.
 `board` in orange is emulated hardware: the image people flash, run unmodified
 inside an emulator. The count beside it is how many builds the catalogue knows.
 
-**3. Storage, and the button that saves an afternoon.** `wipe every node's
+**Storage, and the button that saves an afternoon.** `wipe every node's
 memory` deletes the persisted per-node state. Nodes keep their identity and
 preferences between runs, as hardware does, and that is a trap when comparing
 two firmware builds: **saved preferences beat a compiled default**, so a node
@@ -36,7 +36,7 @@ boot.
 | on disk | size if it is here, or a `download` button if it is not |
 | in use by | how many nodes in the current scenario run it |
 
-**Versions are per role.** Upstream tags one role at a time and so do our native
+**Versions are per role.** Upstream tags one role at a time and so do the native
 builds, so `companion-v1.17.0` and `repeater-v1.17.0` are different releases.
 Asking for a bare `v1.17.0` resolves nothing and reports "no native builds
 published", which points at the release rather than at the string that caused it.

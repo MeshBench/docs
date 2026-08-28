@@ -1,6 +1,6 @@
 # Getting started
 
-Fifteen minutes from nothing to a real 311-node network relaying real packets
+Fifteen minutes from nothing to a real 378-node network relaying real packets
 through real firmware.
 
 ## Install
@@ -13,14 +13,14 @@ blank space you have to ask about.
 
 **Requirements**
 
-- **glibc 2.38 or newer**: Ubuntu 24.04, Debian 13, Fedora 39, or anything more
-  recent. The floor is set by a prebuilt library MeshBench links against rather
-  than by choice, and on an older distribution the application will not start.
+- **glibc 2.35 or newer**: Ubuntu 22.04, Debian 12, RHEL 9, or anything more
+  recent. The floor is the build machine's own glibc rather than a choice, and
+  on an older distribution the application will not start.
 - **A display and a GPU.** The CPU path gives the same answers more slowly, so a
   machine without a usable GPU loses time rather than features.
 - **RAM**: about 500 MB for the application, plus roughly 10 MB per simulated
-  node running real firmware. The 311-node network wants about 4 GB free.
-- **Disk**: 200 MB for the bundle, and a cache under `~/.cache/meshcoresim` that
+  node running real firmware. The 378-node network wants about 4 GB free.
+- **Disk**: 200 MB for the bundle, and a cache under `~/.cache/meshbench` that
   grows with the firmware builds and map tiles you use.
 
 **Steps**
@@ -47,7 +47,7 @@ own path to find its data files, so a bare copy of the binary will not run.
 
 | symptom | cause |
 |---|---|
-| `version GLIBC_2.38 not found` | the distribution is older than the floor above |
+| `version GLIBC_2.35 not found` | the distribution is older than the floor above |
 | `Cannot set swap interval` | harmless, printed when the compositor declines vsync |
 | a window opens and stays black | no usable GL driver; install your vendor's Mesa or driver package |
 
@@ -66,7 +66,7 @@ own path to find its data files, so a bare copy of the binary will not run.
    own row rather than a translation layer.
 
 The intended shape is a signed `.app` in a `.dmg`, with the same
-`~/Library/Caches/meshcoresim` behaviour the Linux build has under
+`~/Library/Caches/meshbench` behaviour the Linux build has under
 `~/.cache`. Emulation would be optional on first release: the native firmware
 path, which is what every study and every CI gate uses, has no platform-specific
 parts.
@@ -92,12 +92,11 @@ directory.
 ```
 git clone https://github.com/MeshBench/meshbench
 cd meshbench
-go build ./cmd/meshcoresim
+go build ./cmd/meshbench
 ```
 
-That produces a binary called `meshcoresim`. The release ships the same program
-as `meshbench`, and it calls itself whichever name it was run as, so the two are
-interchangeable everywhere below.
+That produces a binary called `meshbench`, the same program the release
+ships.
 
 Needs Go 1.25 and a C toolchain with GL and X11 development headers, because the
 UI is cgo. On Debian and Ubuntu:
@@ -120,6 +119,8 @@ sudo apt install gcc pkg-config libgl1-mesa-dev xorg-dev
    reception and miss is listed with a cause, which is the difference between
    "it did not arrive" and "it arrived 3 dB under the demodulator floor".
 
+![The Run view playing: the schedule and scoreboard beside the map, firmware running](images/view-run.png)
+
 > If the mesh looks dead, the usual cause is regions rather than radio. A
 > repeater only forwards flood traffic for regions it has been told about, and
 > reports no error when it declines. See [Shipped networks](fixtures.html).
@@ -138,12 +139,18 @@ arrangement of panels for one kind of work:
 | **Bench** | compare configurations: sweep a parameter, read what differed |
 | **App** | write a client against it: an endpoint, the protocol, faults |
 
+![The menu bar, and the view switcher under it](images/crop-viewbar.png)
+
 Panels can be dragged out, docked elsewhere, or popped into their own window on
 a second monitor. Each view remembers its own arrangement.
 
 ## Next
 
 - [Shipped networks](fixtures.html) if you want a bigger or more realistic mesh.
+- The [CLI reference](reference-cli.html) for everything the binary does without
+  a window, and [Settings](settings.html) for what the application remembers.
+- [External tools](tools.html) for what MeshBench looks for on the machine —
+  Wireshark, SDR++, the emulators — and what happens when one is missing.
 - [Firmware development](firmware-development.html) if you are changing MeshCore
   itself.
 - [Companion bench](companion-bench.html) if you are writing a client.

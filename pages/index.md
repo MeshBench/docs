@@ -13,6 +13,8 @@ Both price the same path; see [RF simulation](rf-simulation.html).
 One binary on your machine. No service to deploy, no account, nothing to
 configure before the first run.
 
+![The workbench: the shipped Scotland and Ireland network on the map, links drawn, real firmware running on every node](images/workbench-plan.png)
+
 <figure>
 <svg viewBox="0 0 780 340" role="img" aria-label="Who uses MeshBench, what it gives them, and which parts are real">
   <defs>
@@ -46,7 +48,7 @@ configure before the first run.
   <rect x="234" y="102" width="156" height="34" rx="6" fill="var(--card)" stroke="var(--rule)"/>
   <text x="312" y="123" font-size="11.5" fill="var(--ink)" text-anchor="middle">the command line</text>
   <rect x="234" y="144" width="156" height="34" rx="6" fill="var(--card)" stroke="var(--rule)"/>
-  <text x="312" y="165" font-size="11.5" fill="var(--ink)" text-anchor="middle">meshtest, in your tests</text>
+  <text x="312" y="165" font-size="11.5" fill="var(--ink)" text-anchor="middle">three clients, in your tests</text>
   <text x="312" y="202" font-size="10.5" fill="var(--faint)" text-anchor="middle">no service, no account,</text>
   <text x="312" y="215" font-size="10.5" fill="var(--faint)" text-anchor="middle">nothing to configure first</text>
 
@@ -81,7 +83,7 @@ thing but the thing itself.</figcaption>
 - **Network operators.** Will this repeater help? What does the mesh look like
   if that site goes down? Import a real network from CoreScope and ask.
 - **Firmware developers.** Does my branch relay more or less than `dev`? Build
-  it, hand it to MeshBench, run both against the same 311-node network, and
+  it, hand it to MeshBench, run both against the same 378-node network, and
   read the difference.
 - **Application developers.** Point your client at a simulated mesh over TCP or
   a virtual serial port, and break it on purpose to see how your app copes.

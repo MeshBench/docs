@@ -2,6 +2,8 @@
 
 Everything that changes what a run does, grouped by what it affects.
 
+![The Configuration window's overview: scope, links, randomness, and the run profile](images/settings-overview.png)
+
 ## Radio presets
 
 A preset is an agreed set of LoRa parameters for a territory, taken from the
@@ -106,8 +108,8 @@ profile and the model answers whether a site survives December at its latitude.
 
 | setting | effect |
 |---|---|
-| let agents drive this workbench | opens the control socket at `$XDG_RUNTIME_DIR/meshcoresim.sock` |
-| compute the link matrix in the background | keeps reachability current while you edit |
+| let agents drive this workbench | opens the control socket at `$XDG_RUNTIME_DIR/meshbench.sock` |
+| compute the link matrix in the background | keeps reachability current while editing |
 
 The control socket is how every scripted run, the test runner and the MCP server
 drive the application. See the [control socket reference](reference-control.html).

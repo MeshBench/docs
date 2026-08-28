@@ -15,18 +15,20 @@ against the same network, with the results tabulated side by side.
    first run.
 4. **Define the arms.** Each arm is a label plus what differs: a firmware
    version, a loop-detection setting, a path-hash size, a CAD setting.
-5. **Choose seeds and senders.** Senders `spread` rather than the first few in
-   the list: a cluster of neighbours contends with itself instead of with the
-   mesh.
+5. **Choose seeds and senders.** Pick senders spread across the map rather
+   than the first few in the list: a cluster of neighbours contends with itself
+   instead of with the mesh. `experiment.senders` takes the node names.
 6. **Start it, and watch the log.** Each run boots every node's firmware,
    settles, sends, and tears down.
 7. **Export.** `experiment.export` writes an HTML report with every arm, every
    run and the deltas between them.
 
+![The Bench view: the sweep definition, past runs, the experiment log and per-node timelines](images/view-bench.png)
+
 From a script, the whole thing:
 
 ```
-{"id":1,"method":"experiment.senders","params":{"mode":"spread","count":4}}
+{"id":1,"method":"experiment.senders","params":{"senders":["Abernethy Repeater","Largo Law","Cluny Clay","West Lomond"]}}
 {"id":2,"method":"experiment.define","params":{
    "arms":[{"label":"control","repeater_version":"repeater-v1.17.0"},
            {"label":"my branch","repeater_version":"my-arm"}],
@@ -42,17 +44,17 @@ From a script, the whole thing:
 |---|---|
 | `tx` | transmissions, summed over every node |
 | `rx` | successful receptions |
-| `reach_pct` | share of reachable nodes a message got to |
+| `delivered` | unique deliveries — a message reaching a node it had not reached |
+| `redundant` | receptions of something already heard, the cost of flooding |
 | `collisions` | receptions lost to overlapping transmissions |
 | `airtime_ms` | total time the network spent transmitting |
-| `busy_ms`, `busy_pct` | time the channel was occupied |
-| `deaf` | receptions missed because the radio was elsewhere |
-| `repeats_per_msg` | how many times each message was relayed |
-| `duty` | per-node duty cycle, the compliance number |
+| `rx_spread` | how much `rx` varied across the arm's seeds — the arm's own noise floor |
+| `at_risk_2db` | deliveries within 2 dB of the demodulator floor, absent when no run measured it |
 
-Airtime, collisions and duty are the metrics that answer "is this change good
-for the network" rather than "did this message arrive". They are reported for
-every arm without being asked for.
+Airtime, collisions and redundancy are the metrics that answer "is this change
+good for the network" rather than "did this message arrive". They are reported
+for every arm without being asked for, and `rx_spread` is the number every delta
+must beat before it means anything.
 
 ## Designing one that survives scrutiny
 

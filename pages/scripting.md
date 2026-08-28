@@ -23,7 +23,9 @@ Every function each client exports is documented, generated from the clients'
 own doc comments so it cannot drift from the code: the
 [Python client reference](reference-python.html), the
 [Go client reference](reference-go.html), and the
-[Node client reference](reference-js.html).
+[Node client reference](reference-js.html). For one-shot jobs that need no
+session at all — a link budget, a coverage raster, downloading terrain — the
+[CLI](reference-cli.html) is quicker than a script.
 
 ## Opening a session
 
@@ -190,7 +192,7 @@ report.write_junit("results.xml")
 ```
 
 A fixture can carry its own traffic and its own claims, which is what
-`meshcoresim test` runs. A script can add both, which is what a regression check
+`meshbench test` runs. A script can add both, which is what a regression check
 in another repository does. The report prints the provenance above the numbers,
 because that is the half that gets dropped when a result is pasted somewhere
 else.

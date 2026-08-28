@@ -8,7 +8,7 @@ There are two ways to do that, and they answer different questions.
 
 | | native | emulated |
 |---|---|---|
-| what runs | MeshCore compiled for your host | the published board image |
+| what runs | MeshCore compiled for the host | the published board image |
 | the radio | a shim linked in place of the driver | an SX1262 model over SPI |
 | speed | faster than real time on small networks | wall time, always |
 | deterministic | **yes** | no |
@@ -45,12 +45,12 @@ Roles map to MeshCore's own examples:
 
 ## Per-node state, and the trap in it
 
-Each node gets its own working directory under `~/.cache/meshcoresim/nodefs`,
+Each node gets its own working directory under `~/.cache/meshbench/nodefs`,
 keyed by name. The firmware writes its identity, preferences, channels and
 contacts there and reads them back at boot, exactly as hardware does.
 
 > **Saved node state beats a compiled default.** A node that has run before
-> loads its stored value and never reaches your changed default. Both arms of a
+> loads its stored value and never reaches the changed default. Both arms of a
 > comparison then return identical numbers and the change looks inert. It fails
 > silently, in both arms, which is the worst way for a comparison to fail.
 
@@ -59,7 +59,7 @@ Two ways out:
 - `firmware.wipe`, or the `wipe every node's memory` button in the firmware
   library. Identities regenerate from the run seed, so a wipe costs nothing but
   the next boot.
-- `MESHCORESIM_NODEFS`, pointing each arm of a comparison at its own storage
+- `MESHBENCH_NODEFS`, pointing each arm of a comparison at its own storage
   root. This is what the A/B tooling does, so no arm can inherit another's
   state.
 
@@ -85,6 +85,35 @@ The clock comes from the scenario rather than the host so that runs stay
 reproducible. Regions come from the node itself, because they were observed from
 real traffic and are a fact about that node.
 
+<figure>
+<svg viewBox="0 0 780 260" role="img" aria-label="The provisioning sequence at firmware start, and what each line establishes">
+  <path d="M30 24 V236" stroke="var(--rule)" stroke-width="2" fill="none"/>
+  <circle cx="30" cy="36" r="4" fill="var(--accent-mark)"/>
+  <text x="48" y="40" font-size="11.5" font-weight="600" fill="var(--ink)" font-family="var(--mono)">set name</text>
+  <text x="280" y="40" font-size="11" fill="var(--dim)">identity: what its adverts carry</text>
+  <circle cx="30" cy="66" r="4" fill="var(--accent-mark)"/>
+  <text x="48" y="70" font-size="11.5" font-weight="600" fill="var(--ink)" font-family="var(--mono)">time</text>
+  <text x="280" y="70" font-size="11" fill="var(--dim)">a shared clock &#8212; the scenario&#8217;s, so runs reproduce</text>
+  <circle cx="30" cy="96" r="4" fill="var(--accent-mark)"/>
+  <text x="48" y="100" font-size="11.5" font-weight="600" fill="var(--ink)" font-family="var(--mono)">set lat / set lon</text>
+  <text x="280" y="100" font-size="11" fill="var(--dim)">position: what the physics prices</text>
+  <circle cx="30" cy="126" r="4" fill="var(--accent-mark)"/>
+  <text x="48" y="130" font-size="11.5" font-weight="600" fill="var(--ink)" font-family="var(--mono)">region put / allowf</text>
+  <text x="280" y="130" font-size="11" fill="var(--dim)">what it relays, observed from real traffic</text>
+  <circle cx="30" cy="156" r="4" fill="var(--accent-mark)"/>
+  <text x="48" y="160" font-size="11.5" font-weight="600" fill="var(--ink)" font-family="var(--mono)">region save</text>
+  <text x="280" y="160" font-size="11" fill="var(--dim)">persisted, as hardware would</text>
+  <circle cx="30" cy="186" r="4" fill="var(--accent-mark)"/>
+  <text x="48" y="190" font-size="11.5" font-weight="600" fill="var(--ink)" font-family="var(--mono)">region default</text>
+  <text x="280" y="190" font-size="11" fill="var(--dim)">the scope its own traffic goes out on</text>
+  <circle cx="30" cy="216" r="4" fill="var(--accent-mark)"/>
+  <text x="48" y="220" font-size="11.5" font-weight="600" fill="var(--ink)" font-family="var(--mono)">set flood.max.advert</text>
+  <text x="280" y="220" font-size="11" fill="var(--dim)">a hop ceiling on adverts</text>
+</svg>
+<figcaption>Seven console lines, issued in this order at every firmware start.
+Before them a node is not broken &#8212; and not useful either.</figcaption>
+</figure>
+
 **The region half of this is shared code**, in `internal/app/fixture`, used by both
 the workbench and the headless test runner. It contains the `#` asymmetry, which
 this project has paid for twice, and two copies of that rule would eventually
@@ -93,8 +122,8 @@ disagree.
 ## Talking to a running node
 
 `console.type` runs a line on a node's CLI and returns what it said, which is
-the fastest way to find out what a node actually believes rather than what you
-think you configured.
+the fastest way to find out what a node actually believes rather than what its
+configuration was assumed to say.
 
 ```
 {"id":1,"method":"console.type","params":{"node":"Bathgate room","command":"get repeat"}}

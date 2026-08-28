@@ -79,7 +79,7 @@ RNG, never a stateful stream shared across goroutines.
 ## Where the code is
 
 <figure>
-<svg viewBox="0 0 760 380" role="img" aria-label="The seven layers of internal, with imports running downward only">
+<svg viewBox="0 0 760 470" role="img" aria-label="The nine layers of internal, with imports running downward only">
   <text x="396" y="24" font-size="12.5" font-weight="600" fill="var(--ink)" text-anchor="middle">internal/ — a package imports its own layer and everything below it</text>
 
   <rect x="96" y="46" width="600" height="38" rx="6" fill="var(--warn)" fill-opacity=".10" stroke="var(--warn)" stroke-opacity=".45"/>
@@ -98,26 +98,32 @@ RNG, never a stateful stream shared across goroutines.
   <text x="120" y="246" font-size="13" font-weight="600" fill="var(--ink)">world</text>
   <text x="182" y="246" font-size="11.5" fill="var(--dim)">the scenario, live feeds, areas, basemap, the SDR observer</text>
   <rect x="96" y="266" width="600" height="38" rx="6" fill="var(--good)" fill-opacity=".10" stroke="var(--good)" stroke-opacity=".45"/>
-  <text x="120" y="290" font-size="13" font-weight="600" fill="var(--ink)">mesh</text>
-  <text x="182" y="290" font-size="11.5" fill="var(--dim)">firmware, the radio shim, the companion protocol, packets</text>
+  <text x="120" y="290" font-size="13" font-weight="600" fill="var(--ink)">firmware</text>
+  <text x="182" y="290" font-size="11.5" fill="var(--dim)">running real firmware against the radio: boards, native, QEMU, Renode</text>
   <rect x="96" y="310" width="600" height="38" rx="6" fill="var(--good)" fill-opacity=".10" stroke="var(--good)" stroke-opacity=".45"/>
-  <text x="120" y="334" font-size="13" font-weight="600" fill="var(--ink)">rf</text>
-  <text x="182" y="334" font-size="11.5" fill="var(--dim)">the channel, DSP, GPU twins, LoRa coding, terrain, buildings</text>
+  <text x="120" y="334" font-size="13" font-weight="600" fill="var(--ink)">mesh</text>
+  <text x="182" y="334" font-size="11.5" fill="var(--dim)">what a node is and says: the radio shim, the companion protocol, packets</text>
+  <rect x="96" y="354" width="600" height="38" rx="6" fill="var(--good)" fill-opacity=".10" stroke="var(--good)" stroke-opacity=".45"/>
+  <text x="120" y="378" font-size="13" font-weight="600" fill="var(--ink)">rf</text>
+  <text x="182" y="378" font-size="11.5" fill="var(--dim)">the channel, DSP, GPU twins, LoRa coding, terrain, buildings</text>
+  <rect x="96" y="398" width="600" height="38" rx="6" fill="var(--faint)" fill-opacity=".08" stroke="var(--rule)"/>
+  <text x="120" y="422" font-size="13" font-weight="600" fill="var(--ink)">diag</text>
+  <text x="182" y="422" font-size="11.5" fill="var(--dim)">opt-in diagnostic logging, chosen by domain (MESHBENCH_LOG)</text>
 
-  <path d="M62 52 L 62 336" stroke="var(--rule)" stroke-width="2" fill="none"/>
-  <path d="M62 336 l -5 -9 l 10 0 z" fill="var(--rule)"/>
-  <text x="40" y="200" font-size="11" fill="var(--faint)" text-anchor="middle" transform="rotate(-90 40 200)">imports point down</text>
+  <path d="M62 52 L 62 424" stroke="var(--rule)" stroke-width="2" fill="none"/>
+  <path d="M62 424 l -5 -9 l 10 0 z" fill="var(--rule)"/>
+  <text x="40" y="240" font-size="11" fill="var(--faint)" text-anchor="middle" transform="rotate(-90 40 240)">imports point down</text>
 
-  <text x="396" y="366" font-size="11.5" fill="var(--dim)" text-anchor="middle">So ui can reach the physics, and the physics cannot reach a widget. A test fails the build otherwise.</text>
+  <text x="396" y="456" font-size="11.5" fill="var(--dim)" text-anchor="middle">So ui can reach the physics, and the physics cannot reach a widget. A test fails the build otherwise.</text>
 </svg>
 <figcaption>The order was read off the import graph rather than imposed on it.
 Making it true cost two packages that were each doing two jobs, and one
 interface moved down a level.</figcaption>
 </figure>
 
-Seven layers, and the rule is mechanical: `internal/layers_test.go` walks every
+Nine layers, and the rule is mechanical: `internal/layers_test.go` walks every
 file and fails if an import points upward, or if a package appears outside the
-seven.
+nine.
 
 ## The engine loop
 
@@ -125,6 +131,33 @@ The engine steps in fixed increments, 10 ms by default. On each step it advances
 every node's firmware, collects whatever those nodes handed to their radios,
 places the resulting transmissions in flight, and delivers to each receiver the
 sum of everything audible at its antenna.
+
+<figure>
+<svg viewBox="0 0 780 250" role="img" aria-label="What one engine tick does, as a cycle">
+  <defs><marker id="el" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+    <path d="M0,0 L10,5 L0,10 z" fill="var(--dim)"/></marker></defs>
+  <rect x="60" y="24" width="280" height="56" rx="8" fill="var(--card)" stroke="var(--rule)"/>
+  <text x="200" y="48" font-size="12" font-weight="600" fill="var(--ink)" text-anchor="middle">advance every node&#8217;s firmware</text>
+  <text x="200" y="66" font-size="10.5" fill="var(--dim)" text-anchor="middle">each gets its slice of the tick</text>
+  <rect x="440" y="24" width="280" height="56" rx="8" fill="var(--card)" stroke="var(--rule)"/>
+  <text x="580" y="48" font-size="12" font-weight="600" fill="var(--ink)" text-anchor="middle">collect what they handed their radios</text>
+  <text x="580" y="66" font-size="10.5" fill="var(--dim)" text-anchor="middle">bytes, through the shim or the SPI model</text>
+  <rect x="440" y="150" width="280" height="56" rx="8" fill="var(--card)" stroke="var(--rule)"/>
+  <text x="580" y="174" font-size="12" font-weight="600" fill="var(--ink)" text-anchor="middle">place transmissions in flight</text>
+  <text x="580" y="192" font-size="10.5" fill="var(--dim)" text-anchor="middle">with airtime the firmware agrees with</text>
+  <rect x="60" y="150" width="280" height="56" rx="8" fill="var(--card)" stroke="var(--rule)"/>
+  <text x="200" y="174" font-size="12" font-weight="600" fill="var(--ink)" text-anchor="middle">deliver the sum at each antenna</text>
+  <text x="200" y="192" font-size="10.5" fill="var(--dim)" text-anchor="middle">everything audible, plus noise</text>
+  <path d="M340 52 H432" stroke="var(--dim)" stroke-width="1.8" fill="none" marker-end="url(#el)"/>
+  <path d="M580 80 V142" stroke="var(--dim)" stroke-width="1.8" fill="none" marker-end="url(#el)"/>
+  <path d="M440 178 H348" stroke="var(--dim)" stroke-width="1.8" fill="none" marker-end="url(#el)"/>
+  <path d="M200 150 V88" stroke="var(--dim)" stroke-width="1.8" fill="none" marker-end="url(#el)"/>
+  <text x="390" y="122" font-size="12.5" font-weight="700" fill="var(--ink)" text-anchor="middle">one tick = 10 ms of simulated time</text>
+  <text x="390" y="234" font-size="11" fill="var(--dim)" text-anchor="middle">Simulated time is not wall time: native runs race ahead of the wall on small networks; an emulated node pins it to the clock.</text>
+</svg>
+<figcaption>The engine&#8217;s whole job, once per tick. Nothing else touches
+the air.</figcaption>
+</figure>
 
 **Simulated time is not wall time.** A native run can go faster than real time
 on a small network and slower on a large one, and neither changes the result.
@@ -134,7 +167,7 @@ seed do not agree.
 
 ## The control socket
 
-The application listens on `$XDG_RUNTIME_DIR/meshcoresim.sock`, newline
+The application listens on `$XDG_RUNTIME_DIR/meshbench.sock`, newline
 delimited JSON. Every verb drives the same code path a person clicks, so a
 driven session opens the same panels and shows the operator what happened.
 See the [control socket reference](reference-control.html).

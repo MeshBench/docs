@@ -101,8 +101,9 @@ def main():
     blocks = [head, "**Classes** · " + nav]
 
     for name, base, doc, methods in classes:
-        title = name + (" extends `%s`" % base if base else "")
-        blocks.append("## " + title)
+        blocks.append("## " + name)
+        if base:
+            blocks.append("Extends `%s`." % base)
         if doc:
             blocks.append(doc)
         for sig, mdoc in methods:

@@ -10,7 +10,7 @@ In this order:
 
 1. The environment variable, if set
 2. **Beside the MeshBench binary**
-3. `~/.cache/meshcoresim/tools/`
+3. `~/.cache/meshbench/tools/`
 4. `PATH`
 
 `PATH` is last, and on a desktop it is nearly useless. **A desktop application
@@ -26,15 +26,15 @@ downloads after the fact.
 
 | Tool | Environment variable | Needed for |
 |---|---|---|
-| `qemu-system-xtensa` | `MESHCORESIM_QEMU` | emulated ESP32 nodes |
-| `renode` | `MESHCORESIM_RENODE` | emulated nRF52 nodes |
-| `radioserver` | `MESHCORESIM_RADIO_SERVER` | both, and nothing else |
-| native firmware | `MESHCORESIM_NATIVE` | every native node |
+| `qemu-system-xtensa` | `MESHBENCH_QEMU` | emulated ESP32 nodes |
+| `renode` | `MESHBENCH_RENODE` | emulated nRF52 nodes |
+| `radioserver` | `MESHBENCH_RADIO_SERVER` | both, and nothing else |
+| native firmware | `MESHBENCH_NATIVE` | every native node |
 
 `radioserver` is the one **every** emulated node needs, ESP32 or nRF52, and it
 is looked up before either emulator.
 
-`MESHCORESIM_NATIVE` may name a **directory** holding one build per role, which
+`MESHBENCH_NATIVE` may name a **directory** holding one build per role, which
 is what a scenario mixing roles needs. Naming a single binary overrides every
 node regardless of role, so a mesh of repeaters and room servers quietly
 becomes a mesh of one application.

@@ -43,3 +43,9 @@ def emit(page_rel, blocks):
     else:
         open(page, "w").write(new)
         print("wrote", os.path.relpath(page, HERE))
+
+
+def anchor(name):
+    """The id gen.py will give a heading holding `name` - one slug rule,
+    shared, so a table of contents cannot disagree with its targets."""
+    return re.sub(r"[^a-z0-9]+", "-", name.lower()).strip("-")
