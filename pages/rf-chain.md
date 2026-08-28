@@ -7,6 +7,46 @@ a link budget, or a real demodulator over synthesised samples — is
 What happens to a packet between one node's antenna and another's, in the order
 it happens.
 
+<figure>
+<svg viewBox="0 0 780 320" role="img" aria-label="The six stages between one antenna and another">
+  <defs><marker id="rc" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+    <path d="M0,0 L10,5 L0,10 z" fill="var(--accent-mark)"/></marker></defs>
+  <rect x="12" y="30" width="228" height="86" rx="8" fill="var(--card)" stroke="var(--rule)"/>
+  <text x="126" y="54" font-size="12" font-weight="600" fill="var(--ink)" text-anchor="middle">1 · Modulation</text>
+  <text x="126" y="74" font-size="10.5" fill="var(--dim)" text-anchor="middle">bytes become chirps; airtime is</text>
+  <text x="126" y="90" font-size="10.5" fill="var(--dim)" text-anchor="middle">the firmware&#8217;s own getEstAirtimeFor()</text>
+  <rect x="276" y="30" width="228" height="86" rx="8" fill="var(--card)" stroke="var(--rule)"/>
+  <text x="390" y="54" font-size="12" font-weight="600" fill="var(--ink)" text-anchor="middle">2 · Delay</text>
+  <text x="390" y="74" font-size="10.5" fill="var(--dim)" text-anchor="middle">distance over c &#8212; the difference</text>
+  <text x="390" y="90" font-size="10.5" fill="var(--dim)" text-anchor="middle">between aligned and half-symbol overlap</text>
+  <rect x="540" y="30" width="228" height="86" rx="8" fill="var(--card)" stroke="var(--rule)"/>
+  <text x="654" y="54" font-size="12" font-weight="600" fill="var(--ink)" text-anchor="middle">3 · Path loss</text>
+  <text x="654" y="74" font-size="10.5" fill="var(--dim)" text-anchor="middle">free space, terrain, diffraction,</text>
+  <text x="654" y="90" font-size="10.5" fill="var(--dim)" text-anchor="middle">antenna gain in the true direction</text>
+  <path d="M240 73 H272" stroke="var(--accent-mark)" stroke-width="2" fill="none" marker-end="url(#rc)"/>
+  <path d="M504 73 H536" stroke="var(--accent-mark)" stroke-width="2" fill="none" marker-end="url(#rc)"/>
+  <path d="M654 116 V150" stroke="var(--accent-mark)" stroke-width="2" fill="none" marker-end="url(#rc)"/>
+  <rect x="540" y="154" width="228" height="86" rx="8" fill="var(--card)" stroke="var(--rule)"/>
+  <text x="654" y="178" font-size="12" font-weight="600" fill="var(--ink)" text-anchor="middle">4 · Summation</text>
+  <text x="654" y="198" font-size="10.5" fill="var(--dim)" text-anchor="middle">every transmission in flight, summed</text>
+  <text x="654" y="214" font-size="10.5" fill="var(--dim)" text-anchor="middle">as samples &#8212; no collision rule exists</text>
+  <rect x="276" y="154" width="228" height="86" rx="8" fill="var(--card)" stroke="var(--rule)"/>
+  <text x="390" y="178" font-size="12" font-weight="600" fill="var(--ink)" text-anchor="middle">5 · Noise</text>
+  <text x="390" y="198" font-size="10.5" fill="var(--dim)" text-anchor="middle">thermal, at the board&#8217;s noise figure,</text>
+  <text x="390" y="214" font-size="10.5" fill="var(--dim)" text-anchor="middle">plus any emitter in the scenario</text>
+  <rect x="12" y="154" width="228" height="86" rx="8" fill="var(--card)" stroke="var(--rule)"/>
+  <text x="126" y="178" font-size="12" font-weight="600" fill="var(--ink)" text-anchor="middle">6 · Demodulation</text>
+  <text x="126" y="198" font-size="10.5" fill="var(--dim)" text-anchor="middle">de-chirp, FFT, error correction &#8212;</text>
+  <text x="126" y="214" font-size="10.5" fill="var(--dim)" text-anchor="middle">it decodes, or the cause is recorded</text>
+  <path d="M536 197 H508" stroke="var(--accent-mark)" stroke-width="2" fill="none" marker-end="url(#rc)"/>
+  <path d="M272 197 H244" stroke="var(--accent-mark)" stroke-width="2" fill="none" marker-end="url(#rc)"/>
+  <rect x="12" y="264" width="756" height="40" rx="8" fill="var(--sunk)" stroke="var(--rule)"/>
+  <text x="390" y="289" font-size="11.5" fill="var(--dim)" text-anchor="middle">Capture effect emerges at stage 4: what survives an overlap is decided by the arithmetic at stage 6, not by a rule.</text>
+</svg>
+<figcaption>The chain both reception models share, in the order it happens.
+Orange is the signal&#8217;s own path.</figcaption>
+</figure>
+
 ## 1. Modulation
 
 The bytes the firmware handed its radio are turned into complex baseband samples

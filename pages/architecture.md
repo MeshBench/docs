@@ -132,6 +132,33 @@ every node's firmware, collects whatever those nodes handed to their radios,
 places the resulting transmissions in flight, and delivers to each receiver the
 sum of everything audible at its antenna.
 
+<figure>
+<svg viewBox="0 0 780 250" role="img" aria-label="What one engine tick does, as a cycle">
+  <defs><marker id="el" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+    <path d="M0,0 L10,5 L0,10 z" fill="var(--dim)"/></marker></defs>
+  <rect x="60" y="24" width="280" height="56" rx="8" fill="var(--card)" stroke="var(--rule)"/>
+  <text x="200" y="48" font-size="12" font-weight="600" fill="var(--ink)" text-anchor="middle">advance every node&#8217;s firmware</text>
+  <text x="200" y="66" font-size="10.5" fill="var(--dim)" text-anchor="middle">each gets its slice of the tick</text>
+  <rect x="440" y="24" width="280" height="56" rx="8" fill="var(--card)" stroke="var(--rule)"/>
+  <text x="580" y="48" font-size="12" font-weight="600" fill="var(--ink)" text-anchor="middle">collect what they handed their radios</text>
+  <text x="580" y="66" font-size="10.5" fill="var(--dim)" text-anchor="middle">bytes, through the shim or the SPI model</text>
+  <rect x="440" y="150" width="280" height="56" rx="8" fill="var(--card)" stroke="var(--rule)"/>
+  <text x="580" y="174" font-size="12" font-weight="600" fill="var(--ink)" text-anchor="middle">place transmissions in flight</text>
+  <text x="580" y="192" font-size="10.5" fill="var(--dim)" text-anchor="middle">with airtime the firmware agrees with</text>
+  <rect x="60" y="150" width="280" height="56" rx="8" fill="var(--card)" stroke="var(--rule)"/>
+  <text x="200" y="174" font-size="12" font-weight="600" fill="var(--ink)" text-anchor="middle">deliver the sum at each antenna</text>
+  <text x="200" y="192" font-size="10.5" fill="var(--dim)" text-anchor="middle">everything audible, plus noise</text>
+  <path d="M340 52 H432" stroke="var(--dim)" stroke-width="1.8" fill="none" marker-end="url(#el)"/>
+  <path d="M580 80 V142" stroke="var(--dim)" stroke-width="1.8" fill="none" marker-end="url(#el)"/>
+  <path d="M440 178 H348" stroke="var(--dim)" stroke-width="1.8" fill="none" marker-end="url(#el)"/>
+  <path d="M200 150 V88" stroke="var(--dim)" stroke-width="1.8" fill="none" marker-end="url(#el)"/>
+  <text x="390" y="122" font-size="12.5" font-weight="700" fill="var(--ink)" text-anchor="middle">one tick = 10 ms of simulated time</text>
+  <text x="390" y="234" font-size="11" fill="var(--dim)" text-anchor="middle">Simulated time is not wall time: native runs race ahead of the wall on small networks; an emulated node pins it to the clock.</text>
+</svg>
+<figcaption>The engine&#8217;s whole job, once per tick. Nothing else touches
+the air.</figcaption>
+</figure>
+
 **Simulated time is not wall time.** A native run can go faster than real time
 on a small network and slower on a large one, and neither changes the result.
 This is exactly what emulation gives up: an emulated node runs at the speed of

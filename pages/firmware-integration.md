@@ -85,6 +85,35 @@ The clock comes from the scenario rather than the host so that runs stay
 reproducible. Regions come from the node itself, because they were observed from
 real traffic and are a fact about that node.
 
+<figure>
+<svg viewBox="0 0 780 260" role="img" aria-label="The provisioning sequence at firmware start, and what each line establishes">
+  <path d="M30 24 V236" stroke="var(--rule)" stroke-width="2" fill="none"/>
+  <circle cx="30" cy="36" r="4" fill="var(--accent-mark)"/>
+  <text x="48" y="40" font-size="11.5" font-weight="600" fill="var(--ink)" font-family="var(--mono)">set name</text>
+  <text x="280" y="40" font-size="11" fill="var(--dim)">identity: what its adverts carry</text>
+  <circle cx="30" cy="66" r="4" fill="var(--accent-mark)"/>
+  <text x="48" y="70" font-size="11.5" font-weight="600" fill="var(--ink)" font-family="var(--mono)">time</text>
+  <text x="280" y="70" font-size="11" fill="var(--dim)">a shared clock &#8212; the scenario&#8217;s, so runs reproduce</text>
+  <circle cx="30" cy="96" r="4" fill="var(--accent-mark)"/>
+  <text x="48" y="100" font-size="11.5" font-weight="600" fill="var(--ink)" font-family="var(--mono)">set lat / set lon</text>
+  <text x="280" y="100" font-size="11" fill="var(--dim)">position: what the physics prices</text>
+  <circle cx="30" cy="126" r="4" fill="var(--accent-mark)"/>
+  <text x="48" y="130" font-size="11.5" font-weight="600" fill="var(--ink)" font-family="var(--mono)">region put / allowf</text>
+  <text x="280" y="130" font-size="11" fill="var(--dim)">what it relays, observed from real traffic</text>
+  <circle cx="30" cy="156" r="4" fill="var(--accent-mark)"/>
+  <text x="48" y="160" font-size="11.5" font-weight="600" fill="var(--ink)" font-family="var(--mono)">region save</text>
+  <text x="280" y="160" font-size="11" fill="var(--dim)">persisted, as hardware would</text>
+  <circle cx="30" cy="186" r="4" fill="var(--accent-mark)"/>
+  <text x="48" y="190" font-size="11.5" font-weight="600" fill="var(--ink)" font-family="var(--mono)">region default</text>
+  <text x="280" y="190" font-size="11" fill="var(--dim)">the scope its own traffic goes out on</text>
+  <circle cx="30" cy="216" r="4" fill="var(--accent-mark)"/>
+  <text x="48" y="220" font-size="11.5" font-weight="600" fill="var(--ink)" font-family="var(--mono)">set flood.max.advert</text>
+  <text x="280" y="220" font-size="11" fill="var(--dim)">a hop ceiling on adverts</text>
+</svg>
+<figcaption>Seven console lines, issued in this order at every firmware start.
+Before them a node is not broken &#8212; and not useful either.</figcaption>
+</figure>
+
 **The region half of this is shared code**, in `internal/app/fixture`, used by both
 the workbench and the headless test runner. It contains the `#` asymmetry, which
 this project has paid for twice, and two copies of that rule would eventually

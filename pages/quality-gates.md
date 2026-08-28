@@ -4,6 +4,22 @@ MeshBench's limits are mechanical rather than advisory, because taste does not
 survive scale. This is what actually fails a build, what only reports, and why
 each one exists.
 
+<figure>
+<svg viewBox="0 0 780 240" role="img" aria-label="Which checks run at which trigger">
+  <text x="20" y="30" font-size="12" font-weight="600" fill="var(--ink)">every pull request</text>
+  <rect x="20" y="40" width="740" height="44" rx="8" fill="var(--good)" fill-opacity=".08" stroke="var(--good)" stroke-opacity=".4"/>
+  <text x="390" y="67" font-size="11.5" fill="var(--ink)" text-anchor="middle">gofmt &#183; go vet &#183; golangci-lint + ratchet &#183; tests, four shards &#183; conflict markers &#183; file limits &#183; layout map &#183; licence inventory</text>
+  <text x="20" y="116" font-size="12" font-weight="600" fill="var(--ink)">a v* tag, or a deliberate dispatch</text>
+  <rect x="20" y="126" width="740" height="44" rx="8" fill="var(--warn)" fill-opacity=".08" stroke="var(--warn)" stroke-opacity=".4"/>
+  <text x="390" y="153" font-size="11.5" fill="var(--ink)" text-anchor="middle">the race detector &#183; the release pipeline (package.yml) &#8212; nothing in a pull request exercises either</text>
+  <text x="20" y="202" font-size="12" font-weight="600" fill="var(--ink)">on demand, for reading rather than gating</text>
+  <rect x="20" y="212" width="740" height="24" rx="8" fill="var(--panel)" stroke="var(--rule)"/>
+  <text x="390" y="228" font-size="11.5" fill="var(--dim)" text-anchor="middle">SonarQube: complexity, whole-tree duplication, per-package coverage</text>
+</svg>
+<figcaption>A green pull request is evidence about the first lane only. The
+second lane stays invisible until a tag or a dispatch fires it.</figcaption>
+</figure>
+
 ## On every pull request
 
 | gate | what it refuses |
