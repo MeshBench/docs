@@ -1,0 +1,936 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Go client reference - MeshBench</title>
+<link rel="icon" href="brand/favicon.svg" type="image/svg+xml">
+<meta name="theme-color" content="#0B0A12">
+<meta property="og:title" content="Go client reference - MeshBench">
+<meta property="og:type" content="website">
+<meta property="og:image" content="brand/meshbench-card-1200x630.png">
+<style>
+@import url("brand/webfonts/meshbench-fonts.css");
+:root {
+  /* MeshBench brand tokens - see MeshBench/brand. Orange is signal: it marks
+     traffic and the thing that carried, here and in every figure. */
+  --ink:#14131F; --dim:#6A6480; --line:#E4E0F1; --bg:#FFFFFF;
+  --panel:#F5F3FA; --accent:#B93B06; --accent-mark:#E8500F; --relay:#5B3BD6;
+  --warn:#8A6200; --good:#1B7A44;
+  /* what the inlined lockup reads: the mark keeps its own colours and follows
+     the page's theme, rather than being flattened to one ink. */
+  --mb-ink:#14131F; --mb-signal:#E8500F; --mb-relay:#5B3BD6; --mb-dim:#6A6480;
+  --display:"MeshBench Display", ui-sans-serif, system-ui, sans-serif;
+  --text:"MeshBench Text", ui-sans-serif, system-ui, sans-serif;
+  --mono:"MeshBench Mono", ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+  /* The diagram palette. The figures reference these by name, and every one of
+     them was undefined: a box filled with var(--card) has no fill at all, a
+     border stroked with var(--rule) is not drawn, and text in var(--faint)
+     falls back to the SVG default of black, which is invisible on the dark
+     theme. Sixty-three references across eleven figures. */
+  --card: #FFFFFF; --rule: #DCD6EE; --faint: #837C9C; --sunk: #EEEBF7;
+}
+@media (prefers-color-scheme: dark) {
+  :root { --ink:#F2EFF9; --dim:#9A93B8; --line:#262238; --bg:#0B0A12;
+          --panel:#15131F; --accent:#FF7A3D; --accent-mark:#FF7A3D; --relay:#8E6DFF;
+          --warn:#F2B705; --good:#2EBD6B;
+          --card:#15131F; --rule:#2E2A44; --faint:#7D769B; --sunk:#100E19;
+          --mb-ink:#F2EFF9; --mb-signal:#FF7A3D; --mb-relay:#8E6DFF; --mb-dim:#9A93B8; }
+}
+/* Scrollbars. The default one is a wide light plate that reads as a seam
+   between the navigation and the page, and it is the only chrome on the site
+   not wearing the palette. Thin, transparent track, thumb in the rule colour. */
+* { scrollbar-width: thin; scrollbar-color: var(--line) transparent; }
+::-webkit-scrollbar { width: 9px; height: 9px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--line); border-radius: 5px;
+  border: 2px solid transparent; background-clip: padding-box; }
+::-webkit-scrollbar-thumb:hover { background: var(--dim); background-clip: padding-box; }
+::-webkit-scrollbar-corner { background: transparent; }
+nav { scrollbar-color: var(--line) transparent; }
+nav:not(:hover) { scrollbar-color: transparent transparent; }
+* { box-sizing: border-box; }
+body { margin:0; background:var(--bg); color:var(--ink);
+  font: 16px/1.65 var(--text); -webkit-font-smoothing:antialiased; }
+.wrap { display:flex; align-items:flex-start; max-width:1180px; margin:0 auto; }
+nav { position:sticky; top:0; width:230px; flex:0 0 230px; padding:26px 18px;
+  border-right:1px solid var(--line); height:100vh; overflow-y:auto; }
+nav .brand { display:block; margin:0 0 22px; color:var(--ink); }
+nav .brand svg { width:158px; height:auto; display:block; }
+nav a { display:block; padding:5px 0; color:var(--ink); text-decoration:none; font-size:14.5px; }
+nav a:hover { color:var(--accent); }
+nav a.here { color:var(--accent); font-weight:600; }
+nav .navsec { font-family:var(--display); font-size:11.5px; letter-spacing:.11em;
+  text-transform:uppercase; color:var(--dim); margin:20px 0 5px; border:0; padding:0; font-weight:700; }
+figure { margin:22px 0; }
+figure svg { max-width:100%; height:auto; display:block; }
+figcaption { color:var(--dim); font-size:13.5px; margin-top:8px; max-width:70ch; }
+.svg-ink { fill:var(--ink); } .svg-dim { fill:var(--dim); }
+.svg-line { stroke:var(--line); fill:none; } .svg-accent { stroke:var(--accent-mark); fill:none; }
+.svg-panel { fill:var(--panel); stroke:var(--line); }
+.svg-real { fill:none; stroke:var(--good); stroke-dasharray:5 4; }
+main { flex:1 1 auto; padding:34px 40px 90px; min-width:0; }
+h1,h2,h3 { line-height:1.22; text-wrap:balance; font-family:var(--display);
+  font-weight:700; letter-spacing:-.015em; }
+h1 { font-size:33px; margin:0 0 6px; letter-spacing:-.022em; }
+h2 { font-size:23px; margin:34px 0 10px; padding-top:14px; border-top:1px solid var(--line); }
+h3 { font-size:17.5px; margin:24px 0 8px; }
+p, li { max-width:70ch; }
+code { font-family:var(--mono); font-size:.88em; background:var(--panel);
+  padding:1px 5px; border-radius:4px; }
+pre { background:var(--panel); border:1px solid var(--line); border-radius:8px;
+  padding:14px 16px; overflow-x:auto; }
+pre code { background:none; padding:0; }
+img { max-width:100%; border:1px solid var(--line); border-radius:8px; display:block; margin:18px 0; }
+table { border-collapse:collapse; margin:16px 0; font-size:14.5px; display:block; overflow-x:auto;
+  font-variant-numeric:tabular-nums; }
+th, td { border:1px solid var(--line); padding:7px 11px; text-align:left; vertical-align:top; }
+th { background:var(--panel); font-family:var(--display); font-weight:700; font-size:13px;
+  letter-spacing:.02em; }
+td.num, th.num { text-align:right; font-variant-numeric:tabular-nums; }
+blockquote { margin:16px 0; padding:10px 16px; border-left:3px solid var(--warn);
+  background:var(--panel); border-radius:0 8px 8px 0; }
+blockquote p { margin:.4em 0; }
+ol.steps { counter-reset:step; list-style:none; padding-left:0; }
+ol.steps > li { counter-increment:step; position:relative; padding:0 0 4px 42px; margin:16px 0; }
+ol.steps > li::before { content:counter(step); position:absolute; left:0; top:0;
+  width:27px; height:27px; border-radius:50%; background:var(--accent); color:#fff;
+  display:flex; align-items:center; justify-content:center; font-size:14px;
+  font-weight:700; font-family:var(--display); }
+footer { color:var(--dim); font-size:13.5px; border-top:1px solid var(--line);
+  margin-top:44px; padding-top:14px; }
+a { color:var(--accent); text-underline-offset:2px; }
+:focus-visible { outline:2px solid var(--accent); outline-offset:2px; border-radius:3px; }
+@media (max-width:820px) {
+  .wrap { display:block; } nav { position:static; width:auto; height:auto;
+    border-right:0; border-bottom:1px solid var(--line); }
+  nav .brand svg { width:140px; }
+  nav a { display:inline-block; margin-right:14px; } main { padding:24px 18px 70px; }
+}
+</style></head>
+<body><div class="wrap">
+<nav><a class="brand" href="index.html" aria-label="MeshBench"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 324.6 49.2" fill="none" stroke-linecap="round" stroke-linejoin="round" role="img" aria-label="MeshBench"><g transform="translate(-6.25,-11.31) scale(1.3300)">
+  <path d="M 9.50 34.50 L 18.00 43.00" stroke="var(--mb-relay, #5B3BD6)" stroke-width="1.8" opacity="0.26"/>
+  <path d="M 18.00 43.00 L 32.00 30.50" stroke="var(--mb-relay, #5B3BD6)" stroke-width="1.8" opacity="0.26"/>
+  <path d="M 18.00 43.00 L 20.50 23.00" stroke="var(--mb-relay, #5B3BD6)" stroke-width="1.8" opacity="0.26"/>
+  <path d="M 20.50 23.00 L 29.50 11.00" stroke="var(--mb-relay, #5B3BD6)" stroke-width="1.8" opacity="0.26"/>
+  <path d="M 29.50 11.00 L 40.50 19.50" stroke="var(--mb-relay, #5B3BD6)" stroke-width="1.8" opacity="0.26"/>
+  <path d="M 32.00 30.50 L 39.00 40.00" stroke="var(--mb-relay, #5B3BD6)" stroke-width="1.8" opacity="0.26"/>
+  <path d="M 40.50 19.50 L 39.00 40.00" stroke="var(--mb-relay, #5B3BD6)" stroke-width="1.8" opacity="0.26"/>
+  <path d="M 9.50 34.50 L 29.50 11.00" stroke="var(--mb-relay, #5B3BD6)" stroke-width="1.8" opacity="0.26"/>
+  <path d="M 9.50 34.50 L 20.50 23.00" stroke="var(--mb-signal, #E8500F)" stroke-width="3.2"/>
+  <path d="M 20.50 23.00 L 32.00 30.50" stroke="var(--mb-signal, #E8500F)" stroke-width="3.2"/>
+  <path d="M 32.00 30.50 L 40.50 19.50" stroke="var(--mb-signal, #E8500F)" stroke-width="3.2"/>
+  <circle cx="18.00" cy="43.00" r="2.50" fill="var(--mb-relay, #5B3BD6)" opacity="0.4"/>
+  <circle cx="29.50" cy="11.00" r="2.50" fill="var(--mb-relay, #5B3BD6)" opacity="0.4"/>
+  <circle cx="39.00" cy="40.00" r="2.50" fill="var(--mb-relay, #5B3BD6)" opacity="0.4"/>
+  <circle cx="20.50" cy="23.00" r="3.80" fill="var(--mb-ink, #14131F)"/>
+  <circle cx="32.00" cy="30.50" r="3.80" fill="var(--mb-ink, #14131F)"/>
+  <circle cx="9.50" cy="34.50" r="4.80" fill="var(--mb-signal, #E8500F)"/>
+  <circle cx="40.50" cy="19.50" r="4.80" fill="var(--mb-ink, #14131F)"/>
+</g><g transform="translate(70.0,40.7)" fill="var(--mb-ink, #14131F)"><path d="M3.04 0V-32.2H14.31L19.87 -4.14H20.7L26.27 -32.2H37.54V0H31.65V-27.74H30.82L25.3 0H15.27L9.75 -27.74H8.92V0Z M53.36 0.64Q49.96 0.64 47.36 -0.8Q44.76 -2.25 43.31 -4.9Q41.86 -7.54 41.86 -11.13V-11.68Q41.86 -15.27 43.29 -17.92Q44.71 -20.56 47.29 -22.01Q49.86 -23.46 53.27 -23.46Q56.63 -23.46 59.11 -21.96Q61.59 -20.47 62.97 -17.82Q64.35 -15.18 64.35 -11.68V-9.71H47.75Q47.84 -7.36 49.5 -5.89Q51.15 -4.42 53.54 -4.42Q55.98 -4.42 57.13 -5.47Q58.28 -6.53 58.88 -7.82L63.62 -5.34Q62.97 -4.14 61.76 -2.74Q60.54 -1.33 58.51 -0.35Q56.49 0.64 53.36 0.64ZM47.79 -14.03H58.47Q58.28 -16.01 56.88 -17.2Q55.48 -18.4 53.22 -18.4Q50.88 -18.4 49.5 -17.2Q48.12 -16.01 47.79 -14.03Z M78.15 0.64Q73.69 0.64 70.84 -1.29Q67.99 -3.22 67.39 -6.81L72.73 -8.19Q73.05 -6.58 73.81 -5.66Q74.57 -4.74 75.69 -4.35Q76.82 -3.96 78.15 -3.96Q80.18 -3.96 81.14 -4.67Q82.11 -5.38 82.11 -6.44Q82.11 -7.5 81.19 -8.07Q80.27 -8.65 78.25 -9.02L76.96 -9.25Q74.57 -9.71 72.59 -10.51Q70.61 -11.32 69.41 -12.74Q68.22 -14.17 68.22 -16.42Q68.22 -19.83 70.7 -21.64Q73.19 -23.46 77.23 -23.46Q81.05 -23.46 83.58 -21.76Q86.11 -20.06 86.89 -17.3L81.51 -15.64Q81.14 -17.39 80.02 -18.12Q78.89 -18.86 77.23 -18.86Q75.58 -18.86 74.7 -18.29Q73.83 -17.71 73.83 -16.7Q73.83 -15.59 74.75 -15.06Q75.67 -14.54 77.23 -14.26L78.52 -14.03Q81.1 -13.57 83.19 -12.81Q85.28 -12.05 86.5 -10.65Q87.72 -9.25 87.72 -6.85Q87.72 -3.27 85.12 -1.31Q82.52 0.64 78.15 0.64Z M91.95 0V-32.2H97.75V-20.01H98.58Q98.95 -20.75 99.73 -21.48Q100.51 -22.22 101.82 -22.7Q103.13 -23.18 105.16 -23.18Q107.82 -23.18 109.82 -21.96Q111.83 -20.75 112.93 -18.61Q114.03 -16.47 114.03 -13.62V0H108.24V-13.16Q108.24 -15.73 106.97 -17.02Q105.71 -18.31 103.36 -18.31Q100.69 -18.31 99.22 -16.54Q97.75 -14.77 97.75 -11.59V0Z M118.36 0V-5.34H122.59V-26.86H118.36V-32.2H134.92Q137.86 -32.2 140.05 -31.21Q142.23 -30.22 143.45 -28.41Q144.67 -26.59 144.67 -24.06V-23.6Q144.67 -21.39 143.84 -19.99Q143.01 -18.58 141.89 -17.82Q140.76 -17.07 139.75 -16.74V-15.92Q140.76 -15.64 141.96 -14.88Q143.15 -14.12 144 -12.7Q144.85 -11.27 144.85 -8.97V-8.51Q144.85 -5.84 143.61 -3.93Q142.37 -2.02 140.19 -1.01Q138 0 135.1 0ZM128.66 -5.52H134.37Q136.34 -5.52 137.56 -6.49Q138.78 -7.45 138.78 -9.25V-9.71Q138.78 -11.5 137.59 -12.47Q136.39 -13.43 134.37 -13.43H128.66ZM128.66 -18.95H134.27Q136.16 -18.95 137.38 -19.92Q138.6 -20.88 138.6 -22.59V-23.05Q138.6 -24.79 137.4 -25.74Q136.21 -26.68 134.27 -26.68H128.66Z M159.57 0.64Q156.17 0.64 153.57 -0.8Q150.97 -2.25 149.52 -4.9Q148.07 -7.54 148.07 -11.13V-11.68Q148.07 -15.27 149.5 -17.92Q150.93 -20.56 153.5 -22.01Q156.08 -23.46 159.48 -23.46Q162.84 -23.46 165.32 -21.96Q167.81 -20.47 169.19 -17.82Q170.57 -15.18 170.57 -11.68V-9.71H153.96Q154.05 -7.36 155.71 -5.89Q157.37 -4.42 159.76 -4.42Q162.2 -4.42 163.35 -5.47Q164.5 -6.53 165.09 -7.82L169.83 -5.34Q169.19 -4.14 167.97 -2.74Q166.75 -1.33 164.73 -0.35Q162.7 0.64 159.57 0.64ZM154.01 -14.03H164.68Q164.5 -16.01 163.09 -17.2Q161.69 -18.4 159.44 -18.4Q157.09 -18.4 155.71 -17.2Q154.33 -16.01 154.01 -14.03Z M174.89 0V-22.82H180.6V-19.83H181.42Q181.98 -21.02 183.49 -22.1Q185.01 -23.18 188.09 -23.18Q190.76 -23.18 192.76 -21.96Q194.76 -20.75 195.87 -18.61Q196.97 -16.47 196.97 -13.62V0H191.18V-13.16Q191.18 -15.73 189.91 -17.02Q188.65 -18.31 186.3 -18.31Q183.63 -18.31 182.16 -16.54Q180.69 -14.77 180.69 -11.59V0Z M213.12 0.64Q209.81 0.64 207.12 -0.74Q204.42 -2.12 202.86 -4.74Q201.3 -7.36 201.3 -11.09V-11.73Q201.3 -15.46 202.86 -18.08Q204.42 -20.7 207.12 -22.08Q209.81 -23.46 213.12 -23.46Q216.38 -23.46 218.73 -22.31Q221.08 -21.16 222.53 -19.16Q223.97 -17.16 224.43 -14.63L218.82 -13.43Q218.64 -14.81 217.99 -15.92Q217.35 -17.02 216.18 -17.66Q215 -18.31 213.26 -18.31Q211.51 -18.31 210.11 -17.55Q208.7 -16.79 207.9 -15.29Q207.09 -13.8 207.09 -11.64V-11.18Q207.09 -9.02 207.9 -7.52Q208.7 -6.03 210.11 -5.27Q211.51 -4.51 213.26 -4.51Q215.88 -4.51 217.24 -5.87Q218.59 -7.22 218.96 -9.43L224.57 -8.1Q223.97 -5.66 222.53 -3.66Q221.08 -1.66 218.73 -0.51Q216.38 0.64 213.12 0.64Z M228.53 0V-32.2H234.32V-20.01H235.15Q235.52 -20.75 236.3 -21.48Q237.08 -22.22 238.39 -22.7Q239.71 -23.18 241.73 -23.18Q244.4 -23.18 246.4 -21.96Q248.4 -20.75 249.5 -18.61Q250.61 -16.47 250.61 -13.62V0H244.81V-13.16Q244.81 -15.73 243.55 -17.02Q242.28 -18.31 239.94 -18.31Q237.27 -18.31 235.8 -16.54Q234.32 -14.77 234.32 -11.59V0Z"/></g></svg></a><a href="index.html">Overview</a><a href="getting-started.html">Getting started</a><a href="what-it-does-not-do.html">What it does not do</a><h2 class="navsec">Plan a network</h2><a href="fixtures.html">Shipped networks</a><a href="importing.html">Importing a network</a><a href="debugging.html">Why a packet failed</a><a href="studies.html">Studies</a><h2 class="navsec">Develop firmware</h2><a href="firmware-library.html">Firmware library</a><a href="firmware-development.html">Firmware development</a><a href="testing-repeaters.html">Testing a repeater</a><h2 class="navsec">Build an application</h2><a href="app-development.html">App development</a><a href="companion-bench.html">Companion bench</a><a href="testing.html">Testing your own code</a><a href="scripting.html">Scripting a session</a><a href="cookbook.html">Scripting cookbook</a><h2 class="navsec">Measure and observe</h2><a href="experiments.html">Experiments</a><a href="sdr-observer.html">Listening with SDR++</a><h2 class="navsec">How it works</h2><a href="architecture.html">Architecture</a><a href="native-vs-emulated.html">Native and emulated</a><a href="rf-simulation.html">RF simulation</a><a href="waveform.html">Waveform mode</a><a href="rf-chain.html">The RF chain</a><a href="golden-vectors.html">Golden vectors</a><a href="emulation.html">Emulation</a><a href="firmware-integration.html">Firmware integration</a><h2 class="navsec">Reference</h2><a href="settings.html">Settings</a><a href="reference-cli.html">CLI</a><a href="reference-control.html">Control socket</a><a href="reference-python.html">Python client</a><a href="reference-go.html" class="here">Go client</a><a href="reference-js.html">Node client</a><a href="resources.html">What gets downloaded</a><a href="tools.html">External tools</a><a href="quality-gates.html">What the build enforces</a><a href="repositories.html">Repositories and licences</a></nav>
+<main><h1>Go client reference</h1>
+<p>The Go client is <code>pkg/client-go/meshbench</code> in the <a href="https://github.com/MeshBench/meshbench">meshbench repository</a>: <code>import &quot;github.com/MeshBench/meshbench/pkg/client-go/meshbench&quot;</code>. It is a peer of the Python client, not a wrapper — both speak the control socket, and anything either can do the other can.</p>
+<p>This page is the whole exported surface, taken from the package&#x27;s own <code>go doc</code>. <code>Call</code> is the entire API; everything else is a typed shape over it, so a verb the façade has not reached is still one line away. For how a session is opened read <a href="scripting.html">Scripting a session</a>; for whole programs, the <a href="cookbook.html">cookbook</a>.</p>
+<h2 id="the-surface">The surface</h2>
+<p>Every exported type in the Go client, its methods, and the shape of each call - taken straight from <code>go doc</code> over <code>pkg/client-go/meshbench</code>, so it matches the package a program imports. Read <a href="scripting.html">Scripting a session</a> for the two layers - <code>Call</code> and the façade over it - and the <a href="cookbook.html">cookbook</a> for whole programs.</p>
+<p><strong>The workbench</strong> · <a href="#workbench">Workbench</a></p>
+<p><strong>The parts</strong> · <a href="#project">Project</a> · <a href="#nodes">Nodes</a> · <a href="#node">Node</a> · <a href="#sim">Sim</a> · <a href="#firmware">Firmware</a> · <a href="#console">Console</a> · <a href="#events">Events</a> · <a href="#boundary">Boundary</a> · <a href="#live">Live</a> · <a href="#assertions">Assertions</a> · <a href="#schedule">Schedule</a> · <a href="#device">Device</a> · <a href="#job">Job</a></p>
+<p><strong>Enumerations</strong> · <a href="#board">Board</a> · <a href="#class">Class</a> · <a href="#kind">Kind</a> · <a href="#preset">Preset</a> · <a href="#role">Role</a> · <a href="#strategy">Strategy</a> · <a href="#tab">Tab</a> · <a href="#transport">Transport</a></p>
+<p><strong>Errors</strong> · <a href="#protocolmismatch">ProtocolMismatch</a> · <a href="#refused">Refused</a> · <a href="#timeout">Timeout</a></p>
+<p><strong>Values</strong> · <a href="#assertion">Assertion</a> · <a href="#build">Build</a> · <a href="#buildchange">BuildChange</a> · <a href="#builddetails">BuildDetails</a> · <a href="#buildid">BuildID</a> · <a href="#cardchange">CardChange</a> · <a href="#cardslot">CardSlot</a> · <a href="#check">Check</a> · <a href="#checkpoint">Checkpoint</a> · <a href="#describe">Describe</a> · <a href="#event">Event</a> · <a href="#firmwarestate">FirmwareState</a> · <a href="#hello">Hello</a> · <a href="#importpreview">ImportPreview</a> · <a href="#jobinfo">JobInfo</a> · <a href="#journal">Journal</a> · <a href="#journalentry">JournalEntry</a> · <a href="#match">Match</a> · <a href="#namematch">NameMatch</a> · <a href="#neighbour">Neighbour</a> · <a href="#nodeinfo">NodeInfo</a> · <a href="#nodestat">NodeStat</a> · <a href="#notification">Notification</a> · <a href="#placement">Placement</a> · <a href="#provenance">Provenance</a> · <a href="#report">Report</a> · <a href="#restored">Restored</a> · <a href="#roleneed">RoleNeed</a> · <a href="#screen">Screen</a> · <a href="#send">Send</a> · <a href="#shot">Shot</a> · <a href="#simstate">SimState</a> · <a href="#subscription">Subscription</a></p>
+<p><strong>Options and functions</strong> · <a href="#option">Option</a> · <a href="#codeof">CodeOf</a></p>
+<h2 id="workbench">Workbench</h2>
+<p>Workbench is a connection to a running session.</p>
+<p>Safe from several goroutines: the socket serialises calls, which is what the control package already guarantees.</p>
+<h3 id="attach-ctx-context-context-options-option-workbench-error"><code>Attach(ctx context.Context, options ...Option) (*Workbench, error)</code></h3>
+<p>Attach connects to a workbench that is already running.</p>
+<p>It never owns the process: Close hangs up, and whatever was on screen stays on screen.</p>
+<h3 id="attachorheadless-ctx-context-context-options-option-workbench-error"><code>AttachOrHeadless(ctx context.Context, options ...Option) (*Workbench, error)</code></h3>
+<p>AttachOrHeadless is AttachOrLaunch without a window, for a machine with no display.</p>
+<h3 id="attachorlaunch-ctx-context-context-options-option-workbench-error"><code>AttachOrLaunch(ctx context.Context, options ...Option) (*Workbench, error)</code></h3>
+<p>AttachOrLaunch uses the session that is already running, or opens one.</p>
+<p>For a script somebody runs repeatedly by hand: the second run carries on from the first rather than clearing everything down and starting again.</p>
+<p>Note which half you got, because they differ in one important way. Attaching does not own the process and Close leaves it running; launching owns it and Close stops it. Owned reports which happened, so a script that must not take the session down with it can say so.</p>
+<h3 id="headless-ctx-context-context-options-option-workbench-error"><code>Headless(ctx context.Context, options ...Option) (*Workbench, error)</code></h3>
+<p>Headless starts a session with no window and owns it.</p>
+<p>The one to use from a test or from CI: no display, no GPU, no toolkit.</p>
+<h3 id="launch-ctx-context-context-options-option-workbench-error"><code>Launch(ctx context.Context, options ...Option) (*Workbench, error)</code></h3>
+<p>Launch opens the desktop workbench and owns it. Needs a display.</p>
+<h3 id="w-workbench-assertions-assertions"><code>(w *Workbench) Assertions() Assertions</code></h3>
+<p>Assertions reaches them.</p>
+<h3 id="w-workbench-boundary-boundary"><code>(w *Workbench) Boundary() Boundary</code></h3>
+<p>Boundary reaches the study area.</p>
+<h3 id="w-workbench-call-ctx-context-context-verb-string-params-any-json-rawmessage-error"><code>(w *Workbench) Call(ctx context.Context, verb string, params any) (json.RawMessage, error)</code></h3>
+<p>Call runs one verb and returns its result as raw JSON.</p>
+<p>Public and documented, not an escape hatch to be ashamed of: the façade will never cover all 213 verbs, and a verb added tomorrow is usable today.</p>
+<h3 id="w-workbench-callinto-ctx-context-context-verb-string-params-into-any-error"><code>(w *Workbench) CallInto(ctx context.Context, verb string, params, into any) error</code></h3>
+<p>CallInto runs a verb and decodes its result.</p>
+<h3 id="w-workbench-checkpoint-ctx-context-context-name-string-checkpoint-error"><code>(w *Workbench) Checkpoint(ctx context.Context, name string) (Checkpoint, error)</code></h3>
+<p>Checkpoint freezes the session under a name, so it can be taken back here.</p>
+<h3 id="w-workbench-checkpoints-ctx-context-context-string-error"><code>(w *Workbench) Checkpoints(ctx context.Context) ([]string, error)</code></h3>
+<p>Checkpoints is what can be restored, by name.</p>
+<h3 id="w-workbench-close-error"><code>(w *Workbench) Close() error</code></h3>
+<p>Close hangs up, and stops the process if this client started it.</p>
+<h3 id="w-workbench-describe-ctx-context-context-describe-error"><code>(w *Workbench) Describe(ctx context.Context) (Describe, error)</code></h3>
+<p>Describe is the cheap summary: how many nodes, what time it is, whether it is playing.</p>
+<h3 id="w-workbench-do-ctx-context-context-verb-string-params-any-error"><code>(w *Workbench) Do(ctx context.Context, verb string, params any) error</code></h3>
+<p>Do runs a verb and discards its result, for the ones whose answer is only an acknowledgement.</p>
+<h3 id="w-workbench-events-events"><code>(w *Workbench) Events() Events</code></h3>
+<p>Events reaches the log.</p>
+<h3 id="w-workbench-firmware-firmware"><code>(w *Workbench) Firmware() Firmware</code></h3>
+<p>Firmware reaches the builds.</p>
+<h3 id="w-workbench-headless-bool"><code>(w *Workbench) Headless() bool</code></h3>
+<p>Headless reports whether this session has no interface, so a caller can check once rather than learn it from a dozen refusals.</p>
+<h3 id="w-workbench-hello-hello"><code>(w *Workbench) Hello() Hello</code></h3>
+<p>Hello is what this connection is talking to, read once at connect.</p>
+<h3 id="w-workbench-job-id-string-job"><code>(w *Workbench) Job(id string) Job</code></h3>
+<p>Job makes a handle to one by id.</p>
+<h3 id="w-workbench-jobs-ctx-context-context-jobinfo-error"><code>(w *Workbench) Jobs(ctx context.Context) ([]JobInfo, error)</code></h3>
+<p>Jobs is everything in flight.</p>
+<h3 id="w-workbench-journal-ctx-context-context-journal-error"><code>(w *Workbench) Journal(ctx context.Context) (Journal, error)</code></h3>
+<p>Journal is the command history, for picking up a session cold: how the world got here, and whether the process has been restarted since it was built.</p>
+<h3 id="w-workbench-keepabove-ctx-context-context-bool-error"><code>(w *Workbench) KeepAbove(ctx context.Context) (bool, error)</code></h3>
+<p>Window opens a node&#x27;s own window, on a named tab.</p>
+<p>Windowed sessions only, and it says so here rather than appearing to work: a headless run has nothing to open, and a script that &quot;opened the Hardware tab&quot; in CI and saw no error will be written to assume it did.</p>
+<p>The tab names are the ones on the strip - Console, Companion, SDR, Settings, Radio, Stats, Activity, Connect, Hardware - and an empty one takes the default. It returns the tab it opened on. KeepAbove reads whether a panel opened in its own window stays above the main one.</p>
+<p>The preference exists for Linux under Wayland, where no client may ask a normal window to stay above others. What can be asked for is a layer-shell surface, and that is a different kind of window: the compositor gives it no title bar, no taskbar entry and no minimise, so the window draws its own bar and its close button returns the panel to the main window. On macOS and Windows always-on-top costs nothing and the preference does not apply.</p>
+<h3 id="w-workbench-live-live"><code>(w *Workbench) Live() Live</code></h3>
+<p>Live reaches the import chain.</p>
+<h3 id="w-workbench-node-name-string-node"><code>(w *Workbench) Node(name string) Node</code></h3>
+<p>Node makes a handle without checking it exists, so a caller can name one before placing it. Every method on it will say so if it does not.</p>
+<h3 id="w-workbench-nodestats-ctx-context-context-nodestat-error"><code>(w *Workbench) NodeStats(ctx context.Context) ([]NodeStat, error)</code></h3>
+<p>NodeStats samples every node and returns what it found.</p>
+<p>A sample, not a read: it costs a /proc read per node, which is why the window only does it while somebody is looking at the panel.</p>
+<h3 id="w-workbench-nodes-nodes"><code>(w *Workbench) Nodes() Nodes</code></h3>
+<p>Nodes reaches the network.</p>
+<h3 id="w-workbench-owned-bool"><code>(w *Workbench) Owned() bool</code></h3>
+<p>Owned reports whether Close will stop the session or only hang up on it.</p>
+<p>Worth asking after AttachOrLaunch, where either is possible and the difference is whether the workbench is still there afterwards.</p>
+<h3 id="w-workbench-project-project"><code>(w *Workbench) Project() Project</code></h3>
+<p>Project reaches the network as a whole.</p>
+<h3 id="w-workbench-provenance-ctx-context-context-provenance-error"><code>(w *Workbench) Provenance(ctx context.Context) (Provenance, error)</code></h3>
+<p>Provenance is what this session&#x27;s measurements are being made under.</p>
+<p>Read from the snapshot rather than carried on each result, for now: the verbs do not return it yet, and inventing it client-side would be a claim this client is not entitled to make. What it does guarantee is that the numbers here are the session&#x27;s actual settings at the moment of asking.</p>
+<h3 id="w-workbench-restore-ctx-context-context-name-string-restored-error"><code>(w *Workbench) Restore(ctx context.Context, name string) (Restored, error)</code></h3>
+<p>Restore rebuilds a checkpoint and replays to the moment it was taken. It returns as soon as the replay is under way; the sim reaching TargetMs is when it has actually arrived.</p>
+<h3 id="w-workbench-say-ctx-context-context-text-string-error"><code>(w *Workbench) Say(ctx context.Context, text string) error</code></h3>
+<p>Say puts a line in the session&#x27;s log, which is how a script leaves a note for whoever is watching the window or reading the run&#x27;s stderr.</p>
+<h3 id="w-workbench-schedule-schedule"><code>(w *Workbench) Schedule() Schedule</code></h3>
+<p>Schedule reaches the fixture&#x27;s traffic.</p>
+<h3 id="w-workbench-setkeepabove-ctx-context-context-on-bool-bool-error"><code>(w *Workbench) SetKeepAbove(ctx context.Context, on bool) (bool, error)</code></h3>
+<p>SetKeepAbove sets it, and reports what it now is.</p>
+<h3 id="w-workbench-sim-sim"><code>(w *Workbench) Sim() Sim</code></h3>
+<p>Sim reaches the clock.</p>
+<h3 id="w-workbench-snapshot-ctx-context-context-map-string-any-error"><code>(w *Workbench) Snapshot(ctx context.Context) (map[string]any, error)</code></h3>
+<p>Snapshot is the whole session as the socket summarises it - counts, jobs, endpoints, the status line. Decoded loosely on purpose: it grows, and a client that failed on a field it had not heard of would break on every release.</p>
+<h3 id="w-workbench-stop-error"><code>(w *Workbench) Stop() error</code></h3>
+<p>Stop ends a workbench this client started. Attach&#x27;s connection has nothing to stop, and says so rather than quietly doing nothing.</p>
+<h3 id="w-workbench-subscribe-topics-string-subscription-error"><code>(w *Workbench) Subscribe(topics ...string) (*Subscription, error)</code></h3>
+<p>Subscribe streams the given topics - status, snapshot, and whichever else the server publishes - without polling. It opens a second connection to the same workbench, so Close on the returned Subscription hangs up only that stream.</p>
+<p>Topics known today: &quot;status&quot; (a new console line) and &quot;snapshot&quot; (a compact summary after each publish, coalesced by the server so a busy run cannot flood a slow reader).</p>
+<h3 id="w-workbench-verbs-ctx-context-context-string-error"><code>(w *Workbench) Verbs(ctx context.Context) ([]string, error)</code></h3>
+<p>Verbs is every method this build answers.</p>
+<h3 id="w-workbench-waitidle-ctx-context-context-timeout-time-duration-error"><code>(w *Workbench) WaitIdle(ctx context.Context, timeout time.Duration) error</code></h3>
+<p>WaitIdle waits for every job to finish - the honest way to wait out a warm, which is what most of them are.</p>
+<p>Finished jobs are ignored rather than waited for. Some are removed when they end and some are only marked - infer.run&#x27;s is marked - so waiting for the list to empty waits forever on half of them. That is a difference between the verbs, and not a caller&#x27;s to know about.</p>
+<h3 id="w-workbench-window-ctx-context-context-node-string-tab-tab-tab-error"><code>(w *Workbench) Window(ctx context.Context, node string, tab Tab) (Tab, error)</code></h3>
+<h2 id="project">Project</h2>
+<p>Project is opening, saving and starting over. Live.</p>
+<h3 id="p-project-list-ctx-context-context-string-error"><code>(p Project) List(ctx context.Context) ([]string, error)</code></h3>
+<p>List is what has been saved.</p>
+<h3 id="p-project-new-ctx-context-context-place-string-error"><code>(p Project) New(ctx context.Context, place string) error</code></h3>
+<p>New is an empty network.</p>
+<p>With a place, it becomes the study area and the map is framed on it, because those are the same wish - and because a blank network with no place is a map in the middle of the Atlantic.</p>
+<h3 id="p-project-open-ctx-context-context-path-string-error"><code>(p Project) Open(ctx context.Context, path string) error</code></h3>
+<p>Open loads a fixture or a saved project.</p>
+<h3 id="p-project-save-ctx-context-context-name-string-string-error"><code>(p Project) Save(ctx context.Context, name string) (string, error)</code></h3>
+<p>Save writes the current one out. Worth doing before anything that might restart the process: the scenario lives in the process, not on disk.</p>
+<h2 id="nodes">Nodes</h2>
+<p>Nodes is the collection. Live: every call reads the session.</p>
+<h3 id="n-nodes-delete-ctx-context-context-names-string-error"><code>(n Nodes) Delete(ctx context.Context, names ...string) error</code></h3>
+<p>Delete removes them, in one rebuild.</p>
+<p>All or none: a name that is not there refuses and removes nothing, because half a deletion leaves a scenario nobody described and no way to tell which half survived without asking again.</p>
+<h3 id="n-nodes-find-ctx-context-context-query-string-node-error"><code>(n Nodes) Find(ctx context.Context, query string) (Node, error)</code></h3>
+<p>Find is the one node a search meant, or a refusal naming what it did find.</p>
+<h3 id="n-nodes-get-ctx-context-context-name-string-nodeinfo-error"><code>(n Nodes) Get(ctx context.Context, name string) (NodeInfo, error)</code></h3>
+<p>Get is one by name.</p>
+<h3 id="n-nodes-keep-ctx-context-context-names-string-error"><code>(n Nodes) Keep(ctx context.Context, names ...string) error</code></h3>
+<p>Keep deletes everything these do not name.</p>
+<p>The complement is worked out at the workbench rather than here, so it cannot be computed against a list that changed in between.</p>
+<h3 id="n-nodes-list-ctx-context-context-nodeinfo-error"><code>(n Nodes) List(ctx context.Context) ([]NodeInfo, error)</code></h3>
+<p>List is every node, as the network currently has them.</p>
+<h3 id="n-nodes-near-ctx-context-context-name-string-count-int-neighbour-error"><code>(n Nodes) Near(ctx context.Context, name string, count int) ([]Neighbour, error)</code></h3>
+<p>Near is the nodes closest to this one, nearest first, at most count of them (all of them when count is zero).</p>
+<p>Trimming an imported deployment to a neighbourhood is the first thing anybody does with one, and the distance is the workbench&#x27;s own - the same great circle its path losses use.</p>
+<h3 id="n-nodes-ofkind-ctx-context-context-kind-kind-nodeinfo-error"><code>(n Nodes) OfKind(ctx context.Context, kind Kind) ([]NodeInfo, error)</code></h3>
+<p>OfKind filters. Evaluated here rather than at the workbench: it is a question about a list somebody already has.</p>
+<h3 id="n-nodes-place-ctx-context-context-p-placement-node-error"><code>(n Nodes) Place(ctx context.Context, p Placement) (Node, error)</code></h3>
+<p>Place puts one node down and hands back a handle to it.</p>
+<p>It inherits its neighbours&#x27; regions and their firmware, because somebody dropping a repeater on a map is adding a repeater to this network, not choosing a firmware strategy.</p>
+<h3 id="n-nodes-placemany-ctx-context-context-ps-placement-node-error"><code>(n Nodes) PlaceMany(ctx context.Context, ps []Placement) ([]Node, error)</code></h3>
+<p>PlaceMany puts several down, then measures the links once.</p>
+<p>One warm at the end rather than one per node: nodes.place re-measures the matrix each time, and on a national network that is minutes repeated.</p>
+<h3 id="n-nodes-refreshstats-ctx-context-context-error"><code>(n Nodes) RefreshStats(ctx context.Context) error</code></h3>
+<p>RefreshStats samples what every node is costing, rather than waiting for the window to ask.</p>
+<h3 id="n-nodes-search-ctx-context-context-query-string-limit-int-namematch-error"><code>(n Nodes) Search(ctx context.Context, query string, limit int) ([]NameMatch, error)</code></h3>
+<p>Search finds nodes by name, best first, when you cannot type the name.</p>
+<p>Imported names carry emoji and accents - &quot;\U0001F3D4\uFE0F West Lomond \U0001F4E1&quot; is one real node - so matching is done on letters and digits alone, with accents folded and word order ignored. The ranking happens at the workbench rather than here, so this client and the Python one agree about which result is the top one.</p>
+<p>An empty result is not an error: &quot;nothing matched&quot; is an answer, and the caller usually wants to widen the query rather than handle a refusal.</p>
+<h3 id="n-nodes-select-ctx-context-context-names-string-add-bool-error"><code>(n Nodes) Select(ctx context.Context, names []string, add bool) error</code></h3>
+<p>Select replaces the selection, or adds to it.</p>
+<h3 id="n-nodes-selected-ctx-context-context-string-error"><code>(n Nodes) Selected(ctx context.Context) ([]string, error)</code></h3>
+<p>Selected is who is selected now.</p>
+<h2 id="node">Node</h2>
+<p>Node is one node. Live: a handle, not a copy - it holds a name, and asks.</p>
+<h3 id="n-node-build-ctx-context-context-build-bool-error"><code>(n Node) Build(ctx context.Context) (Build, bool, error)</code></h3>
+<p>SetFirmware changes what it runs.</p>
+<p>Applied by default, which means stop, provision, start: firmware is chosen when a node launches, so recording it and leaving the node on its old build is the control somebody presses twice and then distrusts. Pass false to record it for the next start instead - and know that is what you have done. Build is the build this node runs, and false when it is pinned to nothing.</p>
+<p>The whole row rather than the version string, because deleting a build or comparing two needs its path and its board, and reassembling those from a version is the kind of guesswork that deletes the wrong file.</p>
+<h3 id="n-node-card-ctx-context-context-c-cardchange-cardslot-error"><code>(n Node) Card(ctx context.Context, c CardChange) (CardSlot, error)</code></h3>
+<p>Card is what is in this node&#x27;s card slot, and changing it.</p>
+<p>A slot is not a fitted card: the board says the slot exists, this says whether it is filled. A firmware marked as needing a card fills the slot whatever this says, because a build that keeps its settings there boots into nothing without one.</p>
+<h3 id="n-node-console-console"><code>(n Node) Console() Console</code></h3>
+<p>Console reaches a node&#x27;s console.</p>
+<h3 id="n-node-delete-ctx-context-context-error"><code>(n Node) Delete(ctx context.Context) error</code></h3>
+<p>Delete removes it from the scenario, and re-measures what is left.</p>
+<h3 id="n-node-device-device"><code>(n Node) Device() Device</code></h3>
+<p>Device is this node as a device to drive: its screen, buttons and panel.</p>
+<h3 id="n-node-info-ctx-context-context-nodeinfo-error"><code>(n Node) Info(ctx context.Context) (NodeInfo, error)</code></h3>
+<p>Info is what the network says about it, now.</p>
+<h3 id="n-node-inject-ctx-context-context-error"><code>(n Node) Inject(ctx context.Context) error</code></h3>
+<p>Inject originates a packet without firmware.</p>
+<p>It exercises the radio model and the channel; what it does not exercise is relaying, which is a firmware behaviour and needs a firmware.</p>
+<h3 id="n-node-move-ctx-context-context-lat-lon-float64-error"><code>(n Node) Move(ctx context.Context, lat, lon float64) error</code></h3>
+<p>Move puts it somewhere else. The physics moves with it: cached losses for this node are forgotten.</p>
+<h3 id="n-node-name-string"><code>(n Node) Name() string</code></h3>
+<p>Name is what it is called, which is also its identity everywhere.</p>
+<h3 id="n-node-output-ctx-context-context-source-string-lines-int-string-error"><code>(n Node) Output(ctx context.Context, source string, lines int) ([]string, error)</code></h3>
+<p>Output is what this node printed, from one of four voices: &quot;serial&quot; is the board&#x27;s own port (a native node&#x27;s standard error), &quot;boot&quot; is the ROM&#x27;s on a board whose application talks over USB, &quot;emulator&quot; is what QEMU or Renode said about running it, and &quot;radio&quot; is the radio model&#x27;s log.</p>
+<p>The lines, not a count of them. A board that has gone quiet is read by looking at what it last said.</p>
+<h3 id="n-node-outputwindow-ctx-context-context-source-string-error"><code>(n Node) OutputWindow(ctx context.Context, source string) error</code></h3>
+<p>OutputWindow opens one of this node&#x27;s logs in a window of its own.</p>
+<p>A tab is one pane. What people do while a board is misbehaving is watch its screen and two of its logs together - what the board printed beside what the emulator said about running it - and that needs windows.</p>
+<h3 id="n-node-provisioning-ctx-context-context-string-error"><code>(n Node) Provisioning(ctx context.Context) ([]string, error)</code></h3>
+<p>Provisioning is what this node is told at boot, in the console&#x27;s own words.</p>
+<h3 id="n-node-radio-ctx-context-context-map-string-any-error"><code>(n Node) Radio(ctx context.Context) (map[string]any, error)</code></h3>
+<p>Radio is what this node&#x27;s radio is set to - the same thing the workbench shows under Radio: the frequency, spreading factor, bandwidth and the rest the model assumes, and, for a node that is running, what it reports back and where the two differ. The shape is left open because a repeater and a companion answer it differently, and both are worth having whole.</p>
+<h3 id="n-node-running-ctx-context-context-bool-error"><code>(n Node) Running(ctx context.Context) (bool, error)</code></h3>
+<p>Running reports whether its firmware process is up.</p>
+<h3 id="n-node-serve-ctx-context-context-over-transport-string-error"><code>(n Node) Serve(ctx context.Context, over Transport) (string, error)</code></h3>
+<p>Serve hands this companion to a real client - meshcore-cli, or an app over a bridge - and returns where to point it.</p>
+<h3 id="n-node-setboard-ctx-context-context-board-board-error"><code>(n Node) SetBoard(ctx context.Context, board Board) error</code></h3>
+<p>SetBoard changes what hardware this node is.</p>
+<p>A change to the physics rather than a label, so it rebuilds and re-warms - and it clears a firmware pin made for a different board, because that image cannot run on this one and a pin nobody can honour reads as a configured node right up until it refuses to start.</p>
+<h3 id="n-node-setfirmware-ctx-context-context-b-build-apply-bool-error"><code>(n Node) SetFirmware(ctx context.Context, b Build, apply bool) error</code></h3>
+<h3 id="n-node-setregions-ctx-context-context-regions-string-error"><code>(n Node) SetRegions(ctx context.Context, regions ...string) error</code></h3>
+<p>SetRegions is what it relays for.</p>
+<h3 id="n-node-settruerf-ctx-context-context-on-bool-error"><code>(n Node) SetTrueRF(ctx context.Context, on bool) error</code></h3>
+<p>SetTrueRF makes this receiver take waveform verdicts whatever the run&#x27;s mode - the hybrid flag, for measuring one node honestly inside a cheap run.</p>
+<h3 id="n-node-start-ctx-context-context-error"><code>(n Node) Start(ctx context.Context) error</code></h3>
+<p>Start and Stop are its firmware process.</p>
+<h3 id="n-node-stop-ctx-context-context-error"><code>(n Node) Stop(ctx context.Context) error</code></h3>
+<h3 id="n-node-unserve-ctx-context-context-error"><code>(n Node) Unserve(ctx context.Context) error</code></h3>
+<p>Unserve takes it back.</p>
+<h3 id="n-node-waitrunning-ctx-context-context-timeout-time-duration-error"><code>(n Node) WaitRunning(ctx context.Context, timeout time.Duration) error</code></h3>
+<p>WaitRunning waits for its firmware to come up.</p>
+<p>Polling, for now. When the socket learns to push this switches underneath and no caller changes - which is why the clients are built before the events rather than after.</p>
+<h3 id="n-node-wipe-ctx-context-context-error"><code>(n Node) Wipe(ctx context.Context) error</code></h3>
+<p>Wipe puts this board back to factory: its flash, its card, its files.</p>
+<p>A board keeps what it was told between runs, as hardware does, so a node configured into a corner stays there until this is called. Refused while it is running, rather than rewriting a flash underneath the emulator holding it.</p>
+<h2 id="sim">Sim</h2>
+<p>Sim is the run. Live.</p>
+<h3 id="s-sim-pause-ctx-context-context-error"><code>(s Sim) Pause(ctx context.Context) error</code></h3>
+<h3 id="s-sim-play-ctx-context-context-error"><code>(s Sim) Play(ctx context.Context) error</code></h3>
+<p>Play, Pause and Toggle are the clock itself.</p>
+<h3 id="s-sim-reset-ctx-context-context-error"><code>(s Sim) Reset(ctx context.Context) error</code></h3>
+<p>Reset puts the clock and the counters back to the start of the run.</p>
+<h3 id="s-sim-run-ctx-context-context-simulated-wait-time-duration-error"><code>(s Sim) Run(ctx context.Context, simulated, wait time.Duration) error</code></h3>
+<p>Run advances the mesh&#x27;s own clock by this much and waits for it to finish.</p>
+<p>Simulated time, not yours. Five minutes here is five minutes of the mesh&#x27;s clock; on 155 emulated nodes that is a great deal longer than five of yours, which is why the wait&#x27;s own timeout is separate and generous.</p>
+<h3 id="s-sim-setrealfirmware-ctx-context-context-on-bool-error"><code>(s Sim) SetRealFirmware(ctx context.Context, on bool) error</code></h3>
+<p>SetRealFirmware chooses whether play starts MeshCore on every node, or runs the channel with nothing behind it.</p>
+<h3 id="s-sim-setseed-ctx-context-context-seed-uint64-error"><code>(s Sim) SetSeed(ctx context.Context, seed uint64) error</code></h3>
+<p>SetSeed fixes the run. Same seed, same scenario, same result - which is what makes a *changed* result mean something.</p>
+<h3 id="s-sim-setstepms-ctx-context-context-ms-uint32-error"><code>(s Sim) SetStepMs(ctx context.Context, ms uint32) error</code></h3>
+<p>SetStepMs is how much simulated time one tick advances.</p>
+<h3 id="s-sim-settle-ctx-context-context-steps-int-error"><code>(s Sim) Settle(ctx context.Context, steps int) error</code></h3>
+<p>Settle steps the engine on a paused run, which is how a command gets the time it needs to be answered without starting the clock.</p>
+<h3 id="s-sim-start-ctx-context-context-error"><code>(s Sim) Start(ctx context.Context) error</code></h3>
+<p>Start brings the run up: waits out the warm, starts every node, and plays.</p>
+<p>Deliberately not one call to sim.start. That verb is the play button&#x27;s own handler and answers four ways - it pauses if already playing, declines while links are being measured, or starts firmware and does not play - so a script pressing it once gets whichever of those the moment happens to be in.</p>
+<p>Worse, it only starts firmware when *no* node is running. Pin a build onto two nodes of a fifty-eight node fixture and it considers the mesh started, plays with fifty-six of them down, and says nothing.</p>
+<p>So this asks for the three things it actually wants, in order, and checks each one. Zero timeouts mean the usual ones.</p>
+<h3 id="s-sim-startwithin-ctx-context-context-warm-firmware-time-duration-error"><code>(s Sim) StartWithin(ctx context.Context, warm, firmware time.Duration) error</code></h3>
+<p>StartWithin is Start with the two waits named: how long to give the link measurement, and how long to give the firmware.</p>
+<h3 id="s-sim-state-ctx-context-context-simstate-error"><code>(s Sim) State(ctx context.Context) (SimState, error)</code></h3>
+<p>State is what the clock is doing.</p>
+<h3 id="s-sim-step-ctx-context-context-error"><code>(s Sim) Step(ctx context.Context) error</code></h3>
+<p>Step advances one tick, which is StepMs of simulated time.</p>
+<h3 id="s-sim-toggle-ctx-context-context-error"><code>(s Sim) Toggle(ctx context.Context) error</code></h3>
+<h3 id="s-sim-waitstopped-ctx-context-context-timeout-time-duration-error"><code>(s Sim) WaitStopped(ctx context.Context, timeout time.Duration) error</code></h3>
+<p>WaitStopped waits for a run to end.</p>
+<h3 id="s-sim-waituntil-ctx-context-context-atms-uint32-timeout-time-duration-error"><code>(s Sim) WaitUntil(ctx context.Context, atMs uint32, timeout time.Duration) error</code></h3>
+<p>WaitUntil waits for the mesh&#x27;s clock to reach a moment.</p>
+<h2 id="firmware">Firmware</h2>
+<p>Firmware is the library. Live.</p>
+<h3 id="f-firmware-build-ctx-context-context-checkout-role-label-string-job-error"><code>(f Firmware) Build(ctx context.Context, checkout, role, label string) (Job, error)</code></h3>
+<p>Build compiles a MeshCore checkout and puts the results in the library.</p>
+<p>Both roles from one call unless one is named, deliberately. A locally built repeater compiled against a stale shim once answered console output with 0x06 where the host expects 0x07: it connected, misbehaved and exited. Two arms of a comparison built at different moments from different trees measure the build process rather than the firmware, so the easy thing to do here is the thing that builds them together.</p>
+<p>It returns once the work has started. Wait on it: a MeshCore build is a minute or two per role.</p>
+<h3 id="f-firmware-buildandwait-ctx-context-context-checkout-string-timeout-time-duration-build-error"><code>(f Firmware) BuildAndWait(ctx context.Context, checkout string, timeout time.Duration) ([]Build, error)</code></h3>
+<p>BuildAndWait is the same, blocking, for a caller with nothing else to do - which is most of them.</p>
+<h3 id="f-firmware-delete-ctx-context-context-b-build-string-error"><code>(f Firmware) Delete(ctx context.Context, b Build) (string, error)</code></h3>
+<p>Delete removes a build from the cache, and says what it removed.</p>
+<p>By path, and the workbench refuses any path outside the firmware cache. A build nodes are still pinned to will go: they keep the pin, which then cannot be honoured and fails at start - so move them onto the replacement first.</p>
+<h3 id="f-firmware-details-ctx-context-context-id-buildid-builddetails-error"><code>(f Firmware) Details(ctx context.Context, id BuildID) (BuildDetails, error)</code></h3>
+<p>Details is everything known about one build: where it is, what it is, and what has been decided about it.</p>
+<h3 id="f-firmware-download-ctx-context-context-role-version-string-board-board-error"><code>(f Firmware) Download(ctx context.Context, role, version string, board Board) error</code></h3>
+<p>Download fetches one. It returns once the download has been asked for, not once it has landed: wait on the job. role is a plain string here and a Role everywhere else, deliberately: this one names a published release asset, and the catalogue&#x27;s own spellings are not always the application names the verbs are keyed on. Typing it as Role would have the compiler vouch for something nobody has checked.</p>
+<h3 id="f-firmware-find-ctx-context-context-version-string-board-board-build-error"><code>(f Firmware) Find(ctx context.Context, version string, board Board) (Build, error)</code></h3>
+<p>Find is one build by version, and by board where the version alone is ambiguous - which it is for every board image, because &quot;wadamesh&quot; is not a build until it is wadamesh for a particular piece of hardware.</p>
+<h3 id="f-firmware-import-ctx-context-context-path-string-role-role-board-board-label-string-build-error"><code>(f Firmware) Import(ctx context.Context, path string, role Role, board Board, label string) (Build, error)</code></h3>
+<p>Import takes a build from a path - the one way a locally built image gets into the library.</p>
+<p>label is what the library will know it by and what a node pins. Left empty it is a timestamp, so importing twice gives two builds rather than one that quietly replaced the other - which matters the moment you want to put the new one on a node and delete the old.</p>
+<h3 id="f-firmware-library-ctx-context-context-build-error"><code>(f Firmware) Library(ctx context.Context) ([]Build, error)</code></h3>
+<p>Library is every build, published or on disk, with what runs it.</p>
+<h3 id="f-firmware-needed-ctx-context-context-roleneed-error"><code>(f Firmware) Needed(ctx context.Context) ([]RoleNeed, error)</code></h3>
+<p>Needed is the roles this scenario has nodes for and no build pinned to, with what could be pinned. A run refuses to start until every one is answered.</p>
+<h3 id="f-firmware-ondisk-ctx-context-context-build-error"><code>(f Firmware) OnDisk(ctx context.Context) ([]Build, error)</code></h3>
+<p>OnDisk is only the ones this machine actually holds, which is the only thing that decides what a node can run. A build that failed to download and one in daily use look identical from anywhere else.</p>
+<h3 id="f-firmware-scan-ctx-context-context-error"><code>(f Firmware) Scan(ctx context.Context) error</code></h3>
+<p>Scan asks the catalogue what is published, which is how a build nobody has downloaded becomes offerable.</p>
+<h3 id="f-firmware-start-ctx-context-context-error"><code>(f Firmware) Start(ctx context.Context) error</code></h3>
+<p>Start brings up firmware on every node.</p>
+<p>Asynchronous, and always has been: it answers with what it has begun, not with what is up. It was synchronous once, and on 155 nodes that froze the window and the socket together for as long as it was left - which read as a crash and was reported as one. Wait with WaitStarted.</p>
+<h3 id="f-firmware-state-ctx-context-context-firmwarestate-error"><code>(f Firmware) State(ctx context.Context) (FirmwareState, error)</code></h3>
+<p>State is how far a start has got.</p>
+<h3 id="f-firmware-update-ctx-context-context-id-buildid-c-buildchange-builddetails-error"><code>(f Firmware) Update(ctx context.Context, id BuildID, c BuildChange) (BuildDetails, error)</code></h3>
+<p>Update renames a build, moves it to another board or role, or changes how it is run, and reports it as it now stands.</p>
+<h3 id="f-firmware-useforrole-ctx-context-context-role-role-b-build-error"><code>(f Firmware) UseForRole(ctx context.Context, role Role, b Build) error</code></h3>
+<p>UseForRole pins every node of a role to one build.</p>
+<h3 id="f-firmware-usewhatishere-ctx-context-context-map-role-build-error"><code>(f Firmware) UseWhatIsHere(ctx context.Context) (map[Role]Build, error)</code></h3>
+<p>UseWhatIsHere pins every role that needs one to the newest build on this machine, and reports what it chose.</p>
+<p>What a script wants almost every time: this mesh, whatever this machine holds, rather than a version typed into the script that goes stale. A run refuses to start until every role is answered, so the alternative is the same loop written out in every caller.</p>
+<p>It refuses by name when a role has nothing, because &quot;no companion build&quot; is a thing to go and fix rather than a reason to start a mesh with a silent hole in it.</p>
+<h3 id="f-firmware-waitstarted-ctx-context-context-timeout-time-duration-error"><code>(f Firmware) WaitStarted(ctx context.Context, timeout time.Duration) error</code></h3>
+<p>WaitStarted waits for every node&#x27;s firmware to be up.</p>
+<p>Generous by default where a caller passes nothing: real firmware on a large network is minutes, and on emulated boards it is longer. WaitStarted waits for every node&#x27;s firmware to be up.</p>
+<p>Nodes here is the nodes that run firmware, which is not every node: an SDR observer and an emitter never boot one. It used to be every node, so a fixture holding either reported &quot;56 of 58&quot; until the timeout with no way to see which two.</p>
+<p>Which is why this names the stragglers rather than counting them. Ten minutes of &quot;56 of 58&quot; tells you nothing; two node names tell you whether a build is missing or a board is wedged.</p>
+<h3 id="f-firmware-window-ctx-context-context-id-buildid-error"><code>(f Firmware) Window(ctx context.Context, id BuildID) error</code></h3>
+<p>Window opens the build&#x27;s own window, which is what a click on a library row does. Refused by a workbench with no interface.</p>
+<h2 id="console">Console</h2>
+<p>Console is one node&#x27;s firmware console. Live.</p>
+<h3 id="c-console-ask-ctx-context-context-line-string-steps-int-string-error"><code>(c Console) Ask(ctx context.Context, line string, steps int) (string, error)</code></h3>
+<p>Ask sends a line and waits for the node to answer it.</p>
+<p>The important one. A node reads its serial input on its next loop and its loop only runs when the engine steps, so reading straight after sending reads the moment *before* the command was sent - every script that has done this by hand got an empty reply and concluded the console was broken. This gives the mesh its own time first, by stepping when the run is paused.</p>
+<h3 id="c-console-read-ctx-context-context-string-error"><code>(c Console) Read(ctx context.Context) ([]string, error)</code></h3>
+<p>Read is the scrollback. Read is the scrollback, newest last.</p>
+<p>The lines come back under &quot;tail&quot; and &quot;lines&quot; is how many there are in total, so reading &quot;lines&quot; hands you a number where you asked for text. The tail is the last 200; a node up for an hour has thousands and nobody reads the first one.</p>
+<h3 id="c-console-send-ctx-context-context-line-string-error"><code>(c Console) Send(ctx context.Context, line string) error</code></h3>
+<p>Send types a line at it.</p>
+<h2 id="events">Events</h2>
+<p>Events is what the engine has done. Live.</p>
+<h3 id="e-events-dump-ctx-context-context-path-string-int-error"><code>(e Events) Dump(ctx context.Context, path string) (int, error)</code></h3>
+<p>Dump writes every event held to a file, one JSON object per line.</p>
+<h3 id="e-events-recent-ctx-context-context-limit-int-event-error"><code>(e Events) Recent(ctx context.Context, limit int) ([]Event, error)</code></h3>
+<p>Recent is the tail.</p>
+<p>A tail, and only a tail: the store keeps a bounded one because a long run has millions, so a script that needs all of them dumps per round rather than polling this. Reading only the tail after a busy flood samples the most congested moment of it, which is a mistake already made once here.</p>
+<h3 id="e-events-total-ctx-context-context-int-error"><code>(e Events) Total(ctx context.Context) (int, error)</code></h3>
+<p>Total is how many there have been, which is the cheap question.</p>
+<h3 id="e-events-wait-ctx-context-context-m-match-timeout-time-duration-event-error"><code>(e Events) Wait(ctx context.Context, m Match, timeout time.Duration) (Event, error)</code></h3>
+<p>Wait blocks until an event matches, and returns it.</p>
+<h2 id="boundary">Boundary</h2>
+<p>Boundary is the study area, however you have it. Live.</p>
+<h3 id="b-boundary-accept-ctx-context-context-name-string-string-error"><code>(b Boundary) Accept(ctx context.Context, name string) (string, error)</code></h3>
+<p>Accept takes one of the search results into the study area.</p>
+<p>Areas union rather than replace: a study is often two council areas rather than one.</p>
+<h3 id="b-boundary-list-ctx-context-context-string-error"><code>(b Boundary) List(ctx context.Context) ([]string, error)</code></h3>
+<p>List is what the study area is made of.</p>
+<h3 id="b-boundary-load-ctx-context-context-source-name-string-string-error"><code>(b Boundary) Load(ctx context.Context, source, name string) ([]string, error)</code></h3>
+<p>Load takes a study area from GeoJSON: a path, or the document itself.</p>
+<p>A Polygon, a MultiPolygon, a Feature or a FeatureCollection. Each polygon becomes an area named from its &quot;name&quot; property, or from name, or from the file.</p>
+<p>The one way to study an area nothing has an administrative name for - a catchment, a valley, the bit north of the river - and the only one that works with no network at all.</p>
+<h3 id="b-boundary-prune-ctx-context-context-marginkm-float64-int-error"><code>(b Boundary) Prune(ctx context.Context, marginKm float64) (int, error)</code></h3>
+<p>Prune deletes the nodes outside the study area, and says how many went.</p>
+<p>For a mesh that was imported before the boundary was set. marginKm is kept on purpose and zero means the session&#x27;s own: a node just outside still interferes with one just inside, and dropping it makes the inside look quieter than it is.</p>
+<h3 id="b-boundary-remove-ctx-context-context-name-string-error"><code>(b Boundary) Remove(ctx context.Context, name string) error</code></h3>
+<p>Remove takes one area back out.</p>
+<p>Changes what is measured, never what is loaded: the nodes stay until something prunes them.</p>
+<h3 id="b-boundary-search-ctx-context-context-query-string-string-error"><code>(b Boundary) Search(ctx context.Context, query string) ([]string, error)</code></h3>
+<p>Search finds places matching a name, best first. Needs the network.</p>
+<p>Names rather than geometry: the geometry stays at the workbench, and the name is what Accept takes.</p>
+<h3 id="b-boundary-use-ctx-context-context-area-string-string-error"><code>(b Boundary) Use(ctx context.Context, area string) ([]string, error)</code></h3>
+<p>Use takes a study area from a place name or from GeoJSON.</p>
+<p>The one to call. A path to a .geojson file is loaded; anything else is searched for by name and the best match accepted. Both end with the area in the study, which is the only thing the caller wanted to say.</p>
+<h2 id="live">Live</h2>
+<p>Live is a live feed, and the deployment it describes. Live in both senses.</p>
+<h3 id="l-live-applyregions-ctx-context-context-int-error"><code>(l Live) ApplyRegions(ctx context.Context) (int, error)</code></h3>
+<p>ApplyRegions puts the inferred regions onto the nodes, and says how many took one.</p>
+<p>The forgotten step. Everything above can succeed and the mesh still be silent until this runs.</p>
+<h3 id="l-live-commit-ctx-context-context-strategy-strategy-int-error"><code>(l Live) Commit(ctx context.Context, strategy Strategy) (int, error)</code></h3>
+<p>Commit applies the fetched nodes to the scenario and says how many it now holds.</p>
+<p>&quot;replace-all&quot; is the default and is what the shipped fixtures were built with; &quot;add&quot; keeps what is already here and skips names that clash.</p>
+<p>Measuring the links afterwards is a job rather than part of this call - 676 nodes is 228,000 terrain paths over real ground - so this returns while that is still running.</p>
+<h3 id="l-live-fetch-ctx-context-context-url-string-importpreview-error"><code>(l Live) Fetch(ctx context.Context, url string) (ImportPreview, error)</code></h3>
+<p>Fetch reads the deployment and says what would change, changing nothing.</p>
+<h3 id="l-live-infer-ctx-context-context-window-wait-time-duration-error"><code>(l Live) Infer(ctx context.Context, window, wait time.Duration) error</code></h3>
+<p>Infer reads the feed&#x27;s recent traffic to work out what each node holds.</p>
+<p>This is the step that decides whether anything relays. A node whose regions are unknown forwards nothing, and nothing says so.</p>
+<p>window is the feed&#x27;s own past and zero means DefaultWindow; wait is how long you will sit here for it. A week of ScotMesh is around 150,000 packets and several minutes of paging.</p>
+<h3 id="l-live-pull-ctx-context-context-url-string-window-wait-time-duration-importpreview-error"><code>(l Live) Pull(ctx context.Context, url string, window, wait time.Duration) (ImportPreview, error)</code></h3>
+<p>Pull fetches, commits, reads the traffic and applies what it implies.</p>
+<p>The whole chain, in the order that works. window is how far back into the feed&#x27;s own history to read - the mesh&#x27;s past, not your patience - and zero means DefaultWindow. wait is yours.</p>
+<p>Link measurement is still running when this returns on anything but a small mesh, so follow it with WaitIdle before starting a run.</p>
+<h3 id="l-live-setsource-ctx-context-context-url-string-string-error"><code>(l Live) SetSource(ctx context.Context, url string) (string, error)</code></h3>
+<p>SetSource points at a feed without reading it, and reports the URL as the workbench tidied it.</p>
+<h2 id="assertions">Assertions</h2>
+<p>Assertions are what has to be true for a run to have passed. Live.</p>
+<h3 id="a-assertions-add-ctx-context-context-want-assertion-error"><code>(a Assertions) Add(ctx context.Context, want Assertion) error</code></h3>
+<p>Add records one.</p>
+<h3 id="a-assertions-check-ctx-context-context-report-error"><code>(a Assertions) Check(ctx context.Context) (Report, error)</code></h3>
+<p>Check measures every assertion against the run so far.</p>
+<h3 id="a-assertions-delivered-ctx-context-context-atleast-int-error"><code>(a Assertions) Delivered(ctx context.Context, atLeast int) error</code></h3>
+<p>Delivered is the common one: at least this many nodes received something.</p>
+<h3 id="a-assertions-sent-ctx-context-context-node-string-atleast-atmost-int-error"><code>(a Assertions) Sent(ctx context.Context, node string, atLeast, atMost int) error</code></h3>
+<p>Sent bounds what a node - or the whole mesh - transmitted.</p>
+<p>AtMost is the interesting one: it is how a relay-suppression change is held to not having made the mesh chattier.</p>
+<h2 id="schedule">Schedule</h2>
+<p>Schedule is what the mesh is told to send, and when. Live.</p>
+<h3 id="s-schedule-add-ctx-context-context-send-send-error"><code>(s Schedule) Add(ctx context.Context, send Send) error</code></h3>
+<p>Add schedules one.</p>
+<p>Repeating traffic has worked all along and nothing said so, which to somebody writing a script is the same as it not existing.</p>
+<h3 id="s-schedule-clear-ctx-context-context-error"><code>(s Schedule) Clear(ctx context.Context) error</code></h3>
+<p>Clear forgets all of them.</p>
+<h2 id="device">Device</h2>
+<p>Device is a running board a script can look at and prod: read what its display is showing, capture it as an image, press its buttons, type at its keyboard, and touch its panel. All of it works headless - the display is the framebuffer the controller holds, not a picture of anybody&#x27;s desktop - which is the point: a board test that needs a screen in front of it does not run in CI.</p>
+<h3 id="b-device-press-ctx-context-context-pin-int-down-bool-error"><code>(b Device) Press(ctx context.Context, pin int, down bool) error</code></h3>
+<p>Press holds a button pin down, or releases it. Held rather than clicked because the firmware cares: MeshCore wakes a sleeping display on a press and powers the board off on a long one, so a caller times the release itself.</p>
+<h3 id="b-device-screen-ctx-context-context-screen-error"><code>(b Device) Screen(ctx context.Context) (Screen, error)</code></h3>
+<p>Screen reads what this board&#x27;s display is currently showing.</p>
+<h3 id="b-device-screenshot-ctx-context-context-shot-error"><code>(b Device) Screenshot(ctx context.Context) (Shot, error)</code></h3>
+<p>Screenshot writes the board&#x27;s display to a PNG and returns where it landed. The frame is exactly what the controller holds, at the size it holds it.</p>
+<h3 id="b-device-tap-ctx-context-context-pin-int-error"><code>(b Device) Tap(ctx context.Context, pin int) error</code></h3>
+<p>Tap presses a button and lets go - the ordinary click, for when the hold does not matter.</p>
+<h3 id="b-device-tapat-ctx-context-context-x-y-int-error"><code>(b Device) TapAt(ctx context.Context, x, y int) error</code></h3>
+<p>TapAt touches a point and lifts off - a tap on the panel.</p>
+<h3 id="b-device-touch-ctx-context-context-x-y-int-down-bool-error"><code>(b Device) Touch(ctx context.Context, x, y int, down bool) error</code></h3>
+<p>Touch puts a finger on the panel at a point (down true) or lifts it off (down false).</p>
+<h3 id="b-device-type-ctx-context-context-text-string-error"><code>(b Device) Type(ctx context.Context, text string) error</code></h3>
+<p>Type enters text at the board&#x27;s own keyboard, one character at a time - which is what the keyboard sends, and what the firmware polls for.</p>
+<h3 id="b-device-waitscreen-ctx-context-context-timeout-time-duration-screen-error"><code>(b Device) WaitScreen(ctx context.Context, timeout time.Duration) (Screen, error)</code></h3>
+<p>WaitScreen waits until the display changes from what it shows now and returns the new frame, or fails with what it was still showing when the timeout ran out. This is the honest way to check an input: half duplex eats stimuli - a board handed a packet while transmitting never hears it - so a tap followed by an immediate screen read will intermittently read the frame from before the tap landed. Change is by Digest, so a redraw that keeps the same number of lit pixels still counts.</p>
+<h2 id="job">Job</h2>
+<p>Job is a long operation the workbench is doing. Live: a handle to an id.</p>
+<h3 id="j-job-cancel-ctx-context-context-error"><code>(j Job) Cancel(ctx context.Context) error</code></h3>
+<p>Cancel stops it, where whoever started it left a way to.</p>
+<p>A job with no cancel refuses by name rather than silently doing nothing: an operator who asked deserves to be told, not left watching a bar that carries on.</p>
+<h3 id="j-job-info-ctx-context-context-jobinfo-bool-error"><code>(j Job) Info(ctx context.Context) (JobInfo, bool, error)</code></h3>
+<p>Info is where this job has got to, or false when it is no longer listed - which means finished, because a job that has ended is removed.</p>
+<h3 id="j-job-wait-ctx-context-context-timeout-time-duration-error"><code>(j Job) Wait(ctx context.Context, timeout time.Duration) error</code></h3>
+<p>Wait blocks until it is gone from the list.</p>
+<h2 id="enumerations">Enumerations</h2>
+<h3 id="board">Board</h3>
+<p>Board is a hardware profile this build knows about.</p>
+<ul><li><code>BoardEbyteEoRaS3</code> — <code>&quot;Ebyte_EoRa-S3&quot;</code> · Ebyte_EoRa-S3: ESP32-S3, SX1262, by Ebyte.</li><li><code>BoardGenericE22Sx1262</code> — <code>&quot;Generic_E22_sx1262&quot;</code> · Generic_E22_sx1262: ESP32, SX1262, by Ebyte.</li><li><code>BoardHeltecE213</code> — <code>&quot;Heltec_E213&quot;</code> · Heltec_E213: ESP32-S3, SX1262, by Heltec.</li><li><code>BoardHeltecE290</code> — <code>&quot;Heltec_E290&quot;</code> · Heltec_E290: ESP32-S3, SX1262, by Heltec.</li><li><code>BoardHeltecWSL3</code> — <code>&quot;Heltec_WSL3&quot;</code> · Heltec_WSL3: ESP32-S3, SX1262, by Heltec.</li><li><code>BoardHeltecWirelessPaper</code> — <code>&quot;Heltec_Wireless_Paper&quot;</code> · Heltec_Wireless_Paper: ESP32-S3, SX1262, by Heltec.</li><li><code>BoardHeltecWirelessTracker</code> — <code>&quot;Heltec_Wireless_Tracker&quot;</code> · Heltec_Wireless_Tracker: ESP32-S3, SX1262, by Heltec.</li><li><code>BoardHeltecMeshSolar</code> — <code>&quot;Heltec_mesh_solar&quot;</code> · Heltec_mesh_solar: nRF52840, SX1262, by Heltec.</li><li><code>BoardHeltecT096</code> — <code>&quot;Heltec_t096&quot;</code> · Heltec_t096: nRF52840, SX1262, by Heltec.</li><li><code>BoardHeltecT114</code> — <code>&quot;Heltec_t114&quot;</code> · Heltec_t114: nRF52840, SX1262, by Heltec.</li><li><code>BoardHeltecV2</code> — <code>&quot;Heltec_v2&quot;</code> · Heltec_v2: ESP32, SX1276, by Heltec.</li><li><code>BoardHeltecV3</code> — <code>&quot;Heltec_v3&quot;</code> · Heltec_v3: ESP32-S3, SX1262, by Heltec.</li><li><code>BoardLilyGoT3S3Sx1262</code> — <code>&quot;LilyGo_T3S3_sx1262&quot;</code> · LilyGo_T3S3_sx1262: ESP32-S3, SX1262, by LILYGO.</li><li><code>BoardLilyGoTBeam1W</code> — <code>&quot;LilyGo_TBeam_1W&quot;</code> · LilyGo_TBeam_1W: ESP32-S3, SX1262, by LILYGO.</li><li><code>BoardLilyGoTDeck</code> — <code>&quot;LilyGo_TDeck&quot;</code> · LilyGo_TDeck: ESP32-S3, SX1262, by LILYGO.</li><li><code>BoardRAK3112</code> — <code>&quot;RAK_3112&quot;</code> · RAK_3112: ESP32-S3, SX1262, by RAKwireless.</li><li><code>BoardRAK4631</code> — <code>&quot;RAK_4631&quot;</code> · RAK_4631: nRF52840, SX1262, by RAKwireless.</li><li><code>BoardStationG2</code> — <code>&quot;Station_G2&quot;</code> · Station_G2: ESP32-S3, SX1262, by LILYGO.</li><li><code>BoardStationG3ESP32</code> — <code>&quot;Station_G3_ESP32&quot;</code> · Station_G3_ESP32: ESP32-S3, SX1262, by LILYGO.</li><li><code>BoardTbeamSX1262</code> — <code>&quot;Tbeam_SX1262&quot;</code> · Tbeam_SX1262: ESP32, SX1262, by LILYGO.</li><li><code>BoardXiaoS3</code> — <code>&quot;Xiao_S3&quot;</code> · Xiao_S3: ESP32-S3, SX1262, by Seeed.</li><li><code>BoardXiaoS3WIO</code> — <code>&quot;Xiao_S3_WIO&quot;</code> · Xiao_S3_WIO: ESP32-S3, SX1262, by Seeed.</li><li><code>BoardXiaoNrf52</code> — <code>&quot;Xiao_nrf52&quot;</code> · Xiao_nrf52: nRF52840, SX1262, by Seeed.</li><li><code>BoardHeltecTrackerV2</code> — <code>&quot;heltec_tracker_v2&quot;</code> · heltec_tracker_v2: ESP32-S3, SX1262, by Heltec.</li><li><code>BoardHeltecV4</code> — <code>&quot;heltec_v4&quot;</code> · heltec_v4: ESP32-S3, SX1262, by Heltec.</li></ul>
+<h3 id="class">Class</h3>
+<p>Class is what happened to an event.</p>
+<ul><li><code>ClassSent</code> — <code>&quot;sent&quot;</code> · ClassSent is this node transmitted it.</li><li><code>ClassReceived</code> — <code>&quot;received&quot;</code> · ClassReceived is this node decoded it, for the first time.</li><li><code>ClassHalfDuplex</code> — <code>&quot;half-duplex&quot;</code> · keyed; LoRa is half duplex.</li><li><code>ClassInterference</code> — <code>&quot;interference&quot;</code> · ClassInterference is would have decoded, but a stronger signal took it.</li><li><code>ClassFloor</code> — <code>&quot;floor&quot;</code> · spreading factor.</li></ul>
+<h3 id="kind">Kind</h3>
+<p>Kind is what a node is.</p>
+<ul><li><code>SimpleRepeater</code> — <code>&quot;simple-repeater&quot;</code> · SimpleRepeater forwards, and nothing else.</li><li><code>AdvancedRepeater</code> — <code>&quot;advanced-repeater&quot;</code> · AdvancedRepeater forwards, serves clients, holds state.</li><li><code>Companion</code> — <code>&quot;companion&quot;</code> · Companion a user&#x27;s device - the thing a phone connects to.</li><li><code>RoomServer</code> — <code>&quot;room-server&quot;</code> · mesh that treats one as a repeater overstates its own reach.</li><li><code>SDRObserver</code> — <code>&quot;sdr-observer&quot;</code> · field at its antenna and hands back IQ.</li><li><code>Emitter</code> — <code>&quot;emitter&quot;</code> · terrain as everything else.</li></ul>
+<h3 id="preset">Preset</h3>
+<p>Preset is a named set of LoRa parameters for a territory.</p>
+<ul><li><code>PresetAustralia</code> — <code>&quot;Australia&quot;</code> · Australia: 915.800 MHz, 250.0 kHz, SF10, CR 4/5.</li><li><code>PresetAustraliaNarrow</code> — <code>&quot;Australia (Narrow)&quot;</code> · Australia (Narrow): 916.575 MHz, 62.5 kHz, SF7, CR 4/8.</li><li><code>PresetAustraliaMid</code> — <code>&quot;Australia (Mid)&quot;</code> · Australia (Mid): 915.075 MHz, 125.0 kHz, SF9, CR 4/5.</li><li><code>PresetAustraliaSAWA</code> — <code>&quot;Australia: SA, WA&quot;</code> · Australia: SA, WA: 923.125 MHz, 62.5 kHz, SF8, CR 4/8.</li><li><code>PresetAustraliaQLD</code> — <code>&quot;Australia: QLD&quot;</code> · Australia: QLD: 923.125 MHz, 62.5 kHz, SF8, CR 4/5.</li><li><code>PresetBrazil</code> — <code>&quot;Brazil&quot;</code> · Brazil: 923.125 MHz, 62.5 kHz, SF8, CR 4/8.</li><li><code>PresetEUUKNarrow</code> — <code>&quot;EU/UK (Narrow)&quot;</code> · EU/UK (Narrow): 869.618 MHz, 62.5 kHz, SF8, CR 4/8.</li><li><code>PresetEUUKDeprecated</code> — <code>&quot;EU/UK (Deprecated)&quot;</code> · EU/UK (Deprecated): 869.525 MHz, 250.0 kHz, SF11, CR 4/5.</li><li><code>PresetCzechRepublicNarrow</code> — <code>&quot;Czech Republic (Narrow)&quot;</code> · Czech Republic (Narrow): 869.432 MHz, 62.5 kHz, SF7, CR 4/5.</li><li><code>PresetEU433MHzLongRange</code> — <code>&quot;EU 433MHz (Long Range)&quot;</code> · EU 433MHz (Long Range): 433.650 MHz, 250.0 kHz, SF11, CR 4/5.</li><li><code>PresetEU433MHzNarrow</code> — <code>&quot;EU 433MHz (Narrow)&quot;</code> · EU 433MHz (Narrow): 433.650 MHz, 62.5 kHz, SF8, CR 4/8.</li><li><code>PresetNetherlands</code> — <code>&quot;Netherlands&quot;</code> · Netherlands: 869.618 MHz, 62.5 kHz, SF7, CR 4/5.</li><li><code>PresetNewZealand</code> — <code>&quot;New Zealand&quot;</code> · New Zealand: 917.375 MHz, 250.0 kHz, SF11, CR 4/5.</li><li><code>PresetNewZealandNarrow</code> — <code>&quot;New Zealand (Narrow)&quot;</code> · New Zealand (Narrow): 917.375 MHz, 62.5 kHz, SF7, CR 4/5.</li><li><code>PresetPortugal433</code> — <code>&quot;Portugal 433&quot;</code> · Portugal 433: 433.375 MHz, 62.5 kHz, SF9, CR 4/6.</li><li><code>PresetPortugal868</code> — <code>&quot;Portugal 868&quot;</code> · Portugal 868: 869.618 MHz, 62.5 kHz, SF7, CR 4/6.</li><li><code>PresetSwitzerland</code> — <code>&quot;Switzerland&quot;</code> · Switzerland: 869.618 MHz, 62.5 kHz, SF8, CR 4/8.</li><li><code>PresetUSACanadaRecommended</code> — <code>&quot;USA/Canada (Recommended)&quot;</code> · USA/Canada (Recommended): 910.525 MHz, 62.5 kHz, SF7, CR 4/5.</li><li><code>PresetVietnamNarrow</code> — <code>&quot;Vietnam (Narrow)&quot;</code> · Vietnam (Narrow): 920.250 MHz, 62.5 kHz, SF8, CR 4/5.</li><li><code>PresetVietnamDeprecated</code> — <code>&quot;Vietnam (Deprecated)&quot;</code> · Vietnam (Deprecated): 920.250 MHz, 250.0 kHz, SF11, CR 4/5.</li></ul>
+<h3 id="role">Role</h3>
+<p>Role is the MeshCore application a node runs, named as upstream names its example directory. The string every firmware verb is keyed on. The published catalogue spells some of the same things differently - &quot;repeater&quot;, &quot;room-server&quot; - and those belong to the release assets; typing one at a verb pins nothing and the run refuses to start with no clue as to why.</p>
+<ul><li><code>RoleSimpleRepeater</code> — <code>&quot;simple_repeater&quot;</code> · only in configuration.</li><li><code>RoleCompanionRadio</code> — <code>&quot;companion_radio&quot;</code> · RoleCompanionRadio is a user&#x27;s device - the thing a phone connects to.</li><li><code>RoleSimpleRoomServer</code> — <code>&quot;simple_room_server&quot;</code> · not forward.</li><li><code>RoleCompanionRadioUSB</code> — <code>&quot;companion_radio_usb&quot;</code> · where a board publishes both transports at one version.</li><li><code>RoleCompanionRadioBLE</code> — <code>&quot;companion_radio_ble&quot;</code> · only.</li></ul>
+<h3 id="strategy">Strategy</h3>
+<p>Strategy is how an imported deployment meets what is already loaded.</p>
+<ul><li><code>Replace</code> — <code>&quot;replace-all&quot;</code> · shipped fixtures were built with.</li><li><code>Add</code> — <code>&quot;add&quot;</code> · Add is keep what is loaded and add the names it has not got.</li></ul>
+<h3 id="tab">Tab</h3>
+<p>Tab is a pane of a node&#x27;s own window.</p>
+<ul><li><code>TabConsole</code> — <code>&quot;Console&quot;</code> · TabConsole is the firmware&#x27;s text console, which only a repeater has.</li><li><code>TabCompanion</code> — <code>&quot;Companion&quot;</code> · TabCompanion is channels, contacts and the companion command line.</li><li><code>TabSDR</code> — <code>&quot;SDR&quot;</code> · TabSDR is an observer&#x27;s antenna: serve it, read the address.</li><li><code>TabSettings</code> — <code>&quot;Settings&quot;</code> · TabSettings is what this node is: identity, radio, regions, firmware.</li><li><code>TabRadio</code> — <code>&quot;Radio&quot;</code> · TabRadio is what the chip is really doing.</li><li><code>TabStats</code> — <code>&quot;Stats&quot;</code> · TabStats is what it has cost and what it has carried.</li><li><code>TabActivity</code> — <code>&quot;Activity&quot;</code> · TabActivity is what it has heard and sent, in order.</li><li><code>TabConnect</code> — <code>&quot;Connect&quot;</code> · TabConnect is hand this companion to a real client.</li><li><code>TabHardware</code> — <code>&quot;Hardware&quot;</code> · grows it.</li><li><code>TabOutput</code> — <code>&quot;Output&quot;</code> · running it, or the radio model beside it.</li></ul>
+<h3 id="transport">Transport</h3>
+<p>Transport is how a served companion is reached.</p>
+<ul><li><code>OverTCP</code> — <code>&quot;tcp&quot;</code> · one to point a phone or another machine at.</li><li><code>OverSerial</code> — <code>&quot;serial&quot;</code> · OverSerial is a pseudo-terminal, for a client that wants a serial port.</li></ul>
+<h2 id="errors">Errors</h2>
+<h3 id="protocolmismatch">ProtocolMismatch</h3>
+<p>ProtocolMismatch is a client and a workbench that cannot speak to each other, reported at connect rather than discovered later.</p>
+<pre><code>Client    int
+Workbench Hello</code></pre>
+<h3 id="refused">Refused</h3>
+<p>Refused is one verb&#x27;s refusal: what was asked, what came back, and its kind.</p>
+<pre><code>Verb string
+Code control.Code
+// Message is the workbench&#x27;s own words, unaltered.
+Message string
+// Has unexported fields.</code></pre>
+<h3 id="timeout">Timeout</h3>
+<p>Timeout is a wait that ran out, saying what it was waiting for and what the state actually was.</p>
+<p>Not a bare deadline error: &quot;timeout&quot; in a CI log tells whoever reads it nothing, and the state at the moment it gave up is the only thing that does.</p>
+<pre><code>What  string
+After time.Duration
+// Last is what the final check saw.
+Last string</code></pre>
+<h2 id="values">Values</h2>
+<h3 id="assertion">Assertion</h3>
+<p>Assertion is one claim, in the general form.</p>
+<pre><code>// Kind is what is being counted. AssertDelivered and AssertSent are the
+// ones this build understands; one it does not is a failure rather than a
+// pass, because a green run that checked nothing is the worst outcome
+// available here.
+Kind    string
+Node    string
+AtLeast int
+AtMost  int
+MaxPct  float64
+Within  time.Duration</code></pre>
+<h3 id="build">Build</h3>
+<p>Build is one firmware image, as the library sees it. Snapshot.</p>
+<p>Version, board and role travel together because a board image is not a build on its own: &quot;wadamesh&quot; means nothing until it is wadamesh for a LilyGo_TDeck, built as a companion. A host build carries neither of the other two.</p>
+<pre><code>Role    Role   `json:&quot;role&quot;`
+Version string `json:&quot;version&quot;`
+Board   Board  `json:&quot;board&quot;`
+Bytes   int64  `json:&quot;bytes&quot;`
+OnDisk  bool   `json:&quot;on_disk&quot;`
+Path    string `json:&quot;path&quot;`
+InUse   int    `json:&quot;in_use&quot;`
+// Unavailable marks a build that exists only because nodes are pinned to
+// it: nothing on disk, nothing published. Pinning to one succeeds and then
+// fails at start, which reads as the library losing builds rather than as
+// a pin nobody can honour.
+Unavailable bool `json:&quot;unavailable&quot;`</code></pre>
+<ul><li><code>(b Build) Describe() string</code> — Describe is how this build is named where a person will read it.</li></ul>
+<ul><li><code>(b Build) ID() BuildID</code> — ID is the identity of a build already in hand.</li></ul>
+<h3 id="buildchange">BuildChange</h3>
+<p>BuildChange is what to change about a build. Every field left at its zero value is left alone, which is why the settings are pointers: &quot;leave this setting&quot; and &quot;turn it off&quot; are different answers, and a bool cannot say both.</p>
+<pre><code>// Label, NewRole and NewBoard rename the build, which moves the file: the
+// name is the identity, because a board image is stored as
+// &lt;board&gt;/&lt;role&gt;@&lt;label&gt;.bin and nothing else records what it is. Nodes
+// pinned to the old name are repointed, or they would fail at their next
+// start with &quot;no image in the cache&quot; about a build sitting in the library
+// under its new name.
+Label    string
+NewRole  Role
+NewBoard Board
+CoprocAtReset *bool
+CardRequired  *bool
+Notes         *string</code></pre>
+<h3 id="builddetails">BuildDetails</h3>
+<p>BuildDetails is one build in full: what a library row cannot hold.</p>
+<p>Separate from Build because the library is deliberately a list - role, version, size, a tick. Where the file actually is, whether it is a whole flash image or half of one, and what has been decided about how it runs are the questions somebody has once a build does not do what they expected.</p>
+<pre><code>Role    Role   `json:&quot;role&quot;`
+Version string `json:&quot;version&quot;`
+Board   Board  `json:&quot;board&quot;`
+// Native marks a build for this machine rather than an image for a board.
+// The two are not interchangeable and only one of them can be renamed.
+Native bool   `json:&quot;native&quot;`
+OnDisk bool   `json:&quot;on_disk&quot;`
+Path   string `json:&quot;path&quot;`
+// SettingsPath is where the settings below are written, named whether or
+// not any exist: &quot;where does this live&quot; is asked of a build that has none
+// as often as of one that has.
+SettingsPath string `json:&quot;settings_path&quot;`
+Bytes        int64  `json:&quot;bytes&quot;`
+Modified     string `json:&quot;modified&quot;`
+InUse        int    `json:&quot;in_use&quot;`
+// Kind is what reading the front of the image says it is, and Bootable
+// whether a board could start from it. An application-only image imports,
+// lists and pins exactly like a whole one and then starts nothing.
+Kind     string `json:&quot;kind&quot;`
+Bootable bool   `json:&quot;bootable&quot;`
+FlashMB  int    `json:&quot;flash_mb&quot;`
+// CoprocAtReset, CardRequired and Notes are kept beside the image, so
+// they follow this build rather than the board it runs on.
+CoprocAtReset bool `json:&quot;coproc_at_reset&quot;`
+// CardRequired says this firmware will not get far without storage in the
+// board&#x27;s slot, so every node running it is given a card whatever its own
+// slot was set to.
+CardRequired bool   `json:&quot;card_required&quot;`
+Notes        string `json:&quot;notes&quot;`</code></pre>
+<ul><li><code>(b BuildDetails) Describe() string</code> — Describe is how this build is named where a person will read it.</li></ul>
+<h3 id="buildid">BuildID</h3>
+<p>BuildID says which build a call means.</p>
+<p>All three names travel together where they are known, so a call cannot land on a different build that happens to share a label. Version alone is accepted and the workbench refuses it when it is ambiguous, rather than guessing - acting on the wrong build is a rename of somebody else&#x27;s image.</p>
+<pre><code>Version string
+Role    Role
+Board   Board</code></pre>
+<h3 id="cardchange">CardChange</h3>
+<p>CardChange is what to change about a node&#x27;s card. Nil leaves a field alone, which is why the two that can be turned off are pointers: &quot;leave this&quot; and &quot;take the card out&quot; are different answers and a bool cannot say both.</p>
+<pre><code>Fitted *bool
+// File hands the node a card of its own - shared between runs, or
+// prepared in advance. A pointer to the empty string returns it to its
+// own, named after it and kept beside its flash.
+File *string
+Wipe bool</code></pre>
+<h3 id="cardslot">CardSlot</h3>
+<p>CardSlot is what is in one node&#x27;s card slot.</p>
+<p>A slot is not a fitted card: the board says the slot exists, the node says whether it is filled, and a firmware that keeps its settings on a card fills it regardless.</p>
+<pre><code>Node string `json:&quot;node&quot;`
+// Slot is &quot;&quot; for the board&#x27;s own answer, &quot;fitted&quot; or &quot;empty&quot; for a
+// decision somebody made about this node.
+Slot   string `json:&quot;slot&quot;`
+Fitted bool   `json:&quot;fitted&quot;`
+// File is the card this node uses, and OwnFile the one it would use if it
+// had been handed none.
+File    string `json:&quot;file&quot;`
+OwnFile string `json:&quot;own_file&quot;`
+Bytes   int64  `json:&quot;bytes&quot;`
+// RequiredByFirmware says the build fills the slot whatever the node
+// asked for; BoardHasSlot that there is a slot at all.
+RequiredByFirmware bool `json:&quot;required_by_firmware&quot;`
+BoardHasSlot       bool `json:&quot;board_has_slot&quot;`
+Wiped              bool `json:&quot;wiped&quot;`</code></pre>
+<h3 id="check">Check</h3>
+<p>Check is one assertion, and what the run made of it.</p>
+<pre><code>Kind   string `json:&quot;kind&quot;`
+Node   string `json:&quot;node&quot;`
+Passed bool   `json:&quot;pass&quot;`
+Got    string `json:&quot;got&quot;`
+Want   string `json:&quot;want&quot;`</code></pre>
+<ul><li><code>(c Check) String() string</code></li></ul>
+<h3 id="checkpoint">Checkpoint</h3>
+<p>Checkpoint is what a save reports back.</p>
+<pre><code>Name  string `json:&quot;checkpoint&quot;`
+Path  string `json:&quot;path&quot;`
+NowMs uint32 `json:&quot;now_ms&quot;`
+Nodes int    `json:&quot;nodes&quot;`</code></pre>
+<h3 id="describe">Describe</h3>
+<p>Describe is the cheap summary. Snapshot.</p>
+<pre><code>Nodes   int    `json:&quot;nodes&quot;`
+Seed    uint64 `json:&quot;seed&quot;`
+NowMs   uint32 `json:&quot;now_ms&quot;`
+Playing bool   `json:&quot;playing&quot;`</code></pre>
+<h3 id="event">Event</h3>
+<p>Event is one thing the engine did. Snapshot.</p>
+<p>The frame bytes are deliberately absent: a long run has millions of these, and the one packet somebody wants is asked for by id.</p>
+<pre><code>AtMs      uint32 `json:&quot;at_ms&quot;`
+Kind      string `json:&quot;kind&quot;`
+From      string `json:&quot;from&quot;`
+To        string `json:&quot;to&quot;`
+MessageID uint64 `json:&quot;message_id&quot;`
+PacketID  uint64 `json:&quot;packet_id&quot;`
+// SNRdB is null on the wire for an infinite ratio - a reception with no
+// noise at all - so it is a pointer here. Absent is not zero.
+SNRdB  *float64 `json:&quot;snr_db&quot;`
+Detail string   `json:&quot;detail&quot;`
+Class  Class    `json:&quot;class&quot;`</code></pre>
+<h3 id="firmwarestate">FirmwareState</h3>
+<p>FirmwareState is how far a start has got. Snapshot.</p>
+<pre><code>Running int `json:&quot;running&quot;`
+// Nodes is the nodes that run firmware, which is not every node: an SDR
+// observer and an emitter never boot one. Comparing Running against the
+// scenario&#x27;s size is how a wait ends up asking for 58 of 58 on a mesh
+// where only 56 can ever start.
+Nodes    int  `json:&quot;nodes&quot;`
+Total    int  `json:&quot;total&quot;`
+Starting bool `json:&quot;starting&quot;`</code></pre>
+<h3 id="hello">Hello</h3>
+<p>Hello is what a connection is talking to. Snapshot, read once at connect.</p>
+<pre><code>Protocol int    `json:&quot;protocol&quot;`
+Version  string `json:&quot;version&quot;`
+// Mode is &quot;workbench&quot; or &quot;headless&quot;.
+Mode   string `json:&quot;mode&quot;`
+Socket string `json:&quot;socket&quot;`
+Verbs  int    `json:&quot;verbs&quot;`
+// PID and StartedAt tell a restart from a reconnect. The scenario does
+// not survive a restart, so a script picking up a session it did not
+// start has to be able to ask.
+PID       int       `json:&quot;pid&quot;`
+StartedAt time.Time `json:&quot;started_at&quot;`</code></pre>
+<h3 id="importpreview">ImportPreview</h3>
+<p>ImportPreview is what a fetch found, before anything has been changed.</p>
+<p>SkippedNoPosition and Uncertain are the two worth reading before committing. A node with no position cannot be simulated at all, and an uncertain one is being placed to within kilometres - the answer it gives is that vague too, however confident the rest of the output looks.</p>
+<pre><code>Records           int `json:&quot;records&quot;`
+Nodes             int `json:&quot;nodes&quot;`
+SkippedNoPosition int `json:&quot;skipped_no_position&quot;`
+Uncertain         int `json:&quot;uncertain&quot;`</code></pre>
+<ul><li><code>(p ImportPreview) String() string</code></li></ul>
+<h3 id="jobinfo">JobInfo</h3>
+<p>JobInfo is a long operation in flight. Snapshot; ask again for progress, or use Job.Wait.</p>
+<pre><code>ID       string `json:&quot;id&quot;`
+What     string `json:&quot;what&quot;`
+Done     int    `json:&quot;done&quot;`
+Total    int    `json:&quot;total&quot;`
+Finished bool   `json:&quot;finished&quot;`
+// Failed marks a job that ended without doing what it was for. Separate
+// from Finished because a waiter needs both: &quot;stop waiting&quot; and &quot;this did
+// not work&quot; are different answers, and telling them apart by reading What
+// means matching on prose.
+Failed bool `json:&quot;failed&quot;`</code></pre>
+<h3 id="journal">Journal</h3>
+<p>Journal is the command history: when the process started, and the commands since, newest last. Polls and the workers&#x27; own progress reports are left out, so this is how the world got here, not everything that touched the socket.</p>
+<pre><code>StartedMs int64          `json:&quot;started_ms&quot;`
+Count     int            `json:&quot;count&quot;`
+Entries   []JournalEntry `json:&quot;entries&quot;`</code></pre>
+<h3 id="journalentry">JournalEntry</h3>
+<p>JournalEntry is one command the workbench was driven with: its sequence, the wall-clock time it ran, the verb, and a compact rendering of its argument.</p>
+<pre><code>Seq   uint64 `json:&quot;seq&quot;`
+AtMs  int64  `json:&quot;at_ms&quot;`
+Verb  string `json:&quot;verb&quot;`
+Nodes int    `json:&quot;nodes&quot;`
+Err   string `json:&quot;err,omitempty&quot;`
+Arg   string `json:&quot;arg,omitempty&quot;`</code></pre>
+<h3 id="match">Match</h3>
+<p>Match is what an event has to be for Wait to stop.</p>
+<p>Empty fields match anything, so waiting for &quot;any reception at Glenrothes&quot; is Match{Kind: &quot;rx&quot;, To: &quot;Glenrothes&quot;} and not a predicate somebody has to write.</p>
+<pre><code>Kind string
+From string
+To   string</code></pre>
+<h3 id="namematch">NameMatch</h3>
+<p>NameMatch is one answer from a name search, and how sure it is.</p>
+<p>Score runs 0 to 1, ranked best first by the workbench. It exists so a script can tell &quot;found it&quot; from &quot;found something that shares a word&quot;: a top result at 0.3 is a prompt to look at the list, not a node to start talking to.</p>
+<pre><code>Name     string  `json:&quot;name&quot;`
+Score    float64 `json:&quot;score&quot;`
+Kind     Kind    `json:&quot;kind&quot;`
+Lat, Lon float64 `json:&quot;-&quot;`</code></pre>
+<ul><li><code>(m NameMatch) String() string</code></li></ul>
+<h3 id="neighbour">Neighbour</h3>
+<p>Neighbour is one node near another, with how far away it is.</p>
+<pre><code>Name     string  `json:&quot;name&quot;`
+Km       float64 `json:&quot;km&quot;`
+Kind     Kind    `json:&quot;kind&quot;`
+Lat, Lon float64 `json:&quot;-&quot;`</code></pre>
+<ul><li><code>(n Neighbour) String() string</code></li></ul>
+<h3 id="nodeinfo">NodeInfo</h3>
+<p>NodeInfo is what a network is, per node. Snapshot: take another with Nodes.List when something has changed it.</p>
+<p>What a node is *doing* - running, its memory, its counters - is NodeStat, because the two change on completely different timescales and the store publishes them separately.</p>
+<pre><code>Name     string   `json:&quot;name&quot;`
+Kind     Kind     `json:&quot;kind&quot;`
+Lat      float64  `json:&quot;lat&quot;`
+Lon      float64  `json:&quot;lon&quot;`
+HeightM  float64  `json:&quot;height_m&quot;`
+TxDBm    float64  `json:&quot;tx_dbm&quot;`
+Regions  []string `json:&quot;regions&quot;`
+Firmware string   `json:&quot;firmware&quot;`
+// Board is what the node is; FirmwareBoard is what its image was built
+// for. They agree most of the time and come apart the moment a host build
+// is pointed at a T-Deck, which is an ordinary thing to do.
+Board         Board  `json:&quot;board&quot;`
+FirmwareBoard string `json:&quot;firmware_board&quot;`
+Sent          int    `json:&quot;sent&quot;`
+Heard         int    `json:&quot;heard&quot;`
+Selected      bool   `json:&quot;selected&quot;`</code></pre>
+<h3 id="nodestat">NodeStat</h3>
+<p>NodeStats is what every node is costing and doing. Snapshot.</p>
+<p>Separate from NodeInfo because one is what the network *is* and the other is what it is *doing*: they change on different timescales and the store publishes them apart.</p>
+<pre><code>Name     string `json:&quot;name&quot;`
+Backend  string `json:&quot;backend&quot;`
+Firmware string `json:&quot;firmware&quot;`
+Running  bool   `json:&quot;running&quot;`
+State    string `json:&quot;state&quot;`
+Board    string `json:&quot;board&quot;`
+PID      int    `json:&quot;pid&quot;`
+RSSBytes int64  `json:&quot;rss_bytes&quot;`
+CPUms    int64  `json:&quot;cpu_ms&quot;`
+Sent     int    `json:&quot;sent&quot;`
+Heard    int    `json:&quot;heard&quot;`</code></pre>
+<h3 id="notification">Notification</h3>
+<p>Notification is one server-pushed event on a Subscription. Named apart from the log&#x27;s Event, which is a different thing entirely: an Event is a record of something that happened in the simulation, a Notification is the socket telling this connection about a change as it lands.</p>
+<h3 id="placement">Placement</h3>
+<p>Placement is a node to put down.</p>
+<pre><code>Name     string
+Kind     Kind
+Lat, Lon float64
+// HeightM and TxDBm default to the scenario&#x27;s own defaults when zero -
+// ten metres and 22 dBm - rather than to nothing.
+HeightM float64
+TxDBm   float64
+// Board is the hardware this node is, by profile name. Empty is a host
+// build. A name nothing matches is refused rather than ignored: the board
+// decides the transmit ceiling, the noise figure and the battery, so a
+// silent fallback would be a different node answering the question.
+Board Board</code></pre>
+<h3 id="provenance">Provenance</h3>
+<p>Provenance is what a measurement was measured under.</p>
+<p>Carried with any result that is a number about the world, because a scripted number gets pasted into a report with the caveats stripped. The caveats have to be in the value.</p>
+<pre><code>// RFMode is &quot;calculated&quot; or &quot;waveform&quot;.
+RFMode string `json:&quot;rf_mode&quot;`
+// ExcessLossDB is the calibration term in force, and Calibrated says it
+// was fitted against real receptions rather than left at the default.
+ExcessLossDB float64 `json:&quot;excess_loss_db&quot;`
+Calibrated   bool    `json:&quot;calibrated&quot;`
+Seed         uint64  `json:&quot;seed&quot;`</code></pre>
+<ul><li><code>(p Provenance) String() string</code> — String is one line, meant to be printed above any number a script emits.</li></ul>
+<h3 id="report">Report</h3>
+<p>Report is what a run passed and failed, with what it was measured under.</p>
+<pre><code>Passed int     `json:&quot;passed&quot;`
+Total  int     `json:&quot;total&quot;`
+Checks []Check `json:&quot;results&quot;`
+// Provenance is what the numbers were measured under, carried with the
+// verdict because a delivery figure without it is the number this project
+// exists not to publish.
+Provenance Provenance `json:&quot;-&quot;`</code></pre>
+<ul><li><code>(r Report) Failures() []Check</code> — Failures are the ones that did not hold.</li></ul>
+<ul><li><code>(r Report) OK() bool</code> — OK reports whether every assertion held.</li></ul>
+<ul><li><code>(r Report) String() string</code></li></ul>
+<ul><li><code>(r Report) WriteJUnit(path, suite string) error</code> — WriteJUnit writes a JUnit file, with the caveats inside it.</li></ul>
+<h3 id="restored">Restored</h3>
+<p>Restored is what a restore reports: where it landed, and whether it is still replaying to get there.</p>
+<pre><code>Name     string `json:&quot;restored&quot;`
+Nodes    int    `json:&quot;nodes&quot;`
+NowMs    uint32 `json:&quot;now_ms&quot;`
+TargetMs uint32 `json:&quot;target_ms&quot;`
+// Replaying is true while the run is stepping forward to the checkpoint&#x27;s
+// time; wait on the sim reaching TargetMs to know it has arrived.
+Replaying bool `json:&quot;replaying&quot;`</code></pre>
+<h3 id="roleneed">RoleNeed</h3>
+<p>RoleNeed is one role with nothing to run. Snapshot.</p>
+<pre><code>Role    Role     `json:&quot;role&quot;`
+Nodes   int      `json:&quot;nodes&quot;`
+Choices []string `json:&quot;choices&quot;`</code></pre>
+<h3 id="screen">Screen</h3>
+<p>Screen is what a board&#x27;s display is showing, as numbers rather than a picture. Enough to answer &quot;did anything change&quot; after a press or a touch; for the picture itself, use Screenshot.</p>
+<pre><code>// HasScreen is false when the board has drawn nothing yet, or has no
+// display at all - the other fields are meaningless then.
+HasScreen bool `json:&quot;has_screen&quot;`
+Width     int  `json:&quot;width&quot;`
+Height    int  `json:&quot;height&quot;`
+BPP       int  `json:&quot;bpp&quot;`
+On        bool `json:&quot;on&quot;`
+// Lit is how many framebuffer bytes are non-zero - how much is lit.
+Lit int `json:&quot;lit&quot;`
+// Digest identifies the frame: two screens with the same Digest are the
+// same picture, which Lit cannot promise. It is what WaitScreen watches.
+Digest string `json:&quot;digest&quot;`</code></pre>
+<h3 id="send">Send</h3>
+<p>Send is one scheduled line at a node.</p>
+<p>At and Every are durations of the mesh&#x27;s own clock, not yours. The verb underneath takes milliseconds; nobody writing a script should have to.</p>
+<pre><code>Node    string
+Command string
+At      time.Duration
+// Every repeats it. Zero sends once.
+Every time.Duration</code></pre>
+<h3 id="shot">Shot</h3>
+<p>Shot is a captured display: a PNG written under the node&#x27;s own work directory, with the frame&#x27;s dimensions.</p>
+<pre><code>Path   string `json:&quot;path&quot;`
+Width  int    `json:&quot;width&quot;`
+Height int    `json:&quot;height&quot;`
+BPP    int    `json:&quot;bpp&quot;`
+On     bool   `json:&quot;on&quot;`</code></pre>
+<h3 id="simstate">SimState</h3>
+<p>SimState is the clock. Snapshot.</p>
+<pre><code>Playing bool   `json:&quot;playing&quot;`
+NowMs   uint32 `json:&quot;now_ms&quot;`
+UntilMs uint32 `json:&quot;until_ms&quot;`
+Events  int    `json:&quot;events&quot;`
+StepMs  uint32 `json:&quot;step_ms&quot;`
+Seed    uint64 `json:&quot;seed&quot;`</code></pre>
+<h3 id="subscription">Subscription</h3>
+<p>Subscription is a live stream of notifications, on a connection of its own so it never interleaves with this workbench&#x27;s request/response calls.</p>
+<h2 id="options-and-functions">Options and functions</h2>
+<h3 id="option">Option</h3>
+<p>Option configures a connection.</p>
+<ul><li><code>Args(a ...string) Option</code> — Args passes extra flags to a launched process.</li></ul>
+<ul><li><code>Binary(path string) Option</code> — Binary names the meshbench executable to launch. The default is whatever &quot;meshbench&quot; resolves to on PATH.</li></ul>
+<ul><li><code>Fixture(name string) Option</code> — Fixture opens a network as the session starts.</li></ul>
+<ul><li><code>LogTo(f *os.File) Option</code> — LogTo sends a launched process&#x27;s stderr somewhere. The default is this process&#x27;s own, because a scripted run that fails silently is the worst of both worlds.</li></ul>
+<ul><li><code>Seed(n uint64) Option</code> — Seed fixes the run&#x27;s seed. Same seed, same scenario, same result - which is what makes a changed result mean something.</li></ul>
+<ul><li><code>Socket(path string) Option</code> — Socket chooses which socket to use, rather than the per-user default.</li></ul>
+<ul><li><code>StartTimeout(d time.Duration) Option</code> — StartTimeout bounds how long Launch and Headless wait for the socket.</li></ul>
+<h3 id="codeof-err-error-control-code"><code>CodeOf(err error) control.Code</code></h3>
+<p>CodeOf reads the workbench&#x27;s classification off an error, for a caller that wants the code rather than the sentinel.</p>
+<footer>MeshBench documentation. Built from the running application, not from
+mock-ups. Screenshots are window-only captures; see CLAUDE.md for the rule that
+keeps them current.</footer>
+</main></div></body></html>
