@@ -45,7 +45,7 @@ Roles map to MeshCore's own examples:
 
 ## Per-node state, and the trap in it
 
-Each node gets its own working directory under `~/.cache/meshcoresim/nodefs`,
+Each node gets its own working directory under `~/.cache/meshbench/nodefs`,
 keyed by name. The firmware writes its identity, preferences, channels and
 contacts there and reads them back at boot, exactly as hardware does.
 
@@ -59,7 +59,7 @@ Two ways out:
 - `firmware.wipe`, or the `wipe every node's memory` button in the firmware
   library. Identities regenerate from the run seed, so a wipe costs nothing but
   the next boot.
-- `MESHCORESIM_NODEFS`, pointing each arm of a comparison at its own storage
+- `MESHBENCH_NODEFS`, pointing each arm of a comparison at its own storage
   root. This is what the A/B tooling does, so no arm can inherit another's
   state.
 

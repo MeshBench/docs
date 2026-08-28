@@ -23,7 +23,7 @@ Over the control socket:
 
 ```
 {"id":1,"method":"nodes.place","params":{
-   "kind":"repeater","name":"Test Site","lat":56.12,"lon":-3.45,
+   "kind":"simple-repeater","name":"Test Site","lat":56.12,"lon":-3.45,
    "height_m":25,"tx_dbm":22}}
 ```
 
@@ -34,9 +34,12 @@ told about. A node with none receives everything and forwards nothing, and
 reports no error while doing so.
 
 ```
-{"id":2,"method":"nodes.regions","params":{
-   "node":"Test Site","regions":["#sco"],"default_scope":"#sco"}}
+{"id":2,"method":"nodes.regions","params":{"node":"Test Site","regions":["#sco"]}}
 ```
+
+The node's *default scope* — what it sends on when nothing says otherwise — is
+a separate setting, applied at import or through the provisioning panel, not by
+this verb.
 
 ## 4. Start firmware and watch it
 
@@ -78,15 +81,18 @@ Then start it, and watch each run complete.
 
 | metric | what it tells you about a repeater |
 |---|---|
-| `reach_pct` | how much of the network a message got to. The headline. |
+| `delivered` | unique deliveries — how much of the network a message got to. The headline. |
 | `tx` | how much traffic the network generated to achieve it |
+| `redundant` | receptions of something already heard — the cost of flooding |
 | `collisions` | how much of that traffic destroyed other traffic |
 | `airtime_ms` | total time the network spent transmitting |
-| `duty` | per node, the compliance number |
+| `rx_spread` | how much the arms' receptions varied between seeds — the noise floor of the answer |
+| `at_risk_2db` | deliveries within 2 dB of the demodulator floor — what a wet winter takes away |
 
-A repeater that raises reach and lowers collisions is helping. One that raises
-reach and raises airtime sharply is buying delivery with spectrum, which may
-still be the right trade on a quiet band and the wrong one on a busy one.
+A repeater that raises delivered and lowers collisions is helping. One that
+raises delivered and raises airtime sharply is buying delivery with spectrum,
+which may still be the right trade on a quiet band and the wrong one on a busy
+one. A difference smaller than `rx_spread` is not a difference.
 
 ## What to be careful about
 

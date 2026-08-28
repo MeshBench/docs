@@ -26,6 +26,7 @@ meshbench <command> [flags]
 | `basemap` | download map tiles for an area |
 | `test` | run a fixture on real firmware and check its assertions |
 | `workbench` | open the desktop workbench |
+| `headless` | run the verbs over the control socket, with no window |
 | `serve` | run a mesh and expose one companion to your app over TCP or a pty |
 | `dev` | build a MeshCore checkout and hand the result to the workbench |
 
@@ -71,11 +72,24 @@ rather than injecting traffic.
 
 ## `firmware`
 
+It takes flags rather than subcommands: bare `meshbench firmware` lists the
+catalogue and what is already cached.
+
 ```
-meshbench firmware list
-meshbench firmware download repeater-v1.17.0
-meshbench firmware import ./my-build --role simple_repeater --version my-arm
+meshbench firmware
+meshbench firmware -get RAK_4631/repeater
+meshbench firmware -import ./my-build.uf2 -board RAK_4631 -role repeater -label my-arm
 ```
 
-Versions are per role. `repeater-v1.17.0` and `companion-v1.17.0` are different
-releases, and a bare `v1.17.0` resolves nothing.
+| flag | meaning |
+|---|---|
+| `-get <name>` | download an image by name, e.g. `RAK_4631/repeater` |
+| `-import <path>` | import your own `.uf2`, `.bin` or `.elf` |
+| `-board`, `-role`, `-label` | what an imported build is for, and what to call it |
+| `-offline` | list and use only what is already downloaded |
+| `-board <b>` | filter the listing |
+
+Versions are per role: a repeater release and a companion release are different
+artefacts, and a bare version string resolves nothing. An import with no
+`-label` is stamped with the time, so importing twice gives two builds rather
+than one quietly replacing the other.

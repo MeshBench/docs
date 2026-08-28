@@ -30,7 +30,7 @@ The import is filtered by the chosen boundary, so setting it first avoids
 fetching a continent to keep a county.
 
 ```
-{"id":1,"method":"boundary.set","params":{"place":"Fife"}}
+{"id":1,"method":"boundary.set","params":{"query":"Fife"}}
 {"id":2,"method":"boundary.accept"}
 ```
 
@@ -47,8 +47,9 @@ null-island nodes and cuts coastline wrongly.
 {"id":5,"method":"import.commit","params":{"strategy":"replace-all"}}
 ```
 
-`replace-all` is the strategy name. Plain `replace` is not, and leaves the
-starting nodes in place alongside the imported ones.
+There are two strategies. `replace-all` clears the current nodes and starts
+from the import; `add` keeps them and puts the imported nodes alongside.
+Anything else is refused with an error naming the two.
 
 **Nodes are filtered at ±1 km position uncertainty.** A node whose position is a
 guess would answer a reach question with a guess. Some tens of nodes typically

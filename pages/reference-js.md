@@ -18,7 +18,9 @@ The whole Node client - one zero-dependency ES module, `pkg/client-js/meshbench.
 
 **Classes** · [WorkbenchError](#workbencherror) · [Workbench](#workbench)
 
-## WorkbenchError extends `Error`
+## WorkbenchError
+
+Extends `Error`.
 
 A verb the workbench refused, carrying its classification so a caller can tell "no such node" from "the workbench is closing" without matching prose.
 

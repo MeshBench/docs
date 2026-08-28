@@ -52,7 +52,7 @@ happens to the link.
 The harness serves an endpoint too, so a test in a pipeline can point a client
 at a mesh:
 
-    meshcoresim test -fixture fixtures/fixture-fife-strict.json \
+    meshbench test -fixture fixtures/fixture-fife-strict.json \
       -endpoint tcp:AngusOutlaw1 -junit out.xml
 
 It prints `endpoint: tcp 127.0.0.1:36273 (node AngusOutlaw1)` and holds it open

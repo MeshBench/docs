@@ -190,7 +190,7 @@ report.write_junit("results.xml")
 ```
 
 A fixture can carry its own traffic and its own claims, which is what
-`meshcoresim test` runs. A script can add both, which is what a regression check
+`meshbench test` runs. A script can add both, which is what a regression check
 in another repository does. The report prints the provenance above the numbers,
 because that is the half that gets dropped when a result is pasted somewhere
 else.

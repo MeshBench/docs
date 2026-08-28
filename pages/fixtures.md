@@ -48,8 +48,7 @@ nothing, and reports no error at all, which is indistinguishable from bad RF.
 > first, or that experiment could not see the difference. Use strict for
 > anything you plan to believe.
 
-The application says so on screen when a permissive fixture is loaded, and the
-test runner prints a `PERMISSIVE` line on its first line of output, every time.
+ The `meshbench test` runner prints a `PERMISSIVE:` line when one is loaded; the workbench does not yet announce it.
 
 ## The `#` asymmetry
 

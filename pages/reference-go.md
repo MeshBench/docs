@@ -933,7 +933,7 @@ Transport is how a served companion is reached.
 
 ProtocolMismatch is a client and a workbench that cannot speak to each other, reported at connect rather than discovered later.
 
-```
+```go
 Client    int
 Workbench Hello
 ```
@@ -942,7 +942,7 @@ Workbench Hello
 
 Refused is one verb's refusal: what was asked, what came back, and its kind.
 
-```
+```go
 Verb string
 Code control.Code
 // Message is the workbench's own words, unaltered.
@@ -956,7 +956,7 @@ Timeout is a wait that ran out, saying what it was waiting for and what the stat
 
 Not a bare deadline error: "timeout" in a CI log tells whoever reads it nothing, and the state at the moment it gave up is the only thing that does.
 
-```
+```go
 What  string
 After time.Duration
 // Last is what the final check saw.
@@ -969,7 +969,7 @@ Last string
 
 Assertion is one claim, in the general form.
 
-```
+```go
 // Kind is what is being counted. AssertDelivered and AssertSent are the
 // ones this build understands; one it does not is a failure rather than a
 // pass, because a green run that checked nothing is the worst outcome
@@ -988,7 +988,7 @@ Build is one firmware image, as the library sees it. Snapshot.
 
 Version, board and role travel together because a board image is not a build on its own: "wadamesh" means nothing until it is wadamesh for a LilyGo_TDeck, built as a companion. A host build carries neither of the other two.
 
-```
+```go
 Role    Role   `json:"role"`
 Version string `json:"version"`
 Board   Board  `json:"board"`
@@ -1011,7 +1011,7 @@ Unavailable bool `json:"unavailable"`
 
 BuildChange is what to change about a build. Every field left at its zero value is left alone, which is why the settings are pointers: "leave this setting" and "turn it off" are different answers, and a bool cannot say both.
 
-```
+```go
 // Label, NewRole and NewBoard rename the build, which moves the file: the
 // name is the identity, because a board image is stored as
 // <board>/<role>@<label>.bin and nothing else records what it is. Nodes
@@ -1032,7 +1032,7 @@ BuildDetails is one build in full: what a library row cannot hold.
 
 Separate from Build because the library is deliberately a list - role, version, size, a tick. Where the file actually is, whether it is a whole flash image or half of one, and what has been decided about how it runs are the questions somebody has once a build does not do what they expected.
 
-```
+```go
 Role    Role   `json:"role"`
 Version string `json:"version"`
 Board   Board  `json:"board"`
@@ -1072,7 +1072,7 @@ BuildID says which build a call means.
 
 All three names travel together where they are known, so a call cannot land on a different build that happens to share a label. Version alone is accepted and the workbench refuses it when it is ambiguous, rather than guessing - acting on the wrong build is a rename of somebody else's image.
 
-```
+```go
 Version string
 Role    Role
 Board   Board
@@ -1082,7 +1082,7 @@ Board   Board
 
 CardChange is what to change about a node's card. Nil leaves a field alone, which is why the two that can be turned off are pointers: "leave this" and "take the card out" are different answers and a bool cannot say both.
 
-```
+```go
 Fitted *bool
 // File hands the node a card of its own - shared between runs, or
 // prepared in advance. A pointer to the empty string returns it to its
@@ -1097,7 +1097,7 @@ CardSlot is what is in one node's card slot.
 
 A slot is not a fitted card: the board says the slot exists, the node says whether it is filled, and a firmware that keeps its settings on a card fills it regardless.
 
-```
+```go
 Node string `json:"node"`
 // Slot is "" for the board's own answer, "fitted" or "empty" for a
 // decision somebody made about this node.
@@ -1119,7 +1119,7 @@ Wiped              bool `json:"wiped"`
 
 Check is one assertion, and what the run made of it.
 
-```
+```go
 Kind   string `json:"kind"`
 Node   string `json:"node"`
 Passed bool   `json:"pass"`
@@ -1133,7 +1133,7 @@ Want   string `json:"want"`
 
 Checkpoint is what a save reports back.
 
-```
+```go
 Name  string `json:"checkpoint"`
 Path  string `json:"path"`
 NowMs uint32 `json:"now_ms"`
@@ -1144,7 +1144,7 @@ Nodes int    `json:"nodes"`
 
 Describe is the cheap summary. Snapshot.
 
-```
+```go
 Nodes   int    `json:"nodes"`
 Seed    uint64 `json:"seed"`
 NowMs   uint32 `json:"now_ms"`
@@ -1157,7 +1157,7 @@ Event is one thing the engine did. Snapshot.
 
 The frame bytes are deliberately absent: a long run has millions of these, and the one packet somebody wants is asked for by id.
 
-```
+```go
 AtMs      uint32 `json:"at_ms"`
 Kind      string `json:"kind"`
 From      string `json:"from"`
@@ -1175,7 +1175,7 @@ Class  Class    `json:"class"`
 
 FirmwareState is how far a start has got. Snapshot.
 
-```
+```go
 Running int `json:"running"`
 // Nodes is the nodes that run firmware, which is not every node: an SDR
 // observer and an emitter never boot one. Comparing Running against the
@@ -1190,7 +1190,7 @@ Starting bool `json:"starting"`
 
 Hello is what a connection is talking to. Snapshot, read once at connect.
 
-```
+```go
 Protocol int    `json:"protocol"`
 Version  string `json:"version"`
 // Mode is "workbench" or "headless".
@@ -1210,7 +1210,7 @@ ImportPreview is what a fetch found, before anything has been changed.
 
 SkippedNoPosition and Uncertain are the two worth reading before committing. A node with no position cannot be simulated at all, and an uncertain one is being placed to within kilometres - the answer it gives is that vague too, however confident the rest of the output looks.
 
-```
+```go
 Records           int `json:"records"`
 Nodes             int `json:"nodes"`
 SkippedNoPosition int `json:"skipped_no_position"`
@@ -1223,7 +1223,7 @@ Uncertain         int `json:"uncertain"`
 
 JobInfo is a long operation in flight. Snapshot; ask again for progress, or use Job.Wait.
 
-```
+```go
 ID       string `json:"id"`
 What     string `json:"what"`
 Done     int    `json:"done"`
@@ -1240,7 +1240,7 @@ Failed bool `json:"failed"`
 
 Journal is the command history: when the process started, and the commands since, newest last. Polls and the workers' own progress reports are left out, so this is how the world got here, not everything that touched the socket.
 
-```
+```go
 StartedMs int64          `json:"started_ms"`
 Count     int            `json:"count"`
 Entries   []JournalEntry `json:"entries"`
@@ -1250,7 +1250,7 @@ Entries   []JournalEntry `json:"entries"`
 
 JournalEntry is one command the workbench was driven with: its sequence, the wall-clock time it ran, the verb, and a compact rendering of its argument.
 
-```
+```go
 Seq   uint64 `json:"seq"`
 AtMs  int64  `json:"at_ms"`
 Verb  string `json:"verb"`
@@ -1265,7 +1265,7 @@ Match is what an event has to be for Wait to stop.
 
 Empty fields match anything, so waiting for "any reception at Glenrothes" is Match{Kind: "rx", To: "Glenrothes"} and not a predicate somebody has to write.
 
-```
+```go
 Kind string
 From string
 To   string
@@ -1277,7 +1277,7 @@ NameMatch is one answer from a name search, and how sure it is.
 
 Score runs 0 to 1, ranked best first by the workbench. It exists so a script can tell "found it" from "found something that shares a word": a top result at 0.3 is a prompt to look at the list, not a node to start talking to.
 
-```
+```go
 Name     string  `json:"name"`
 Score    float64 `json:"score"`
 Kind     Kind    `json:"kind"`
@@ -1290,7 +1290,7 @@ Lat, Lon float64 `json:"-"`
 
 Neighbour is one node near another, with how far away it is.
 
-```
+```go
 Name     string  `json:"name"`
 Km       float64 `json:"km"`
 Kind     Kind    `json:"kind"`
@@ -1305,7 +1305,7 @@ NodeInfo is what a network is, per node. Snapshot: take another with Nodes.List 
 
 What a node is *doing* - running, its memory, its counters - is NodeStat, because the two change on completely different timescales and the store publishes them separately.
 
-```
+```go
 Name     string   `json:"name"`
 Kind     Kind     `json:"kind"`
 Lat      float64  `json:"lat"`
@@ -1330,7 +1330,7 @@ NodeStats is what every node is costing and doing. Snapshot.
 
 Separate from NodeInfo because one is what the network *is* and the other is what it is *doing*: they change on different timescales and the store publishes them apart.
 
-```
+```go
 Name     string `json:"name"`
 Backend  string `json:"backend"`
 Firmware string `json:"firmware"`
@@ -1352,7 +1352,7 @@ Notification is one server-pushed event on a Subscription. Named apart from the 
 
 Placement is a node to put down.
 
-```
+```go
 Name     string
 Kind     Kind
 Lat, Lon float64
@@ -1373,7 +1373,7 @@ Provenance is what a measurement was measured under.
 
 Carried with any result that is a number about the world, because a scripted number gets pasted into a report with the caveats stripped. The caveats have to be in the value.
 
-```
+```go
 // RFMode is "calculated" or "waveform".
 RFMode string `json:"rf_mode"`
 // ExcessLossDB is the calibration term in force, and Calibrated says it
@@ -1389,7 +1389,7 @@ Seed         uint64  `json:"seed"`
 
 Report is what a run passed and failed, with what it was measured under.
 
-```
+```go
 Passed int     `json:"passed"`
 Total  int     `json:"total"`
 Checks []Check `json:"results"`
@@ -1411,7 +1411,7 @@ Provenance Provenance `json:"-"`
 
 Restored is what a restore reports: where it landed, and whether it is still replaying to get there.
 
-```
+```go
 Name     string `json:"restored"`
 Nodes    int    `json:"nodes"`
 NowMs    uint32 `json:"now_ms"`
@@ -1425,7 +1425,7 @@ Replaying bool `json:"replaying"`
 
 RoleNeed is one role with nothing to run. Snapshot.
 
-```
+```go
 Role    Role     `json:"role"`
 Nodes   int      `json:"nodes"`
 Choices []string `json:"choices"`
@@ -1435,7 +1435,7 @@ Choices []string `json:"choices"`
 
 Screen is what a board's display is showing, as numbers rather than a picture. Enough to answer "did anything change" after a press or a touch; for the picture itself, use Screenshot.
 
-```
+```go
 // HasScreen is false when the board has drawn nothing yet, or has no
 // display at all - the other fields are meaningless then.
 HasScreen bool `json:"has_screen"`
@@ -1456,7 +1456,7 @@ Send is one scheduled line at a node.
 
 At and Every are durations of the mesh's own clock, not yours. The verb underneath takes milliseconds; nobody writing a script should have to.
 
-```
+```go
 Node    string
 Command string
 At      time.Duration
@@ -1468,7 +1468,7 @@ Every time.Duration
 
 Shot is a captured display: a PNG written under the node's own work directory, with the frame's dimensions.
 
-```
+```go
 Path   string `json:"path"`
 Width  int    `json:"width"`
 Height int    `json:"height"`
@@ -1480,7 +1480,7 @@ On     bool   `json:"on"`
 
 SimState is the clock. Snapshot.
 
-```
+```go
 Playing bool   `json:"playing"`
 NowMs   uint32 `json:"now_ms"`
 UntilMs uint32 `json:"until_ms"`
@@ -1513,7 +1513,11 @@ Option configures a connection.
 
 - `StartTimeout(d time.Duration) Option` — StartTimeout bounds how long Launch and Headless wait for the socket.
 
-### `CodeOf(err error) control.Code`
+### `CodeOf`
+
+```go
+func CodeOf(err error) control.Code
+```
 
 CodeOf reads the workbench's classification off an error, for a caller that wants the code rather than the sentinel.
 

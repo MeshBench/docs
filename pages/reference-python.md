@@ -28,7 +28,7 @@ Every class the client exports, its methods, and the shape of each call - genera
 
 **Errors** · [BadParams](#badparams) · [Closing](#closing) · [Conflict](#conflict) · [MeshbenchError](#meshbencherror) · [NotFound](#notfound) · [ProtocolMismatch](#protocolmismatch) · [Refused](#refused) · [Timeout](#timeout) · [Unavailable](#unavailable) · [UnknownVerb](#unknownverb)
 
-**Module functions** · [default_address](#default_address) · [subscribe](#subscribe)
+**Module functions** · [default_address](#default-address) · [subscribe](#subscribe)
 
 ## Workbench
 
@@ -1464,11 +1464,19 @@ is supposed to have caught first, so seeing this is worth looking into.
 
 ## Module functions
 
-### `default_address() -> str`
+### `default_address`
+
+```python
+default_address() -> str
+```
 
 Where a workbench answers on this operating system unless told otherwise.
 
-### `subscribe(*topics: str, address: str | None = None) -> Subscription`
+### `subscribe`
+
+```python
+subscribe(*topics: str, address: str | None = None) -> Subscription
+```
 
 Open a subscription to the given topics - "status", "snapshot", and
 whatever else the workbench publishes.
