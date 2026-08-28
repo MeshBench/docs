@@ -79,6 +79,7 @@ NAV = [
     ("companion-bench.html", "Companion bench"),
     ("testing.html", "Testing your own code"),
     ("scripting.html", "Scripting a session"),
+    ("cookbook.html", "Scripting cookbook"),
 
     ("SECTION", "Measure and observe"),
     ("experiments.html", "Experiments"),
