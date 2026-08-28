@@ -68,7 +68,7 @@ The **Companion bench** panel, in the App view, does the same thing with a
 button, and adds what a terminal cannot: the protocol decoded in both
 directions, whether a client is attached, and faults on demand.
 
-![The Companion bench](images/companion-bench-annotated.png)
+![The App view: the Companion bench beside the live event counters and a node's console](images/view-app.png)
 
 **Drop every client connection** takes the listener away with the connection, so
 the device disappears the way an unplugged cable does. An application that

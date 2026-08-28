@@ -2,6 +2,8 @@
 
 Everything that changes what a run does, grouped by what it affects.
 
+![The Configuration window's overview: scope, links, randomness, and the run profile](images/settings-overview.png)
+
 ## Radio presets
 
 A preset is an agreed set of LoRa parameters for a territory, taken from the

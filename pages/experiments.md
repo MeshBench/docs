@@ -23,6 +23,8 @@ against the same network, with the results tabulated side by side.
 7. **Export.** `experiment.export` writes an HTML report with every arm, every
    run and the deltas between them.
 
+![The Bench view: the sweep definition, past runs, the experiment log and per-node timelines](images/view-bench.png)
+
 From a script, the whole thing:
 
 ```

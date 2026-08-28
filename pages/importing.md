@@ -24,6 +24,8 @@ firmware.set                            per node
 infer.run  →  infer.result  →  infer.apply
 ```
 
+![The Import panel: the five steps in order, and the study area they act on](images/import-panel.png)
+
 ## 1. Choose the area first
 
 The import is filtered by the chosen boundary, so setting it first avoids
@@ -37,6 +39,8 @@ fetching a continent to keep a county.
 Areas union, so Scotland plus Ireland is two accepts. Boundaries come from
 OpenStreetMap and are cached; a hand-drawn latitude and longitude box keeps
 null-island nodes and cuts coastline wrongly.
+
+![The Boundary panel: three accepted areas, their rings, and the 30 km margin](images/boundary-panel.png)
 
 ## 2. Fetch and commit
 

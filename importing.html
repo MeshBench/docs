@@ -217,11 +217,13 @@ import.set_source  →  fetch  →  commit  strategy &quot;replace-all&quot;
 boundary.prune                          drop what falls outside
 firmware.set                            per node
 infer.run  →  infer.result  →  infer.apply</code></pre><button class="copy" type="button" aria-label="Copy this code">copy</button></div>
+<p><img src="images/import-panel.png" alt="The Import panel: the five steps in order, and the study area they act on"></p>
 <h2 id="1-choose-the-area-first">1. Choose the area first<a class="hl" href="#1-choose-the-area-first" aria-label="Link to this section">#</a></h2>
 <p>The import is filtered by the chosen boundary, so setting it first avoids fetching a continent to keep a county.</p>
 <div class="codewrap"><pre><code>{<span class="tok-str">&quot;id&quot;</span>:<span class="tok-num">1</span>,<span class="tok-str">&quot;method&quot;</span>:<span class="tok-str">&quot;boundary.set&quot;</span>,<span class="tok-str">&quot;params&quot;</span>:{<span class="tok-str">&quot;query&quot;</span>:<span class="tok-str">&quot;Fife&quot;</span>}}
 {<span class="tok-str">&quot;id&quot;</span>:<span class="tok-num">2</span>,<span class="tok-str">&quot;method&quot;</span>:<span class="tok-str">&quot;boundary.accept&quot;</span>}</code></pre><button class="copy" type="button" aria-label="Copy this code">copy</button></div>
 <p>Areas union, so Scotland plus Ireland is two accepts. Boundaries come from OpenStreetMap and are cached; a hand-drawn latitude and longitude box keeps null-island nodes and cuts coastline wrongly.</p>
+<p><img src="images/boundary-panel.png" alt="The Boundary panel: three accepted areas, their rings, and the 30 km margin"></p>
 <h2 id="2-fetch-and-commit">2. Fetch and commit<a class="hl" href="#2-fetch-and-commit" aria-label="Link to this section">#</a></h2>
 <div class="codewrap"><pre><code>{<span class="tok-str">&quot;id&quot;</span>:<span class="tok-num">3</span>,<span class="tok-str">&quot;method&quot;</span>:<span class="tok-str">&quot;import.set_source&quot;</span>,<span class="tok-str">&quot;params&quot;</span>:{
    <span class="tok-str">&quot;source&quot;</span>:<span class="tok-str">&quot;corescope&quot;</span>,<span class="tok-str">&quot;url&quot;</span>:<span class="tok-str">&quot;https://your-corescope.example&quot;</span>}}

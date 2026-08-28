@@ -13,6 +13,8 @@ Both price the same path; see [RF simulation](rf-simulation.html).
 One binary on your machine. No service to deploy, no account, nothing to
 configure before the first run.
 
+![The workbench: the shipped Scotland and Ireland network on the map, links drawn, real firmware running on every node](images/workbench-plan.png)
+
 <figure>
 <svg viewBox="0 0 780 340" role="img" aria-label="Who uses MeshBench, what it gives them, and which parts are real">
   <defs>

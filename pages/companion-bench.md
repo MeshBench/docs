@@ -4,21 +4,21 @@ The view for somebody writing an application against MeshCore rather than
 studying a network. It assumes you want a mesh and an address to point your
 client at, and gets you there in one click.
 
-![The Companion bench](images/companion-bench-annotated.png)
+![The Companion bench: transports, the companion table, and the fault buttons](images/companion-bench.png)
 
-The three marks, in order.
+Three parts of it, in reading order.
 
-**1. The App view.** A sixth view beside Plan, Run, Debug, Verify and Bench. No
+**The App view.** A sixth view beside Plan, Run, Debug, Verify and Bench. No
 waterfall and no link budget: you are writing a client, so what is here is an
 address, the protocol in both directions, and a way to break it on purpose.
 
-**2. One click for both.** `give me a mesh and an endpoint` starts firmware on
+**One click for both.** `give me a mesh and an endpoint` starts firmware on
 every node if it is not already running, then serves the first companion over
 TCP and prints the address. Firmware starts a process per node, so on a large
 fixture it takes a few seconds and the button says so rather than handing you a
 port that answers nothing.
 
-**3. Two transports, per companion.** `TCP` for a client that speaks sockets,
+**Two transports, per companion.** `TCP` for a client that speaks sockets,
 `serial` for the many that only know how to open a port. Both carry the
 firmware's own serial protocol byte for byte - this is not a mock, it is the
 same bytes the real device sends. The address gets a `copy` button beside it,

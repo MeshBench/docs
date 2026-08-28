@@ -8,6 +8,8 @@ question has an answer rather than a theory.
 It arranges the panels this question needs: the packet timeline, the waterfall,
 consoles and link budgets, with the Inspector for whichever node is selected.
 
+![The Debug view: the packet timeline, and every event's SNR and cause in the Inspector](images/view-debug.png)
+
 ## The causes, and what each means
 
 | cause | what happened | what to change |

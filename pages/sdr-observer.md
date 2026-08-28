@@ -43,6 +43,8 @@ collision because the samples contain it, and for no other reason.
    picked, and a status line that flips to "client connected" when something
    is on the other end.
 
+![An observer's node window on its SDR pane, ready to serve rtl_tcp](images/sdr-observer.png)
+
 The same serve/stop control sits in the window's head, and the verb behind
 both is `sdr.serve` with `sdr.stop`, so a script can do it too.
 

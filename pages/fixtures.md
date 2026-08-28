@@ -4,6 +4,8 @@ Real networks you can load and run without importing anything, built from live
 CoreScope with the transport regions the real nodes actually hold. A result on
 one of these is a result about a real topology rather than about a lattice.
 
+![fixture-scotland-ireland loaded: 378 nodes across Scotland and Ireland, links weighted by margin](images/workbench-plan.png)
+
 | network | boundary | nodes | repeaters | companions |
 |---|---|---|---|---|
 | `fixture-fife` | Fife | 58 | 46 | 9 |

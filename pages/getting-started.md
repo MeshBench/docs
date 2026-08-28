@@ -119,6 +119,8 @@ sudo apt install gcc pkg-config libgl1-mesa-dev xorg-dev
    reception and miss is listed with a cause, which is the difference between
    "it did not arrive" and "it arrived 3 dB under the demodulator floor".
 
+![The Run view playing: the schedule and scoreboard beside the map, firmware running](images/view-run.png)
+
 > If the mesh looks dead, the usual cause is regions rather than radio. A
 > repeater only forwards flood traffic for regions it has been told about, and
 > reports no error when it declines. See [Shipped networks](fixtures.html).
@@ -136,6 +138,8 @@ arrangement of panels for one kind of work:
 | **Verify** | check it is still true: baselines, A/B bisect, residuals |
 | **Bench** | compare configurations: sweep a parameter, read what differed |
 | **App** | write a client against it: an endpoint, the protocol, faults |
+
+![The menu bar, and the view switcher under it](images/crop-viewbar.png)
 
 Panels can be dragged out, docked elsewhere, or popped into their own window on
 a second monitor. Each view remembers its own arrangement.

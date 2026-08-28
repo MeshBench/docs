@@ -220,6 +220,7 @@ than the first few in the list: a cluster of neighbours contends with itself
 instead of with the mesh. <code>experiment.senders</code> takes the node names.</li><li><strong>Start it, and watch the log.</strong> Each run boots every node&#x27;s firmware,
 settles, sends, and tears down.</li><li><strong>Export.</strong> <code>experiment.export</code> writes an HTML report with every arm, every
 run and the deltas between them.</li></ol>
+<p><img src="images/view-bench.png" alt="The Bench view: the sweep definition, past runs, the experiment log and per-node timelines"></p>
 <p>From a script, the whole thing:</p>
 <div class="codewrap"><pre><code>{<span class="tok-str">&quot;id&quot;</span>:<span class="tok-num">1</span>,<span class="tok-str">&quot;method&quot;</span>:<span class="tok-str">&quot;experiment.senders&quot;</span>,<span class="tok-str">&quot;params&quot;</span>:{<span class="tok-str">&quot;senders&quot;</span>:[<span class="tok-str">&quot;Abernethy Repeater&quot;</span>,<span class="tok-str">&quot;Largo Law&quot;</span>,<span class="tok-str">&quot;Cluny Clay&quot;</span>,<span class="tok-str">&quot;West Lomond&quot;</span>]}}
 {<span class="tok-str">&quot;id&quot;</span>:<span class="tok-num">2</span>,<span class="tok-str">&quot;method&quot;</span>:<span class="tok-str">&quot;experiment.define&quot;</span>,<span class="tok-str">&quot;params&quot;</span>:{
