@@ -19,6 +19,12 @@ companion app or a dashboard in the JavaScript world. The Python and Go clients
 ship the same seven runnable examples; the [cookbook](cookbook.html) indexes
 them.
 
+Every function each client exports is documented, generated from the clients'
+own doc comments so it cannot drift from the code: the
+[Python client reference](reference-python.html), the
+[Go client reference](reference-go.html), and the
+[Node client reference](reference-js.html).
+
 ## Opening a session
 
 ```python

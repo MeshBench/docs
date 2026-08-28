@@ -22,6 +22,9 @@ SYNCED = {
     # These are not edited here; the script rewrites them.
     "what-it-does-not-do.md": ("docs/shortcomings.md", "tools/sync-limits.py"),
     "reference-control.md": ("internal/app/session", "tools/sync-verbs.py"),
+    "reference-python.md": ("pkg/client-python/meshbench", "tools/sync-api-python.py"),
+    "reference-go.md": ("pkg/client-go/meshbench", "tools/sync-api-go.py"),
+    "reference-js.md": ("pkg/client-js/meshbench.mjs", "tools/sync-api-js.py"),
 }
 
 
@@ -99,6 +102,9 @@ NAV = [
     ("settings.html", "Settings"),
     ("reference-cli.html", "CLI"),
     ("reference-control.html", "Control socket"),
+    ("reference-python.html", "Python client"),
+    ("reference-go.html", "Go client"),
+    ("reference-js.html", "Node client"),
     ("resources.html", "What gets downloaded"),
     ("tools.html", "External tools"),
     ("quality-gates.html", "What the build enforces"),
@@ -215,6 +221,14 @@ def inline(t):
     return t
 
 
+def slug(text):
+    """A heading's id: lowercased, punctuation dropped, spaces to hyphens. Lets
+    a long page carry a table of contents and lets a heading be linked to."""
+    s = re.sub(r"<[^>]+>", "", inline(text))  # strip any tags inline() added
+    s = re.sub(r"[^a-z0-9]+", "-", s.lower()).strip("-")
+    return s
+
+
 def render(md):
     out, lines, i = [], md.split("\n"), 0
     while i < len(lines):
@@ -283,9 +297,9 @@ def render(md):
             i -= 1
             out.append("<blockquote><p>" + inline(" ".join(body)) + "</p></blockquote>")
         elif l.startswith("### "):
-            out.append("<h3>%s</h3>" % inline(l[4:]))
+            out.append('<h3 id="%s">%s</h3>' % (slug(l[4:]), inline(l[4:])))
         elif l.startswith("## "):
-            out.append("<h2>%s</h2>" % inline(l[3:]))
+            out.append('<h2 id="%s">%s</h2>' % (slug(l[3:]), inline(l[3:])))
         elif l.startswith("# "):
             out.append("<h1>%s</h1>" % inline(l[2:]))
         elif l.strip():
