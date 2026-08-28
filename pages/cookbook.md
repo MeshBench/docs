@@ -57,19 +57,13 @@ building the scenario again.
 
 ## The seven
 
-| Go directory · Python file | What it does | Needs |
-|---|---|---|
-| `blank-setup-with-a-board` · `01_blank_setup_with_a_board.py` | A blank setup, a companion set to a LilyGo T-Deck running wadamesh, its window open on Hardware. | a display |
-| `two-nodes-on-a-local-build` · `02_two_nodes_on_a_local_build.py` | A fixture trimmed to two companions in Scotland, both on a build made from a MeshCore checkout; re-runnable, so a rebuilt firmware swaps in without rebuilding the scenario. | a display, a checkout |
-| `small-mesh-with-traffic` · `03_small_mesh_with_traffic.py` | Two repeaters and two companions, one a T-Deck; a message to the public channel every twenty seconds, with a node window open to watch it arrive. | a display |
-| `headless-regression` · `04_headless_regression.py` | The one CI runs: assertions over a shipped network, JUnit output, a non-zero exit on regression. No display. | — |
-| `two-builds-in-one-scenario` · `05_two_builds_in_one_scenario.py` | The A/B: two firmware builds on two nodes under one seed, so a behaviour change is the build and not the luck of the draw. | a display, two builds |
-| `live-import-and-advert` · `06_live_import_and_advert.py` | A real mesh pulled from its live feed into a study area, one node found by name, an advert sent from it. | a display, the network |
-| `replace-a-board-build` · `07_replace_a_board_build.py` | Build a board image from its own repository, put the new image on a node, delete the old one; re-runnable. | a display, a checkout |
+Pick one below. Each opens into the steps it is made of, one at a time, with the
+reason for each; and every example carries a button to switch the language — the
+same task in Python and Go, and Node where it exists, side by side so the shape
+shows through the syntax. The first three — a board on show, a local build on
+two nodes, and a small mesh with traffic — are the ones to start from.
 
-The first three are the examples asked for when scripting was
-specified — a board on show, a local build on two nodes, and a small mesh with
-traffic — and they are the ones to start from.
+{{app}}
 
 ## What a scripted result still is
 

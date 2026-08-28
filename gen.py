@@ -343,7 +343,15 @@ def main():
         md = open(os.path.join(src, f)).read()
         title = next((l[2:] for l in md.split("\n") if l.startswith("# ")), f)
         out = f[:-3] + ".html"
-        open(os.path.join(here, out), "w").write(page(out, render(md), title))
+        body = render(md)
+        # An interactive page embeds a self-contained HTML component: it leaves
+        # {{app}} where the component goes, and the component lives beside it as
+        # <name>.app.html, inlined verbatim. Everything else stays plain
+        # Markdown, so only the one page that needs a script carries one.
+        app = os.path.join(src, f[:-3] + ".app.html")
+        if os.path.exists(app):
+            body = body.replace("<p>{{app}}</p>", open(app).read())
+        open(os.path.join(here, out), "w").write(page(out, body, title))
         n += 1
         print("wrote", out)
     print(n, "pages")
