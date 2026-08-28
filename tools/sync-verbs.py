@@ -43,13 +43,18 @@ GROUP_TITLES = [
 
 
 def verbs(root):
+    """Every registration, wherever it lives. The session package split its
+    verbs into sub-packages (session/boundary, session/capture, ...), so this
+    walks the whole tree; and a verb name can carry an underscore, which the
+    first version of this regex silently truncated at."""
     found = set()
-    d = os.path.join(root, SOURCE)
-    for name in os.listdir(d):
-        if not name.endswith(".go") or name.endswith("_test.go"):
-            continue
-        with open(os.path.join(d, name)) as f:
-            found.update(re.findall(r'st\.Handle\("([a-z][a-z.]*)"', f.read()))
+    for d, _, names in os.walk(os.path.join(root, SOURCE)):
+        for name in names:
+            if not name.endswith(".go") or name.endswith("_test.go"):
+                continue
+            with open(os.path.join(d, name)) as f:
+                found.update(re.findall(
+                    r'Handle(?:Spec)?\(\s*"([a-z][a-z0-9._]*)"', f.read()))
     return sorted(found)
 
 

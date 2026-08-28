@@ -13,7 +13,7 @@ import subprocess
 import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from apidoc_common import repo_arg, rst_to_md, emit  # noqa: E402
+from apidoc_common import anchor, repo_arg, rst_to_md, emit  # noqa: E402
 
 PAGE = "reference-go.md"
 PKG = os.path.join("pkg", "client-go", "meshbench")
@@ -221,7 +221,7 @@ def main():
         if not names:
             return ""
         return "**%s** · %s" % (title, " · ".join(
-            "[%s](#%s)" % (n, n.lower()) for n in names))
+            "[%s](#%s)" % (n, anchor(n)) for n in names))
 
     head = ("Every exported type in the Go client, its methods, and the shape of "
             "each call - taken straight from `go doc` over "
@@ -267,7 +267,7 @@ def main():
                 blocks.append(t["doc"])
             fields = struct_fields(t["decl"]) if t["kind"] == "struct" else None
             if fields:
-                blocks.append("```\n" + fields + "\n```")
+                blocks.append("```go\n" + fields + "\n```")
 
     if values:
         blocks.append("## Values")
@@ -278,7 +278,7 @@ def main():
                 blocks.append(t["doc"])
             fields = struct_fields(t["decl"]) if t["kind"] == "struct" else None
             if fields:
-                blocks.append("```\n" + fields + "\n```")
+                blocks.append("```go\n" + fields + "\n```")
             for sig, doc in t["funcs"]:
                 blocks.append("- `%s`%s" % (sig, " — " + doc.split("\n")[0] if doc else ""))
 
@@ -292,7 +292,8 @@ def main():
             for sig, doc in t["funcs"]:
                 blocks.append("- `%s`%s" % (sig, " — " + doc.split("\n")[0] if doc else ""))
         for sig, doc in topfuncs:
-            blocks.append("### `%s`" % sig)
+            blocks.append("### `%s`" % sig.split("(")[0])
+            blocks.append("```go\nfunc %s\n```" % sig)
             if doc:
                 blocks.append(doc)
 
