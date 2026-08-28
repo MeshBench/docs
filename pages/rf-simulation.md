@@ -63,7 +63,7 @@ questions should be asked in.
 
 **Waveform** answers what arithmetic cannot: whether two overlapping
 transmissions capture or collide, what a partial overlap actually costs, and
-what a receiver would hear if you attached an SDR to it.
+what a receiver would hear if an SDR were attached to it.
 
 | | Calculated | Waveform |
 |---|---|---|

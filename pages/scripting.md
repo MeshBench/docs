@@ -23,7 +23,9 @@ Every function each client exports is documented, generated from the clients'
 own doc comments so it cannot drift from the code: the
 [Python client reference](reference-python.html), the
 [Go client reference](reference-go.html), and the
-[Node client reference](reference-js.html).
+[Node client reference](reference-js.html). For one-shot jobs that need no
+session at all — a link budget, a coverage raster, downloading terrain — the
+[CLI](reference-cli.html) is quicker than a script.
 
 ## Opening a session
 

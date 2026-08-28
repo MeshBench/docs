@@ -36,7 +36,7 @@ boot.
 | on disk | size if it is here, or a `download` button if it is not |
 | in use by | how many nodes in the current scenario run it |
 
-**Versions are per role.** Upstream tags one role at a time and so do our native
+**Versions are per role.** Upstream tags one role at a time and so do the native
 builds, so `companion-v1.17.0` and `repeater-v1.17.0` are different releases.
 Asking for a bare `v1.17.0` resolves nothing and reports "no native builds
 published", which points at the release rather than at the string that caused it.

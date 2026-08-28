@@ -27,7 +27,7 @@ meshbench <command> [flags]
 | `test` | run a fixture on real firmware and check its assertions |
 | `workbench` | open the desktop workbench |
 | `headless` | run the verbs over the control socket, with no window |
-| `serve` | run a mesh and expose one companion to your app over TCP or a pty |
+| `serve` | run a mesh and expose one companion to an application over TCP or a pty |
 | `dev` | build a MeshCore checkout and hand the result to the workbench |
 
 Every command takes `-h`.

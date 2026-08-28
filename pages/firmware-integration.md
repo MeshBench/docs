@@ -8,7 +8,7 @@ There are two ways to do that, and they answer different questions.
 
 | | native | emulated |
 |---|---|---|
-| what runs | MeshCore compiled for your host | the published board image |
+| what runs | MeshCore compiled for the host | the published board image |
 | the radio | a shim linked in place of the driver | an SX1262 model over SPI |
 | speed | faster than real time on small networks | wall time, always |
 | deterministic | **yes** | no |
@@ -50,7 +50,7 @@ keyed by name. The firmware writes its identity, preferences, channels and
 contacts there and reads them back at boot, exactly as hardware does.
 
 > **Saved node state beats a compiled default.** A node that has run before
-> loads its stored value and never reaches your changed default. Both arms of a
+> loads its stored value and never reaches the changed default. Both arms of a
 > comparison then return identical numbers and the change looks inert. It fails
 > silently, in both arms, which is the worst way for a comparison to fail.
 
@@ -93,8 +93,8 @@ disagree.
 ## Talking to a running node
 
 `console.type` runs a line on a node's CLI and returns what it said, which is
-the fastest way to find out what a node actually believes rather than what you
-think you configured.
+the fastest way to find out what a node actually believes rather than what its
+configuration was assumed to say.
 
 ```
 {"id":1,"method":"console.type","params":{"node":"Bathgate room","command":"get repeat"}}

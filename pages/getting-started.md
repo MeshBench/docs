@@ -143,6 +143,10 @@ a second monitor. Each view remembers its own arrangement.
 ## Next
 
 - [Shipped networks](fixtures.html) if you want a bigger or more realistic mesh.
+- The [CLI reference](reference-cli.html) for everything the binary does without
+  a window, and [Settings](settings.html) for what the application remembers.
+- [External tools](tools.html) for what MeshBench looks for on the machine —
+  Wireshark, SDR++, the emulators — and what happens when one is missing.
 - [Firmware development](firmware-development.html) if you are changing MeshCore
   itself.
 - [Companion bench](companion-bench.html) if you are writing a client.

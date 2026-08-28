@@ -107,7 +107,7 @@ profile and the model answers whether a site survives December at its latitude.
 | setting | effect |
 |---|---|
 | let agents drive this workbench | opens the control socket at `$XDG_RUNTIME_DIR/meshbench.sock` |
-| compute the link matrix in the background | keeps reachability current while you edit |
+| compute the link matrix in the background | keeps reachability current while editing |
 
 The control socket is how every scripted run, the test runner and the MCP server
 drive the application. See the [control socket reference](reference-control.html).

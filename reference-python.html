@@ -220,258 +220,258 @@ h2:hover .hl, h3:hover .hl, h2 .hl:focus-visible, h3 .hl:focus-visible { opacity
 <h2 id="workbench">Workbench<a class="hl" href="#workbench" aria-label="Link to this section">#</a></h2>
 <p>A running session.</p>
 <p>Use it as a context manager. <code>launch</code> and <code>headless</code> own the process they started and stop it on the way out; <code>attach</code> never does - a script must not be able to close the workbench somebody is looking at by falling off the end of a <code>with</code>.</p>
-<h3 id="classmethod-attach-cls-socket-str-none-none-timeout-float-300-0-gt-workbench"><code>classmethod attach(cls, socket: str | None = None, timeout: float = 300.0) -&gt; Workbench</code><a class="hl" href="#classmethod-attach-cls-socket-str-none-none-timeout-float-300-0-gt-workbench" aria-label="Link to this section">#</a></h3>
+<h3 id="classmethod-workbench-attach-cls-socket-str-none-none-timeout-float-300-0-gt-workbench"><code>classmethod Workbench.attach(cls, socket: str | None = None, timeout: float = 300.0) -&gt; Workbench</code><a class="hl" href="#classmethod-workbench-attach-cls-socket-str-none-none-timeout-float-300-0-gt-workbench" aria-label="Link to this section">#</a></h3>
 <p>Connect to a workbench that is already running.</p>
-<h3 id="classmethod-headless-cls-fixture-str-none-none-seed-int-none-none-socket-str-none-none-binary-str-none-none-extra-list-str-none-none-start-timeout-float-90-0-stderr-any-none-gt-workbench"><code>classmethod headless(cls, fixture: str | None = None, seed: int | None = None, socket: str | None = None, binary: str | None = None, extra: list[str] | None = None, start_timeout: float = 90.0, stderr: Any = None) -&gt; Workbench</code><a class="hl" href="#classmethod-headless-cls-fixture-str-none-none-seed-int-none-none-socket-str-none-none-binary-str-none-none-extra-list-str-none-none-start-timeout-float-90-0-stderr-any-none-gt-workbench" aria-label="Link to this section">#</a></h3>
+<h3 id="classmethod-workbench-headless-cls-fixture-str-none-none-seed-int-none-none-socket-str-none-none-binary-str-none-none-extra-list-str-none-none-start-timeout-float-90-0-stderr-any-none-gt-workbench"><code>classmethod Workbench.headless(cls, fixture: str | None = None, seed: int | None = None, socket: str | None = None, binary: str | None = None, extra: list[str] | None = None, start_timeout: float = 90.0, stderr: Any = None) -&gt; Workbench</code><a class="hl" href="#classmethod-workbench-headless-cls-fixture-str-none-none-seed-int-none-none-socket-str-none-none-binary-str-none-none-extra-list-str-none-none-start-timeout-float-90-0-stderr-any-none-gt-workbench" aria-label="Link to this section">#</a></h3>
 <p>Start a session with no window, and own it.</p>
 <p>The one to use from a test or from CI: no display, no GPU, no toolkit.</p>
-<h3 id="classmethod-launch-cls-kw-gt-workbench"><code>classmethod launch(cls, **kw) -&gt; Workbench</code><a class="hl" href="#classmethod-launch-cls-kw-gt-workbench" aria-label="Link to this section">#</a></h3>
+<h3 id="classmethod-workbench-launch-cls-kw-gt-workbench"><code>classmethod Workbench.launch(cls, **kw) -&gt; Workbench</code><a class="hl" href="#classmethod-workbench-launch-cls-kw-gt-workbench" aria-label="Link to this section">#</a></h3>
 <p>Open the desktop workbench and own it. Needs a display.</p>
-<h3 id="classmethod-attach-or-headless-cls-kw-gt-workbench"><code>classmethod attach_or_headless(cls, **kw) -&gt; Workbench</code><a class="hl" href="#classmethod-attach-or-headless-cls-kw-gt-workbench" aria-label="Link to this section">#</a></h3>
+<h3 id="classmethod-workbench-attach-or-headless-cls-kw-gt-workbench"><code>classmethod Workbench.attach_or_headless(cls, **kw) -&gt; Workbench</code><a class="hl" href="#classmethod-workbench-attach-or-headless-cls-kw-gt-workbench" aria-label="Link to this section">#</a></h3>
 <p>Use the session that is running, or start one with no window.</p>
 <p>For a script somebody runs repeatedly by hand: the second run should carry on from the first rather than clearing everything down.</p>
 <p>Note which half you get. Attaching does not own the process and leaves it running at the end; starting one does own it and stops it. A script that wants the session to survive should attach to a session started separately.</p>
-<h3 id="classmethod-attach-or-launch-cls-kw-gt-workbench"><code>classmethod attach_or_launch(cls, **kw) -&gt; Workbench</code><a class="hl" href="#classmethod-attach-or-launch-cls-kw-gt-workbench" aria-label="Link to this section">#</a></h3>
+<h3 id="classmethod-workbench-attach-or-launch-cls-kw-gt-workbench"><code>classmethod Workbench.attach_or_launch(cls, **kw) -&gt; Workbench</code><a class="hl" href="#classmethod-workbench-attach-or-launch-cls-kw-gt-workbench" aria-label="Link to this section">#</a></h3>
 <p>Use the session that is running, or open the desktop workbench.</p>
 <p>The windowed half of the pair, so a re-run can put something back on screen. Needs a display.</p>
-<h3 id="close-gt-none"><code>close() -&gt; None</code><a class="hl" href="#close-gt-none" aria-label="Link to this section">#</a></h3>
+<h3 id="workbench-close-gt-none"><code>Workbench.close() -&gt; None</code><a class="hl" href="#workbench-close-gt-none" aria-label="Link to this section">#</a></h3>
 <p>Hang up, and stop the process if this client started it.</p>
-<h3 id="property-owns-process-gt-bool"><code>property owns_process() -&gt; bool</code><a class="hl" href="#property-owns-process-gt-bool" aria-label="Link to this section">#</a></h3>
+<h3 id="property-workbench-owns-process-gt-bool"><code>property Workbench.owns_process() -&gt; bool</code><a class="hl" href="#property-workbench-owns-process-gt-bool" aria-label="Link to this section">#</a></h3>
 <p>Whether closing this will stop the workbench.</p>
-<h3 id="property-is-headless-gt-bool"><code>property is_headless() -&gt; bool</code><a class="hl" href="#property-is-headless-gt-bool" aria-label="Link to this section">#</a></h3>
-<h3 id="call-verb-str-params-any-none-gt-any"><code>call(verb: str, params: Any = None) -&gt; Any</code><a class="hl" href="#call-verb-str-params-any-none-gt-any" aria-label="Link to this section">#</a></h3>
+<h3 id="property-workbench-is-headless-gt-bool"><code>property Workbench.is_headless() -&gt; bool</code><a class="hl" href="#property-workbench-is-headless-gt-bool" aria-label="Link to this section">#</a></h3>
+<h3 id="workbench-call-verb-str-params-any-none-gt-any"><code>Workbench.call(verb: str, params: Any = None) -&gt; Any</code><a class="hl" href="#workbench-call-verb-str-params-any-none-gt-any" aria-label="Link to this section">#</a></h3>
 <p>Run one verb and return its result.</p>
 <p>Public and documented, not an escape hatch to be ashamed of: the shaped API will never cover all 213 verbs, and a verb added tomorrow should be usable today.</p>
-<h3 id="subscribe-topics-str-gt-subscription"><code>subscribe(*topics: str) -&gt; Subscription</code><a class="hl" href="#subscribe-topics-str-gt-subscription" aria-label="Link to this section">#</a></h3>
+<h3 id="workbench-subscribe-topics-str-gt-subscription"><code>Workbench.subscribe(*topics: str) -&gt; Subscription</code><a class="hl" href="#workbench-subscribe-topics-str-gt-subscription" aria-label="Link to this section">#</a></h3>
 <p>Stream server-pushed notifications for the given topics, rather than polling. Opens a second connection to this same workbench, so closing the returned Subscription hangs up only that stream.</p>
 <p>Topics today: &quot;status&quot; (a new console line) and &quot;snapshot&quot; (a compact summary after each publish, coalesced by the server so a busy run cannot flood a slow reader).</p>
-<h3 id="checkpoint-name-str-gt-dict-str-any"><code>checkpoint(name: str) -&gt; dict[str, Any]</code><a class="hl" href="#checkpoint-name-str-gt-dict-str-any" aria-label="Link to this section">#</a></h3>
+<h3 id="workbench-checkpoint-name-str-gt-dict-str-any"><code>Workbench.checkpoint(name: str) -&gt; dict[str, Any]</code><a class="hl" href="#workbench-checkpoint-name-str-gt-dict-str-any" aria-label="Link to this section">#</a></h3>
 <p>Freeze the whole session under a name - the network, how it is being run, and where the clock had got to - so it can be taken back here.</p>
-<h3 id="restore-name-str-gt-dict-str-any"><code>restore(name: str) -&gt; dict[str, Any]</code><a class="hl" href="#restore-name-str-gt-dict-str-any" aria-label="Link to this section">#</a></h3>
+<h3 id="workbench-restore-name-str-gt-dict-str-any"><code>Workbench.restore(name: str) -&gt; dict[str, Any]</code><a class="hl" href="#workbench-restore-name-str-gt-dict-str-any" aria-label="Link to this section">#</a></h3>
 <p>Rebuild a checkpoint and replay to the moment it was taken. Returns as soon as the replay is under way; the sim reaching target_ms is when it has actually arrived. Deterministic, so it comes back to exactly where it was - at the cost of the replay taking the run&#x27;s own time.</p>
-<h3 id="checkpoints-gt-list-str"><code>checkpoints() -&gt; list[str]</code><a class="hl" href="#checkpoints-gt-list-str" aria-label="Link to this section">#</a></h3>
+<h3 id="workbench-checkpoints-gt-list-str"><code>Workbench.checkpoints() -&gt; list[str]</code><a class="hl" href="#workbench-checkpoints-gt-list-str" aria-label="Link to this section">#</a></h3>
 <p>What can be restored, by name.</p>
-<h3 id="snapshot-gt-dict-str-any"><code>snapshot() -&gt; dict[str, Any]</code><a class="hl" href="#snapshot-gt-dict-str-any" aria-label="Link to this section">#</a></h3>
+<h3 id="workbench-snapshot-gt-dict-str-any"><code>Workbench.snapshot() -&gt; dict[str, Any]</code><a class="hl" href="#workbench-snapshot-gt-dict-str-any" aria-label="Link to this section">#</a></h3>
 <p>The whole session as the socket summarises it.</p>
-<h3 id="describe-gt-dict-str-any"><code>describe() -&gt; dict[str, Any]</code><a class="hl" href="#describe-gt-dict-str-any" aria-label="Link to this section">#</a></h3>
+<h3 id="workbench-describe-gt-dict-str-any"><code>Workbench.describe() -&gt; dict[str, Any]</code><a class="hl" href="#workbench-describe-gt-dict-str-any" aria-label="Link to this section">#</a></h3>
 <p>The cheap summary: nodes, seed, time, whether it is playing.</p>
-<h3 id="journal-gt-dict-str-any"><code>journal() -&gt; dict[str, Any]</code><a class="hl" href="#journal-gt-dict-str-any" aria-label="Link to this section">#</a></h3>
+<h3 id="workbench-journal-gt-dict-str-any"><code>Workbench.journal() -&gt; dict[str, Any]</code><a class="hl" href="#workbench-journal-gt-dict-str-any" aria-label="Link to this section">#</a></h3>
 <p>Every command this workbench has been driven with, newest last, and when the process started - so a session picked up cold can be told how the world got here, and whether it has been restarted.</p>
-<h3 id="verbs-gt-list-str"><code>verbs() -&gt; list[str]</code><a class="hl" href="#verbs-gt-list-str" aria-label="Link to this section">#</a></h3>
+<h3 id="workbench-verbs-gt-list-str"><code>Workbench.verbs() -&gt; list[str]</code><a class="hl" href="#workbench-verbs-gt-list-str" aria-label="Link to this section">#</a></h3>
 <p>Every method this build answers.</p>
-<h3 id="say-text-str-gt-none"><code>say(text: str) -&gt; None</code><a class="hl" href="#say-text-str-gt-none" aria-label="Link to this section">#</a></h3>
+<h3 id="workbench-say-text-str-gt-none"><code>Workbench.say(text: str) -&gt; None</code><a class="hl" href="#workbench-say-text-str-gt-none" aria-label="Link to this section">#</a></h3>
 <p>Leave a line in the session&#x27;s log, for whoever is watching.</p>
-<h3 id="keep-above-on-bool-none-none-gt-bool"><code>keep_above(on: bool | None = None) -&gt; bool</code><a class="hl" href="#keep-above-on-bool-none-none-gt-bool" aria-label="Link to this section">#</a></h3>
+<h3 id="workbench-keep-above-on-bool-none-none-gt-bool"><code>Workbench.keep_above(on: bool | None = None) -&gt; bool</code><a class="hl" href="#workbench-keep-above-on-bool-none-none-gt-bool" aria-label="Link to this section">#</a></h3>
 <p>Whether a panel opened in its own window stays above the main one.</p>
 <p>Reads the preference when called with nothing, sets it when given a value, and returns what it now is.</p>
 <p>The preference exists for Linux under Wayland, where no client may ask a normal window to stay above others. What can be asked for is a layer-shell surface, and that is a different kind of window: the compositor gives it no title bar, no taskbar entry and no minimise, so the window draws its own bar and its close button returns the panel to the main window. Somebody who would rather have the compositor&#x27;s own windows turns this off. On macOS and Windows always-on-top costs nothing and the preference does not apply.</p>
-<h3 id="window-node-str-node-tab-tab-str-x27-x27-gt-str"><code>window(node: str | Node, tab: Tab | str = &#x27;&#x27;) -&gt; str</code><a class="hl" href="#window-node-str-node-tab-tab-str-x27-x27-gt-str" aria-label="Link to this section">#</a></h3>
+<h3 id="workbench-window-node-str-node-tab-tab-str-x27-x27-gt-str"><code>Workbench.window(node: str | Node, tab: Tab | str = &#x27;&#x27;) -&gt; str</code><a class="hl" href="#workbench-window-node-str-node-tab-tab-str-x27-x27-gt-str" aria-label="Link to this section">#</a></h3>
 <p>Open a node&#x27;s own window, on a named tab.</p>
 <p>Windowed sessions only, and it says so here rather than appearing to work: a headless run has nothing to open, and a script that &quot;opened the Hardware tab&quot; in CI and saw no error will be written to assume it did.</p>
 <p>Tabs are named as they are on the strip - Console, Companion, SDR, Settings, Radio, Stats, Activity, Connect, Hardware. Returns the one it opened on.</p>
-<h3 id="property-nodes-gt-nodes"><code>property nodes() -&gt; Nodes</code><a class="hl" href="#property-nodes-gt-nodes" aria-label="Link to this section">#</a></h3>
-<h3 id="node-name-str-gt-node"><code>node(name: str) -&gt; Node</code><a class="hl" href="#node-name-str-gt-node" aria-label="Link to this section">#</a></h3>
+<h3 id="property-workbench-nodes-gt-nodes"><code>property Workbench.nodes() -&gt; Nodes</code><a class="hl" href="#property-workbench-nodes-gt-nodes" aria-label="Link to this section">#</a></h3>
+<h3 id="workbench-node-name-str-gt-node"><code>Workbench.node(name: str) -&gt; Node</code><a class="hl" href="#workbench-node-name-str-gt-node" aria-label="Link to this section">#</a></h3>
 <p>A handle, without checking it exists - so one can be named before it is placed. Every method on it will say so if it does not.</p>
-<h3 id="property-schedule-gt-schedule"><code>property schedule() -&gt; Schedule</code><a class="hl" href="#property-schedule-gt-schedule" aria-label="Link to this section">#</a></h3>
-<h3 id="property-assertions-gt-assertions"><code>property assertions() -&gt; Assertions</code><a class="hl" href="#property-assertions-gt-assertions" aria-label="Link to this section">#</a></h3>
-<h3 id="property-sim-gt-sim"><code>property sim() -&gt; Sim</code><a class="hl" href="#property-sim-gt-sim" aria-label="Link to this section">#</a></h3>
-<h3 id="property-project-gt-project"><code>property project() -&gt; Project</code><a class="hl" href="#property-project-gt-project" aria-label="Link to this section">#</a></h3>
-<h3 id="property-firmware-gt-firmware"><code>property firmware() -&gt; Firmware</code><a class="hl" href="#property-firmware-gt-firmware" aria-label="Link to this section">#</a></h3>
-<h3 id="property-events-gt-events"><code>property events() -&gt; Events</code><a class="hl" href="#property-events-gt-events" aria-label="Link to this section">#</a></h3>
-<h3 id="property-boundary-gt-boundary"><code>property boundary() -&gt; Boundary</code><a class="hl" href="#property-boundary-gt-boundary" aria-label="Link to this section">#</a></h3>
+<h3 id="property-workbench-schedule-gt-schedule"><code>property Workbench.schedule() -&gt; Schedule</code><a class="hl" href="#property-workbench-schedule-gt-schedule" aria-label="Link to this section">#</a></h3>
+<h3 id="property-workbench-assertions-gt-assertions"><code>property Workbench.assertions() -&gt; Assertions</code><a class="hl" href="#property-workbench-assertions-gt-assertions" aria-label="Link to this section">#</a></h3>
+<h3 id="property-workbench-sim-gt-sim"><code>property Workbench.sim() -&gt; Sim</code><a class="hl" href="#property-workbench-sim-gt-sim" aria-label="Link to this section">#</a></h3>
+<h3 id="property-workbench-project-gt-project"><code>property Workbench.project() -&gt; Project</code><a class="hl" href="#property-workbench-project-gt-project" aria-label="Link to this section">#</a></h3>
+<h3 id="property-workbench-firmware-gt-firmware"><code>property Workbench.firmware() -&gt; Firmware</code><a class="hl" href="#property-workbench-firmware-gt-firmware" aria-label="Link to this section">#</a></h3>
+<h3 id="property-workbench-events-gt-events"><code>property Workbench.events() -&gt; Events</code><a class="hl" href="#property-workbench-events-gt-events" aria-label="Link to this section">#</a></h3>
+<h3 id="property-workbench-boundary-gt-boundary"><code>property Workbench.boundary() -&gt; Boundary</code><a class="hl" href="#property-workbench-boundary-gt-boundary" aria-label="Link to this section">#</a></h3>
 <p>The study area: which nodes are in the question being asked. Set it before importing, because the import filters at fetch time.</p>
-<h3 id="property-live-gt-live"><code>property live() -&gt; Live</code><a class="hl" href="#property-live-gt-live" aria-label="Link to this section">#</a></h3>
+<h3 id="property-workbench-live-gt-live"><code>property Workbench.live() -&gt; Live</code><a class="hl" href="#property-workbench-live-gt-live" aria-label="Link to this section">#</a></h3>
 <p>A live deployment feed - CoreScope and the rest - and the import chain that brings one in.</p>
-<h3 id="console-node-str-gt-console"><code>console(node: str) -&gt; Console</code><a class="hl" href="#console-node-str-gt-console" aria-label="Link to this section">#</a></h3>
-<h3 id="job-job-id-str-gt-job"><code>job(job_id: str) -&gt; Job</code><a class="hl" href="#job-job-id-str-gt-job" aria-label="Link to this section">#</a></h3>
-<h3 id="jobs-gt-list-dict-str-any"><code>jobs() -&gt; list[dict[str, Any]]</code><a class="hl" href="#jobs-gt-list-dict-str-any" aria-label="Link to this section">#</a></h3>
+<h3 id="workbench-console-node-str-gt-console"><code>Workbench.console(node: str) -&gt; Console</code><a class="hl" href="#workbench-console-node-str-gt-console" aria-label="Link to this section">#</a></h3>
+<h3 id="workbench-job-job-id-str-gt-job"><code>Workbench.job(job_id: str) -&gt; Job</code><a class="hl" href="#workbench-job-job-id-str-gt-job" aria-label="Link to this section">#</a></h3>
+<h3 id="workbench-jobs-gt-list-dict-str-any"><code>Workbench.jobs() -&gt; list[dict[str, Any]]</code><a class="hl" href="#workbench-jobs-gt-list-dict-str-any" aria-label="Link to this section">#</a></h3>
 <p>Everything long-running that is in flight.</p>
-<h3 id="wait-for-nodes-timeout-timedelta-job-wait-gt-none"><code>wait_for_nodes(timeout: timedelta = JOB_WAIT) -&gt; None</code><a class="hl" href="#wait-for-nodes-timeout-timedelta-job-wait-gt-none" aria-label="Link to this section">#</a></h3>
+<h3 id="workbench-wait-for-nodes-timeout-timedelta-job-wait-gt-none"><code>Workbench.wait_for_nodes(timeout: timedelta = JOB_WAIT) -&gt; None</code><a class="hl" href="#workbench-wait-for-nodes-timeout-timedelta-job-wait-gt-none" aria-label="Link to this section">#</a></h3>
 <p>Wait until the session has a network in it.</p>
 <p>For a fixture opened at startup, which happens on a worker: the socket answers first, so everything asked before the open lands describes an empty session and is believed.</p>
-<h3 id="wait-idle-timeout-timedelta-job-wait-gt-none"><code>wait_idle(timeout: timedelta = JOB_WAIT) -&gt; None</code><a class="hl" href="#wait-idle-timeout-timedelta-job-wait-gt-none" aria-label="Link to this section">#</a></h3>
+<h3 id="workbench-wait-idle-timeout-timedelta-job-wait-gt-none"><code>Workbench.wait_idle(timeout: timedelta = JOB_WAIT) -&gt; None</code><a class="hl" href="#workbench-wait-idle-timeout-timedelta-job-wait-gt-none" aria-label="Link to this section">#</a></h3>
 <p>Wait for every job to finish.</p>
 <p>The honest way to wait out a warm, which is what most of them are.</p>
 <p>Finished jobs are ignored rather than waited for: some are removed when they end and some are only marked - infer.run&#x27;s is marked - so waiting for the list to empty waits forever on half of them. That is a difference between the verbs, not something a caller should know.</p>
-<h3 id="node-stats-gt-list-nodestat"><code>node_stats() -&gt; list[NodeStat]</code><a class="hl" href="#node-stats-gt-list-nodestat" aria-label="Link to this section">#</a></h3>
+<h3 id="workbench-node-stats-gt-list-nodestat"><code>Workbench.node_stats() -&gt; list[NodeStat]</code><a class="hl" href="#workbench-node-stats-gt-list-nodestat" aria-label="Link to this section">#</a></h3>
 <p>Sample every node and return what it found.</p>
 <p>A sample, not a read: it costs a /proc read per node, which is why the window only does it while somebody is looking at the panel.</p>
-<h3 id="provenance-gt-provenance"><code>provenance() -&gt; Provenance</code><a class="hl" href="#provenance-gt-provenance" aria-label="Link to this section">#</a></h3>
+<h3 id="workbench-provenance-gt-provenance"><code>Workbench.provenance() -&gt; Provenance</code><a class="hl" href="#workbench-provenance-gt-provenance" aria-label="Link to this section">#</a></h3>
 <p>What this session&#x27;s measurements are being made under.</p>
 <p>Read from the session rather than carried on each result, for now: the verbs do not return it yet, and inventing it here would be a claim this client is not entitled to make.</p>
 <h2 id="project">Project<a class="hl" href="#project" aria-label="Link to this section">#</a></h2>
 <p>Opening, saving, and starting over. Live.</p>
-<h3 id="new-place-str-none-none-gt-none"><code>new(place: str | None = None) -&gt; None</code><a class="hl" href="#new-place-str-none-none-gt-none" aria-label="Link to this section">#</a></h3>
+<h3 id="project-new-place-str-none-none-gt-none"><code>Project.new(place: str | None = None) -&gt; None</code><a class="hl" href="#project-new-place-str-none-none-gt-none" aria-label="Link to this section">#</a></h3>
 <p>An empty network.</p>
 <p>With a place it becomes the study area and the map is framed on it, because those are the same wish - and because a blank network with no place is a map in the middle of the Atlantic.</p>
-<h3 id="open-path-str-gt-none"><code>open(path: str) -&gt; None</code><a class="hl" href="#open-path-str-gt-none" aria-label="Link to this section">#</a></h3>
-<h3 id="save-name-str-gt-str"><code>save(name: str) -&gt; str</code><a class="hl" href="#save-name-str-gt-str" aria-label="Link to this section">#</a></h3>
+<h3 id="project-open-path-str-gt-none"><code>Project.open(path: str) -&gt; None</code><a class="hl" href="#project-open-path-str-gt-none" aria-label="Link to this section">#</a></h3>
+<h3 id="project-save-name-str-gt-str"><code>Project.save(name: str) -&gt; str</code><a class="hl" href="#project-save-name-str-gt-str" aria-label="Link to this section">#</a></h3>
 <p>Write it out.</p>
 <p>Worth doing before anything that might restart the process: the scenario lives in the process, not on disk.</p>
-<h3 id="list-gt-list-str"><code>list() -&gt; list[str]</code><a class="hl" href="#list-gt-list-str" aria-label="Link to this section">#</a></h3>
+<h3 id="project-list-gt-list-str"><code>Project.list() -&gt; list[str]</code><a class="hl" href="#project-list-gt-list-str" aria-label="Link to this section">#</a></h3>
 <h2 id="nodes">Nodes<a class="hl" href="#nodes" aria-label="Link to this section">#</a></h2>
 <p>The collection. Live: every call reads the session.</p>
-<h3 id="list-gt-list-nodeinfo"><code>list() -&gt; list[NodeInfo]</code><a class="hl" href="#list-gt-list-nodeinfo" aria-label="Link to this section">#</a></h3>
-<h3 id="info-name-str-gt-nodeinfo"><code>info(name: str) -&gt; NodeInfo</code><a class="hl" href="#info-name-str-gt-nodeinfo" aria-label="Link to this section">#</a></h3>
-<h3 id="search-query-str-limit-int-10-gt-list-namematch"><code>search(query: str, limit: int = 10) -&gt; list[NameMatch]</code><a class="hl" href="#search-query-str-limit-int-10-gt-list-namematch" aria-label="Link to this section">#</a></h3>
+<h3 id="nodes-list-gt-list-nodeinfo"><code>Nodes.list() -&gt; list[NodeInfo]</code><a class="hl" href="#nodes-list-gt-list-nodeinfo" aria-label="Link to this section">#</a></h3>
+<h3 id="nodes-info-name-str-gt-nodeinfo"><code>Nodes.info(name: str) -&gt; NodeInfo</code><a class="hl" href="#nodes-info-name-str-gt-nodeinfo" aria-label="Link to this section">#</a></h3>
+<h3 id="nodes-search-query-str-limit-int-10-gt-list-namematch"><code>Nodes.search(query: str, limit: int = 10) -&gt; list[NameMatch]</code><a class="hl" href="#nodes-search-query-str-limit-int-10-gt-list-namematch" aria-label="Link to this section">#</a></h3>
 <p>Find nodes by name, best first, when you cannot type the name.</p>
 <p>Imported names carry emoji and accents - &quot;🏔️ West Lomond 📡&quot; is one real node - so matching is done on letters and digits alone, with accents folded and word order ignored. The ranking happens at the workbench rather than here, so this client and the Go one agree about which result is the top one.</p>
 <p>Returns an empty list rather than raising: &quot;nothing matched&quot; is an answer, and the caller usually wants to widen the query rather than handle an exception.</p>
-<h3 id="find-query-str-least-float-0-5-gt-node"><code>find(query: str, least: float = 0.5) -&gt; Node</code><a class="hl" href="#find-query-str-least-float-0-5-gt-node" aria-label="Link to this section">#</a></h3>
+<h3 id="nodes-find-query-str-least-float-0-5-gt-node"><code>Nodes.find(query: str, least: float = 0.5) -&gt; Node</code><a class="hl" href="#nodes-find-query-str-least-float-0-5-gt-node" aria-label="Link to this section">#</a></h3>
 <p>The one node a search meant, or a refusal naming what it did find.</p>
 <p><code>least</code> is the score below which the top answer is not good enough to act on. Taking the top result unconditionally is how a script ends up sending an advert from a node that merely shared a word with what was asked for, and it does that silently.</p>
-<h3 id="near-node-node-str-count-int-0-gt-list-node"><code>near(node: Node | str, count: int = 0) -&gt; list[Node]</code><a class="hl" href="#near-node-node-str-count-int-0-gt-list-node" aria-label="Link to this section">#</a></h3>
+<h3 id="nodes-near-node-node-str-count-int-0-gt-list-node"><code>Nodes.near(node: Node | str, count: int = 0) -&gt; list[Node]</code><a class="hl" href="#nodes-near-node-node-str-count-int-0-gt-list-node" aria-label="Link to this section">#</a></h3>
 <p>The nodes closest to this one, nearest first.</p>
 <p>Trimming an imported deployment to a neighbourhood is the first thing anybody does with one, and the distance is the workbench&#x27;s own - the same great circle its path losses use.</p>
-<h3 id="of-kind-kind-str-gt-list-node"><code>of_kind(kind: str) -&gt; list[Node]</code><a class="hl" href="#of-kind-kind-str-gt-list-node" aria-label="Link to this section">#</a></h3>
-<h3 id="place-name-str-kind-kind-str-kind-simple-repeater-lat-float-0-0-lon-float-0-0-height-m-float-none-none-tx-dbm-float-none-none-board-board-str-none-none-gt-node"><code>place(name: str, kind: Kind | str = Kind.SIMPLE_REPEATER, lat: float = 0.0, lon: float = 0.0, height_m: float | None = None, tx_dbm: float | None = None, board: Board | str | None = None) -&gt; Node</code><a class="hl" href="#place-name-str-kind-kind-str-kind-simple-repeater-lat-float-0-0-lon-float-0-0-height-m-float-none-none-tx-dbm-float-none-none-board-board-str-none-none-gt-node" aria-label="Link to this section">#</a></h3>
+<h3 id="nodes-of-kind-kind-str-gt-list-node"><code>Nodes.of_kind(kind: str) -&gt; list[Node]</code><a class="hl" href="#nodes-of-kind-kind-str-gt-list-node" aria-label="Link to this section">#</a></h3>
+<h3 id="nodes-place-name-str-kind-kind-str-kind-simple-repeater-lat-float-0-0-lon-float-0-0-height-m-float-none-none-tx-dbm-float-none-none-board-board-str-none-none-gt-node"><code>Nodes.place(name: str, kind: Kind | str = Kind.SIMPLE_REPEATER, lat: float = 0.0, lon: float = 0.0, height_m: float | None = None, tx_dbm: float | None = None, board: Board | str | None = None) -&gt; Node</code><a class="hl" href="#nodes-place-name-str-kind-kind-str-kind-simple-repeater-lat-float-0-0-lon-float-0-0-height-m-float-none-none-tx-dbm-float-none-none-board-board-str-none-none-gt-node" aria-label="Link to this section">#</a></h3>
 <p>Put one node down.</p>
 <p>It inherits its neighbours&#x27; regions and their firmware, because somebody dropping a repeater on a map is adding a repeater to this network, not choosing a firmware strategy.</p>
-<h3 id="place-many-placements-list-dict-gt-list-node"><code>place_many(placements: list[dict]) -&gt; list[Node]</code><a class="hl" href="#place-many-placements-list-dict-gt-list-node" aria-label="Link to this section">#</a></h3>
+<h3 id="nodes-place-many-placements-list-dict-gt-list-node"><code>Nodes.place_many(placements: list[dict]) -&gt; list[Node]</code><a class="hl" href="#nodes-place-many-placements-list-dict-gt-list-node" aria-label="Link to this section">#</a></h3>
 <p>Put several down, then measure the links once.</p>
 <p>One warm at the end rather than one per node: nodes.place re-measures the matrix each time, and on a national network that is minutes repeated.</p>
-<h3 id="delete-nodes-node-str-gt-none"><code>delete(*nodes: Node | str) -&gt; None</code><a class="hl" href="#delete-nodes-node-str-gt-none" aria-label="Link to this section">#</a></h3>
+<h3 id="nodes-delete-nodes-node-str-gt-none"><code>Nodes.delete(*nodes: Node | str) -&gt; None</code><a class="hl" href="#nodes-delete-nodes-node-str-gt-none" aria-label="Link to this section">#</a></h3>
 <p>Remove them, in one rebuild.</p>
 <p>All or none: a name that is not there refuses and removes nothing, because half a deletion leaves a scenario nobody described and no way to tell which half survived without asking again.</p>
-<h3 id="keep-nodes-node-str-gt-none"><code>keep(*nodes: Node | str) -&gt; None</code><a class="hl" href="#keep-nodes-node-str-gt-none" aria-label="Link to this section">#</a></h3>
+<h3 id="nodes-keep-nodes-node-str-gt-none"><code>Nodes.keep(*nodes: Node | str) -&gt; None</code><a class="hl" href="#nodes-keep-nodes-node-str-gt-none" aria-label="Link to this section">#</a></h3>
 <p>Delete everything these do not name.</p>
 <p>The complement is worked out at the workbench rather than here, so it cannot be computed against a list that changed in between.</p>
-<h3 id="select-nodes-node-str-add-bool-false-gt-none"><code>select(*nodes: Node | str, add: bool = False) -&gt; None</code><a class="hl" href="#select-nodes-node-str-add-bool-false-gt-none" aria-label="Link to this section">#</a></h3>
-<h3 id="selected-gt-list-str"><code>selected() -&gt; list[str]</code><a class="hl" href="#selected-gt-list-str" aria-label="Link to this section">#</a></h3>
-<h3 id="stats-gt-list-nodestat"><code>stats() -&gt; list[NodeStat]</code><a class="hl" href="#stats-gt-list-nodestat" aria-label="Link to this section">#</a></h3>
+<h3 id="nodes-select-nodes-node-str-add-bool-false-gt-none"><code>Nodes.select(*nodes: Node | str, add: bool = False) -&gt; None</code><a class="hl" href="#nodes-select-nodes-node-str-add-bool-false-gt-none" aria-label="Link to this section">#</a></h3>
+<h3 id="nodes-selected-gt-list-str"><code>Nodes.selected() -&gt; list[str]</code><a class="hl" href="#nodes-selected-gt-list-str" aria-label="Link to this section">#</a></h3>
+<h3 id="nodes-stats-gt-list-nodestat"><code>Nodes.stats() -&gt; list[NodeStat]</code><a class="hl" href="#nodes-stats-gt-list-nodestat" aria-label="Link to this section">#</a></h3>
 <h2 id="node">Node<a class="hl" href="#node" aria-label="Link to this section">#</a></h2>
 <p>One node. Live: a handle, not a copy - it holds a name and asks.</p>
-<h3 id="property-info-gt-nodeinfo"><code>property info() -&gt; NodeInfo</code><a class="hl" href="#property-info-gt-nodeinfo" aria-label="Link to this section">#</a></h3>
-<h3 id="property-stat-gt-nodestat-none"><code>property stat() -&gt; NodeStat | None</code><a class="hl" href="#property-stat-gt-nodestat-none" aria-label="Link to this section">#</a></h3>
-<h3 id="property-running-gt-bool"><code>property running() -&gt; bool</code><a class="hl" href="#property-running-gt-bool" aria-label="Link to this section">#</a></h3>
-<h3 id="property-state-gt-str"><code>property state() -&gt; str</code><a class="hl" href="#property-state-gt-str" aria-label="Link to this section">#</a></h3>
-<h3 id="start-gt-none"><code>start() -&gt; None</code><a class="hl" href="#start-gt-none" aria-label="Link to this section">#</a></h3>
-<h3 id="stop-gt-none"><code>stop() -&gt; None</code><a class="hl" href="#stop-gt-none" aria-label="Link to this section">#</a></h3>
-<h3 id="delete-gt-none"><code>delete() -&gt; None</code><a class="hl" href="#delete-gt-none" aria-label="Link to this section">#</a></h3>
-<h3 id="output-source-str-x27-serial-x27-lines-int-200-gt-list-str"><code>output(source: str = &#x27;serial&#x27;, lines: int = 200) -&gt; list[str]</code><a class="hl" href="#output-source-str-x27-serial-x27-lines-int-200-gt-list-str" aria-label="Link to this section">#</a></h3>
+<h3 id="property-node-info-gt-nodeinfo"><code>property Node.info() -&gt; NodeInfo</code><a class="hl" href="#property-node-info-gt-nodeinfo" aria-label="Link to this section">#</a></h3>
+<h3 id="property-node-stat-gt-nodestat-none"><code>property Node.stat() -&gt; NodeStat | None</code><a class="hl" href="#property-node-stat-gt-nodestat-none" aria-label="Link to this section">#</a></h3>
+<h3 id="property-node-running-gt-bool"><code>property Node.running() -&gt; bool</code><a class="hl" href="#property-node-running-gt-bool" aria-label="Link to this section">#</a></h3>
+<h3 id="property-node-state-gt-str"><code>property Node.state() -&gt; str</code><a class="hl" href="#property-node-state-gt-str" aria-label="Link to this section">#</a></h3>
+<h3 id="node-start-gt-none"><code>Node.start() -&gt; None</code><a class="hl" href="#node-start-gt-none" aria-label="Link to this section">#</a></h3>
+<h3 id="node-stop-gt-none"><code>Node.stop() -&gt; None</code><a class="hl" href="#node-stop-gt-none" aria-label="Link to this section">#</a></h3>
+<h3 id="node-delete-gt-none"><code>Node.delete() -&gt; None</code><a class="hl" href="#node-delete-gt-none" aria-label="Link to this section">#</a></h3>
+<h3 id="node-output-source-str-x27-serial-x27-lines-int-200-gt-list-str"><code>Node.output(source: str = &#x27;serial&#x27;, lines: int = 200) -&gt; list[str]</code><a class="hl" href="#node-output-source-str-x27-serial-x27-lines-int-200-gt-list-str" aria-label="Link to this section">#</a></h3>
 <p>What this node printed, from one of four voices.</p>
 <p><code>serial</code> is the board&#x27;s own port - a native node&#x27;s standard error; <code>boot</code> is the ROM&#x27;s, on a board whose application talks over USB; <code>emulator</code> is what QEMU or Renode said about running it; <code>radio</code> is the radio model&#x27;s log.</p>
 <p>The lines, not a count of them: a board that has gone quiet is read by looking at what it last said.</p>
-<h3 id="property-device-gt-device"><code>property device() -&gt; Device</code><a class="hl" href="#property-device-gt-device" aria-label="Link to this section">#</a></h3>
+<h3 id="property-node-device-gt-device"><code>property Node.device() -&gt; Device</code><a class="hl" href="#property-node-device-gt-device" aria-label="Link to this section">#</a></h3>
 <p>This node as a device to drive: its screen, buttons and panel. All of it works headless - the display is the framebuffer the controller holds, not a picture of the desktop. Distinct from <code>board</code>, which is the model name this hardware is.</p>
-<h3 id="radio-gt-dict-str-any"><code>radio() -&gt; dict[str, Any]</code><a class="hl" href="#radio-gt-dict-str-any" aria-label="Link to this section">#</a></h3>
+<h3 id="node-radio-gt-dict-str-any"><code>Node.radio() -&gt; dict[str, Any]</code><a class="hl" href="#node-radio-gt-dict-str-any" aria-label="Link to this section">#</a></h3>
 <p>What this node&#x27;s radio is set to - the same thing the workbench shows under Radio. What the model assumes, and, for a node that is running, what it reports back and where the two differ. Left as a dict because a repeater and a companion answer it differently.</p>
-<h3 id="wipe-gt-none"><code>wipe() -&gt; None</code><a class="hl" href="#wipe-gt-none" aria-label="Link to this section">#</a></h3>
+<h3 id="node-wipe-gt-none"><code>Node.wipe() -&gt; None</code><a class="hl" href="#node-wipe-gt-none" aria-label="Link to this section">#</a></h3>
 <p>Put this board back to factory: its flash, its card, its files.</p>
 <p>A board keeps what it was told between runs, as hardware does, so a node configured into a corner stays there until this is called. Refused while it is running, rather than rewriting a flash underneath the emulator holding it.</p>
-<h3 id="card-fitted-bool-none-none-file-str-none-none-wipe-bool-false-gt-cardslot"><code>card(*, fitted: bool | None = None, file: str | None = None, wipe: bool = False) -&gt; CardSlot</code><a class="hl" href="#card-fitted-bool-none-none-file-str-none-none-wipe-bool-false-gt-cardslot" aria-label="Link to this section">#</a></h3>
+<h3 id="node-card-fitted-bool-none-none-file-str-none-none-wipe-bool-false-gt-cardslot"><code>Node.card(*, fitted: bool | None = None, file: str | None = None, wipe: bool = False) -&gt; CardSlot</code><a class="hl" href="#node-card-fitted-bool-none-none-file-str-none-none-wipe-bool-false-gt-cardslot" aria-label="Link to this section">#</a></h3>
 <p>What is in this node&#x27;s card slot, and changing it.</p>
 <p>A slot is not a fitted card: the board says the slot exists, this says whether it is filled. Two of the same handheld in one network, one with storage and one without, is an ordinary thing to want.</p>
 <p><code>file</code> hands the node a card of your own - shared between runs, or prepared in advance; an empty string returns it to its own, named after it and kept beside its flash. <code>wipe</code> erases it, which is what reformatting one is, and is refused while the node is running.</p>
 <p>A firmware marked as needing a card fills the slot whatever this says, because a build that keeps its settings there boots into nothing without one.</p>
-<h3 id="output-window-source-str-x27-serial-x27-gt-none"><code>output_window(source: str = &#x27;serial&#x27;) -&gt; None</code><a class="hl" href="#output-window-source-str-x27-serial-x27-gt-none" aria-label="Link to this section">#</a></h3>
+<h3 id="node-output-window-source-str-x27-serial-x27-gt-none"><code>Node.output_window(source: str = &#x27;serial&#x27;) -&gt; None</code><a class="hl" href="#node-output-window-source-str-x27-serial-x27-gt-none" aria-label="Link to this section">#</a></h3>
 <p>Open one of this node&#x27;s logs in a window of its own.</p>
 <p>A tab is one pane. What people do while a board is misbehaving is watch its screen and two of its logs together - what the board printed beside what the emulator said about running it - and that needs windows.</p>
-<h3 id="move-lat-float-lon-float-gt-none"><code>move(lat: float, lon: float) -&gt; None</code><a class="hl" href="#move-lat-float-lon-float-gt-none" aria-label="Link to this section">#</a></h3>
+<h3 id="node-move-lat-float-lon-float-gt-none"><code>Node.move(lat: float, lon: float) -&gt; None</code><a class="hl" href="#node-move-lat-float-lon-float-gt-none" aria-label="Link to this section">#</a></h3>
 <p>Put it somewhere else. The physics moves with it: cached losses for this node are forgotten.</p>
-<h3 id="set-regions-regions-str-gt-none"><code>set_regions(*regions: str) -&gt; None</code><a class="hl" href="#set-regions-regions-str-gt-none" aria-label="Link to this section">#</a></h3>
-<h3 id="set-firmware-build-build-str-apply-bool-true-gt-none"><code>set_firmware(build: Build | str, apply: bool = True) -&gt; None</code><a class="hl" href="#set-firmware-build-build-str-apply-bool-true-gt-none" aria-label="Link to this section">#</a></h3>
+<h3 id="node-set-regions-regions-str-gt-none"><code>Node.set_regions(*regions: str) -&gt; None</code><a class="hl" href="#node-set-regions-regions-str-gt-none" aria-label="Link to this section">#</a></h3>
+<h3 id="node-set-firmware-build-build-str-apply-bool-true-gt-none"><code>Node.set_firmware(build: Build | str, apply: bool = True) -&gt; None</code><a class="hl" href="#node-set-firmware-build-build-str-apply-bool-true-gt-none" aria-label="Link to this section">#</a></h3>
 <p>Change what it runs.</p>
 <p>Applied by default, which means stop, provision, start: firmware is chosen when a node launches, so recording it and leaving the node on its old build is the control somebody presses twice and then distrusts. Pass apply=False to record it for the next start instead - and know that is what you have done.</p>
-<h3 id="property-build-gt-build-none"><code>property build() -&gt; Build | None</code><a class="hl" href="#property-build-gt-build-none" aria-label="Link to this section">#</a></h3>
+<h3 id="property-node-build-gt-build-none"><code>property Node.build() -&gt; Build | None</code><a class="hl" href="#property-node-build-gt-build-none" aria-label="Link to this section">#</a></h3>
 <p>The build this node runs, or None if it is pinned to nothing.</p>
 <p>The whole row rather than the version string, because deleting a build or comparing two needs its path and its board, and reassembling those from a version is the kind of guesswork that deletes the wrong file.</p>
-<h3 id="property-firmware-gt-str"><code>property firmware() -&gt; str</code><a class="hl" href="#property-firmware-gt-str" aria-label="Link to this section">#</a></h3>
-<h3 id="firmware-build-build-str-gt-none"><code>firmware(build: Build | str) -&gt; None</code><a class="hl" href="#firmware-build-build-str-gt-none" aria-label="Link to this section">#</a></h3>
-<h3 id="property-board-gt-str"><code>property board() -&gt; str</code><a class="hl" href="#property-board-gt-str" aria-label="Link to this section">#</a></h3>
+<h3 id="property-node-firmware-gt-str"><code>property Node.firmware() -&gt; str</code><a class="hl" href="#property-node-firmware-gt-str" aria-label="Link to this section">#</a></h3>
+<h3 id="node-firmware-build-build-str-gt-none"><code>Node.firmware(build: Build | str) -&gt; None</code><a class="hl" href="#node-firmware-build-build-str-gt-none" aria-label="Link to this section">#</a></h3>
+<h3 id="property-node-board-gt-str"><code>property Node.board() -&gt; str</code><a class="hl" href="#property-node-board-gt-str" aria-label="Link to this section">#</a></h3>
 <p>What this node is, by board profile name.</p>
 <p>From the network rather than from the statistics: a stopped node has hardware just as surely as a running one.</p>
-<h3 id="board-name-board-str-gt-none"><code>board(name: Board | str) -&gt; None</code><a class="hl" href="#board-name-board-str-gt-none" aria-label="Link to this section">#</a></h3>
+<h3 id="node-board-name-board-str-gt-none"><code>Node.board(name: Board | str) -&gt; None</code><a class="hl" href="#node-board-name-board-str-gt-none" aria-label="Link to this section">#</a></h3>
 <p>What hardware this node is.</p>
 <p>A change to the physics rather than a label, so it rebuilds and re-warms - and it clears a firmware pin made for a different board, because that image cannot run on this one and a pin nobody can honour reads as a configured node right up until it refuses to start.</p>
-<h3 id="set-true-rf-on-bool-true-gt-none"><code>set_true_rf(on: bool = True) -&gt; None</code><a class="hl" href="#set-true-rf-on-bool-true-gt-none" aria-label="Link to this section">#</a></h3>
+<h3 id="node-set-true-rf-on-bool-true-gt-none"><code>Node.set_true_rf(on: bool = True) -&gt; None</code><a class="hl" href="#node-set-true-rf-on-bool-true-gt-none" aria-label="Link to this section">#</a></h3>
 <p>Take waveform verdicts whatever the run&#x27;s mode - the hybrid flag, for measuring one node honestly inside a cheap run.</p>
-<h3 id="inject-gt-none"><code>inject() -&gt; None</code><a class="hl" href="#inject-gt-none" aria-label="Link to this section">#</a></h3>
+<h3 id="node-inject-gt-none"><code>Node.inject() -&gt; None</code><a class="hl" href="#node-inject-gt-none" aria-label="Link to this section">#</a></h3>
 <p>Originate a packet without firmware.</p>
 <p>It exercises the radio model and the channel; what it does not exercise is relaying, which is a firmware behaviour and needs a firmware.</p>
-<h3 id="provisioning-gt-list-str"><code>provisioning() -&gt; list[str]</code><a class="hl" href="#provisioning-gt-list-str" aria-label="Link to this section">#</a></h3>
+<h3 id="node-provisioning-gt-list-str"><code>Node.provisioning() -&gt; list[str]</code><a class="hl" href="#node-provisioning-gt-list-str" aria-label="Link to this section">#</a></h3>
 <p>What this node is told at boot, in the console&#x27;s own words.</p>
-<h3 id="serve-over-transport-transport-tcp-gt-str"><code>serve(over: Transport = Transport.TCP) -&gt; str</code><a class="hl" href="#serve-over-transport-transport-tcp-gt-str" aria-label="Link to this section">#</a></h3>
+<h3 id="node-serve-over-transport-transport-tcp-gt-str"><code>Node.serve(over: Transport = Transport.TCP) -&gt; str</code><a class="hl" href="#node-serve-over-transport-transport-tcp-gt-str" aria-label="Link to this section">#</a></h3>
 <p>Hand this companion to a real client, and say where to point it.</p>
-<h3 id="unserve-gt-none"><code>unserve() -&gt; None</code><a class="hl" href="#unserve-gt-none" aria-label="Link to this section">#</a></h3>
-<h3 id="property-console-gt-console"><code>property console() -&gt; Console</code><a class="hl" href="#property-console-gt-console" aria-label="Link to this section">#</a></h3>
-<h3 id="wait-running-timeout-timedelta-firmware-wait-gt-none"><code>wait_running(timeout: timedelta = FIRMWARE_WAIT) -&gt; None</code><a class="hl" href="#wait-running-timeout-timedelta-firmware-wait-gt-none" aria-label="Link to this section">#</a></h3>
+<h3 id="node-unserve-gt-none"><code>Node.unserve() -&gt; None</code><a class="hl" href="#node-unserve-gt-none" aria-label="Link to this section">#</a></h3>
+<h3 id="property-node-console-gt-console"><code>property Node.console() -&gt; Console</code><a class="hl" href="#property-node-console-gt-console" aria-label="Link to this section">#</a></h3>
+<h3 id="node-wait-running-timeout-timedelta-firmware-wait-gt-none"><code>Node.wait_running(timeout: timedelta = FIRMWARE_WAIT) -&gt; None</code><a class="hl" href="#node-wait-running-timeout-timedelta-firmware-wait-gt-none" aria-label="Link to this section">#</a></h3>
 <p>Wait for its firmware process to be up.</p>
 <p><code>timeout</code> is wall clock - how long you are prepared to sit here - not simulated time. Starting a process is real work on the real machine.</p>
 <h2 id="sim">Sim<a class="hl" href="#sim" aria-label="Link to this section">#</a></h2>
 <p>The clock, and the run. Live.</p>
-<h3 id="state-gt-simstate"><code>state() -&gt; SimState</code><a class="hl" href="#state-gt-simstate" aria-label="Link to this section">#</a></h3>
-<h3 id="property-playing-gt-bool"><code>property playing() -&gt; bool</code><a class="hl" href="#property-playing-gt-bool" aria-label="Link to this section">#</a></h3>
-<h3 id="property-now-ms-gt-int"><code>property now_ms() -&gt; int</code><a class="hl" href="#property-now-ms-gt-int" aria-label="Link to this section">#</a></h3>
-<h3 id="start-firmware-wait-timedelta-firmware-wait-wait-timedelta-job-wait-gt-none"><code>start(firmware_wait: timedelta = FIRMWARE_WAIT, wait: timedelta = JOB_WAIT) -&gt; None</code><a class="hl" href="#start-firmware-wait-timedelta-firmware-wait-wait-timedelta-job-wait-gt-none" aria-label="Link to this section">#</a></h3>
+<h3 id="sim-state-gt-simstate"><code>Sim.state() -&gt; SimState</code><a class="hl" href="#sim-state-gt-simstate" aria-label="Link to this section">#</a></h3>
+<h3 id="property-sim-playing-gt-bool"><code>property Sim.playing() -&gt; bool</code><a class="hl" href="#property-sim-playing-gt-bool" aria-label="Link to this section">#</a></h3>
+<h3 id="property-sim-now-ms-gt-int"><code>property Sim.now_ms() -&gt; int</code><a class="hl" href="#property-sim-now-ms-gt-int" aria-label="Link to this section">#</a></h3>
+<h3 id="sim-start-firmware-wait-timedelta-firmware-wait-wait-timedelta-job-wait-gt-none"><code>Sim.start(firmware_wait: timedelta = FIRMWARE_WAIT, wait: timedelta = JOB_WAIT) -&gt; None</code><a class="hl" href="#sim-start-firmware-wait-timedelta-firmware-wait-wait-timedelta-job-wait-gt-none" aria-label="Link to this section">#</a></h3>
 <p>Bring the run up: wait out the warm, start every node, and play.</p>
 <p>Deliberately not one call to <code>sim.start</code>. That verb is the play button&#x27;s own handler and answers four ways - it *pauses* if already playing, declines while links are being measured, or starts firmware and does not play - so a script pressing it once gets whichever of those the moment happens to be in.</p>
 <p>Worse, it only starts firmware when <strong>no</strong> node is running. Pin a build onto two nodes of a fifty-eight node fixture and it considers the mesh started, plays with fifty-six of them down, and says nothing.</p>
 <p>So this asks for the three things it actually wants, in order, and checks each one.</p>
-<h3 id="play-gt-none"><code>play() -&gt; None</code><a class="hl" href="#play-gt-none" aria-label="Link to this section">#</a></h3>
-<h3 id="pause-gt-none"><code>pause() -&gt; None</code><a class="hl" href="#pause-gt-none" aria-label="Link to this section">#</a></h3>
-<h3 id="step-gt-none"><code>step() -&gt; None</code><a class="hl" href="#step-gt-none" aria-label="Link to this section">#</a></h3>
-<h3 id="reset-gt-none"><code>reset() -&gt; None</code><a class="hl" href="#reset-gt-none" aria-label="Link to this section">#</a></h3>
-<h3 id="settle-steps-int-60-gt-none"><code>settle(steps: int = 60) -&gt; None</code><a class="hl" href="#settle-steps-int-60-gt-none" aria-label="Link to this section">#</a></h3>
+<h3 id="sim-play-gt-none"><code>Sim.play() -&gt; None</code><a class="hl" href="#sim-play-gt-none" aria-label="Link to this section">#</a></h3>
+<h3 id="sim-pause-gt-none"><code>Sim.pause() -&gt; None</code><a class="hl" href="#sim-pause-gt-none" aria-label="Link to this section">#</a></h3>
+<h3 id="sim-step-gt-none"><code>Sim.step() -&gt; None</code><a class="hl" href="#sim-step-gt-none" aria-label="Link to this section">#</a></h3>
+<h3 id="sim-reset-gt-none"><code>Sim.reset() -&gt; None</code><a class="hl" href="#sim-reset-gt-none" aria-label="Link to this section">#</a></h3>
+<h3 id="sim-settle-steps-int-60-gt-none"><code>Sim.settle(steps: int = 60) -&gt; None</code><a class="hl" href="#sim-settle-steps-int-60-gt-none" aria-label="Link to this section">#</a></h3>
 <p>Step a paused run, which is how a command gets the time it needs to be answered without starting the clock.</p>
-<h3 id="property-seed-gt-int"><code>property seed() -&gt; int</code><a class="hl" href="#property-seed-gt-int" aria-label="Link to this section">#</a></h3>
-<h3 id="seed-value-int-gt-none"><code>seed(value: int) -&gt; None</code><a class="hl" href="#seed-value-int-gt-none" aria-label="Link to this section">#</a></h3>
+<h3 id="property-sim-seed-gt-int"><code>property Sim.seed() -&gt; int</code><a class="hl" href="#property-sim-seed-gt-int" aria-label="Link to this section">#</a></h3>
+<h3 id="sim-seed-value-int-gt-none"><code>Sim.seed(value: int) -&gt; None</code><a class="hl" href="#sim-seed-value-int-gt-none" aria-label="Link to this section">#</a></h3>
 <p>Fix the run. Same seed, same scenario, same result - which is what makes a *changed* result mean something.</p>
-<h3 id="property-step-ms-gt-int"><code>property step_ms() -&gt; int</code><a class="hl" href="#property-step-ms-gt-int" aria-label="Link to this section">#</a></h3>
-<h3 id="step-ms-value-int-gt-none"><code>step_ms(value: int) -&gt; None</code><a class="hl" href="#step-ms-value-int-gt-none" aria-label="Link to this section">#</a></h3>
-<h3 id="set-real-firmware-on-bool-true-gt-none"><code>set_real_firmware(on: bool = True) -&gt; None</code><a class="hl" href="#set-real-firmware-on-bool-true-gt-none" aria-label="Link to this section">#</a></h3>
-<h3 id="run-simulated-timedelta-wait-timedelta-run-wait-gt-none"><code>run(simulated: timedelta, wait: timedelta = RUN_WAIT) -&gt; None</code><a class="hl" href="#run-simulated-timedelta-wait-timedelta-run-wait-gt-none" aria-label="Link to this section">#</a></h3>
+<h3 id="property-sim-step-ms-gt-int"><code>property Sim.step_ms() -&gt; int</code><a class="hl" href="#property-sim-step-ms-gt-int" aria-label="Link to this section">#</a></h3>
+<h3 id="sim-step-ms-value-int-gt-none"><code>Sim.step_ms(value: int) -&gt; None</code><a class="hl" href="#sim-step-ms-value-int-gt-none" aria-label="Link to this section">#</a></h3>
+<h3 id="sim-set-real-firmware-on-bool-true-gt-none"><code>Sim.set_real_firmware(on: bool = True) -&gt; None</code><a class="hl" href="#sim-set-real-firmware-on-bool-true-gt-none" aria-label="Link to this section">#</a></h3>
+<h3 id="sim-run-simulated-timedelta-wait-timedelta-run-wait-gt-none"><code>Sim.run(simulated: timedelta, wait: timedelta = RUN_WAIT) -&gt; None</code><a class="hl" href="#sim-run-simulated-timedelta-wait-timedelta-run-wait-gt-none" aria-label="Link to this section">#</a></h3>
 <p>Advance the mesh&#x27;s own clock by this much, and wait for it.</p>
 <p>Two clocks, one call, and they are not the same one:</p>
 <ul><li><code>simulated</code> is the mesh&#x27;s. <code>timedelta(minutes=5)</code> is five minutes of its time.</li><li><code>wait</code> is yours: how long you are prepared to sit here before giving up. On 155 emulated nodes five simulated minutes is a great deal more than five of yours, which is why it is separate and generous.</li></ul>
-<h3 id="wait-stopped-timeout-timedelta-run-wait-gt-none"><code>wait_stopped(timeout: timedelta = RUN_WAIT) -&gt; None</code><a class="hl" href="#wait-stopped-timeout-timedelta-run-wait-gt-none" aria-label="Link to this section">#</a></h3>
+<h3 id="sim-wait-stopped-timeout-timedelta-run-wait-gt-none"><code>Sim.wait_stopped(timeout: timedelta = RUN_WAIT) -&gt; None</code><a class="hl" href="#sim-wait-stopped-timeout-timedelta-run-wait-gt-none" aria-label="Link to this section">#</a></h3>
 <p>Wait for a run to end. <code>timeout</code> is wall clock.</p>
-<h3 id="wait-until-at-timedelta-timeout-timedelta-run-wait-gt-none"><code>wait_until(at: timedelta, timeout: timedelta = RUN_WAIT) -&gt; None</code><a class="hl" href="#wait-until-at-timedelta-timeout-timedelta-run-wait-gt-none" aria-label="Link to this section">#</a></h3>
+<h3 id="sim-wait-until-at-timedelta-timeout-timedelta-run-wait-gt-none"><code>Sim.wait_until(at: timedelta, timeout: timedelta = RUN_WAIT) -&gt; None</code><a class="hl" href="#sim-wait-until-at-timedelta-timeout-timedelta-run-wait-gt-none" aria-label="Link to this section">#</a></h3>
 <p>Wait for the mesh&#x27;s clock to reach a moment.</p>
 <p><code>at</code> is simulated time; <code>timeout</code> is yours.</p>
 <h2 id="firmware">Firmware<a class="hl" href="#firmware" aria-label="Link to this section">#</a></h2>
 <p>What this machine can run, and what it is running. Live.</p>
-<h3 id="library-gt-list-build"><code>library() -&gt; list[Build]</code><a class="hl" href="#library-gt-list-build" aria-label="Link to this section">#</a></h3>
-<h3 id="on-disk-gt-list-build"><code>on_disk() -&gt; list[Build]</code><a class="hl" href="#on-disk-gt-list-build" aria-label="Link to this section">#</a></h3>
+<h3 id="firmware-library-gt-list-build"><code>Firmware.library() -&gt; list[Build]</code><a class="hl" href="#firmware-library-gt-list-build" aria-label="Link to this section">#</a></h3>
+<h3 id="firmware-on-disk-gt-list-build"><code>Firmware.on_disk() -&gt; list[Build]</code><a class="hl" href="#firmware-on-disk-gt-list-build" aria-label="Link to this section">#</a></h3>
 <p>Only the ones this machine holds, which is the only thing that decides what a node can run. A build that failed to download and one in daily use look identical from anywhere else.</p>
-<h3 id="find-version-str-board-board-str-x27-x27-gt-build"><code>find(version: str, board: Board | str = &#x27;&#x27;) -&gt; Build</code><a class="hl" href="#find-version-str-board-board-str-x27-x27-gt-build" aria-label="Link to this section">#</a></h3>
+<h3 id="firmware-find-version-str-board-board-str-x27-x27-gt-build"><code>Firmware.find(version: str, board: Board | str = &#x27;&#x27;) -&gt; Build</code><a class="hl" href="#firmware-find-version-str-board-board-str-x27-x27-gt-build" aria-label="Link to this section">#</a></h3>
 <p>One build, by version and - where the version alone is ambiguous, which it is for every board image - by board.</p>
-<h3 id="scan-gt-none"><code>scan() -&gt; None</code><a class="hl" href="#scan-gt-none" aria-label="Link to this section">#</a></h3>
+<h3 id="firmware-scan-gt-none"><code>Firmware.scan() -&gt; None</code><a class="hl" href="#firmware-scan-gt-none" aria-label="Link to this section">#</a></h3>
 <p>Ask the catalogue what is published, which is how a build nobody has downloaded becomes offerable.</p>
-<h3 id="download-role-str-version-str-board-board-str-x27-x27-gt-none"><code>download(role: str, version: str, board: Board | str = &#x27;&#x27;) -&gt; None</code><a class="hl" href="#download-role-str-version-str-board-board-str-x27-x27-gt-none" aria-label="Link to this section">#</a></h3>
+<h3 id="firmware-download-role-str-version-str-board-board-str-x27-x27-gt-none"><code>Firmware.download(role: str, version: str, board: Board | str = &#x27;&#x27;) -&gt; None</code><a class="hl" href="#firmware-download-role-str-version-str-board-board-str-x27-x27-gt-none" aria-label="Link to this section">#</a></h3>
 <p>Fetch a published build.</p>
 <p><code>role</code> is a plain string here and a Role everywhere else, deliberately: this one names a published release asset, and the catalogue&#x27;s own spellings are not always the application names the verbs are keyed on.</p>
-<h3 id="import-path-str-role-str-board-str-x27-x27-label-str-x27-x27-gt-build"><code>import_(path: str, role: str, board: str = &#x27;&#x27;, label: str = &#x27;&#x27;) -&gt; Build</code><a class="hl" href="#import-path-str-role-str-board-str-x27-x27-label-str-x27-x27-gt-build" aria-label="Link to this section">#</a></h3>
+<h3 id="firmware-import-path-str-role-str-board-str-x27-x27-label-str-x27-x27-gt-build"><code>Firmware.import_(path: str, role: str, board: str = &#x27;&#x27;, label: str = &#x27;&#x27;) -&gt; Build</code><a class="hl" href="#firmware-import-path-str-role-str-board-str-x27-x27-label-str-x27-x27-gt-build" aria-label="Link to this section">#</a></h3>
 <p>Take a build from a path - the one way a locally built image gets into the library.</p>
 <p><code>label</code> is what the library will know it by and what a node pins. Left out it is a timestamp, so importing twice gives two builds rather than one that quietly replaced the other - which matters the moment you want to put the new one on a node and delete the old.</p>
-<h3 id="delete-build-build-gt-str"><code>delete(build: Build) -&gt; str</code><a class="hl" href="#delete-build-build-gt-str" aria-label="Link to this section">#</a></h3>
+<h3 id="firmware-delete-build-build-gt-str"><code>Firmware.delete(build: Build) -&gt; str</code><a class="hl" href="#firmware-delete-build-build-gt-str" aria-label="Link to this section">#</a></h3>
 <p>Remove a build from the cache, and say what was removed.</p>
 <p>By path, and the workbench refuses any path outside the firmware cache. A build nodes are still pinned to will go: they keep the pin, which then cannot be honoured and fails at start - so move them onto the replacement first.</p>
-<h3 id="details-build-build-str-board-board-str-x27-x27-role-role-str-x27-x27-gt-builddetails"><code>details(build: Build | str, board: Board | str = &#x27;&#x27;, role: Role | str = &#x27;&#x27;) -&gt; BuildDetails</code><a class="hl" href="#details-build-build-str-board-board-str-x27-x27-role-role-str-x27-x27-gt-builddetails" aria-label="Link to this section">#</a></h3>
+<h3 id="firmware-details-build-build-str-board-board-str-x27-x27-role-role-str-x27-x27-gt-builddetails"><code>Firmware.details(build: Build | str, board: Board | str = &#x27;&#x27;, role: Role | str = &#x27;&#x27;) -&gt; BuildDetails</code><a class="hl" href="#firmware-details-build-build-str-board-board-str-x27-x27-role-role-str-x27-x27-gt-builddetails" aria-label="Link to this section">#</a></h3>
 <p>Everything known about one build: where it is, what it is, and what has been decided about it.</p>
 <p>Takes a Build or a bare label. A label alone is refused when it names more than one build - the same image imported for two boards, say - because acting on the wrong one is a rename of somebody else&#x27;s image.</p>
-<h3 id="update-build-build-str-board-board-str-x27-x27-role-role-str-x27-x27-label-str-none-none-new-role-role-str-none-none-new-board-board-str-none-none-coproc-at-reset-bool-none-none-card-required-bool-none-none-notes-str-none-none-gt-builddetails"><code>update(build: Build | str, *, board: Board | str = &#x27;&#x27;, role: Role | str = &#x27;&#x27;, label: str | None = None, new_role: Role | str | None = None, new_board: Board | str | None = None, coproc_at_reset: bool | None = None, card_required: bool | None = None, notes: str | None = None) -&gt; BuildDetails</code><a class="hl" href="#update-build-build-str-board-board-str-x27-x27-role-role-str-x27-x27-label-str-none-none-new-role-role-str-none-none-new-board-board-str-none-none-coproc-at-reset-bool-none-none-card-required-bool-none-none-notes-str-none-none-gt-builddetails" aria-label="Link to this section">#</a></h3>
+<h3 id="firmware-update-build-build-str-board-board-str-x27-x27-role-role-str-x27-x27-label-str-none-none-new-role-role-str-none-none-new-board-board-str-none-none-coproc-at-reset-bool-none-none-card-required-bool-none-none-notes-str-none-none-gt-builddetails"><code>Firmware.update(build: Build | str, *, board: Board | str = &#x27;&#x27;, role: Role | str = &#x27;&#x27;, label: str | None = None, new_role: Role | str | None = None, new_board: Board | str | None = None, coproc_at_reset: bool | None = None, card_required: bool | None = None, notes: str | None = None) -&gt; BuildDetails</code><a class="hl" href="#firmware-update-build-build-str-board-board-str-x27-x27-role-role-str-x27-x27-label-str-none-none-new-role-role-str-none-none-new-board-board-str-none-none-coproc-at-reset-bool-none-none-card-required-bool-none-none-notes-str-none-none-gt-builddetails" aria-label="Link to this section">#</a></h3>
 <p>Rename a build, move it to another board or role, or change how it is run.</p>
 <p>Renaming moves the file, because the name is the identity: a board image is stored as <code>&lt;board&gt;/&lt;role&gt;@&lt;label&gt;.bin</code> and nothing else records what it is. Nodes pinned to the old name are repointed, or they would fail at their next start with &quot;no image in the cache&quot; about a build sitting in the library under its new name.</p>
 <p>Every argument left out is left alone, which is why they default to None rather than to &quot;&quot; or False: &quot;leave this setting&quot; and &quot;turn it off&quot; are different answers.</p>
-<h3 id="window-build-build-str-board-board-str-x27-x27-role-role-str-x27-x27-gt-none"><code>window(build: Build | str, board: Board | str = &#x27;&#x27;, role: Role | str = &#x27;&#x27;) -&gt; None</code><a class="hl" href="#window-build-build-str-board-board-str-x27-x27-role-role-str-x27-x27-gt-none" aria-label="Link to this section">#</a></h3>
+<h3 id="firmware-window-build-build-str-board-board-str-x27-x27-role-role-str-x27-x27-gt-none"><code>Firmware.window(build: Build | str, board: Board | str = &#x27;&#x27;, role: Role | str = &#x27;&#x27;) -&gt; None</code><a class="hl" href="#firmware-window-build-build-str-board-board-str-x27-x27-role-role-str-x27-x27-gt-none" aria-label="Link to this section">#</a></h3>
 <p>Open the build&#x27;s own window - what a click on a library row does.</p>
-<h3 id="build-checkout-str-role-role-str-x27-x27-label-str-x27-x27-wait-timedelta-job-wait-gt-list-build"><code>build(checkout: str, role: Role | str = &#x27;&#x27;, label: str = &#x27;&#x27;, wait: timedelta = JOB_WAIT) -&gt; list[Build]</code><a class="hl" href="#build-checkout-str-role-role-str-x27-x27-label-str-x27-x27-wait-timedelta-job-wait-gt-list-build" aria-label="Link to this section">#</a></h3>
+<h3 id="firmware-build-checkout-str-role-role-str-x27-x27-label-str-x27-x27-wait-timedelta-job-wait-gt-list-build"><code>Firmware.build(checkout: str, role: Role | str = &#x27;&#x27;, label: str = &#x27;&#x27;, wait: timedelta = JOB_WAIT) -&gt; list[Build]</code><a class="hl" href="#firmware-build-checkout-str-role-role-str-x27-x27-label-str-x27-x27-wait-timedelta-job-wait-gt-list-build" aria-label="Link to this section">#</a></h3>
 <p>Compile a MeshCore checkout and put the results in the library.</p>
 <p>Both roles unless one is named, deliberately. A locally built repeater compiled against a stale shim once answered console output with 0x06 where the host expects 0x07: it connected, misbehaved and exited. Two arms of a comparison built at different moments from different trees measure the build process rather than the firmware, so the easy thing here is the thing that builds them together.</p>
 <p>Blocks until it is done - a MeshCore build is a minute or two per role - and returns what the library now holds that was built locally.</p>
-<h3 id="use-what-is-here-gt-dict-role-build"><code>use_what_is_here() -&gt; dict[Role, Build]</code><a class="hl" href="#use-what-is-here-gt-dict-role-build" aria-label="Link to this section">#</a></h3>
+<h3 id="firmware-use-what-is-here-gt-dict-role-build"><code>Firmware.use_what_is_here() -&gt; dict[Role, Build]</code><a class="hl" href="#firmware-use-what-is-here-gt-dict-role-build" aria-label="Link to this section">#</a></h3>
 <p>Pin every role that needs one to the newest build on this machine.</p>
 <p>What a script wants almost every time: this mesh, whatever this machine holds, rather than a version typed into the script that goes stale. A run refuses to start until every role is answered, so the alternative is the same loop written out in each one.</p>
 <p>Refuses by name when a role has nothing, because &quot;no companion build&quot; is a thing to go and fix rather than a reason to start a mesh with a silent hole in it.</p>
-<h3 id="use-for-role-role-role-build-build-str-gt-none"><code>use_for_role(role: Role, build: Build | str) -&gt; None</code><a class="hl" href="#use-for-role-role-role-build-build-str-gt-none" aria-label="Link to this section">#</a></h3>
-<h3 id="start-gt-none"><code>start() -&gt; None</code><a class="hl" href="#start-gt-none" aria-label="Link to this section">#</a></h3>
+<h3 id="firmware-use-for-role-role-role-build-build-str-gt-none"><code>Firmware.use_for_role(role: Role, build: Build | str) -&gt; None</code><a class="hl" href="#firmware-use-for-role-role-role-build-build-str-gt-none" aria-label="Link to this section">#</a></h3>
+<h3 id="firmware-start-gt-none"><code>Firmware.start() -&gt; None</code><a class="hl" href="#firmware-start-gt-none" aria-label="Link to this section">#</a></h3>
 <p>Bring up firmware on every node.</p>
 <p>Asynchronous, and always has been: it answers with what it has begun, not with what is up. It was synchronous once, and on 155 nodes that froze the window and the socket together for as long as it was left - which read as a crash and was reported as one.</p>
-<h3 id="state-gt-dict-str-any"><code>state() -&gt; dict[str, Any]</code><a class="hl" href="#state-gt-dict-str-any" aria-label="Link to this section">#</a></h3>
-<h3 id="needed-gt-list-dict-str-any"><code>needed() -&gt; list[dict[str, Any]]</code><a class="hl" href="#needed-gt-list-dict-str-any" aria-label="Link to this section">#</a></h3>
+<h3 id="firmware-state-gt-dict-str-any"><code>Firmware.state() -&gt; dict[str, Any]</code><a class="hl" href="#firmware-state-gt-dict-str-any" aria-label="Link to this section">#</a></h3>
+<h3 id="firmware-needed-gt-list-dict-str-any"><code>Firmware.needed() -&gt; list[dict[str, Any]]</code><a class="hl" href="#firmware-needed-gt-list-dict-str-any" aria-label="Link to this section">#</a></h3>
 <p>The roles with nodes and no build pinned, with what could be. A run refuses to start until every one is answered.</p>
-<h3 id="wait-started-timeout-timedelta-firmware-wait-gt-none"><code>wait_started(timeout: timedelta = FIRMWARE_WAIT) -&gt; None</code><a class="hl" href="#wait-started-timeout-timedelta-firmware-wait-gt-none" aria-label="Link to this section">#</a></h3>
+<h3 id="firmware-wait-started-timeout-timedelta-firmware-wait-gt-none"><code>Firmware.wait_started(timeout: timedelta = FIRMWARE_WAIT) -&gt; None</code><a class="hl" href="#firmware-wait-started-timeout-timedelta-firmware-wait-gt-none" aria-label="Link to this section">#</a></h3>
 <p>Wait for every node&#x27;s firmware to be up. <code>timeout</code> is wall clock.</p>
 <p><code>nodes</code> here is the nodes that *run* firmware, which is not every node - an SDR observer and an emitter never boot one. It used to be every node, so a fixture holding either reported &quot;56 of 58&quot; until the timeout and there was no way to see which two.</p>
 <p>Which is why the wait names the stragglers rather than counting them. Ten minutes of &quot;56 of 58&quot; tells you nothing; two node names tell you whether a build is missing or a board is wedged.</p>
@@ -480,120 +480,120 @@ h2:hover .hl, h3:hover .hl, h2 .hl:focus-visible, h3 .hl:focus-visible { opacity
 <p>Two consoles, not one, and which you get depends on what the node is.</p>
 <p>A repeater has a text CLI and reads typed bytes. A companion does not: it speaks the framed companion protocol, and its command line is meshcore-cli&#x27;s vocabulary - <code>advert</code>, <code>public &lt;msg&gt;</code>, <code>chan &lt;n&gt; &lt;msg&gt;</code>. Typing text at a companion goes nowhere, is echoed locally, and reads exactly like a command that ran and did nothing.</p>
 <p>So this picks the right one from the node&#x27;s kind. A caller should not have to know, and every caller that did know got it wrong at least once.</p>
-<h3 id="send-line-str-gt-none"><code>send(line: str) -&gt; None</code><a class="hl" href="#send-line-str-gt-none" aria-label="Link to this section">#</a></h3>
-<h3 id="read-gt-list-str"><code>read() -&gt; list[str]</code><a class="hl" href="#read-gt-list-str" aria-label="Link to this section">#</a></h3>
+<h3 id="console-send-line-str-gt-none"><code>Console.send(line: str) -&gt; None</code><a class="hl" href="#console-send-line-str-gt-none" aria-label="Link to this section">#</a></h3>
+<h3 id="console-read-gt-list-str"><code>Console.read() -&gt; list[str]</code><a class="hl" href="#console-read-gt-list-str" aria-label="Link to this section">#</a></h3>
 <p>The scrollback, newest last.</p>
 <p>The lines come back under &quot;tail&quot; and &quot;lines&quot; is how many there are in total - so reading &quot;lines&quot; hands you an integer where you asked for text, and every use of it fails somewhere further along. The tail is the last 200; a node up for an hour has thousands and nobody reads the first one.</p>
-<h3 id="ask-line-str-steps-int-100-gt-str"><code>ask(line: str, steps: int = 100) -&gt; str</code><a class="hl" href="#ask-line-str-steps-int-100-gt-str" aria-label="Link to this section">#</a></h3>
+<h3 id="console-ask-line-str-steps-int-100-gt-str"><code>Console.ask(line: str, steps: int = 100) -&gt; str</code><a class="hl" href="#console-ask-line-str-steps-int-100-gt-str" aria-label="Link to this section">#</a></h3>
 <p>Send a line and wait for the node to answer it.</p>
 <p>The important one. A node reads its serial input on its next loop and its loop only runs when the engine steps, so reading straight after sending reads the moment *before* the command was sent - every script that has done this by hand got an empty reply and concluded the console was broken. This gives the mesh its own time first.</p>
 <h2 id="events">Events<a class="hl" href="#events" aria-label="Link to this section">#</a></h2>
 <p>What the engine has done. Live.</p>
-<h3 id="recent-limit-int-50-gt-list-event"><code>recent(limit: int = 50) -&gt; list[Event]</code><a class="hl" href="#recent-limit-int-50-gt-list-event" aria-label="Link to this section">#</a></h3>
+<h3 id="events-recent-limit-int-50-gt-list-event"><code>Events.recent(limit: int = 50) -&gt; list[Event]</code><a class="hl" href="#events-recent-limit-int-50-gt-list-event" aria-label="Link to this section">#</a></h3>
 <p>The tail.</p>
 <p>A tail, and only a tail: the store keeps a bounded one because a long run has millions. A script that needs all of them dumps per round - reading only the tail after a busy flood samples the most congested moment of it, which is a mistake already made once here.</p>
-<h3 id="total-gt-int"><code>total() -&gt; int</code><a class="hl" href="#total-gt-int" aria-label="Link to this section">#</a></h3>
-<h3 id="dump-path-str-gt-int"><code>dump(path: str) -&gt; int</code><a class="hl" href="#dump-path-str-gt-int" aria-label="Link to this section">#</a></h3>
+<h3 id="events-total-gt-int"><code>Events.total() -&gt; int</code><a class="hl" href="#events-total-gt-int" aria-label="Link to this section">#</a></h3>
+<h3 id="events-dump-path-str-gt-int"><code>Events.dump(path: str) -&gt; int</code><a class="hl" href="#events-dump-path-str-gt-int" aria-label="Link to this section">#</a></h3>
 <p>Write every event held to a file, one JSON object per line.</p>
-<h3 id="wait-kind-str-x27-x27-from-str-x27-x27-to-str-x27-x27-timeout-timedelta-event-wait-gt-event"><code>wait(kind: str = &#x27;&#x27;, from_: str = &#x27;&#x27;, to: str = &#x27;&#x27;, timeout: timedelta = EVENT_WAIT) -&gt; Event</code><a class="hl" href="#wait-kind-str-x27-x27-from-str-x27-x27-to-str-x27-x27-timeout-timedelta-event-wait-gt-event" aria-label="Link to this section">#</a></h3>
+<h3 id="events-wait-kind-str-x27-x27-from-str-x27-x27-to-str-x27-x27-timeout-timedelta-event-wait-gt-event"><code>Events.wait(kind: str = &#x27;&#x27;, from_: str = &#x27;&#x27;, to: str = &#x27;&#x27;, timeout: timedelta = EVENT_WAIT) -&gt; Event</code><a class="hl" href="#events-wait-kind-str-x27-x27-from-str-x27-x27-to-str-x27-x27-timeout-timedelta-event-wait-gt-event" aria-label="Link to this section">#</a></h3>
 <p>Wait for an event to match, and return it.</p>
 <h2 id="boundary">Boundary<a class="hl" href="#boundary" aria-label="Link to this section">#</a></h2>
 <p>The study area, however you have it. Live.</p>
-<h3 id="use-area-str-path-name-str-x27-x27-gt-list-str"><code>use(area: str | Path, name: str = &#x27;&#x27;) -&gt; list[str]</code><a class="hl" href="#use-area-str-path-name-str-x27-x27-gt-list-str" aria-label="Link to this section">#</a></h3>
+<h3 id="boundary-use-area-str-path-name-str-x27-x27-gt-list-str"><code>Boundary.use(area: str | Path, name: str = &#x27;&#x27;) -&gt; list[str]</code><a class="hl" href="#boundary-use-area-str-path-name-str-x27-x27-gt-list-str" aria-label="Link to this section">#</a></h3>
 <p>Take a study area from a place name or from GeoJSON.</p>
 <p>The one to call. A path to a .geojson file is loaded; anything else is searched for by name and the best match accepted. Both end with the area in the study, which is the only thing the caller wanted to say.</p>
 <p><code>name</code> renames a single loaded polygon, so a file called <code>export(3).geojson</code> can still join the study as &quot;Tay catchment&quot;.</p>
-<h3 id="search-query-str-gt-list-str"><code>search(query: str) -&gt; list[str]</code><a class="hl" href="#search-query-str-gt-list-str" aria-label="Link to this section">#</a></h3>
+<h3 id="boundary-search-query-str-gt-list-str"><code>Boundary.search(query: str) -&gt; list[str]</code><a class="hl" href="#boundary-search-query-str-gt-list-str" aria-label="Link to this section">#</a></h3>
 <p>Places matching a name, best first. Needs the network.</p>
 <p>Returns names rather than geometry: the geometry stays at the workbench, and the name is what accept takes.</p>
-<h3 id="accept-name-str-gt-str"><code>accept(name: str) -&gt; str</code><a class="hl" href="#accept-name-str-gt-str" aria-label="Link to this section">#</a></h3>
+<h3 id="boundary-accept-name-str-gt-str"><code>Boundary.accept(name: str) -&gt; str</code><a class="hl" href="#boundary-accept-name-str-gt-str" aria-label="Link to this section">#</a></h3>
 <p>Take one of the search results into the study area.</p>
 <p>Areas union rather than replace: a study is often two council areas rather than one.</p>
-<h3 id="load-source-str-path-dict-name-str-x27-x27-gt-list-str"><code>load(source: str | Path | dict, name: str = &#x27;&#x27;) -&gt; list[str]</code><a class="hl" href="#load-source-str-path-dict-name-str-x27-x27-gt-list-str" aria-label="Link to this section">#</a></h3>
+<h3 id="boundary-load-source-str-path-dict-name-str-x27-x27-gt-list-str"><code>Boundary.load(source: str | Path | dict, name: str = &#x27;&#x27;) -&gt; list[str]</code><a class="hl" href="#boundary-load-source-str-path-dict-name-str-x27-x27-gt-list-str" aria-label="Link to this section">#</a></h3>
 <p>Take a study area from GeoJSON: a path, a document, or a dict.</p>
 <p>A Polygon, a MultiPolygon, a Feature or a FeatureCollection. Each polygon becomes an area named from its <code>name</code> property, or from <code>name</code>, or from the file.</p>
 <p>The one way to study an area nothing has an administrative name for - a catchment, a valley, the bit north of the river - and the only one that works with no network at all.</p>
-<h3 id="list-gt-list-str"><code>list() -&gt; list[str]</code><a class="hl" href="#list-gt-list-str" aria-label="Link to this section">#</a></h3>
+<h3 id="boundary-list-gt-list-str"><code>Boundary.list() -&gt; list[str]</code><a class="hl" href="#boundary-list-gt-list-str" aria-label="Link to this section">#</a></h3>
 <p>What the study area is made of.</p>
-<h3 id="remove-name-str-gt-none"><code>remove(name: str) -&gt; None</code><a class="hl" href="#remove-name-str-gt-none" aria-label="Link to this section">#</a></h3>
+<h3 id="boundary-remove-name-str-gt-none"><code>Boundary.remove(name: str) -&gt; None</code><a class="hl" href="#boundary-remove-name-str-gt-none" aria-label="Link to this section">#</a></h3>
 <p>Take one area back out.</p>
 <p>Changes what is measured, never what is loaded: the nodes stay until something prunes them.</p>
-<h3 id="prune-margin-km-float-none-none-gt-int"><code>prune(margin_km: float | None = None) -&gt; int</code><a class="hl" href="#prune-margin-km-float-none-none-gt-int" aria-label="Link to this section">#</a></h3>
+<h3 id="boundary-prune-margin-km-float-none-none-gt-int"><code>Boundary.prune(margin_km: float | None = None) -&gt; int</code><a class="hl" href="#boundary-prune-margin-km-float-none-none-gt-int" aria-label="Link to this section">#</a></h3>
 <p>Delete the nodes outside the study area, and say how many went.</p>
 <p>For a mesh that was imported before the boundary was set. The margin is kept on purpose: a node just outside still interferes with one just inside, and dropping it makes the inside look quieter than it is.</p>
 <h2 id="live">Live<a class="hl" href="#live" aria-label="Link to this section">#</a></h2>
 <p>A live feed, and the deployment it describes. Live in both senses.</p>
-<h3 id="pull-url-str-strategy-strategy-strategy-replace-window-timedelta-default-window-wait-timedelta-job-wait-gt-importpreview"><code>pull(url: str, strategy: Strategy = Strategy.REPLACE, window: timedelta = DEFAULT_WINDOW, wait: timedelta = JOB_WAIT) -&gt; ImportPreview</code><a class="hl" href="#pull-url-str-strategy-strategy-strategy-replace-window-timedelta-default-window-wait-timedelta-job-wait-gt-importpreview" aria-label="Link to this section">#</a></h3>
+<h3 id="live-pull-url-str-strategy-strategy-strategy-replace-window-timedelta-default-window-wait-timedelta-job-wait-gt-importpreview"><code>Live.pull(url: str, strategy: Strategy = Strategy.REPLACE, window: timedelta = DEFAULT_WINDOW, wait: timedelta = JOB_WAIT) -&gt; ImportPreview</code><a class="hl" href="#live-pull-url-str-strategy-strategy-strategy-replace-window-timedelta-default-window-wait-timedelta-job-wait-gt-importpreview" aria-label="Link to this section">#</a></h3>
 <p>Fetch, commit, read the traffic, and apply what it implies.</p>
 <p>The whole chain, in the order that works. <code>window</code> is how far back into the feed&#x27;s history to read - the mesh&#x27;s own past, not your patience; <code>wait</code> is yours.</p>
 <p>Returns what the fetch found. Link measurement is still running when this returns on anything but a small mesh, so follow it with <code>wb.wait_idle()</code> before starting a run.</p>
-<h3 id="set-source-url-str-gt-str"><code>set_source(url: str) -&gt; str</code><a class="hl" href="#set-source-url-str-gt-str" aria-label="Link to this section">#</a></h3>
+<h3 id="live-set-source-url-str-gt-str"><code>Live.set_source(url: str) -&gt; str</code><a class="hl" href="#live-set-source-url-str-gt-str" aria-label="Link to this section">#</a></h3>
 <p>Point at a feed without reading it, and say how it was tidied.</p>
 <p>A method rather than a property, because a property implies something to read back and the session offers no way to ask what its source currently is. One that answered from a value this object happened to remember would be right until anything else set it.</p>
-<h3 id="fetch-url-str-x27-x27-gt-importpreview"><code>fetch(url: str = &#x27;&#x27;) -&gt; ImportPreview</code><a class="hl" href="#fetch-url-str-x27-x27-gt-importpreview" aria-label="Link to this section">#</a></h3>
+<h3 id="live-fetch-url-str-x27-x27-gt-importpreview"><code>Live.fetch(url: str = &#x27;&#x27;) -&gt; ImportPreview</code><a class="hl" href="#live-fetch-url-str-x27-x27-gt-importpreview" aria-label="Link to this section">#</a></h3>
 <p>Read the deployment and say what would change, changing nothing.</p>
-<h3 id="commit-strategy-strategy-strategy-replace-gt-int"><code>commit(strategy: Strategy = Strategy.REPLACE) -&gt; int</code><a class="hl" href="#commit-strategy-strategy-strategy-replace-gt-int" aria-label="Link to this section">#</a></h3>
+<h3 id="live-commit-strategy-strategy-strategy-replace-gt-int"><code>Live.commit(strategy: Strategy = Strategy.REPLACE) -&gt; int</code><a class="hl" href="#live-commit-strategy-strategy-strategy-replace-gt-int" aria-label="Link to this section">#</a></h3>
 <p>Apply the fetched nodes to the scenario.</p>
 <p><code>&quot;replace-all&quot;</code> is what the shipped fixtures were built with; <code>&quot;add&quot;</code> keeps what is already here and skips names that clash.</p>
 <p>Measuring the links afterwards is a job rather than part of this call - 676 nodes is 228,000 terrain paths over real ground - so this returns while that is still running.</p>
-<h3 id="infer-window-timedelta-default-window-wait-timedelta-job-wait-gt-none"><code>infer(window: timedelta = DEFAULT_WINDOW, wait: timedelta = JOB_WAIT) -&gt; None</code><a class="hl" href="#infer-window-timedelta-default-window-wait-timedelta-job-wait-gt-none" aria-label="Link to this section">#</a></h3>
+<h3 id="live-infer-window-timedelta-default-window-wait-timedelta-job-wait-gt-none"><code>Live.infer(window: timedelta = DEFAULT_WINDOW, wait: timedelta = JOB_WAIT) -&gt; None</code><a class="hl" href="#live-infer-window-timedelta-default-window-wait-timedelta-job-wait-gt-none" aria-label="Link to this section">#</a></h3>
 <p>Read the feed&#x27;s recent traffic to work out what each node holds.</p>
 <p>This is the step that decides whether anything relays. A node whose regions are unknown forwards nothing, and nothing says so.</p>
 <p><code>window</code> is the feed&#x27;s own past; <code>wait</code> is how long you will sit here for it. A week of ScotMesh is around 150,000 packets and several minutes of paging.</p>
-<h3 id="apply-regions-gt-int"><code>apply_regions() -&gt; int</code><a class="hl" href="#apply-regions-gt-int" aria-label="Link to this section">#</a></h3>
+<h3 id="live-apply-regions-gt-int"><code>Live.apply_regions() -&gt; int</code><a class="hl" href="#live-apply-regions-gt-int" aria-label="Link to this section">#</a></h3>
 <p>Put the inferred regions onto the nodes, and say how many took one.</p>
 <p>The forgotten step. Everything above can succeed and the mesh still be silent until this runs.</p>
 <h2 id="assertions">Assertions<a class="hl" href="#assertions" aria-label="Link to this section">#</a></h2>
 <p>What has to be true for a run to have passed. Live.</p>
-<h3 id="delivered-at-least-int-within-timedelta-none-none-gt-none"><code>delivered(at_least: int, within: timedelta | None = None) -&gt; None</code><a class="hl" href="#delivered-at-least-int-within-timedelta-none-none-gt-none" aria-label="Link to this section">#</a></h3>
+<h3 id="assertions-delivered-at-least-int-within-timedelta-none-none-gt-none"><code>Assertions.delivered(at_least: int, within: timedelta | None = None) -&gt; None</code><a class="hl" href="#assertions-delivered-at-least-int-within-timedelta-none-none-gt-none" aria-label="Link to this section">#</a></h3>
 <p>At least this many nodes received something.</p>
-<h3 id="sent-node-str-node-x27-x27-at-least-int-0-at-most-int-0-within-timedelta-none-none-gt-none"><code>sent(node: str | Node = &#x27;&#x27;, at_least: int = 0, at_most: int = 0, within: timedelta | None = None) -&gt; None</code><a class="hl" href="#sent-node-str-node-x27-x27-at-least-int-0-at-most-int-0-within-timedelta-none-none-gt-none" aria-label="Link to this section">#</a></h3>
+<h3 id="assertions-sent-node-str-node-x27-x27-at-least-int-0-at-most-int-0-within-timedelta-none-none-gt-none"><code>Assertions.sent(node: str | Node = &#x27;&#x27;, at_least: int = 0, at_most: int = 0, within: timedelta | None = None) -&gt; None</code><a class="hl" href="#assertions-sent-node-str-node-x27-x27-at-least-int-0-at-most-int-0-within-timedelta-none-none-gt-none" aria-label="Link to this section">#</a></h3>
 <p>This node - or the whole mesh - transmitted within these bounds.</p>
 <p>at_most is the interesting one: it is how a relay-suppression change is held to not having made the mesh chattier.</p>
-<h3 id="add-kind-str-node-str-node-x27-x27-at-least-int-0-at-most-int-0-max-pct-float-0-0-within-timedelta-none-none-gt-int"><code>add(kind: str, node: str | Node = &#x27;&#x27;, at_least: int = 0, at_most: int = 0, max_pct: float = 0.0, within: timedelta | None = None) -&gt; int</code><a class="hl" href="#add-kind-str-node-str-node-x27-x27-at-least-int-0-at-most-int-0-max-pct-float-0-0-within-timedelta-none-none-gt-int" aria-label="Link to this section">#</a></h3>
+<h3 id="assertions-add-kind-str-node-str-node-x27-x27-at-least-int-0-at-most-int-0-max-pct-float-0-0-within-timedelta-none-none-gt-int"><code>Assertions.add(kind: str, node: str | Node = &#x27;&#x27;, at_least: int = 0, at_most: int = 0, max_pct: float = 0.0, within: timedelta | None = None) -&gt; int</code><a class="hl" href="#assertions-add-kind-str-node-str-node-x27-x27-at-least-int-0-at-most-int-0-max-pct-float-0-0-within-timedelta-none-none-gt-int" aria-label="Link to this section">#</a></h3>
 <p>The general form, for a kind this package has no name for yet.</p>
-<h3 id="check-gt-report"><code>check() -&gt; Report</code><a class="hl" href="#check-gt-report" aria-label="Link to this section">#</a></h3>
+<h3 id="assertions-check-gt-report"><code>Assertions.check() -&gt; Report</code><a class="hl" href="#assertions-check-gt-report" aria-label="Link to this section">#</a></h3>
 <p>Measure every assertion against the run so far.</p>
 <p>The provenance travels with the verdict, because a delivery figure without what the model assumed is the number this project exists not to publish.</p>
 <h2 id="schedule">Schedule<a class="hl" href="#schedule" aria-label="Link to this section">#</a></h2>
 <p>What the mesh is told to send, and when. Live.</p>
-<h3 id="add-node-str-node-command-str-at-timedelta-none-none-every-timedelta-none-none-gt-int"><code>add(node: str | Node, command: str, at: timedelta | None = None, every: timedelta | None = None) -&gt; int</code><a class="hl" href="#add-node-str-node-command-str-at-timedelta-none-none-every-timedelta-none-none-gt-int" aria-label="Link to this section">#</a></h3>
+<h3 id="schedule-add-node-str-node-command-str-at-timedelta-none-none-every-timedelta-none-none-gt-int"><code>Schedule.add(node: str | Node, command: str, at: timedelta | None = None, every: timedelta | None = None) -&gt; int</code><a class="hl" href="#schedule-add-node-str-node-command-str-at-timedelta-none-none-every-timedelta-none-none-gt-int" aria-label="Link to this section">#</a></h3>
 <p>Have a node send something, once or repeatedly.</p>
 <p><code>at</code> and <code>every</code> are <strong>simulated</strong> time - the mesh&#x27;s own clock, not yours. The verb underneath takes milliseconds; nobody writing a script should have to.</p>
 <p>Repeating traffic has worked all along and nothing said so, which to somebody writing a script is the same as it not existing.</p>
-<h3 id="clear-gt-int"><code>clear() -&gt; int</code><a class="hl" href="#clear-gt-int" aria-label="Link to this section">#</a></h3>
+<h3 id="schedule-clear-gt-int"><code>Schedule.clear() -&gt; int</code><a class="hl" href="#schedule-clear-gt-int" aria-label="Link to this section">#</a></h3>
 <p>Forget all of them.</p>
 <h2 id="device">Device<a class="hl" href="#device" aria-label="Link to this section">#</a></h2>
 <p>One running node&#x27;s board, as a device to drive.</p>
 <p>A handle, not a copy: it holds a name and asks.</p>
-<h3 id="screen-gt-screen"><code>screen() -&gt; Screen</code><a class="hl" href="#screen-gt-screen" aria-label="Link to this section">#</a></h3>
+<h3 id="device-screen-gt-screen"><code>Device.screen() -&gt; Screen</code><a class="hl" href="#device-screen-gt-screen" aria-label="Link to this section">#</a></h3>
 <p>What the display is showing, as numbers. Works headless - it reads the framebuffer the controller holds, not the desktop.</p>
-<h3 id="screenshot-gt-shot"><code>screenshot() -&gt; Shot</code><a class="hl" href="#screenshot-gt-shot" aria-label="Link to this section">#</a></h3>
+<h3 id="device-screenshot-gt-shot"><code>Device.screenshot() -&gt; Shot</code><a class="hl" href="#device-screenshot-gt-shot" aria-label="Link to this section">#</a></h3>
 <p>Write the display to a PNG and return where it landed. The frame is exactly what the controller holds, at the size it holds it.</p>
-<h3 id="press-pin-int-down-bool-true-gt-none"><code>press(pin: int, down: bool = True) -&gt; None</code><a class="hl" href="#press-pin-int-down-bool-true-gt-none" aria-label="Link to this section">#</a></h3>
+<h3 id="device-press-pin-int-down-bool-true-gt-none"><code>Device.press(pin: int, down: bool = True) -&gt; None</code><a class="hl" href="#device-press-pin-int-down-bool-true-gt-none" aria-label="Link to this section">#</a></h3>
 <p>Hold a button pin down, or release it. Held rather than clicked because the firmware cares: MeshCore wakes a sleeping display on a press and powers off on a long one, so time the release yourself - or use tap, which does not hold.</p>
-<h3 id="tap-pin-int-gt-none"><code>tap(pin: int) -&gt; None</code><a class="hl" href="#tap-pin-int-gt-none" aria-label="Link to this section">#</a></h3>
+<h3 id="device-tap-pin-int-gt-none"><code>Device.tap(pin: int) -&gt; None</code><a class="hl" href="#device-tap-pin-int-gt-none" aria-label="Link to this section">#</a></h3>
 <p>Press a button and let go - the ordinary click.</p>
-<h3 id="type-text-str-gt-none"><code>type(text: str) -&gt; None</code><a class="hl" href="#type-text-str-gt-none" aria-label="Link to this section">#</a></h3>
+<h3 id="device-type-text-str-gt-none"><code>Device.type(text: str) -&gt; None</code><a class="hl" href="#device-type-text-str-gt-none" aria-label="Link to this section">#</a></h3>
 <p>Enter text at the board&#x27;s own keyboard, a character at a time - which is what the keyboard sends and what the firmware polls for.</p>
-<h3 id="touch-x-int-y-int-down-bool-true-gt-none"><code>touch(x: int, y: int, down: bool = True) -&gt; None</code><a class="hl" href="#touch-x-int-y-int-down-bool-true-gt-none" aria-label="Link to this section">#</a></h3>
+<h3 id="device-touch-x-int-y-int-down-bool-true-gt-none"><code>Device.touch(x: int, y: int, down: bool = True) -&gt; None</code><a class="hl" href="#device-touch-x-int-y-int-down-bool-true-gt-none" aria-label="Link to this section">#</a></h3>
 <p>Put a finger on the panel at a point, or lift it off.</p>
-<h3 id="tap-at-x-int-y-int-gt-none"><code>tap_at(x: int, y: int) -&gt; None</code><a class="hl" href="#tap-at-x-int-y-int-gt-none" aria-label="Link to this section">#</a></h3>
+<h3 id="device-tap-at-x-int-y-int-gt-none"><code>Device.tap_at(x: int, y: int) -&gt; None</code><a class="hl" href="#device-tap-at-x-int-y-int-gt-none" aria-label="Link to this section">#</a></h3>
 <p>Touch a point and lift off - a tap on the panel.</p>
-<h3 id="wait-screen-timeout-timedelta-default-screen-wait-gt-screen"><code>wait_screen(timeout: timedelta = DEFAULT_SCREEN_WAIT) -&gt; Screen</code><a class="hl" href="#wait-screen-timeout-timedelta-default-screen-wait-gt-screen" aria-label="Link to this section">#</a></h3>
+<h3 id="device-wait-screen-timeout-timedelta-default-screen-wait-gt-screen"><code>Device.wait_screen(timeout: timedelta = DEFAULT_SCREEN_WAIT) -&gt; Screen</code><a class="hl" href="#device-wait-screen-timeout-timedelta-default-screen-wait-gt-screen" aria-label="Link to this section">#</a></h3>
 <p>Wait until the display changes from what it shows now, and return the new frame; raise with what it was still showing if the timeout runs out.</p>
 <p>This is the honest way to check an input. Half duplex eats stimuli - a board handed a packet while transmitting never hears it - so a tap followed by an immediate screen read will intermittently read the frame from before the tap landed. Change is by digest, so a redraw that keeps the same number of lit pixels still counts.</p>
 <h2 id="subscription">Subscription<a class="hl" href="#subscription" aria-label="Link to this section">#</a></h2>
 <p>A live stream of notifications on a connection of its own.</p>
 <p>Iterate it for events; it blocks until the next one arrives and ends when the workbench hangs up. Use it as a context manager, or call close, so the extra connection does not outlive the interest.</p>
-<h3 id="close-gt-none"><code>close() -&gt; None</code><a class="hl" href="#close-gt-none" aria-label="Link to this section">#</a></h3>
+<h3 id="subscription-close-gt-none"><code>Subscription.close() -&gt; None</code><a class="hl" href="#subscription-close-gt-none" aria-label="Link to this section">#</a></h3>
 <h2 id="job">Job<a class="hl" href="#job" aria-label="Link to this section">#</a></h2>
 <p>A long operation the workbench is doing. Live: a handle to an id.</p>
-<h3 id="info-gt-jobinfo-none"><code>info() -&gt; JobInfo | None</code><a class="hl" href="#info-gt-jobinfo-none" aria-label="Link to this section">#</a></h3>
-<h3 id="cancel-gt-none"><code>cancel() -&gt; None</code><a class="hl" href="#cancel-gt-none" aria-label="Link to this section">#</a></h3>
+<h3 id="job-info-gt-jobinfo-none"><code>Job.info() -&gt; JobInfo | None</code><a class="hl" href="#job-info-gt-jobinfo-none" aria-label="Link to this section">#</a></h3>
+<h3 id="job-cancel-gt-none"><code>Job.cancel() -&gt; None</code><a class="hl" href="#job-cancel-gt-none" aria-label="Link to this section">#</a></h3>
 <p>Stop it, where whoever started it left a way to.</p>
 <p>A job with no cancel refuses by name rather than silently doing nothing: an operator who asked deserves to be told, not left watching a bar that carries on.</p>
-<h3 id="wait-timeout-timedelta-job-wait-gt-none"><code>wait(timeout: timedelta = JOB_WAIT) -&gt; None</code><a class="hl" href="#wait-timeout-timedelta-job-wait-gt-none" aria-label="Link to this section">#</a></h3>
+<h3 id="job-wait-timeout-timedelta-job-wait-gt-none"><code>Job.wait(timeout: timedelta = JOB_WAIT) -&gt; None</code><a class="hl" href="#job-wait-timeout-timedelta-job-wait-gt-none" aria-label="Link to this section">#</a></h3>
 <p>Wait for it to finish, and raise if it finished badly.</p>
 <p><code>timeout</code> is wall clock. Ended is not the same as worked: a read that failed used to finish the job with the reason in its title and nothing else, so every caller either carried on as though it had succeeded or matched on the wording.</p>
 <h2 id="enumerations">Enumerations<a class="hl" href="#enumerations" aria-label="Link to this section">#</a></h2>

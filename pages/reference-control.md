@@ -46,7 +46,7 @@ The rest do what their name says. These do not, quite.
 | `nodes.regions` | Gives a placed node the regions its neighbours hold. Inference only reaches nodes seen on the real network. |
 | `boundary.accept` | The chosen set **unions**, so Scotland plus Ireland is two accepts and one prune. |
 | `import.commit` | Takes `strategy`. Use `replace-all`; plain `replace` is not a strategy name and leaves the demo nodes in. |
-| `infer.apply` | **The step that gets forgotten**, and the one that decides whether anything relays. Returns how many nodes it touched; `0 applied` means you inferred and walked away. |
+| `infer.apply` | **The step that gets forgotten**, and the one that decides whether anything relays. Returns how many nodes it touched; `0 applied` means inference ran and nothing was written back. |
 | `firmware.set` | With a role and no node it applies to **every** node that runs firmware *and sets its role*. Three calls in a row convert the whole mesh three times. Pass `node` to pin one. |
 | `firmware.wipe` | Every node's persistent files. Needed between the arms of any comparison. |
 | `console.type` | Runs a line on a node's CLI and returns what it said. Replies come back empty while a sweep owns the clock. |
@@ -57,7 +57,7 @@ The rest do what their name says. These do not, quite.
 
 ## Driving a whole build
 
-The order matters, and every step in it has been skipped at least once with the
+The order matters, and every step in it can be skipped with the
 failure looking like bad RF rather than a missing step:
 
 ```

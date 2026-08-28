@@ -307,6 +307,8 @@ def guess_lang(code):
         return "js"
     if re.search(r"^\s*[$] ", code, re.M) or re.match(r"^(go run|go test|python3?|pip|git|gh|meshbench)\b", code):
         return "console"
+    if re.match(r"^\s*\{\s*\"", code):
+        return "json"
     return ""
 
 
@@ -320,6 +322,11 @@ def highlight_code(code, lang):
     if lang == "console":
         # Command lines get their comments dimmed; output stays plain.
         return re.sub(r"(#.*)$", r'<span class="tok-com">\1</span>', esc, flags=re.M)
+    if lang == "json":
+        # Strings then numbers; the wire examples are one object per line.
+        out = re.sub(r"(&quot;.*?&quot;)", r'<span class="tok-str">\1</span>', esc)
+        return re.sub(r"(?<![\w-])(-?\d+(?:\.\d+)?)\b",
+                      r'<span class="tok-num">\1</span>', out)
     kw = KEYWORDS.get(lang)
     if not kw:
         return esc
@@ -624,6 +631,12 @@ def check_links(built):
     ids = {out: set(re.findall(r'id="([^"]+)"', body))
            for _, out, _, _, body in built}
     bad = []
+    # Two headings slugging to one id: the second is unreachable, and any link
+    # to it lands on the first without a sound.
+    for _, out, _, _, body in built:
+        hids = re.findall(r'<h[123] id="([^"]+)"', body)
+        for dup in sorted({h for h in hids if hids.count(h) > 1}):
+            bad.append("%s: two headings share id #%s" % (out, dup))
     for f, out, _, md, _ in built:
         prose = re.sub(r"```.*?```", "", md, flags=re.S)
         for m in re.finditer(r"!?\[[^\]]*\]\(([^)\s]+)\)", prose):

@@ -18,18 +18,18 @@ each one exists.
 | the layout map | a package with no entry, or an entry with no package |
 | the licence inventory | a dependency change that has not regenerated it |
 
-The last three are recent, and each was added after the thing it checks had
-already gone wrong once.
+The last three exist because each failure they refuse arrives silently and
+looks fine in review.
 
 ## The lint ratchet
 
-Twenty linters run, not the eight that ran historically and not all 104. The
+Twenty linters run, not a token few and not all 104. The
 enabled set is those whose findings are worth acting on here, each with its
 reason recorded in `.golangci.yml`.
 
-Running the bug-class linters for the first time produced 477 findings. Turning
-that into a red build would have meant 477 unreviewed changes at once, so the
-count is held at a baseline instead:
+Enabling the bug-class linters on an existing tree produces hundreds of
+findings at once. Turning those into a red build would mean hundreds of
+unreviewed changes in one commit, so the count is held at a baseline instead:
 
 ```
 tools/lint-ratchet.sh            compare against the baseline
@@ -57,9 +57,9 @@ becomes the thing people notice about the pipeline, and a check nobody waits for
 is a check that gets worked around.
 
 It runs when a `v*` tag is pushed, which is the moment it matters and the moment
-nobody is waiting on the answer, and on request from the Actions tab. It has
-earned that: a GPU-probe race crashed every startup, and nothing else was going
-to find it.
+nobody is waiting on the answer, and on request from the Actions tab. It is the
+only gate that can find a startup race — exactly the class of fault review does
+not catch.
 
 ## SonarQube
 
@@ -68,8 +68,8 @@ is a second thing to work around. This one is for reading.
 
 It covers what a per-file linter cannot measure: cognitive complexity per
 function, duplication found across the whole tree rather than thresholded, and
-coverage readable per package instead of as one number. It found a duplicated
-`switch` case that twenty Go linters had not.
+coverage readable per package instead of as one number. Whole-tree duplication
+is the class of finding a per-file linter cannot produce.
 
 ## What only reports
 
@@ -83,9 +83,9 @@ violations and wants those fixed before it can be a gate.
 ## The release pipeline is checked separately, and less
 
 `package.yml` runs only on a tag push or a manual dispatch. **Nothing in a pull
-request exercises it**, which is worth stating plainly because it has bitten:
-two independent breakages sat in it for days behind eleven days of green checks,
-and both were found only by dispatching it deliberately.
+request exercises it**, which is worth stating plainly: a breakage in it sits
+invisible behind green pull-request checks until somebody dispatches it
+deliberately.
 
 If a change touches the release pipeline, dispatch it and read the result. A
 green tick on the pull request is evidence about `ci.yml` and nothing else.

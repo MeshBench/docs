@@ -160,7 +160,7 @@ def render_behavior(cls):
             prefix = "staticmethod "
         elif "property" in d:
             prefix = "property "
-        out.append("### `%s%s`" % (prefix, signature(node)))
+        out.append("### `%s%s.%s`" % (prefix, cls.name, signature(node)))
         if doc(node):
             out.append(doc(node))
     return "\n\n".join(out)

@@ -260,7 +260,7 @@ at the receiver: arithmetic against a floor, or a demodulator given samples.</fi
 </figure>
 <h2 id="which-to-use">Which to use<a class="hl" href="#which-to-use" aria-label="Link to this section">#</a></h2>
 <p><strong>Calculated</strong> is the default and the right choice for anything large — a national network, a coverage raster, a sweep across seeds. It is the mode most questions should be asked in.</p>
-<p><strong>Waveform</strong> answers what arithmetic cannot: whether two overlapping transmissions capture or collide, what a partial overlap actually costs, and what a receiver would hear if you attached an SDR to it.</p>
+<p><strong>Waveform</strong> answers what arithmetic cannot: whether two overlapping transmissions capture or collide, what a partial overlap actually costs, and what a receiver would hear if an SDR were attached to it.</p>
 <table><thead><tr><th></th><th>Calculated</th><th>Waveform</th></tr></thead><tbody><tr><td>verdict from</td><td>link-budget SNR</td><td>a decoded frame</td></tr><tr><td>concurrent transmissions</td><td>summed into the noise, in dBm</td><td>summed coherently, as samples</td></tr><tr><td>capture effect</td><td>none</td><td>emerges from the physics</td></tr><tr><td>partial overlap</td><td>counted as full-length interference</td><td>costs what it actually costs</td></tr><tr><td>cost, 300-node burst</td><td>46 ms</td><td>1.0 to 2.3 s</td></tr></tbody></table>
 <h2 id="what-calculated-gets-wrong-and-in-which-direction">What calculated gets wrong, and in which direction<a class="hl" href="#what-calculated-gets-wrong-and-in-which-direction" aria-label="Link to this section">#</a></h2>
 <p>Two known biases, and they pull opposite ways:</p>
