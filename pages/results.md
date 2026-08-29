@@ -48,9 +48,13 @@ as a hypothesis, not a finding.
 
 - **Marginal links that matter.** If a plan depends on a link the model gives
   a few dB of margin, measure it on air before trusting it.
-- **The model itself.** The **Validate** view fetches what a real network
-  actually heard and compares it with the model's prediction, and can fit an
-  excess-loss calibration from the residual.
+- **The model itself.** The **Validate** view: **fetch what was heard** pulls
+  a real network's receptions, **compare** sets them against the model's
+  predictions, and **apply calibration** fits the residual into an excess-loss
+  term. A positive residual means the model predicted more signal than was
+  heard, so the excess loss goes up.
+
+![The Validate view: fetch what was heard, compare, calibrate](images/view-validate.png)
 - **The physics.** The waveform chain is held to real silicon by captured
   [golden vectors](golden-vectors.html): frames from a real SX1262, decoded
   end to end by MeshBench's receiver.

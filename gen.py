@@ -88,7 +88,7 @@ NAV = [
     ("timing.html", "Time and determinism"),
     ("golden-vectors.html", "Golden vectors"),
     ("emulation.html", "Emulation"),
-    ("firmware-integration.html", "Firmware integration"),
+    ("firmware-integration.html", "Running real firmware"),
     ("what-it-does-not-do.html", "Accuracy and limits"),
 
     ("SECTION", "Automate"),

@@ -11,7 +11,8 @@ against the same network, with the results tabulated side by side.
 
 ## Running one
 
-1. **Load the network.** Everything below holds it constant, so pick it first.
+1. **Load the network.** A [shipped `-strict` fixture](fixtures.html) is the
+   usual arena. Everything below holds it constant, so pick it first.
 2. **Open the Bench view.** Sweep, Runs, Experiment log, Matrix, Timelines and
    Configuration, and no map: an experiment is read, not sited.
 3. **Set the constants.** `experiment.base` holds what every arm shares, most
@@ -19,8 +20,10 @@ against the same network, with the results tabulated side by side.
    freshly imported node carries no firmware reference at all, which resolves to
    MeshCore `main`, for which nothing is published, and the sweep dies on its
    first run.
-4. **Define the arms.** Each arm is a label plus what differs: a firmware
-   version, a loop-detection setting, a path-hash size, a CAD setting.
+4. **Define the arms, including a control.** Each arm is a label plus what
+   differs: a firmware version, a loop-detection setting, a path-hash size, a
+   CAD setting. The control is the unchanged source under a second label; if
+   the control arms disagree, nothing else measured that day means anything.
 5. **Choose seeds and senders.** Pick senders spread across the map rather
    than the first few in the list: a cluster of neighbours contends with itself
    instead of with the mesh. `experiment.senders` takes the node names.
@@ -104,9 +107,10 @@ one-originator flood the transmission count has been observed identical across
 eight seeds, while receptions on the same runs varied by ±17%. Measure the
 control's own spread and quote *that*.
 
-**Wipe node storage between arms.** A node keeps its preferences between runs,
-so an arm whose change is a compiled default will silently inherit the previous
-arm's value and look inert.
+**Storage is isolated per arm.** The sweep runs each arm in its own node
+storage root, so an arm cannot silently inherit the previous arm's saved
+preferences. A run made by hand, outside a sweep, does inherit them: wipe
+first, from the [firmware library](firmware-library.html).
 
 ## When calculated mode is not enough
 

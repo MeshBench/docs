@@ -14,14 +14,14 @@ scenario, only your change differs.
 It arranges the panels this question needs: the packet timeline, the waterfall,
 consoles and link budgets, with the Inspector for whichever node is selected.
 
-![The Debug view: the packet timeline, and every event's SNR and cause in the Inspector](images/view-debug.png)
+![The Debug view. The marks: a flood burst on the packet timeline, and the Inspector's SNR column where each event's strength is read](images/view-debug.png)
 
 ## The causes, and what each means
 
 | cause | what happened | what to change |
 |---|---|---|
 | below the demodulator floor | the signal arrived, too weak to decode | height, power, antenna, or a lower spreading factor |
-| corrupted by overlap | another transmission arrived at the same time | timing, offered load, or the number of relays |
+| corrupted by overlap | another transmission arrived at the same time | timing, offered load, relays; and re-run in [waveform mode](rf-simulation.html) before trusting it: calculated mode has no capture effect and overstates collision loss |
 | radio was elsewhere | the node was transmitting or on another frequency | scheduling, duty cycle |
 | no route | nothing relayed it | regions, `flood_max`, loop detection |
 | dropped by region | the node does not hold the scope | the region map, or the scope being sent on |
@@ -80,7 +80,8 @@ different fixes, which is why the cause is recorded rather than a boolean.
    budget question: check the Link panel for that pair, in both directions.
 3. **Did the neighbour relay it?** A reception without a following transmission
    means the firmware decided not to forward. The usual reasons are the region
-   map, the hop ceiling, and loop detection.
+   map, the hop ceiling, and loop detection;
+   [Testing a repeater](testing-repeaters.html) walks setting one node right.
 4. **Ask the node.** `console.type` runs a line on its own CLI and returns what
    it said, which is the difference between what you configured and what it
    believes.

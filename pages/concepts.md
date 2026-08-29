@@ -24,7 +24,7 @@ clock all the nodes share.
   <text x="620" y="98" font-size="10.5" fill="var(--dim)" text-anchor="middle">and its own serial protocol</text>
 
   <rect x="20" y="140" width="740" height="30" rx="7" fill="var(--panel)" stroke="var(--accent-mark)" stroke-dasharray="5 4"/>
-  <text x="390" y="160" font-size="11.5" font-weight="600" fill="var(--accent)" text-anchor="middle">the radio boundary: a linked shim (native) or a modelled SX1262 chip (emulated)</text>
+  <text x="390" y="160" font-size="11.5" font-weight="600" fill="var(--accent)" text-anchor="middle">the radio interface: a linked shim (native) or a modelled SX1262 chip (emulated)</text>
 
   <rect x="20" y="182" width="740" height="96" rx="10" fill="var(--relay)" fill-opacity=".06" stroke="var(--relay)" stroke-opacity=".4"/>
   <text x="46" y="206" font-size="12.5" font-weight="700" fill="var(--relay)">MODELLED</text>
@@ -43,7 +43,7 @@ Everything below it is MeshBench's model. The boundary sits exactly where a real
 radio chip sits.</figcaption>
 </figure>
 
-## Why that boundary
+## Why the interface sits there
 
 A simulator that re-implements the protocol tests the re-implementation. By
 running the real firmware and substituting only the radio, what MeshBench
@@ -51,7 +51,7 @@ measures is MeshCore's actual behaviour: its flood suppression, its CSMA
 timing, its region filtering, exactly as they ship. When a packet is not
 relayed, it is because the real code decided not to relay it.
 
-The boundary has two placements, described in
+The interface has two placements, described in
 [Native and emulated](native-vs-emulated.html):
 
 - **Native**: MeshCore compiled for this machine, with a radio shim linked in
@@ -100,6 +100,7 @@ the fixtures and the clients.
 | calculated RF | reception decided by link-budget arithmetic against the demodulator floor |
 | waveform RF | reception decided by a real demodulator over synthesised samples |
 | boundary | the study area; nodes outside it (plus a margin) are not simulated |
+| demodulator floor | the weakest signal the radio can still decode; everything quieter is noise |
 | margin | how many dB a link clears the demodulator floor by |
 | cause | why a reception failed, recorded per event: below the floor, corrupted by overlap, radio elsewhere |
 | provenance | the caveats stamped into a result: RF mode, realism switches, seed |

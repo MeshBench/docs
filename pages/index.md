@@ -2,7 +2,8 @@
 
 **MeshBench runs real MeshCore firmware. MeshBench models the air.**
 
-An RF-accurate MeshCore network simulator. It runs **real MeshCore firmware**
+MeshCore is the open-source LoRa mesh firmware; MeshBench is the instrument
+it is measured with: an RF-accurate network simulator. It runs **real MeshCore firmware**
 against a modelled radio channel, so the question it answers is not "would a
 packet get through" but "what actually arrived at the antenna, and why".
 
@@ -61,7 +62,7 @@ configure before the first run.
   <path d="M414 124 H460" stroke="var(--dim)" fill="none" marker-end="url(#ar)"/>
 
   <rect x="464" y="26" width="300" height="196" rx="10" fill="none" stroke="var(--good)" stroke-dasharray="5 4"/>
-  <text x="614" y="48" font-size="12.5" font-weight="600" fill="var(--good)" text-anchor="middle">Real, not modelled</text>
+  <text x="614" y="48" font-size="12.5" font-weight="600" fill="var(--good)" text-anchor="middle">Real firmware, honest physics</text>
 
   <rect x="484" y="60" width="260" height="46" rx="6" fill="var(--card)" stroke="var(--rule)"/>
   <text x="614" y="79" font-size="11.5" fill="var(--ink)" text-anchor="middle">MeshCore&#8217;s own firmware</text>
@@ -69,10 +70,10 @@ configure before the first run.
 
   <rect x="484" y="114" width="260" height="46" rx="6" fill="var(--card)" stroke="var(--rule)"/>
   <text x="614" y="133" font-size="11.5" fill="var(--ink)" text-anchor="middle">a sample-accurate LoRa channel</text>
-  <text x="614" y="149" font-size="10.5" fill="var(--faint)" text-anchor="middle">waveforms summed, noise added</text>
+  <text x="614" y="149" font-size="10.5" fill="var(--faint)" text-anchor="middle">modelled from physics, not from rules</text>
 
   <rect x="484" y="168" width="260" height="40" rx="6" fill="var(--card)" stroke="var(--rule)"/>
-  <text x="614" y="185" font-size="11.5" fill="var(--ink)" text-anchor="middle">real terrain</text>
+  <text x="614" y="185" font-size="11.5" fill="var(--ink)" text-anchor="middle">real elevation data</text>
   <text x="614" y="200" font-size="10.5" fill="var(--faint)" text-anchor="middle">and, if you load them, buildings</text>
 
   <rect x="12" y="248" width="752" height="72" rx="8" fill="var(--sunk)" stroke="var(--rule)"/>
@@ -80,14 +81,15 @@ configure before the first run.
   <text x="32" y="292" font-size="11.5" fill="var(--dim)">It sums waveforms, applies path loss and adds noise. Whether a packet decodes is the demodulator&#8217;s business,</text>
   <text x="32" y="308" font-size="11.5" fill="var(--dim)">so capture effect and partial collisions emerge from the physics instead of from a rule somebody wrote down.</text>
 </svg>
-<figcaption>Three questions, one binary, and the parts that are not a model of the
-thing but the thing itself.</figcaption>
+<figcaption>Three questions, one binary. The firmware is the thing itself;
+the air it transmits into is modelled, from physics rather than rules.</figcaption>
 </figure>
 
 ## What it is for
 
 - **Network operators.** Will this repeater help? What does the mesh look like
-  if that site goes down? Import a real network from CoreScope and ask.
+  if that site goes down? Import a real network from CoreScope, the community's live node and traffic
+feed, and ask.
 - **Firmware developers.** Does my branch relay more or less than `dev`? Build
   it, hand it to MeshBench, run both against the same 378-node network, and
   read the difference.

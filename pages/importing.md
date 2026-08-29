@@ -3,6 +3,10 @@
 A shipped network is a snapshot. To work on the network as it is today, import
 it from a live source.
 
+A *region* is held by a node and decides what it relays; a *scope* rides a
+packet and decides who relays it. The distinction runs through every step
+below, and [the concepts page](concepts.html) has the full table.
+
 ## What can be imported
 
 | source | what it provides |
@@ -114,7 +118,9 @@ null-island nodes and cuts coastline wrongly.
 ::gui
 Paste the deployment address into *a CoreScope deployment URL*, press
 **2. fetch**, read the counts it reports, then press **3. commit**. Nothing
-changes until the commit - fetching only describes what an import would do.
+changes until the commit, and fetching only describes what an import would
+do. The workbench's commit replaces the current network (`replace-all`);
+keeping the current nodes alongside (`add`) is a socket or client choice.
 ::socket
 ```json
 {"id":3,"method":"import.set_source","params":{
@@ -230,8 +236,11 @@ _, err = wb.Call(ctx, "infer.apply", nil)
 ```
 :::
 
-`infer.apply` is a separate call and returns how many nodes it changed. A result
-of zero means inference ran and nothing was written.
+`infer.apply` is a separate call and returns how many nodes it changed. A
+result of zero means inference ran and nothing was written. A healthy total
+can still hide gaps: inference only reaches nodes seen in the traffic, so a
+quiet repeater can come through with no regions at all. Check a suspect node
+with its console, and widen the `hours` window if the feed is thin.
 
 **Without this step every node transmits and none relays.** A scoped message is
 sent by its originator and dropped by every repeater, with no error anywhere,
@@ -263,7 +272,7 @@ A saved project holds the nodes, the boundary polygons, the seed, the traffic
 schedule and the assertions, so it opens later with no network access and no
 re-inference.
 
-## Scopes are written with a hash
+## 7. Write scopes with the hash
 
 A region is spelled two ways, and both are correct:
 
@@ -275,3 +284,20 @@ A region is spelled two ways, and both are correct:
 The key in a packet is a hash of the prefixed form. Sending on `sco` produces a
 key no repeater holds, and every one of them declines to forward without
 reporting anything.
+
+
+## If nothing relays
+
+The four silent failures above, in the order to check them:
+
+1. **Regions inferred but never applied.** Everything transmits, nothing
+   relays. Press **5. apply regions**, and confirm the count.
+2. **A quiet node with no regions.** The total was healthy, one repeater was
+   not. Ask it: `get repeat` on its console.
+3. **No firmware version.** Imported nodes resolve to an unpublished build
+   until step 4 gives them one.
+4. **A scope without its hash.** Sending on `sco` keys packets no repeater
+   matches. Write `#sco`.
+
+[Debugging packet delivery](debugging.html) picks up from here with the full
+cause-by-cause workflow.
