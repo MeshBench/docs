@@ -56,55 +56,52 @@ def check_synced():
 
 
 NAV = [
+    # The order is a learning path: understand it, use it, open it up, then
+    # drive it from code. Prev/next walks this order, so it has to read as a
+    # journey rather than as a filing system.
+    ("SECTION", "Learn"),
     ("index.html", "Overview"),
+    ("concepts.html", "What is real"),
     ("getting-started.html", "Getting started"),
-    # Directly under Getting started, not filed in Reference. The simulator's
-    # claim is that it is honest about being kinder than the air; a reader who
-    # cannot find the limits cannot use any other number on the site.
-    ("what-it-does-not-do.html", "What it does not do"),
+    ("first-simulation.html", "Your first simulation"),
+    ("results.html", "Reading a result"),
 
-    # The guides are grouped by who is reading rather than by subject, because
-    # the three arrive with different questions and a flat list of thirteen
-    # made each of them read the other two. The groups match the three the
-    # front page opens with.
-    ("SECTION", "Plan a network"),
+    ("SECTION", "Use"),
     ("fixtures.html", "Shipped networks"),
     ("importing.html", "Importing a network"),
-    ("debugging.html", "Why a packet failed"),
-    ("studies.html", "Studies"),
-
-    ("SECTION", "Develop firmware"),
+    ("debugging.html", "Debugging packet delivery"),
     ("firmware-library.html", "Firmware library"),
     ("firmware-development.html", "Firmware development"),
     ("testing-repeaters.html", "Testing a repeater"),
-
-    ("SECTION", "Build an application"),
     ("app-development.html", "App development"),
     ("testing.html", "Testing your own code"),
-    ("scripting.html", "Scripting a session"),
-    ("cookbook.html", "Scripting cookbook"),
-
-    ("SECTION", "Measure and observe"),
-    ("experiments.html", "Experiments"),
+    ("experiments.html", "Running an experiment"),
+    ("studies.html", "Studies"),
     ("sdr-observer.html", "Listening with SDR++"),
 
-    ("SECTION", "How it works"),
+    ("SECTION", "Understand"),
     ("architecture.html", "Architecture"),
     ("native-vs-emulated.html", "Native and emulated"),
     ("rf-simulation.html", "RF simulation"),
-    ("waveform.html", "Waveform mode"),
     ("rf-chain.html", "The RF chain"),
+    ("waveform.html", "Waveform mode"),
+    ("timing.html", "Time and determinism"),
     ("golden-vectors.html", "Golden vectors"),
     ("emulation.html", "Emulation"),
     ("firmware-integration.html", "Firmware integration"),
+    ("what-it-does-not-do.html", "Accuracy and limits"),
 
-    ("SECTION", "Reference"),
-    ("settings.html", "Settings"),
+    ("SECTION", "Automate"),
+    ("scripting.html", "Scripting a session"),
+    ("cookbook.html", "Scripting cookbook"),
     ("reference-cli.html", "CLI"),
     ("reference-control.html", "Control socket"),
     ("reference-python.html", "Python client"),
     ("reference-go.html", "Go client"),
     ("reference-js.html", "Node client"),
+
+    ("SECTION", "Reference"),
+    ("settings.html", "Settings"),
     ("resources.html", "What gets downloaded"),
     ("tools.html", "External tools"),
     ("quality-gates.html", "What the build enforces"),

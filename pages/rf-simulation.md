@@ -4,6 +4,14 @@ Everything about a run that involves the air passes through one layer, and that
 layer can decide reception two different ways. Which one is active changes what
 a result means, so it is stamped into every saved run.
 
+A concrete case: two repeaters relay the same flood within a millisecond of
+each other, and a third node hears both at similar strength. Calculated mode
+sums each transmission into the other's noise and both fail. A real SX1262
+usually recovers the stronger one, and waveform mode shows that, because the
+chirps are synthesised, summed, and handed to a real demodulator that locks
+onto the stronger frame. When "did it collide" is the question, the mode is
+part of the answer.
+
 <figure>
 <svg viewBox="0 0 760 400" role="img" aria-label="Calculated and waveform reception compared">
   <defs>

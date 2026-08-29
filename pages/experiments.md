@@ -1,4 +1,10 @@
-# Experiments
+# Running an experiment
+
+An experiment starts as a question: does my branch relay more than `dev` on
+this network, does raising the hop cap buy delivery or just airtime. The
+machinery exists to answer it credibly: a control arm as the baseline, one
+variable changed per arm, several seeds per arm, and the difference read
+against the control's own spread rather than against hope.
 
 A sweep is a matrix, not an A/B: arms crossed with seeds, run one at a time
 against the same network, with the results tabulated side by side.
@@ -101,6 +107,18 @@ control's own spread and quote *that*.
 **Wipe node storage between arms.** A node keeps its preferences between runs,
 so an arm whose change is a compiled default will silently inherit the previous
 arm's value and look inert.
+
+## When calculated mode is not enough
+
+- **A collision-level question wants waveform mode.** Whether two specific
+  overlapping transmissions capture or collide is decided by arithmetic in
+  calculated mode and by a real demodulator in
+  [waveform mode](rf-simulation.html). Run both arms in the same mode either
+  way; the mode is stamped into every run.
+- **An absolute claim that matters wants hardware.** The model is
+  [kinder than the air](results.html), so a marginal link a plan depends on
+  should be measured on air, and the **Validate** view exists to compare the
+  model against what a real network heard.
 
 ## Reading a difference honestly
 
