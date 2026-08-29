@@ -10,7 +10,7 @@ it is.
 |---|---|
 | `MeshBench/meshbench` | MeshBench itself |
 | `MeshBench/meshcore-native` | host builds of MeshCore, the virtual SX1262, the bridge and `radioserver` |
-| `MeshBench/meshbench-docs` | this site |
+| `MeshBench/docs` | this site |
 | `MeshBench/meshbench-reports` | published studies |
 | `MeshBench/meshbench-scripting-skills` | agent skills for driving and scripting a workbench |
 | `MeshBench/meshbench-dev-skills` | agent skills for developing MeshBench |

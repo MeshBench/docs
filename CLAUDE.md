@@ -1,10 +1,10 @@
-# meshbench-docs
+# MeshBench/docs
 
 Documentation for MeshBench: every view, how it works, and how to test and
 experiment with it.
 
 **Public.** The site is published at
-<https://meshbench.github.io/meshbench-docs/>, built from `pages/*.md` by the
+<https://meshbench.github.io/docs/>, built from `pages/*.md` by the
 Pages workflow on every push to `main`. What must never appear in it is at the
 bottom of this file; look at every capture before committing it.
 
