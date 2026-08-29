@@ -61,21 +61,25 @@ space-separated and press **set regions**. For a node placed by hand, the
 the common case at the next firmware start. One specific node is a job for the
 socket or a client; its window's Settings tab shows what it holds.
 
+Either spelling is accepted here: MeshBench strips a leading `#` where the
+console needs the bare name, so `sco` and `#sco` set the same region. The
+`#` only ever matters on a packet's scope.
+
 ![The Fleet panel's regions controls](images/crop-fleet-regions.png)
 ::socket
 ```json
-{"id":2,"method":"nodes.regions","params":{"node":"Test Site","regions":["#sco"]}}
+{"id":2,"method":"nodes.regions","params":{"node":"Test Site","regions":["sco"]}}
 ```
 ::python
 ```python
-wb.call("nodes.regions", {"node": "Test Site", "regions": ["#sco"]})
+wb.call("nodes.regions", {"node": "Test Site", "regions": ["sco"]})
 ```
 ::go
 The clients do not shape this verb yet, so both use the raw call:
 
 ```go
 _, err := wb.Call(ctx, "nodes.regions", map[string]any{
-    "node": "Test Site", "regions": []string{"#sco"}})
+    "node": "Test Site", "regions": []string{"sco"}})
 ```
 :::
 
@@ -141,6 +145,7 @@ Then start it, and watch each run complete.
 | metric | what it tells you about a repeater |
 |---|---|
 | `delivered` | unique deliveries - how much of the network a message got to. The headline. |
+| `rx` | successful receptions, the raw count `rx_spread` is measured on |
 | `tx` | how much traffic the network generated to achieve it |
 | `redundant` | receptions of something already heard - the cost of flooding |
 | `collisions` | how much of that traffic destroyed other traffic |

@@ -16,7 +16,14 @@ simple_repeater local-fix-relay-suppression (native)   0.6 MB
 ```
 
 That is the whole loop. Edit, run it again, and the network is running your
-change.
+change. It needs MeshBench [installed](getting-started.html) and a C++
+compiler; nothing else.
+
+The build lands in the [firmware library](firmware-library.html) as a
+*native* build: MeshCore compiled for this machine, which is the
+deterministic arm and the one every measurement uses.
+[Native and emulated](native-vs-emulated.html) is the two-minute version of
+that choice.
 
 ## What the command does
 
@@ -80,7 +87,9 @@ the same one.
 
 The reason to run a change on three hundred nodes is to find out whether it is
 an improvement. That is a sweep: two arms, the same network, the same seeds,
-only the firmware differing.
+only the firmware differing. Load a [shipped `-strict` fixture](fixtures.html)
+as the arena, and [Time and determinism](timing.html) is why the same seeds
+make a difference attributable to the firmware.
 
 ```
 meshbench dev -from ~/src/MeshCore -name my-change -assign=false
@@ -91,10 +100,12 @@ release you branched from. See [Experiments](experiments.html).
 
 Three things decide whether such a comparison means anything:
 
-**Wipe node storage between arms.** A node keeps its preferences across runs, as
-hardware does, so a node that has run before loads its stored value rather than
-your changed default. The sweep does this automatically; the button in the
-firmware library does it by hand.
+**Node storage is isolated per arm.** A node keeps its preferences across
+runs, as hardware does, so a node that has run before loads its stored value
+rather than your changed default. A sweep runs each arm in
+[its own storage root](firmware-integration.html), so no arm inherits
+another's state; only runs made by hand outside a sweep need the firmware
+library's wipe button.
 
 **Give every role a build.** A network with companions or a room server needs a
 build for each of them. Roles you did not change take the published release.

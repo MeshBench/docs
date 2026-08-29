@@ -423,6 +423,8 @@ this node are forgotten.
 
 ### `Node.set_regions(*regions: str) -> None`
 
+What this node relays flood traffic for.
+
 ### `Node.set_firmware(build: Build | str, apply: bool = True) -> None`
 
 Change what it runs.

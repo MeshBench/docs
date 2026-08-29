@@ -22,7 +22,8 @@ Linux is the only platform with a build today (the others are tracked
 
 ## Install and launch
 
-1. Download `meshbench-linux-x86_64.tar.gz` from the releases page.
+1. Download `meshbench-linux-x86_64.tar.gz` from the
+   [releases page](https://github.com/MeshBench/meshbench/releases).
 2. Unpack it anywhere you can write to.
    ```console
    tar xzf meshbench-linux-x86_64.tar.gz
@@ -62,8 +63,10 @@ The workbench opens on the Plan view with a map. You are ready for
 | `Cannot set swap interval` | harmless, printed when the compositor declines vsync |
 | a window opens and stays black | no usable GL driver; install your vendor's Mesa or driver package |
 
-`qemu-system-xtensa` in the bundle is a symlink on purpose: QEMU resolves its
-own path to find its data files, so a bare copy of the binary will not run.
+One bundle oddity worth knowing before rearranging files:
+`qemu-system-xtensa` (the board emulator, used later by
+[emulation](emulation.html)) is a symlink on purpose. QEMU resolves its own
+path to find its data files, so a bare copy of the binary will not run.
 
 ## Building from source, any platform
 

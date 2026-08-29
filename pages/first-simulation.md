@@ -2,14 +2,15 @@
 
 Fifteen minutes from an empty workbench to a real 378-node network relaying
 real packets through real firmware. You will load a shipped snapshot of
-ScotMesh, boot MeshCore on every node, and watch a message flood across
-Scotland.
+ScotMesh, the Scottish community mesh, boot MeshCore on every node, and
+watch a message flood across Scotland.
 
 ## Run it
 
 1. **Load a shipped network.** **File**, then **Open a saved network**, and
-   choose `fixture-fife-strict` for a quick start (58 nodes) or
-   `fixture-scotland-ireland-strict` for the full map (378 nodes).
+   choose `fixture-fife-strict` to see it moving in seconds (58 nodes), or
+   `fixture-scotland-ireland-strict` for the full map (378 nodes, about a
+   minute to boot).
 2. **Start the firmware.** **Simulation**, then **Start firmware on every
    node**. Each node launches a real MeshCore build and is told its name,
    position, clock and regions. Watch the count in the status bar reach the
@@ -17,10 +18,11 @@ Scotland.
 3. **Press play.** The transport control on the toolbar, or the space bar.
    Simulated time starts moving.
 4. **Make something happen.** Open the **Schedule** panel, type `advert` with
-   a node selected, and press **add send**. Watch the flood spread: the
+   a node selected, and press **add send**. An advert is MeshCore's own
+   announcement packet, the thing nodes flood through the mesh. Watch the flood spread: the
    Events panel lists every transmission, reception and miss with a cause.
 
-![The Run view playing: the schedule and scoreboard beside the map, firmware running](images/view-run.png)
+![The Run view playing. The marks: the Schedule panel's add send button, and the scoreboard counting what each node sent](images/view-run.png)
 
 > If the mesh looks dead, the usual cause is regions rather than radio. A
 > repeater only forwards flood traffic for regions it has been told about, and
@@ -52,7 +54,7 @@ arrangement of panels for one kind of work:
 |---|---|
 | **Plan** | build and site: import, place, drag, boundary, coverage |
 | **Run** | exercise it and watch: play, schedule traffic, consoles, live feed |
-| **Debug** | ask why one thing happened: packets, waterfall, consoles, budgets |
+| **Debug** | ask why one thing happened: packet timelines, the waterfall (spectrum over time), consoles, link budgets |
 | **Validate** | check the model against what a real network heard |
 | **Bench** | compare configurations: sweep a parameter, read what differed |
 | **App** | write a client against it: an endpoint, the protocol, faults |
