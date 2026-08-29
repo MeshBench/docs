@@ -1,7 +1,7 @@
 # The RF chain
 
-This is the physics both reception models share. Which model reads the result —
-a link budget, or a real demodulator over synthesised samples — is
+This is the physics both reception models share. Which model reads the result - 
+a link budget, or a real demodulator over synthesised samples - is
 [RF simulation](rf-simulation.html).
 
 What happens to a packet between one node's antenna and another's, in the order
@@ -17,7 +17,7 @@ it happens.
   <text x="126" y="90" font-size="10.5" fill="var(--dim)" text-anchor="middle">the firmware&#8217;s own getEstAirtimeFor()</text>
   <rect x="276" y="30" width="228" height="86" rx="8" fill="var(--card)" stroke="var(--rule)"/>
   <text x="390" y="54" font-size="12" font-weight="600" fill="var(--ink)" text-anchor="middle">2 · Delay</text>
-  <text x="390" y="74" font-size="10.5" fill="var(--dim)" text-anchor="middle">distance over c &#8212; the difference</text>
+  <text x="390" y="74" font-size="10.5" fill="var(--dim)" text-anchor="middle">distance over c - the difference</text>
   <text x="390" y="90" font-size="10.5" fill="var(--dim)" text-anchor="middle">between aligned and half-symbol overlap</text>
   <rect x="540" y="30" width="228" height="86" rx="8" fill="var(--card)" stroke="var(--rule)"/>
   <text x="654" y="54" font-size="12" font-weight="600" fill="var(--ink)" text-anchor="middle">3 · Path loss</text>
@@ -29,14 +29,14 @@ it happens.
   <rect x="540" y="154" width="228" height="86" rx="8" fill="var(--card)" stroke="var(--rule)"/>
   <text x="654" y="178" font-size="12" font-weight="600" fill="var(--ink)" text-anchor="middle">4 · Summation</text>
   <text x="654" y="198" font-size="10.5" fill="var(--dim)" text-anchor="middle">every transmission in flight, summed</text>
-  <text x="654" y="214" font-size="10.5" fill="var(--dim)" text-anchor="middle">as samples &#8212; no collision rule exists</text>
+  <text x="654" y="214" font-size="10.5" fill="var(--dim)" text-anchor="middle">as samples - no collision rule exists</text>
   <rect x="276" y="154" width="228" height="86" rx="8" fill="var(--card)" stroke="var(--rule)"/>
   <text x="390" y="178" font-size="12" font-weight="600" fill="var(--ink)" text-anchor="middle">5 · Noise</text>
   <text x="390" y="198" font-size="10.5" fill="var(--dim)" text-anchor="middle">thermal, at the board&#8217;s noise figure,</text>
   <text x="390" y="214" font-size="10.5" fill="var(--dim)" text-anchor="middle">plus any emitter in the scenario</text>
   <rect x="12" y="154" width="228" height="86" rx="8" fill="var(--card)" stroke="var(--rule)"/>
   <text x="126" y="178" font-size="12" font-weight="600" fill="var(--ink)" text-anchor="middle">6 · Demodulation</text>
-  <text x="126" y="198" font-size="10.5" fill="var(--dim)" text-anchor="middle">de-chirp, FFT, error correction &#8212;</text>
+  <text x="126" y="198" font-size="10.5" fill="var(--dim)" text-anchor="middle">de-chirp, FFT, error correction -</text>
   <text x="126" y="214" font-size="10.5" fill="var(--dim)" text-anchor="middle">it decodes, or the cause is recorded</text>
   <path d="M536 197 H508" stroke="var(--accent-mark)" stroke-width="2" fill="none" marker-end="url(#rc)"/>
   <path d="M272 197 H244" stroke="var(--accent-mark)" stroke-width="2" fill="none" marker-end="url(#rc)"/>

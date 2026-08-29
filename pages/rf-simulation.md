@@ -57,7 +57,7 @@ at the receiver: arithmetic against a floor, or a demodulator given samples.</fi
 
 ## Which to use
 
-**Calculated** is the default and the right choice for anything large — a
+**Calculated** is the default and the right choice for anything large - a
 national network, a coverage raster, a sweep across seeds. It is the mode most
 questions should be asked in.
 
@@ -88,7 +88,7 @@ that calculated calls lost**. In a contended scenario, calculated understates
 delivery.
 
 That is a reason to compare two runs in the same mode rather than to distrust
-the mode. It is also why the mode is stamped into every saved run — two runs
+the mode. It is also why the mode is stamped into every saved run - two runs
 under different models are not comparable.
 
 ## Switching
@@ -99,9 +99,9 @@ cutting a frame in half. The status bar names the active mode.
 
 ## Where to go next
 
-- [The RF chain](rf-chain.html) — the physics both modes share: path loss,
+- [The RF chain](rf-chain.html) - the physics both modes share: path loss,
   terrain, summation, noise.
-- [The waveform](waveform.html) — the sample-accurate path in full, including
+- [The waveform](waveform.html) - the sample-accurate path in full, including
   the SDR observer and the carrier-sense detector.
-- [What it does not do](what-it-does-not-do.html) — the error budget for each
+- [What it does not do](what-it-does-not-do.html) - the error budget for each
   mode.

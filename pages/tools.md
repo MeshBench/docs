@@ -75,8 +75,8 @@ radioserver                   beside it
 A **symlink** is correct for QEMU and a copy is not: it resolves its own path to
 find its data files, so a bare copy of the binary will not run. The Windows zip
 cannot carry a symlink at all, so nothing is linked there and the lookup
-searches the emulators' own unpacked layouts — `qemu/bin/` and the versioned
-`renode_*-portable/` — instead.
+searches the emulators' own unpacked layouts - `qemu/bin/` and the versioned
+`renode_*-portable/` - instead.
 
 The AppImage and the `.deb` carry the application and `radioserver` but not the
 emulators: those are 110 MB against a 26 MB AppImage. The tarball is the

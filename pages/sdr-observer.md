@@ -3,7 +3,7 @@
 An SDR observer is a node that transmits nothing and runs no firmware: it is
 an antenna on the map, and its window can serve that antenna to real SDR
 software over the `rtl_tcp` protocol. SDR++'s stock client connects to it as
-if it were a dongle, and what it draws is the simulation's actual air — the
+if it were a dongle, and what it draws is the simulation's actual air - the
 same summed IQ the verdicts are judged from, never a picture generated from
 packet events. If two transmissions collide, the waterfall shows the
 collision because the samples contain it, and for no other reason.
@@ -37,7 +37,7 @@ collision because the samples contain it, and for no other reason.
    position works, and its height and antenna matter exactly as much as any
    other node's.
 2. Open its node window. An observer's window is its own: no console and no
-   Radio tab — it runs no firmware and has no chip to read — but an **SDR**
+   Radio tab - it runs no firmware and has no chip to read - but an **SDR**
    pane in front.
 3. Press **serve rtl_tcp**. The pane shows the address and port the server
    picked, and a status line that flips to "client connected" when something
@@ -53,7 +53,7 @@ both is `sdr.serve` with `sdr.stop`, so a script can do it too.
 In SDR++, choose the **RTL-TCP** source and give it the address and port
 from the observer's window. Then:
 
-- **Sample rate**: any rate in the menu works — the server resamples its
+- **Sample rate**: any rate in the menu works - the server resamples its
   stream to whatever the client asks for. 250 kHz is the sensible choice:
   the lowest offered, the lightest to draw, and the tightest view of a LoRa
   channel.
@@ -62,26 +62,26 @@ from the observer's window. Then:
   the client tunes; the frequency command is recorded, not obeyed, because
   a simulated observer has exactly one channel to give.
 - **Direct Sampling** disabled, **Offset Tuning** off, **RTL AGC** and
-  **Tuner AGC** off. **Gain** is accepted and ignored — there is no front
+  **Tuner AGC** off. **Gain** is accepted and ignored - there is no front
   end to drive.
 - **IQ Correction** off. It exists to fight a real tuner's DC spike and
   image imbalance; pointed at mathematically clean synthetic IQ it slowly
   invents a correction for a fault that is not there.
 - To look at LoRa bursts, **RAW** mode with the bandwidth set to the
-  channel (62500 for the UK/EU narrow preset) beats any demodulator mode —
+  channel (62500 for the UK/EU narrow preset) beats any demodulator mode - 
   there is no FM here for WFM to find.
 
 Start the simulation playing, and transmissions appear as chirp bursts at
 the channel's width. Drag the observer across the map while it serves: the
 engine forgets its cached path losses on the spot, and the next window
-prices the new geometry — walking an observer away from a transmitter sinks
+prices the new geometry - walking an observer away from a transmitter sinks
 it into the noise floor in real time.
 
 ## What the stream honestly is
 
 - **Simulated time, continuously.** The stream position only moves forward.
-  If the simulation runs slower than the wall — a heavy waveform judgement,
-  a busy machine — the stream waits for it rather than rewinding or
+  If the simulation runs slower than the wall - a heavy waveform judgement,
+  a busy machine - the stream waits for it rather than rewinding or
   repeating windows; a client sees a slower waterfall, never a striped one.
   If the simulation runs much faster than real time, the stream jumps
   forward rather than falling minutes behind, exactly as a real dongle
@@ -99,7 +99,7 @@ it into the noise floor in real time.
   strong burst from clipping into broadband splatter, so a very hot signal
   briefly presses the floor down instead - the same trade a real front end
   makes with its gain.
-- **One client at a time**, exactly as the real `rtl_tcp` behaves — a
+- **One client at a time**, exactly as the real `rtl_tcp` behaves - a
   second connection is refused rather than fed interleaved samples.
 
 This is the same instrument the golden-vector experiment used from the

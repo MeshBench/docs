@@ -78,7 +78,7 @@ a port that answers nothing.
 
 **Two transports, per companion.** `TCP` for a client that speaks sockets,
 `serial` for the many that only know how to open a port. Both carry the
-firmware's own serial protocol byte for byte — this is not a mock, it is the
+firmware's own serial protocol byte for byte - this is not a mock, it is the
 same bytes the real device sends. The address gets a `copy` button beside it,
 because it is going into somebody else's configuration file and retyping a port
 from a screen is how a digit gets lost.
@@ -92,7 +92,7 @@ matters when an application appears to be doing nothing.
 ### Faults
 
 **Drop every client connection** takes the listener away with the connection, so
-the device disappears the way an unplugged cable does — "the device was
+the device disappears the way an unplugged cable does - "the device was
 unplugged", not "the link glitched". An application that reconnects cleanly from
 that is one that survives a phone going to sleep. Serving again is one click.
 

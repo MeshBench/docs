@@ -11,7 +11,7 @@ each one exists.
   <text x="390" y="67" font-size="11.5" fill="var(--ink)" text-anchor="middle">gofmt &#183; go vet &#183; golangci-lint + ratchet &#183; tests, four shards &#183; conflict markers &#183; file limits &#183; layout map &#183; licence inventory</text>
   <text x="20" y="116" font-size="12" font-weight="600" fill="var(--ink)">a v* tag, or a deliberate dispatch</text>
   <rect x="20" y="126" width="740" height="44" rx="8" fill="var(--warn)" fill-opacity=".08" stroke="var(--warn)" stroke-opacity=".4"/>
-  <text x="390" y="153" font-size="11.5" fill="var(--ink)" text-anchor="middle">the race detector &#183; the release pipeline (package.yml) &#8212; nothing in a pull request exercises either</text>
+  <text x="390" y="153" font-size="11.5" fill="var(--ink)" text-anchor="middle">the race detector &#183; the release pipeline (package.yml) - nothing in a pull request exercises either</text>
   <text x="20" y="202" font-size="12" font-weight="600" fill="var(--ink)">on demand, for reading rather than gating</text>
   <rect x="20" y="212" width="740" height="24" rx="8" fill="var(--panel)" stroke="var(--rule)"/>
   <text x="390" y="228" font-size="11.5" fill="var(--dim)" text-anchor="middle">SonarQube: complexity, whole-tree duplication, per-package coverage</text>
@@ -26,7 +26,7 @@ second lane stays invisible until a tag or a dispatch fires it.</figcaption>
 |---|---|
 | `gofmt -l` | any file not formatted |
 | `go vet` | the compiler's own suspicions |
-| `golangci-lint` + ratchet | any *increase* in findings — see below |
+| `golangci-lint` + ratchet | any *increase* in findings - see below |
 | `go test ./...` | a failing test, across four parallel shards |
 | conflict markers | `<<<<<<<`, `=======` or `>>>>>>>` committed in source |
 | file length | over 500 lines without an exemption naming its reason |
@@ -68,13 +68,13 @@ tens of findings, so the baseline is only meaningful against the version
 
 ## The race detector
 
-Not on every push — it multiplies an already slow suite by enough that the wait
+Not on every push - it multiplies an already slow suite by enough that the wait
 becomes the thing people notice about the pipeline, and a check nobody waits for
 is a check that gets worked around.
 
 It runs when a `v*` tag is pushed, which is the moment it matters and the moment
 nobody is waiting on the answer, and on request from the Actions tab. It is the
-only gate that can find a startup race — exactly the class of fault review does
+only gate that can find a startup race - exactly the class of fault review does
 not catch.
 
 ## SonarQube

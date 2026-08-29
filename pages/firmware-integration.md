@@ -93,7 +93,7 @@ real traffic and are a fact about that node.
   <text x="280" y="40" font-size="11" fill="var(--dim)">identity: what its adverts carry</text>
   <circle cx="30" cy="66" r="4" fill="var(--accent-mark)"/>
   <text x="48" y="70" font-size="11.5" font-weight="600" fill="var(--ink)" font-family="var(--mono)">time</text>
-  <text x="280" y="70" font-size="11" fill="var(--dim)">a shared clock &#8212; the scenario&#8217;s, so runs reproduce</text>
+  <text x="280" y="70" font-size="11" fill="var(--dim)">a shared clock - the scenario&#8217;s, so runs reproduce</text>
   <circle cx="30" cy="96" r="4" fill="var(--accent-mark)"/>
   <text x="48" y="100" font-size="11.5" font-weight="600" fill="var(--ink)" font-family="var(--mono)">set lat / set lon</text>
   <text x="280" y="100" font-size="11" fill="var(--dim)">position: what the physics prices</text>
@@ -111,7 +111,7 @@ real traffic and are a fact about that node.
   <text x="280" y="220" font-size="11" fill="var(--dim)">a hop ceiling on adverts</text>
 </svg>
 <figcaption>Seven console lines, issued in this order at every firmware start.
-Before them a node is not broken &#8212; and not useful either.</figcaption>
+Before them a node is not broken - and not useful either.</figcaption>
 </figure>
 
 **The region half of this is shared code**, in `internal/app/fixture`, used by both
@@ -136,6 +136,10 @@ Enter.
 ::python
 ```python
 print(wb.nodes["Bathgate room"].console.ask("get repeat"))
+```
+::go
+```go
+reply, err := wb.Node("Bathgate room").Console().Ask(ctx, "get repeat", 100)
 ```
 :::
 

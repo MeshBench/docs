@@ -80,7 +80,7 @@ RNG, never a stateful stream shared across goroutines.
 
 <figure>
 <svg viewBox="0 0 760 470" role="img" aria-label="The nine layers of internal, with imports running downward only">
-  <text x="396" y="24" font-size="12.5" font-weight="600" fill="var(--ink)" text-anchor="middle">internal/ — a package imports its own layer and everything below it</text>
+  <text x="396" y="24" font-size="12.5" font-weight="600" fill="var(--ink)" text-anchor="middle">internal/ - a package imports its own layer and everything below it</text>
 
   <rect x="96" y="46" width="600" height="38" rx="6" fill="var(--warn)" fill-opacity=".10" stroke="var(--warn)" stroke-opacity=".45"/>
   <text x="120" y="70" font-size="13" font-weight="600" fill="var(--ink)">ui</text>

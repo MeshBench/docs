@@ -27,7 +27,7 @@ disk.
 Most of these fill themselves. Pan the map and terrain arrives; the cache is a
 consequence of using the application rather than a decision anybody made. Those
 rows show what they have cost and offer to remove it, and their **Fetch** button
-is disabled with the reason given — there is nothing to ask for out of context.
+is disabled with the reason given - there is nothing to ask for out of context.
 
 The SoftDevice is the exception, and is fetched **only on request**. It is
 somebody else's licensed binary, and the terms should arrive where a person sees
@@ -47,7 +47,7 @@ each layer's attribution on the map itself.
 ## Removing something
 
 Remove asks twice, in place. What it deletes is a cache, so nothing is lost that
-cannot be fetched again — but a terrain cache rebuilt over a metered connection
+cannot be fetched again - but a terrain cache rebuilt over a metered connection
 is worth thinking about first, which is why the size is on the row.
 
 ## Sizes
