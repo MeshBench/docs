@@ -121,7 +121,7 @@ def main():
     if consts:
         blocks.append("## Constants")
         for name, val, doc in consts:
-            blocks.append("- `%s = %s`%s" % (name, val, " — " + doc if doc else ""))
+            blocks.append("- `%s = %s`%s" % (name, val, " - " + doc if doc else ""))
 
     emit(PAGE, blocks)
 

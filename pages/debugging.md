@@ -89,7 +89,7 @@ that gives one number for "the link" is hiding half the answer.
 
 :::ways
 ::gui
-**Simulation**, then **Capture to a pcapng file** — or **Watch it live in
+**Simulation**, then **Capture to a pcapng file** - or **Watch it live in
 Wireshark**, which starts the stream, installs the dissector and opens
 Wireshark as one action. **Stop capturing** ends either.
 ::socket
@@ -99,6 +99,10 @@ Wireshark as one action. **Stop capturing** ends either.
 ::python
 ```python
 wb.call("capture.file", {"path": "/tmp/run.pcapng"})
+```
+::go
+```go
+_, err := wb.Call(ctx, "capture.file", map[string]any{"path": "/tmp/run.pcapng"})
 ```
 :::
 

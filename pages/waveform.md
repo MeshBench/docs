@@ -23,7 +23,7 @@ partial overlap actually costs, and what a receiver would hear.
 The mode is set in **Configuration → RF Simulation**, or through the `rf.mode`
 verb. It applies on a whole-transmission boundary, so a run can be switched
 while it plays without cutting a frame in half. The choice is persisted, and it
-is stamped into every saved run — a result carries the physics that produced
+is stamped into every saved run - a result carries the physics that produced
 it, because two runs under different models are not comparable.
 
 The status bar names the active mode while a run plays.
@@ -34,7 +34,7 @@ The status bar names the active mode while a run plays.
 
 MeshCore firmware writes a frame to its virtual radio. The bridge surfaces it,
 and the engine prices its airtime with the same formula RadioLib uses in
-`getTimeOnAir` — the one MeshCore's own CSMA is built on. When the airtime
+`getTimeOnAir` - the one MeshCore's own CSMA is built on. When the airtime
 elapses the transmission is collected for delivery together with everything
 that shared the air: transmissions still in flight, others that ended in the
 same tick, and transmissions that ended earlier but overlapped something still
@@ -50,8 +50,8 @@ The frame is rendered as an SX126x would send it. The coding chain
 (`internal/rf/lora`) runs an explicit header with its checksum, payload
 whitening, a CRC16, Hamming forward error correction at the frame's coding
 rate, the diagonal interleaver, and Gray mapping. The result is wrapped
-(`internal/rf/dsp/sync.go`) in MeshCore's own preamble length — 32 upchirps at
-spreading factor 8 and below, 16 above — the `0x12` sync word, and the
+(`internal/rf/dsp/sync.go`) in MeshCore's own preamble length - 32 upchirps at
+spreading factor 8 and below, 16 above - the `0x12` sync word, and the
 2.25-symbol downchirp that marks the start of frame.
 
 That 2.25 is not a rounding. It is RadioLib's `sfCoeff1 = 4.25` expressed as
@@ -60,7 +60,7 @@ describing the same frame. If they disagreed, the channel and the firmware's
 CSMA would drift apart silently.
 
 The coding chain accepts spreading factors 7 to 12. SF5 and SF6 use a different
-frame arrangement on the SX126x — a 6.25-symbol delimiter rather than 2.25 —
+frame arrangement on the SX126x - a 6.25-symbol delimiter rather than 2.25 - 
 and are rejected rather than approximated.
 
 Samples are synthesised once per packet per delivery batch and shared across
@@ -79,8 +79,8 @@ when an environment is loaded, plus a calibration term.
 With multipath enabled, one geometric echo is added per path: deterministic
 excess delay and carrier phase, drifted by the configured fading rate.
 
-`internal/rf/channel` then sums every contribution coherently — fractional
-delay carried as phase — and adds counter-based Gaussian noise at the
+`internal/rf/channel` then sums every contribution coherently - fractional
+delay carried as phase - and adds counter-based Gaussian noise at the
 receiver's own noise floor. The same synthesis feeds the decode verdicts, the
 waterfall, the carrier-sense detector and the SDR observers. Rendering those
 from different signals would let the pictures disagree with the physics.
@@ -116,7 +116,7 @@ streaming window is the channel's business rather than damage to the packet.
 
 What reaches MeshCore is **the decoded bytes, not the transmitted frame**. With
 a valid CRC those are the same bytes. On the day a corrupted frame passes CRC by
-chance, the firmware sees the corruption — which is what the chip would hand it
+chance, the firmware sees the corruption - which is what the chip would hand it
 too.
 
 Misses say why: no preamble lock, header unreadable, or a count of codewords
@@ -168,7 +168,7 @@ Moving a node on the map forgets its cached path losses, so dragging an
 observer changes what an attached client hears on the next window.
 
 An observer has its own node window (`internal/ui/workbench/nodewindowobserver.go`)
-with no console and no Radio tab — it runs no firmware and has no chip — but an
+with no console and no Radio tab - it runs no firmware and has no chip - but an
 SDR pane that serves the antenna, shows the address and the client's exact
 sample rate, and says whether a client is connected.
 
@@ -181,7 +181,7 @@ and its confidence.
 Tiles are gzipped JSON lines per zoom-14 slippy tile, produced offline by
 `tools/envgen` from Microsoft Global ML Building Footprints or OSM GeoJSON,
 loaded on demand and cached. **Missing tiles are counted, never mistaken for
-empty ground** — the difference between "no buildings here" and "no data here"
+empty ground** - the difference between "no buildings here" and "no data here"
 changes what a coverage raster means.
 
 Each crossed building is priced as a P.526 knife edge at its rooftop, plus one
@@ -195,7 +195,7 @@ so a loaded environment reaches all three. Loading or dropping an environment
 forgets the link cache, because two sets of physics must not share one matrix.
 
 Footprints can also be pulled at runtime from OpenStreetMap over Overpass, from
-Microsoft's footprints by quadkey, or — the default — the two merged. Microsoft
+Microsoft's footprints by quadkey, or - the default - the two merged. Microsoft
 provides existence and height; an OSM building whose centroid falls inside a
 detected footprint contributes its explicit type, levels and materials, with
 explicit overriding inferred. OSM-only buildings survive on their own.
@@ -234,5 +234,5 @@ Roughly half the remaining time is Gaussian noise synthesis and a fifth is FFT.
 
 Waveform mode is between 20× and 50× the cost of calculated mode. That is the
 trade: it is the mode to reach for when the question is about a specific
-collision, a specific link, or what a receiver would actually hear — not the
+collision, a specific link, or what a receiver would actually hear - not the
 mode to sweep a national network in.

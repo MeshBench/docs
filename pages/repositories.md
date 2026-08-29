@@ -21,7 +21,7 @@ it is.
 
 ## The forks, and what each changes
 
-### `MeshBench/qemu` — branch `meshbench-sx1262`
+### `MeshBench/qemu` - branch `meshbench-sx1262`
 
 Forked from Espressif's QEMU fork. Adds an SX1262 SPI device, a working GPIO
 implementation, and machine properties for the radio wiring.
@@ -34,28 +34,28 @@ that no chip is present.
 Must be built with `--enable-gcrypt`, or the `esp32` machine will not
 instantiate.
 
-### `MeshBench/tlib` — branch `sevonpend-any-pending`
+### `MeshBench/tlib` - branch `sevonpend-any-pending`
 
 Forked from `antmicro/tlib`. One clause: `SEVONPEND` generates an event for
 *any* exception entering the pending state, not only for exceptions the CPU
 would accept.
 
 ARM DDI0403E B1.5.17 does not qualify the event by whether the exception is
-enabled, and the comment above the line already said "any exception" — but the
+enabled, and the comment above the line already said "any exception" - but the
 code asked a function that answers the narrower question. Firmware that sets
-`SEVONPEND`, sleeps on `WFE` and then reads the pending register — handling the
-source in thread mode with the interrupt deliberately disabled — never woke.
+`SEVONPEND`, sleeps on `WFE` and then reads the pending register - handling the
+source in thread mode with the interrupt deliberately disabled - never woke.
 MeshCore's published nRF52 builds do exactly that.
 
-### `MeshBench/renode-infrastructure` — branch `sevonpend-any-pending`
+### `MeshBench/renode-infrastructure` - branch `sevonpend-any-pending`
 
 The C# half of the same fix, exported for the tlib callback. Its own `tlib`
 submodule points at the fork above.
 
-### `MeshBench/renode` — branch `meshbench`
+### `MeshBench/renode` - branch `meshbench`
 
 Points its infrastructure submodule at the fork, and builds the **portable**
-package — the one that bundles the .NET runtime, so a machine needs no dotnet
+package - the one that bundles the .NET runtime, so a machine needs no dotnet
 installed. Setting MeshBench up should be a download, not a toolchain.
 
 Its build also asserts that both halves of the fix are present in the tree it
@@ -81,9 +81,9 @@ published version stays free: anyone who receives a binary can obtain the source
 for it under the same terms, and every release carries a source archive.
 
 The full text and the reasoning are in `docs/licence.md` in the MeshBench
-repository. The complete third-party inventory — every fork, every bundled
+repository. The complete third-party inventory - every fork, every bundled
 component, everything downloaded at run time, and the map and terrain data
-attributions — is in the application itself, under **Help → Licences &
+attributions - is in the application itself, under **Help → Licences &
 attributions**.
 
 That inventory is generated rather than maintained by hand. A linked module

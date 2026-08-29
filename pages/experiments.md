@@ -51,6 +51,13 @@ wb.call("experiment.define", {"arms": [...], "seeds": [1, 2, 3],
                               "scope": "#sco", "run_for_ms": 90000})
 wb.call("experiment.start")
 ```
+::go
+Neither client shapes the experiment verbs yet; both drive the raw calls, so
+the socket tab is the reference:
+
+```go
+_, err := wb.Call(ctx, "experiment.start", nil)
+```
 :::
 
 ## What comes out
@@ -59,11 +66,11 @@ wb.call("experiment.start")
 |---|---|
 | `tx` | transmissions, summed over every node |
 | `rx` | successful receptions |
-| `delivered` | unique deliveries — a message reaching a node it had not reached |
+| `delivered` | unique deliveries - a message reaching a node it had not reached |
 | `redundant` | receptions of something already heard, the cost of flooding |
 | `collisions` | receptions lost to overlapping transmissions |
 | `airtime_ms` | total time the network spent transmitting |
-| `rx_spread` | how much `rx` varied across the arm's seeds — the arm's own noise floor |
+| `rx_spread` | how much `rx` varied across the arm's seeds - the arm's own noise floor |
 | `at_risk_2db` | deliveries within 2 dB of the demodulator floor, absent when no run measured it |
 
 Airtime, collisions and redundancy are the metrics that answer "is this change

@@ -2,7 +2,7 @@
 
 MeshBench can be driven from outside the application. A script opens a session,
 builds or imports a network, brings the firmware up, runs the clock, and reads
-what happened — the same code path a person clicks, so a driven session shows
+what happened - the same code path a person clicks, so a driven session shows
 its work on screen.
 
 There are three clients, in Python, Go and Node. They are peers: none wraps
@@ -12,7 +12,7 @@ another, and each speaks the control socket directly.
 pkg/client-python/meshbench     pkg/client-go/meshbench     pkg/client-js
 ```
 
-Python is the one most scripts are written in — MeshCore's tooling is Python,
+Python is the one most scripts are written in - MeshCore's tooling is Python,
 and a firmware developer writing a regression test reaches for pytest. Go is the
 reference implementation. Node is one ES module with no dependencies, for a
 companion app or a dashboard in the JavaScript world. The Python and Go clients
@@ -24,7 +24,7 @@ own doc comments so it cannot drift from the code: the
 [Python client reference](reference-python.html), the
 [Go client reference](reference-go.html), and the
 [Node client reference](reference-js.html). For one-shot jobs that need no
-session at all — a link budget, a coverage raster, downloading terrain — the
+session at all - a link budget, a coverage raster, downloading terrain - the
 [CLI](reference-cli.html) is quicker than a script.
 
 ## Opening a session
@@ -38,7 +38,7 @@ with Workbench.headless(fixture="fife-strict", seed=9001) as wb:
 
 `headless` starts a session with no window: no display, no GPU, no toolkit.
 `launch` opens the desktop application instead, which is what an example run by
-hand should do — a scripted run that shows nothing is a scripted run nobody can
+hand should do - a scripted run that shows nothing is a scripted run nobody can
 tell is working. `attach` connects to a session that is already up and never
 stops it.
 
@@ -79,7 +79,7 @@ finish, starts firmware on every node that is not already running, and then
 starts the clock.
 
 It is three calls rather than one because the verb behind the play button
-behaves differently depending on what the run is already doing — it stops a
+behaves differently depending on what the run is already doing - it stops a
 run that is playing, declines while links are still being measured, and starts
 firmware without starting the clock. None of those is an error, so a script
 that sent it once and moved on would wait for firmware that had not been asked
@@ -117,8 +117,8 @@ wb.nodes.place("Deck", kind=Kind.COMPANION, board=Board.LILYGO_TDECK)
 A board name nothing matches is refused rather than defaulted: the board decides
 the transmit ceiling, the receive chain's noise figure and the battery, so a
 silent fallback answers a different question. Roles are the application names
-MeshCore uses for its example directories — `simple_repeater`,
-`companion_radio` — which is what the verbs are keyed on. The published release
+MeshCore uses for its example directories - `simple_repeater`,
+`companion_radio` - which is what the verbs are keyed on. The published release
 assets spell some of the same things differently, and a build pinned under one
 of those names is installed, visible, and never run.
 
@@ -143,7 +143,7 @@ tell "found it" from "found something that shares a word".
 
 A repeater has a text command line and reads what is typed at it. A companion
 does not: it speaks the framed companion protocol, and its command line is
-meshcore-cli's vocabulary — `advert`, `public <msg>`, `chan <n> <msg>`,
+meshcore-cli's vocabulary - `advert`, `public <msg>`, `chan <n> <msg>`,
 `infos`, `contacts`.
 
 `node.console` chooses by the node's kind, so a script does not have to. Text
@@ -155,7 +155,7 @@ print(node.console.ask("advert"))
 ```
 
 `ask` is the one to use. A node reads its serial input on its next loop, and its
-loop runs when the engine steps — so reading immediately after sending reads the
+loop runs when the engine steps - so reading immediately after sending reads the
 moment before the command went out. `ask` sends, gives the mesh its own time,
 and then reads.
 
@@ -171,8 +171,8 @@ fetch time: a boundary applied afterwards prunes nodes that have already been
 fetched and measured.
 
 `boundary.use` takes a place name, looked up in a gazetteer, or a path to
-GeoJSON. GeoJSON is the way to study an area with no administrative name — a
-catchment, a valley, a polygon drawn for the purpose — and the only way that
+GeoJSON. GeoJSON is the way to study an area with no administrative name - a
+catchment, a valley, a polygon drawn for the purpose - and the only way that
 works without a network.
 
 `live.pull` runs the whole chain: fetch the nodes, commit them, read the feed's
@@ -202,7 +202,7 @@ else.
 Everything on the [limits page](what-it-does-not-do.html) applies. A scripted
 result is a simulated result: no multipath, no body loss, no oscillator error.
 The biases are nearly all in one direction, which is what makes the numbers
-usable — read them as a best case.
+usable - read them as a best case.
 
 Two further limits belong to scripting itself. A run is only reproducible
 against the same seed and the same scenario, so a comparison that varies the

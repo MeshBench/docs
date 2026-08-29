@@ -64,14 +64,14 @@ that looks fine and behaves wrongly.
   <text x="711" y="163" font-size="9.5" fill="var(--warn)" text-anchor="middle">never relays</text>
   <text x="390" y="216" font-size="11" fill="var(--dim)" text-anchor="middle">Every step can be skipped without an error; the amber lines are what each skip looks like later.</text>
 </svg>
-<figcaption>The order matters because each step feeds the next &#8212; and a
+<figcaption>The order matters because each step feeds the next - and a
 skipped one fails silently, later, looking like bad RF.</figcaption>
 </figure>
 
 ![The Import panel: the five steps in order, and the study area they act on](images/import-panel.png)
 
 The whole chain is on the Import panel, whose buttons are numbered in this
-order — and from Python or Go it is one call, `wb.live.pull(url)` /
+order - and from Python or Go it is one call, `wb.live.pull(url)` /
 `wb.Live().Pull(ctx, url, 0, 0)`, which runs fetch, commit, inference and
 apply together. The steps below are for doing it a step at a time.
 
@@ -85,7 +85,7 @@ fetching a continent to keep a county.
 :::ways
 ::gui
 On the **Import** panel, type the place into *a place: Fife, Scotland,
-Ireland* and press **1. add area**. Add each area the study needs — areas
+Ireland* and press **1. add area**. Add each area the study needs - areas
 union, so Scotland plus Ireland is two presses.
 ::socket
 ```json
@@ -114,7 +114,7 @@ null-island nodes and cuts coastline wrongly.
 ::gui
 Paste the deployment address into *a CoreScope deployment URL*, press
 **2. fetch**, read the counts it reports, then press **3. commit**. Nothing
-changes until the commit — fetching only describes what an import would do.
+changes until the commit - fetching only describes what an import would do.
 ::socket
 ```json
 {"id":3,"method":"import.set_source","params":{
@@ -122,6 +122,18 @@ changes until the commit — fetching only describes what an import would do.
 {"id":4,"method":"import.fetch"}
 {"id":5,"method":"import.commit","params":{"strategy":"replace-all"}}
 ```
+::python
+The Python client shapes the whole chain rather than this single step:
+`wb.live.pull(url)` runs fetch, commit, inference and apply in one call.
+For just this step, send the socket verbs above with `wb.call(verb, params)`.
+::go
+The Go client shapes the whole chain rather than this single step:
+
+```go
+found, err := wb.Live().Pull(ctx, url, 0, 0)
+```
+
+For just this step, send the socket verbs above with `wb.Call(ctx, verb, params)`.
 :::
 
 There are two strategies. `replace-all` clears the current nodes and starts
@@ -138,11 +150,19 @@ dropped, and the counts are reported.
 :::ways
 ::gui
 On the **Boundary** panel, press **delete what is outside**. The margin box
-beside it keeps what is just over the line — a repeater 20 km outside the
+beside it keeps what is just over the line - a repeater 20 km outside the
 boundary is still heard inside it.
 ::socket
 ```json
 {"id":6,"method":"boundary.prune"}
+```
+::python
+```python
+wb.call("boundary.prune")
+```
+::go
+```go
+raw, err := wb.Call(ctx, "boundary.prune", nil)
 ```
 :::
 
@@ -158,7 +178,7 @@ nodes.
 :::ways
 ::gui
 In the [firmware library](firmware-library.html), press **use for role** on
-the build each role should run — it sets every node of that role at once.
+the build each role should run - it sets every node of that role at once.
 ::socket
 ```json
 {"id":7,"method":"firmware.set","params":{
@@ -167,6 +187,10 @@ the build each role should run — it sets every node of that role at once.
 ::python
 ```python
 wb.firmware.use_what_is_here()   # newest on-disk build, per role
+```
+::go
+```go
+_, err := wb.Firmware().UseWhatIsHere(ctx)
 ```
 :::
 
@@ -188,6 +212,21 @@ then press **5. apply regions**. The panel reports how many nodes changed.
 {"id":8,"method":"infer.run","params":{"hours":168}}
 {"id":9,"method":"infer.result"}
 {"id":10,"method":"infer.apply"}
+```
+::python
+Already covered if the import came in through `wb.live.pull(url)`, which ends
+with this step. On its own:
+
+```python
+wb.call("infer.run", {"hours": 168})
+wb.call("infer.apply")
+```
+::go
+Already covered by `wb.Live().Pull`. On its own:
+
+```go
+_, err := wb.Call(ctx, "infer.run", map[string]any{"hours": 168})
+_, err = wb.Call(ctx, "infer.apply", nil)
 ```
 :::
 
@@ -213,6 +252,10 @@ handful hold produces the same silence for the same reason.
 ::python
 ```python
 wb.project.save("my-network")
+```
+::go
+```go
+name, err := wb.Project().Save(ctx, "my-network")
 ```
 :::
 

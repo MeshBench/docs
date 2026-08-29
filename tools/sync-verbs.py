@@ -65,10 +65,10 @@ def build(all_verbs):
         if not group:
             continue
         seen.update(group)
-        blocks.append("**%s** — %s" % (title, " · ".join("`%s`" % v for v in group)))
+        blocks.append("**%s** - %s" % (title, " · ".join("`%s`" % v for v in group)))
     rest = [v for v in all_verbs if v not in seen]
     if rest:
-        blocks.append("**Everything else** — %s" %
+        blocks.append("**Everything else** - %s" %
                       " · ".join("`%s`" % v for v in rest))
     head = ("There are %d, grouped by what they are for rather than "
             "alphabetically." % len(all_verbs))

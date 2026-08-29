@@ -239,7 +239,7 @@ h2:hover .hl, h3:hover .hl, h2 .hl:focus-visible, h3 .hl:focus-visible { opacity
 qemu-system-xtensa            beside it, or symlinked
 renode                        beside it, or symlinked
 radioserver                   beside it</code></pre><button class="copy" type="button" aria-label="Copy this code">copy</button></div>
-<p>A <strong>symlink</strong> is correct for QEMU and a copy is not: it resolves its own path to find its data files, so a bare copy of the binary will not run. The Windows zip cannot carry a symlink at all, so nothing is linked there and the lookup searches the emulators&#x27; own unpacked layouts — <code>qemu/bin/</code> and the versioned <code>renode_*-portable/</code> — instead.</p>
+<p>A <strong>symlink</strong> is correct for QEMU and a copy is not: it resolves its own path to find its data files, so a bare copy of the binary will not run. The Windows zip cannot carry a symlink at all, so nothing is linked there and the lookup searches the emulators&#x27; own unpacked layouts - <code>qemu/bin/</code> and the versioned <code>renode_*-portable/</code> - instead.</p>
 <p>The AppImage and the <code>.deb</code> carry the application and <code>radioserver</code> but not the emulators: those are 110 MB against a 26 MB AppImage. The tarball is the batteries-included download for anyone who wants them.</p>
 <h2 id="what-is-checked-and-when">What is checked, and when<a class="hl" href="#what-is-checked-and-when" aria-label="Link to this section">#</a></h2>
 <p>A missing tool is reported <strong>before</strong> a run rather than during one, and the error names all four search locations. &quot;<code>qemu-system-xtensa</code> not found&quot; on its own sends people to their package manager for a build that will not work.</p>

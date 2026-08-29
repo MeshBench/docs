@@ -1,7 +1,7 @@
 # Python client reference
 
 The Python client is `pkg/client-python/meshbench` in the
-[meshbench repository](https://github.com/MeshBench/meshbench) — one dependency,
+[meshbench repository](https://github.com/MeshBench/meshbench) - one dependency,
 the standard library, and a control socket. Install it with
 `pip install -e pkg/client-python`, then `from meshbench import Workbench`.
 
@@ -1022,52 +1022,52 @@ A node's board decides its transmit ceiling, its receive chain's noise
 figure and the battery the energy model uses, so naming one that does not
 exist is refused rather than defaulted.
 
-- `EBYTE_EORA_S3` — `'Ebyte_EoRa-S3'`
-- `GENERIC_E22_SX1262` — `'Generic_E22_sx1262'`
-- `HELTEC_E213` — `'Heltec_E213'`
-- `HELTEC_E290` — `'Heltec_E290'`
-- `HELTEC_WSL3` — `'Heltec_WSL3'`
-- `HELTEC_WIRELESS_PAPER` — `'Heltec_Wireless_Paper'`
-- `HELTEC_WIRELESS_TRACKER` — `'Heltec_Wireless_Tracker'`
-- `HELTEC_MESH_SOLAR` — `'Heltec_mesh_solar'`
-- `HELTEC_T096` — `'Heltec_t096'`
-- `HELTEC_T114` — `'Heltec_t114'`
-- `HELTEC_V2` — `'Heltec_v2'`
-- `HELTEC_V3` — `'Heltec_v3'`
-- `LILYGO_T3S3_SX1262` — `'LilyGo_T3S3_sx1262'`
-- `LILYGO_TBEAM_1W` — `'LilyGo_TBeam_1W'`
-- `LILYGO_TDECK` — `'LilyGo_TDeck'`
-- `RAK_3112` — `'RAK_3112'`
-- `RAK_4631` — `'RAK_4631'`
-- `STATION_G2` — `'Station_G2'`
-- `STATION_G3_ESP32` — `'Station_G3_ESP32'`
-- `TBEAM_SX1262` — `'Tbeam_SX1262'`
-- `XIAO_S3` — `'Xiao_S3'`
-- `XIAO_S3_WIO` — `'Xiao_S3_WIO'`
-- `XIAO_NRF52` — `'Xiao_nrf52'`
-- `HELTEC_TRACKER_V2` — `'heltec_tracker_v2'`
-- `HELTEC_V4` — `'heltec_v4'`
+- `EBYTE_EORA_S3` - `'Ebyte_EoRa-S3'`
+- `GENERIC_E22_SX1262` - `'Generic_E22_sx1262'`
+- `HELTEC_E213` - `'Heltec_E213'`
+- `HELTEC_E290` - `'Heltec_E290'`
+- `HELTEC_WSL3` - `'Heltec_WSL3'`
+- `HELTEC_WIRELESS_PAPER` - `'Heltec_Wireless_Paper'`
+- `HELTEC_WIRELESS_TRACKER` - `'Heltec_Wireless_Tracker'`
+- `HELTEC_MESH_SOLAR` - `'Heltec_mesh_solar'`
+- `HELTEC_T096` - `'Heltec_t096'`
+- `HELTEC_T114` - `'Heltec_t114'`
+- `HELTEC_V2` - `'Heltec_v2'`
+- `HELTEC_V3` - `'Heltec_v3'`
+- `LILYGO_T3S3_SX1262` - `'LilyGo_T3S3_sx1262'`
+- `LILYGO_TBEAM_1W` - `'LilyGo_TBeam_1W'`
+- `LILYGO_TDECK` - `'LilyGo_TDeck'`
+- `RAK_3112` - `'RAK_3112'`
+- `RAK_4631` - `'RAK_4631'`
+- `STATION_G2` - `'Station_G2'`
+- `STATION_G3_ESP32` - `'Station_G3_ESP32'`
+- `TBEAM_SX1262` - `'Tbeam_SX1262'`
+- `XIAO_S3` - `'Xiao_S3'`
+- `XIAO_S3_WIO` - `'Xiao_S3_WIO'`
+- `XIAO_NRF52` - `'Xiao_nrf52'`
+- `HELTEC_TRACKER_V2` - `'heltec_tracker_v2'`
+- `HELTEC_V4` - `'heltec_v4'`
 
 ### Class
 
 What happened to an event.
 
-- `SENT` — `'sent'`
-- `RECEIVED` — `'received'`
-- `HALF_DUPLEX` — `'half-duplex'`
-- `INTERFERENCE` — `'interference'`
-- `FLOOR` — `'floor'`
+- `SENT` - `'sent'`
+- `RECEIVED` - `'received'`
+- `HALF_DUPLEX` - `'half-duplex'`
+- `INTERFERENCE` - `'interference'`
+- `FLOOR` - `'floor'`
 
 ### Kind
 
 What a node is.
 
-- `SIMPLE_REPEATER` — `'simple-repeater'`
-- `ADVANCED_REPEATER` — `'advanced-repeater'`
-- `COMPANION` — `'companion'`
-- `ROOM_SERVER` — `'room-server'`
-- `SDR_OBSERVER` — `'sdr-observer'`
-- `EMITTER` — `'emitter'`
+- `SIMPLE_REPEATER` - `'simple-repeater'`
+- `ADVANCED_REPEATER` - `'advanced-repeater'`
+- `COMPANION` - `'companion'`
+- `ROOM_SERVER` - `'room-server'`
+- `SDR_OBSERVER` - `'sdr-observer'`
+- `EMITTER` - `'emitter'`
 
 ### Preset
 
@@ -1076,26 +1076,26 @@ A named set of LoRa parameters for a territory.
 An agreement between operators rather than a configuration, which is why
 the list is baked in rather than fetched.
 
-- `AUSTRALIA` — `'Australia'`
-- `AUSTRALIA_NARROW` — `'Australia (Narrow)'`
-- `AUSTRALIA_MID` — `'Australia (Mid)'`
-- `AUSTRALIA_SA_WA` — `'Australia: SA, WA'`
-- `AUSTRALIA_QLD` — `'Australia: QLD'`
-- `BRAZIL` — `'Brazil'`
-- `EU_UK_NARROW` — `'EU/UK (Narrow)'`
-- `EU_UK_DEPRECATED` — `'EU/UK (Deprecated)'`
-- `CZECH_REPUBLIC_NARROW` — `'Czech Republic (Narrow)'`
-- `EU_433MHZ_LONG_RANGE` — `'EU 433MHz (Long Range)'`
-- `EU_433MHZ_NARROW` — `'EU 433MHz (Narrow)'`
-- `NETHERLANDS` — `'Netherlands'`
-- `NEW_ZEALAND` — `'New Zealand'`
-- `NEW_ZEALAND_NARROW` — `'New Zealand (Narrow)'`
-- `PORTUGAL_433` — `'Portugal 433'`
-- `PORTUGAL_868` — `'Portugal 868'`
-- `SWITZERLAND` — `'Switzerland'`
-- `USA_CANADA_RECOMMENDED` — `'USA/Canada (Recommended)'`
-- `VIETNAM_NARROW` — `'Vietnam (Narrow)'`
-- `VIETNAM_DEPRECATED` — `'Vietnam (Deprecated)'`
+- `AUSTRALIA` - `'Australia'`
+- `AUSTRALIA_NARROW` - `'Australia (Narrow)'`
+- `AUSTRALIA_MID` - `'Australia (Mid)'`
+- `AUSTRALIA_SA_WA` - `'Australia: SA, WA'`
+- `AUSTRALIA_QLD` - `'Australia: QLD'`
+- `BRAZIL` - `'Brazil'`
+- `EU_UK_NARROW` - `'EU/UK (Narrow)'`
+- `EU_UK_DEPRECATED` - `'EU/UK (Deprecated)'`
+- `CZECH_REPUBLIC_NARROW` - `'Czech Republic (Narrow)'`
+- `EU_433MHZ_LONG_RANGE` - `'EU 433MHz (Long Range)'`
+- `EU_433MHZ_NARROW` - `'EU 433MHz (Narrow)'`
+- `NETHERLANDS` - `'Netherlands'`
+- `NEW_ZEALAND` - `'New Zealand'`
+- `NEW_ZEALAND_NARROW` - `'New Zealand (Narrow)'`
+- `PORTUGAL_433` - `'Portugal 433'`
+- `PORTUGAL_868` - `'Portugal 868'`
+- `SWITZERLAND` - `'Switzerland'`
+- `USA_CANADA_RECOMMENDED` - `'USA/Canada (Recommended)'`
+- `VIETNAM_NARROW` - `'Vietnam (Narrow)'`
+- `VIETNAM_DEPRECATED` - `'Vietnam (Deprecated)'`
 
 ### Role
 
@@ -1107,40 +1107,40 @@ some of the same things differently - "repeater", "room-server" - and those
 belong to the release assets; typing one at a verb pins nothing, and the run
 then refuses to start with no clue as to why.
 
-- `SIMPLE_REPEATER` — `'simple_repeater'`
-- `COMPANION_RADIO` — `'companion_radio'`
-- `SIMPLE_ROOM_SERVER` — `'simple_room_server'`
-- `COMPANION_RADIO_USB` — `'companion_radio_usb'`
-- `COMPANION_RADIO_BLE` — `'companion_radio_ble'`
+- `SIMPLE_REPEATER` - `'simple_repeater'`
+- `COMPANION_RADIO` - `'companion_radio'`
+- `SIMPLE_ROOM_SERVER` - `'simple_room_server'`
+- `COMPANION_RADIO_USB` - `'companion_radio_usb'`
+- `COMPANION_RADIO_BLE` - `'companion_radio_ble'`
 
 ### Strategy
 
 How an imported deployment meets what is already loaded.
 
-- `REPLACE` — `'replace-all'`
-- `ADD` — `'add'`
+- `REPLACE` - `'replace-all'`
+- `ADD` - `'add'`
 
 ### Tab
 
 A pane of a node's own window.
 
-- `CONSOLE` — `'Console'`
-- `COMPANION` — `'Companion'`
-- `SDR` — `'SDR'`
-- `SETTINGS` — `'Settings'`
-- `RADIO` — `'Radio'`
-- `STATS` — `'Stats'`
-- `ACTIVITY` — `'Activity'`
-- `CONNECT` — `'Connect'`
-- `HARDWARE` — `'Hardware'`
-- `OUTPUT` — `'Output'`
+- `CONSOLE` - `'Console'`
+- `COMPANION` - `'Companion'`
+- `SDR` - `'SDR'`
+- `SETTINGS` - `'Settings'`
+- `RADIO` - `'Radio'`
+- `STATS` - `'Stats'`
+- `ACTIVITY` - `'Activity'`
+- `CONNECT` - `'Connect'`
+- `HARDWARE` - `'Hardware'`
+- `OUTPUT` - `'Output'`
 
 ### Transport
 
 How a served companion is reached.
 
-- `TCP` — `'tcp'`
-- `SERIAL` — `'serial'`
+- `TCP` - `'tcp'`
+- `SERIAL` - `'serial'`
 
 ## Values
 
@@ -1362,9 +1362,9 @@ What a run passed and failed, with what it was measured under.
 - `total: int`
 - `checks: list[Check]`
 - `provenance: Provenance | None`
-- `ok() -> bool` — Whether every assertion held.
+- `ok() -> bool` - Whether every assertion held.
 - `failures() -> list[Check]`
-- `write_junit(path: str, suite: str = 'meshbench') -> None` — Write a JUnit file, with the caveats inside it.
+- `write_junit(path: str, suite: str = 'meshbench') -> None` - Write a JUnit file, with the caveats inside it.
 
 ### Screen
 

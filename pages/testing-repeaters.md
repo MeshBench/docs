@@ -18,7 +18,7 @@ in **Plan**.
 :::ways
 ::gui
 In **Plan**, choose the *place* tool on the map's toolbar and click where the
-site is — it puts down a repeater unless another kind is chosen. Then set its
+site is - it puts down a repeater unless another kind is chosen. Then set its
 height and transmit power in the Inspector: height above ground matters more
 than power on almost every link.
 
@@ -35,6 +35,16 @@ wb.call("nodes.place", {"kind": "simple-repeater", "name": "Test Site",
                         "lat": 56.12, "lon": -3.45,
                         "height_m": 25, "tx_dbm": 22})
 ```
+::go
+```go
+_, err := wb.Nodes().Place(ctx, meshbench.Placement{
+    Name: "Test Site", Kind: meshbench.Kind("simple-repeater"),
+    Lat: 56.12, Lon: -3.45,
+})
+```
+
+Height and power go through the raw verb, as in the socket tab: the shaped
+call does not carry them yet.
 :::
 
 ## 3. Give it the regions its neighbours hold
@@ -45,7 +55,7 @@ reports no error while doing so.
 
 :::ways
 ::gui
-The **Fleet** panel sets regions for every node of a kind at once — type them
+The **Fleet** panel sets regions for every node of a kind at once - type them
 space-separated and press **set regions**. For a node placed by hand, the
 **Provisioning** panel's *define a region from the study area* toggle covers
 the common case at the next firmware start. One specific node is a job for the
@@ -60,9 +70,16 @@ socket or a client; its window's Settings tab shows what it holds.
 ```python
 wb.call("nodes.regions", {"node": "Test Site", "regions": ["#sco"]})
 ```
+::go
+The clients do not shape this verb yet, so both use the raw call:
+
+```go
+_, err := wb.Call(ctx, "nodes.regions", map[string]any{
+    "node": "Test Site", "regions": []string{"#sco"}})
+```
 :::
 
-The node's *default scope* — what it sends on when nothing says otherwise — is
+The node's *default scope* - what it sends on when nothing says otherwise - is
 a separate setting, applied at import or through the provisioning panel, not by
 this verb.
 
@@ -96,6 +113,10 @@ arrives when the engine next steps.
 ```python
 print(wb.nodes["Test Site"].console.ask("get repeat"))
 ```
+::go
+```go
+reply, err := wb.Node("Test Site").Console().Ask(ctx, "get repeat", 100)
+```
 :::
 
 Useful commands: `get name`, `get repeat`, `get flood.max`, `get path.hash.mode`,
@@ -119,13 +140,13 @@ Then start it, and watch each run complete.
 
 | metric | what it tells you about a repeater |
 |---|---|
-| `delivered` | unique deliveries — how much of the network a message got to. The headline. |
+| `delivered` | unique deliveries - how much of the network a message got to. The headline. |
 | `tx` | how much traffic the network generated to achieve it |
-| `redundant` | receptions of something already heard — the cost of flooding |
+| `redundant` | receptions of something already heard - the cost of flooding |
 | `collisions` | how much of that traffic destroyed other traffic |
 | `airtime_ms` | total time the network spent transmitting |
-| `rx_spread` | how much the arms' receptions varied between seeds — the noise floor of the answer |
-| `at_risk_2db` | deliveries within 2 dB of the demodulator floor — what a wet winter takes away |
+| `rx_spread` | how much the arms' receptions varied between seeds - the noise floor of the answer |
+| `at_risk_2db` | deliveries within 2 dB of the demodulator floor - what a wet winter takes away |
 
 A repeater that raises delivered and lowers collisions is helping. One that
 raises delivered and raises airtime sharply is buying delivery with spectrum,

@@ -101,7 +101,7 @@ defer func() { _ = wb.Close() }()
 
 if err := wb.Project().New(ctx, "Fife"); err != nil { log.Fatal(err) }`}},
     { label:"Place a companion, as a T-Deck",
-      note:"One node, of kind companion, at a coordinate, on a board. The board is what makes this an emulated T-Deck rather than a host build — it is why there is a screen to show at the end.",
+      note:"One node, of kind companion, at a coordinate, on a board. The board is what makes this an emulated T-Deck rather than a host build - it is why there is a screen to show at the end.",
       docs:[D("getting-started.html","Placing nodes"), D("firmware-library.html","Boards")],
       code:{
 python:`deck = wb.nodes.place(
@@ -153,7 +153,7 @@ go:`if err := deck.SetFirmware(ctx, build, true); err != nil { log.Fatal(err) } 
 if err := wb.Sim().Start(ctx); err != nil { log.Fatal(err) }
 if err := deck.WaitRunning(ctx, 5*time.Minute); err != nil { log.Fatal(err) }`}},
     { label:"Open the node's window on Hardware",
-      note:"The Hardware tab is where the board draws its own screen — the whole reason for making this node a T-Deck. The window is held open only for someone looking at it: piped or in CI, there is nobody to press enter.",
+      note:"The Hardware tab is where the board draws its own screen - the whole reason for making this node a T-Deck. The window is held open only for someone looking at it: piped or in CI, there is nobody to press enter.",
       docs:[D("app-development.html","Node windows"), D("testing-repeaters.html","Watching a board")],
       code:{
 python:`tab = wb.window(deck, tab="Hardware")
@@ -174,11 +174,11 @@ if st, err := os.Stdin.Stat(); err == nil && st.Mode()&os.ModeCharDevice != 0 {
 {
   id:"two-nodes", n:2, title:"A local build on two nodes",
   tag:"Example 2 · re-runnable",
-  purpose:"A fixture trimmed to two companions in Scotland, both on a build made from a MeshCore checkout. The second run attaches to the workbench the first one left, rebuilds and repoints — rather than paying for the fixture twice.",
+  purpose:"A fixture trimmed to two companions in Scotland, both on a build made from a MeshCore checkout. The second run attaches to the workbench the first one left, rebuilds and repoints - rather than paying for the fixture twice.",
   needs:["a display","a MeshCore checkout"],
   phases:[
     { label:"Attach to the open session, or launch one",
-      note:"attach_or_launch is what makes the example re-runnable: the second run reuses the session already up. The very first thing after is to stop the clock — a no-op on a fresh session, and what makes a second run safe on a live one.",
+      note:"attach_or_launch is what makes the example re-runnable: the second run reuses the session already up. The very first thing after is to stop the clock - a no-op on a fresh session, and what makes a second run safe on a live one.",
       docs:[D("scripting.html","Two clocks"), D("scripting.html","Re-running")],
       code:{
 python:`with Workbench.attach_or_launch() as wb:
@@ -200,7 +200,7 @@ for _, n := range nodes {
     if _, want := keep[n.Name]; !want { already = false; break }
 }`}},
     { label:"First run only: trim the fixture to two",
-      note:"Open a shipped fixture, put the two keepers where they belong, then keep() deletes everything else. keep is all-or-none, so a name that is not there yet refuses and removes nothing — which is why the placing happens first.",
+      note:"Open a shipped fixture, put the two keepers where they belong, then keep() deletes everything else. keep is all-or-none, so a name that is not there yet refuses and removes nothing - which is why the placing happens first.",
       docs:[D("fixtures.html","Shipped networks"), D("getting-started.html","Trimming a network")],
       code:{
 python:`if not already:
@@ -312,7 +312,7 @@ for (const row of roles) {
   await wb.call("firmware.set", { role: row.role, version: build.version });
 }`}},
     { label:"Schedule repeating traffic",
-      note:"Every twenty seconds, from the plain companion to the public channel. The times are simulated seconds — the mesh's own clock, not yours.",
+      note:"Every twenty seconds, from the plain companion to the public channel. The times are simulated seconds - the mesh's own clock, not yours.",
       docs:[D("scripting.html","Two clocks"), D("reference-control.html","schedule.add")],
       code:{
 python:`wb.schedule.add(
@@ -361,11 +361,11 @@ console.log(\`\${total} events, \${received.length} receptions in the tail\`);`}
 {
   id:"headless", n:4, title:"The regression CI runs",
   tag:"Example 4 · no display",
-  purpose:"Open a fixture, run it, check its assertions, write JUnit, and exit non-zero if the mesh stopped delivering. No display, no GPU, no toolkit — the shape a MeshCore pull request would use.",
+  purpose:"Open a fixture, run it, check its assertions, write JUnit, and exit non-zero if the mesh stopped delivering. No display, no GPU, no toolkit - the shape a MeshCore pull request would use.",
   needs:["nothing but the binary"],
   phases:[
     { label:"Open headless, at a fixed seed",
-      note:"headless starts a session with no window. A fixture and a seed make the run reproducible — same seed, same scenario, same result.",
+      note:"headless starts a session with no window. A fixture and a seed make the run reproducible - same seed, same scenario, same result.",
       docs:[D("testing.html","Headless"), D("fixtures.html","Shipped networks")],
       code:{
 python:`fixture = sys.argv[1] if len(sys.argv) > 1 else "fife-strict"
@@ -382,7 +382,7 @@ wb, err := meshbench.Headless(ctx,
 if err != nil { log.Fatal(err) }
 defer func() { _ = wb.Close() }()`}},
     { label:"Bring the mesh up before running the clock",
-      note:"sim.run only advances time; without starting the firmware first, nothing transmits and the run reports every assertion failed on a tree with nothing wrong with it — the worst thing a regression check can do.",
+      note:"sim.run only advances time; without starting the firmware first, nothing transmits and the run reports every assertion failed on a tree with nothing wrong with it - the worst thing a regression check can do.",
       docs:[D("scripting.html","Bringing a run up"), D("scripting.html","sim.start is the play button")],
       code:{
 python:`wb.sim.start()
@@ -394,7 +394,7 @@ if err := wb.Firmware().WaitStarted(ctx, 0); err != nil { log.Fatal(err) }
 
 if err := wb.Sim().Run(ctx, 5*time.Minute, time.Hour); err != nil { log.Fatal(err) }`}},
     { label:"Check assertions, write JUnit",
-      note:"The report prints the caveats above the numbers itself — this is the output somebody pastes into a pull request, and the caveats are the half that gets dropped.",
+      note:"The report prints the caveats above the numbers itself - this is the output somebody pastes into a pull request, and the caveats are the half that gets dropped.",
       docs:[D("testing.html","Assertions"), D("quality-gates.html","What the build enforces")],
       code:{
 python:`report = wb.assertions.check()
@@ -413,7 +413,7 @@ if junit != "" {
     if err := report.WriteJUnit(junit, ""); err != nil { log.Fatal(err) }
 }`}},
     { label:"Exit code: 0 pass, 1 fail, 2 nothing checked",
-      note:"A fixture with no assertions can report but cannot pass or fail — and a green tick that checked nothing is the worst outcome available here, so it is its own exit code.",
+      note:"A fixture with no assertions can report but cannot pass or fail - and a green tick that checked nothing is the worst outcome available here, so it is its own exit code.",
       docs:[D("testing.html","Exit codes"), D("quality-gates.html","Gating on it")],
       code:{
 python:`if report.total == 0:
@@ -475,7 +475,7 @@ if err := b.SetFirmware(ctx, changed, true); err != nil { log.Fatal(err) }
 if err := wb.Sim().Start(ctx); err != nil { log.Fatal(err) }
 if err := wb.Firmware().WaitStarted(ctx, 15*time.Minute); err != nil { log.Fatal(err) }
 if err := wb.Sim().Run(ctx, 5*time.Minute, time.Hour); err != nil { log.Fatal(err) }`}},
-    { label:"Compare per node — and don't over-read it",
+    { label:"Compare per node - and don't over-read it",
       note:"Per node, because the whole point is which of the two behaved differently; a total would hide it. And one run of one seed is one draw: a difference here is a hypothesis, not a result. Vary the seed with the experiment verbs before believing anything.",
       docs:[D("experiments.html","Experiments"), D("what-it-does-not-do.html","What a result is")],
       code:{
@@ -499,11 +499,11 @@ fmt.Println("\\none seed, one draw - vary the seed first")`}}
 {
   id:"live-import", n:6, title:"A real mesh, live",
   tag:"Example 6 · needs the network",
-  purpose:"Import a real mesh from its live CoreScope feed into a study area, find one node by name, and make it advert — then count who heard it directly.",
+  purpose:"Import a real mesh from its live CoreScope feed into a study area, find one node by name, and make it advert - then count who heard it directly.",
   needs:["a display","the network"],
   phases:[
     { label:"Launch, choose the study area first",
-      note:"The area is set before the import because the import filters at fetch time — the whole feed is around 676 nodes, and this is how you study a corner of it. The area is a place name or a path to GeoJSON.",
+      note:"The area is set before the import because the import filters at fetch time - the whole feed is around 676 nodes, and this is how you study a corner of it. The area is a place name or a path to GeoJSON.",
       docs:[D("importing.html","Choosing an area"), D("importing.html","Importing a network")],
       code:{
 python:`area = sys.argv[1] if len(sys.argv) > 1 else "Fife"
@@ -522,8 +522,8 @@ defer func() { _ = wb.Close() }()
 studying, err := wb.Boundary().Use(ctx, area)
 if err != nil { log.Fatal(err) }
 fmt.Println("studying", strings.Join(studying, ", "))`}},
-    { label:"Pull the feed — fetch, commit, infer, apply",
-      note:"One call fetches the nodes, commits them, reads a week of traffic and applies the regions it implies. Skip that last step and nothing ever relays — it is the step that gets forgotten.",
+    { label:"Pull the feed - fetch, commit, infer, apply",
+      note:"One call fetches the nodes, commits them, reads a week of traffic and applies the regions it implies. Skip that last step and nothing ever relays - it is the step that gets forgotten.",
       docs:[D("importing.html","The import steps"), D("fixtures.html","How they were built")],
       code:{
 python:`print(wb.live.pull(FEED))
@@ -592,7 +592,7 @@ go:`build := exec.CommandContext(ctx, "pio", "run", "-e", pioEnv)
 build.Dir, build.Stdout, build.Stderr = repo, os.Stdout, os.Stderr
 if err := build.Run(); err != nil { log.Fatal(err) }`}},
     { label:"Attach, pause, ensure the node exists",
-      note:"Not a context manager here: closing owns the process it started, and the point is to leave the window up. Pause first — swapping firmware under a running clock stops the node while its neighbours carry on, and nothing accounts for the gap.",
+      note:"Not a context manager here: closing owns the process it started, and the point is to leave the window up. Pause first - swapping firmware under a running clock stops the node while its neighbours carry on, and nothing accounts for the gap.",
       docs:[D("scripting.html","Two clocks"), D("scripting.html","Re-running")],
       code:{
 python:`wb = Workbench.attach_or_launch()
@@ -630,7 +630,7 @@ if err != nil { log.Fatal(err) }
 if err := n.SetFirmware(ctx, fresh, true); err != nil { log.Fatal(err) } // stop, provision, start
 if err := n.WaitRunning(ctx, 0); err != nil { log.Fatal(err) }`}},
     { label:"Delete the old build, open Hardware, run",
-      note:"Only now it is on the new one is the old build safe to delete — a pin nothing can honour does not fail until the node next starts. Then open the Hardware window and let it boot.",
+      note:"Only now it is on the new one is the old build safe to delete - a pin nothing can honour does not fail until the node next starts. Then open the Hardware window and let it boot.",
       docs:[D("firmware-library.html","Deleting a build"), D("app-development.html","Node windows")],
       code:{
 python:`if old and old != new:
@@ -695,7 +695,7 @@ EXAMPLES.forEach(ex=>{
 function codeHTML(p, lang){
   const code = p.code[lang];
   return code ? '<pre><code>'+highlight(code, lang)+'</code></pre>'
-    : '<div class="cb-na">No '+lname(lang)+' example for this step yet — Python and Go show it. The Node client is being filled in for the other examples.</div>';
+    : '<div class="cb-na">No '+lname(lang)+' example for this step yet - Python and Go show it. The Node client is being filled in for the other examples.</div>';
 }
 
 // Swap the code in place: the open steps and the scroll position stay put.
@@ -736,7 +736,7 @@ function render(){
     '<div class="cb-exhead"><div class="cb-tag">'+ex.tag+'</div><h3>'+ex.title+'</h3>'+
       '<p>'+ex.purpose+'</p><div class="cb-needs">'+ex.needs.map(n=>'<span class="cb-need">'+n+'</span>').join("")+'</div></div>'+
     '<div class="cb-bar"><div class="cb-seg">'+langBtns+'</div>'+
-      '<span class="cb-hint">the same example — flip the language and it stays on your step, <b>line for line</b></span></div>'+
+      '<span class="cb-hint">the same example - flip the language and it stays on your step, <b>line for line</b></span></div>'+
     phases;
   mainEl.querySelectorAll(".cb-seg button").forEach(b=>{ if(!b.disabled) b.onclick=()=>setLang(b.dataset.lang); });
   mainEl.querySelectorAll(".cb-phh").forEach(h=>{

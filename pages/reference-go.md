@@ -3,7 +3,7 @@
 The Go client is `pkg/client-go/meshbench` in the
 [meshbench repository](https://github.com/MeshBench/meshbench):
 `import "github.com/MeshBench/meshbench/pkg/client-go/meshbench"`. It is a peer
-of the Python client, not a wrapper — both speak the control socket, and
+of the Python client, not a wrapper - both speak the control socket, and
 anything either can do the other can.
 
 This page is the whole exported surface, taken from the package's own `go doc`.
@@ -816,116 +816,116 @@ Wait blocks until it is gone from the list.
 
 Board is a hardware profile this build knows about.
 
-- `BoardEbyteEoRaS3` — `"Ebyte_EoRa-S3"` · Ebyte_EoRa-S3: ESP32-S3, SX1262, by Ebyte.
-- `BoardGenericE22Sx1262` — `"Generic_E22_sx1262"` · Generic_E22_sx1262: ESP32, SX1262, by Ebyte.
-- `BoardHeltecE213` — `"Heltec_E213"` · Heltec_E213: ESP32-S3, SX1262, by Heltec.
-- `BoardHeltecE290` — `"Heltec_E290"` · Heltec_E290: ESP32-S3, SX1262, by Heltec.
-- `BoardHeltecWSL3` — `"Heltec_WSL3"` · Heltec_WSL3: ESP32-S3, SX1262, by Heltec.
-- `BoardHeltecWirelessPaper` — `"Heltec_Wireless_Paper"` · Heltec_Wireless_Paper: ESP32-S3, SX1262, by Heltec.
-- `BoardHeltecWirelessTracker` — `"Heltec_Wireless_Tracker"` · Heltec_Wireless_Tracker: ESP32-S3, SX1262, by Heltec.
-- `BoardHeltecMeshSolar` — `"Heltec_mesh_solar"` · Heltec_mesh_solar: nRF52840, SX1262, by Heltec.
-- `BoardHeltecT096` — `"Heltec_t096"` · Heltec_t096: nRF52840, SX1262, by Heltec.
-- `BoardHeltecT114` — `"Heltec_t114"` · Heltec_t114: nRF52840, SX1262, by Heltec.
-- `BoardHeltecV2` — `"Heltec_v2"` · Heltec_v2: ESP32, SX1276, by Heltec.
-- `BoardHeltecV3` — `"Heltec_v3"` · Heltec_v3: ESP32-S3, SX1262, by Heltec.
-- `BoardLilyGoT3S3Sx1262` — `"LilyGo_T3S3_sx1262"` · LilyGo_T3S3_sx1262: ESP32-S3, SX1262, by LILYGO.
-- `BoardLilyGoTBeam1W` — `"LilyGo_TBeam_1W"` · LilyGo_TBeam_1W: ESP32-S3, SX1262, by LILYGO.
-- `BoardLilyGoTDeck` — `"LilyGo_TDeck"` · LilyGo_TDeck: ESP32-S3, SX1262, by LILYGO.
-- `BoardRAK3112` — `"RAK_3112"` · RAK_3112: ESP32-S3, SX1262, by RAKwireless.
-- `BoardRAK4631` — `"RAK_4631"` · RAK_4631: nRF52840, SX1262, by RAKwireless.
-- `BoardStationG2` — `"Station_G2"` · Station_G2: ESP32-S3, SX1262, by LILYGO.
-- `BoardStationG3ESP32` — `"Station_G3_ESP32"` · Station_G3_ESP32: ESP32-S3, SX1262, by LILYGO.
-- `BoardTbeamSX1262` — `"Tbeam_SX1262"` · Tbeam_SX1262: ESP32, SX1262, by LILYGO.
-- `BoardXiaoS3` — `"Xiao_S3"` · Xiao_S3: ESP32-S3, SX1262, by Seeed.
-- `BoardXiaoS3WIO` — `"Xiao_S3_WIO"` · Xiao_S3_WIO: ESP32-S3, SX1262, by Seeed.
-- `BoardXiaoNrf52` — `"Xiao_nrf52"` · Xiao_nrf52: nRF52840, SX1262, by Seeed.
-- `BoardHeltecTrackerV2` — `"heltec_tracker_v2"` · heltec_tracker_v2: ESP32-S3, SX1262, by Heltec.
-- `BoardHeltecV4` — `"heltec_v4"` · heltec_v4: ESP32-S3, SX1262, by Heltec.
+- `BoardEbyteEoRaS3` - `"Ebyte_EoRa-S3"` · Ebyte_EoRa-S3: ESP32-S3, SX1262, by Ebyte.
+- `BoardGenericE22Sx1262` - `"Generic_E22_sx1262"` · Generic_E22_sx1262: ESP32, SX1262, by Ebyte.
+- `BoardHeltecE213` - `"Heltec_E213"` · Heltec_E213: ESP32-S3, SX1262, by Heltec.
+- `BoardHeltecE290` - `"Heltec_E290"` · Heltec_E290: ESP32-S3, SX1262, by Heltec.
+- `BoardHeltecWSL3` - `"Heltec_WSL3"` · Heltec_WSL3: ESP32-S3, SX1262, by Heltec.
+- `BoardHeltecWirelessPaper` - `"Heltec_Wireless_Paper"` · Heltec_Wireless_Paper: ESP32-S3, SX1262, by Heltec.
+- `BoardHeltecWirelessTracker` - `"Heltec_Wireless_Tracker"` · Heltec_Wireless_Tracker: ESP32-S3, SX1262, by Heltec.
+- `BoardHeltecMeshSolar` - `"Heltec_mesh_solar"` · Heltec_mesh_solar: nRF52840, SX1262, by Heltec.
+- `BoardHeltecT096` - `"Heltec_t096"` · Heltec_t096: nRF52840, SX1262, by Heltec.
+- `BoardHeltecT114` - `"Heltec_t114"` · Heltec_t114: nRF52840, SX1262, by Heltec.
+- `BoardHeltecV2` - `"Heltec_v2"` · Heltec_v2: ESP32, SX1276, by Heltec.
+- `BoardHeltecV3` - `"Heltec_v3"` · Heltec_v3: ESP32-S3, SX1262, by Heltec.
+- `BoardLilyGoT3S3Sx1262` - `"LilyGo_T3S3_sx1262"` · LilyGo_T3S3_sx1262: ESP32-S3, SX1262, by LILYGO.
+- `BoardLilyGoTBeam1W` - `"LilyGo_TBeam_1W"` · LilyGo_TBeam_1W: ESP32-S3, SX1262, by LILYGO.
+- `BoardLilyGoTDeck` - `"LilyGo_TDeck"` · LilyGo_TDeck: ESP32-S3, SX1262, by LILYGO.
+- `BoardRAK3112` - `"RAK_3112"` · RAK_3112: ESP32-S3, SX1262, by RAKwireless.
+- `BoardRAK4631` - `"RAK_4631"` · RAK_4631: nRF52840, SX1262, by RAKwireless.
+- `BoardStationG2` - `"Station_G2"` · Station_G2: ESP32-S3, SX1262, by LILYGO.
+- `BoardStationG3ESP32` - `"Station_G3_ESP32"` · Station_G3_ESP32: ESP32-S3, SX1262, by LILYGO.
+- `BoardTbeamSX1262` - `"Tbeam_SX1262"` · Tbeam_SX1262: ESP32, SX1262, by LILYGO.
+- `BoardXiaoS3` - `"Xiao_S3"` · Xiao_S3: ESP32-S3, SX1262, by Seeed.
+- `BoardXiaoS3WIO` - `"Xiao_S3_WIO"` · Xiao_S3_WIO: ESP32-S3, SX1262, by Seeed.
+- `BoardXiaoNrf52` - `"Xiao_nrf52"` · Xiao_nrf52: nRF52840, SX1262, by Seeed.
+- `BoardHeltecTrackerV2` - `"heltec_tracker_v2"` · heltec_tracker_v2: ESP32-S3, SX1262, by Heltec.
+- `BoardHeltecV4` - `"heltec_v4"` · heltec_v4: ESP32-S3, SX1262, by Heltec.
 
 ### Class
 
 Class is what happened to an event.
 
-- `ClassSent` — `"sent"` · ClassSent is this node transmitted it.
-- `ClassReceived` — `"received"` · ClassReceived is this node decoded it, for the first time.
-- `ClassHalfDuplex` — `"half-duplex"` · keyed; LoRa is half duplex.
-- `ClassInterference` — `"interference"` · ClassInterference is would have decoded, but a stronger signal took it.
-- `ClassFloor` — `"floor"` · spreading factor.
+- `ClassSent` - `"sent"` · ClassSent is this node transmitted it.
+- `ClassReceived` - `"received"` · ClassReceived is this node decoded it, for the first time.
+- `ClassHalfDuplex` - `"half-duplex"` · keyed; LoRa is half duplex.
+- `ClassInterference` - `"interference"` · ClassInterference is would have decoded, but a stronger signal took it.
+- `ClassFloor` - `"floor"` · spreading factor.
 
 ### Kind
 
 Kind is what a node is.
 
-- `SimpleRepeater` — `"simple-repeater"` · SimpleRepeater forwards, and nothing else.
-- `AdvancedRepeater` — `"advanced-repeater"` · AdvancedRepeater forwards, serves clients, holds state.
-- `Companion` — `"companion"` · Companion a user's device - the thing a phone connects to.
-- `RoomServer` — `"room-server"` · mesh that treats one as a repeater overstates its own reach.
-- `SDRObserver` — `"sdr-observer"` · field at its antenna and hands back IQ.
-- `Emitter` — `"emitter"` · terrain as everything else.
+- `SimpleRepeater` - `"simple-repeater"` · SimpleRepeater forwards, and nothing else.
+- `AdvancedRepeater` - `"advanced-repeater"` · AdvancedRepeater forwards, serves clients, holds state.
+- `Companion` - `"companion"` · Companion a user's device - the thing a phone connects to.
+- `RoomServer` - `"room-server"` · mesh that treats one as a repeater overstates its own reach.
+- `SDRObserver` - `"sdr-observer"` · field at its antenna and hands back IQ.
+- `Emitter` - `"emitter"` · terrain as everything else.
 
 ### Preset
 
 Preset is a named set of LoRa parameters for a territory.
 
-- `PresetAustralia` — `"Australia"` · Australia: 915.800 MHz, 250.0 kHz, SF10, CR 4/5.
-- `PresetAustraliaNarrow` — `"Australia (Narrow)"` · Australia (Narrow): 916.575 MHz, 62.5 kHz, SF7, CR 4/8.
-- `PresetAustraliaMid` — `"Australia (Mid)"` · Australia (Mid): 915.075 MHz, 125.0 kHz, SF9, CR 4/5.
-- `PresetAustraliaSAWA` — `"Australia: SA, WA"` · Australia: SA, WA: 923.125 MHz, 62.5 kHz, SF8, CR 4/8.
-- `PresetAustraliaQLD` — `"Australia: QLD"` · Australia: QLD: 923.125 MHz, 62.5 kHz, SF8, CR 4/5.
-- `PresetBrazil` — `"Brazil"` · Brazil: 923.125 MHz, 62.5 kHz, SF8, CR 4/8.
-- `PresetEUUKNarrow` — `"EU/UK (Narrow)"` · EU/UK (Narrow): 869.618 MHz, 62.5 kHz, SF8, CR 4/8.
-- `PresetEUUKDeprecated` — `"EU/UK (Deprecated)"` · EU/UK (Deprecated): 869.525 MHz, 250.0 kHz, SF11, CR 4/5.
-- `PresetCzechRepublicNarrow` — `"Czech Republic (Narrow)"` · Czech Republic (Narrow): 869.432 MHz, 62.5 kHz, SF7, CR 4/5.
-- `PresetEU433MHzLongRange` — `"EU 433MHz (Long Range)"` · EU 433MHz (Long Range): 433.650 MHz, 250.0 kHz, SF11, CR 4/5.
-- `PresetEU433MHzNarrow` — `"EU 433MHz (Narrow)"` · EU 433MHz (Narrow): 433.650 MHz, 62.5 kHz, SF8, CR 4/8.
-- `PresetNetherlands` — `"Netherlands"` · Netherlands: 869.618 MHz, 62.5 kHz, SF7, CR 4/5.
-- `PresetNewZealand` — `"New Zealand"` · New Zealand: 917.375 MHz, 250.0 kHz, SF11, CR 4/5.
-- `PresetNewZealandNarrow` — `"New Zealand (Narrow)"` · New Zealand (Narrow): 917.375 MHz, 62.5 kHz, SF7, CR 4/5.
-- `PresetPortugal433` — `"Portugal 433"` · Portugal 433: 433.375 MHz, 62.5 kHz, SF9, CR 4/6.
-- `PresetPortugal868` — `"Portugal 868"` · Portugal 868: 869.618 MHz, 62.5 kHz, SF7, CR 4/6.
-- `PresetSwitzerland` — `"Switzerland"` · Switzerland: 869.618 MHz, 62.5 kHz, SF8, CR 4/8.
-- `PresetUSACanadaRecommended` — `"USA/Canada (Recommended)"` · USA/Canada (Recommended): 910.525 MHz, 62.5 kHz, SF7, CR 4/5.
-- `PresetVietnamNarrow` — `"Vietnam (Narrow)"` · Vietnam (Narrow): 920.250 MHz, 62.5 kHz, SF8, CR 4/5.
-- `PresetVietnamDeprecated` — `"Vietnam (Deprecated)"` · Vietnam (Deprecated): 920.250 MHz, 250.0 kHz, SF11, CR 4/5.
+- `PresetAustralia` - `"Australia"` · Australia: 915.800 MHz, 250.0 kHz, SF10, CR 4/5.
+- `PresetAustraliaNarrow` - `"Australia (Narrow)"` · Australia (Narrow): 916.575 MHz, 62.5 kHz, SF7, CR 4/8.
+- `PresetAustraliaMid` - `"Australia (Mid)"` · Australia (Mid): 915.075 MHz, 125.0 kHz, SF9, CR 4/5.
+- `PresetAustraliaSAWA` - `"Australia: SA, WA"` · Australia: SA, WA: 923.125 MHz, 62.5 kHz, SF8, CR 4/8.
+- `PresetAustraliaQLD` - `"Australia: QLD"` · Australia: QLD: 923.125 MHz, 62.5 kHz, SF8, CR 4/5.
+- `PresetBrazil` - `"Brazil"` · Brazil: 923.125 MHz, 62.5 kHz, SF8, CR 4/8.
+- `PresetEUUKNarrow` - `"EU/UK (Narrow)"` · EU/UK (Narrow): 869.618 MHz, 62.5 kHz, SF8, CR 4/8.
+- `PresetEUUKDeprecated` - `"EU/UK (Deprecated)"` · EU/UK (Deprecated): 869.525 MHz, 250.0 kHz, SF11, CR 4/5.
+- `PresetCzechRepublicNarrow` - `"Czech Republic (Narrow)"` · Czech Republic (Narrow): 869.432 MHz, 62.5 kHz, SF7, CR 4/5.
+- `PresetEU433MHzLongRange` - `"EU 433MHz (Long Range)"` · EU 433MHz (Long Range): 433.650 MHz, 250.0 kHz, SF11, CR 4/5.
+- `PresetEU433MHzNarrow` - `"EU 433MHz (Narrow)"` · EU 433MHz (Narrow): 433.650 MHz, 62.5 kHz, SF8, CR 4/8.
+- `PresetNetherlands` - `"Netherlands"` · Netherlands: 869.618 MHz, 62.5 kHz, SF7, CR 4/5.
+- `PresetNewZealand` - `"New Zealand"` · New Zealand: 917.375 MHz, 250.0 kHz, SF11, CR 4/5.
+- `PresetNewZealandNarrow` - `"New Zealand (Narrow)"` · New Zealand (Narrow): 917.375 MHz, 62.5 kHz, SF7, CR 4/5.
+- `PresetPortugal433` - `"Portugal 433"` · Portugal 433: 433.375 MHz, 62.5 kHz, SF9, CR 4/6.
+- `PresetPortugal868` - `"Portugal 868"` · Portugal 868: 869.618 MHz, 62.5 kHz, SF7, CR 4/6.
+- `PresetSwitzerland` - `"Switzerland"` · Switzerland: 869.618 MHz, 62.5 kHz, SF8, CR 4/8.
+- `PresetUSACanadaRecommended` - `"USA/Canada (Recommended)"` · USA/Canada (Recommended): 910.525 MHz, 62.5 kHz, SF7, CR 4/5.
+- `PresetVietnamNarrow` - `"Vietnam (Narrow)"` · Vietnam (Narrow): 920.250 MHz, 62.5 kHz, SF8, CR 4/5.
+- `PresetVietnamDeprecated` - `"Vietnam (Deprecated)"` · Vietnam (Deprecated): 920.250 MHz, 250.0 kHz, SF11, CR 4/5.
 
 ### Role
 
 Role is the MeshCore application a node runs, named as upstream names its example directory. The string every firmware verb is keyed on. The published catalogue spells some of the same things differently - "repeater", "room-server" - and those belong to the release assets; typing one at a verb pins nothing and the run refuses to start with no clue as to why.
 
-- `RoleSimpleRepeater` — `"simple_repeater"` · only in configuration.
-- `RoleCompanionRadio` — `"companion_radio"` · RoleCompanionRadio is a user's device - the thing a phone connects to.
-- `RoleSimpleRoomServer` — `"simple_room_server"` · not forward.
-- `RoleCompanionRadioUSB` — `"companion_radio_usb"` · where a board publishes both transports at one version.
-- `RoleCompanionRadioBLE` — `"companion_radio_ble"` · only.
+- `RoleSimpleRepeater` - `"simple_repeater"` · only in configuration.
+- `RoleCompanionRadio` - `"companion_radio"` · RoleCompanionRadio is a user's device - the thing a phone connects to.
+- `RoleSimpleRoomServer` - `"simple_room_server"` · not forward.
+- `RoleCompanionRadioUSB` - `"companion_radio_usb"` · where a board publishes both transports at one version.
+- `RoleCompanionRadioBLE` - `"companion_radio_ble"` · only.
 
 ### Strategy
 
 Strategy is how an imported deployment meets what is already loaded.
 
-- `Replace` — `"replace-all"` · shipped fixtures were built with.
-- `Add` — `"add"` · Add is keep what is loaded and add the names it has not got.
+- `Replace` - `"replace-all"` · shipped fixtures were built with.
+- `Add` - `"add"` · Add is keep what is loaded and add the names it has not got.
 
 ### Tab
 
 Tab is a pane of a node's own window.
 
-- `TabConsole` — `"Console"` · TabConsole is the firmware's text console, which only a repeater has.
-- `TabCompanion` — `"Companion"` · TabCompanion is channels, contacts and the companion command line.
-- `TabSDR` — `"SDR"` · TabSDR is an observer's antenna: serve it, read the address.
-- `TabSettings` — `"Settings"` · TabSettings is what this node is: identity, radio, regions, firmware.
-- `TabRadio` — `"Radio"` · TabRadio is what the chip is really doing.
-- `TabStats` — `"Stats"` · TabStats is what it has cost and what it has carried.
-- `TabActivity` — `"Activity"` · TabActivity is what it has heard and sent, in order.
-- `TabConnect` — `"Connect"` · TabConnect is hand this companion to a real client.
-- `TabHardware` — `"Hardware"` · grows it.
-- `TabOutput` — `"Output"` · running it, or the radio model beside it.
+- `TabConsole` - `"Console"` · TabConsole is the firmware's text console, which only a repeater has.
+- `TabCompanion` - `"Companion"` · TabCompanion is channels, contacts and the companion command line.
+- `TabSDR` - `"SDR"` · TabSDR is an observer's antenna: serve it, read the address.
+- `TabSettings` - `"Settings"` · TabSettings is what this node is: identity, radio, regions, firmware.
+- `TabRadio` - `"Radio"` · TabRadio is what the chip is really doing.
+- `TabStats` - `"Stats"` · TabStats is what it has cost and what it has carried.
+- `TabActivity` - `"Activity"` · TabActivity is what it has heard and sent, in order.
+- `TabConnect` - `"Connect"` · TabConnect is hand this companion to a real client.
+- `TabHardware` - `"Hardware"` · grows it.
+- `TabOutput` - `"Output"` · running it, or the radio model beside it.
 
 ### Transport
 
 Transport is how a served companion is reached.
 
-- `OverTCP` — `"tcp"` · one to point a phone or another machine at.
-- `OverSerial` — `"serial"` · OverSerial is a pseudo-terminal, for a client that wants a serial port.
+- `OverTCP` - `"tcp"` · one to point a phone or another machine at.
+- `OverSerial` - `"serial"` · OverSerial is a pseudo-terminal, for a client that wants a serial port.
 
 ## Errors
 
@@ -1003,9 +1003,9 @@ InUse   int    `json:"in_use"`
 Unavailable bool `json:"unavailable"`
 ```
 
-- `(b Build) Describe() string` — Describe is how this build is named where a person will read it.
+- `(b Build) Describe() string` - Describe is how this build is named where a person will read it.
 
-- `(b Build) ID() BuildID` — ID is the identity of a build already in hand.
+- `(b Build) ID() BuildID` - ID is the identity of a build already in hand.
 
 ### BuildChange
 
@@ -1064,7 +1064,7 @@ CardRequired bool   `json:"card_required"`
 Notes        string `json:"notes"`
 ```
 
-- `(b BuildDetails) Describe() string` — Describe is how this build is named where a person will read it.
+- `(b BuildDetails) Describe() string` - Describe is how this build is named where a person will read it.
 
 ### BuildID
 
@@ -1383,7 +1383,7 @@ Calibrated   bool    `json:"calibrated"`
 Seed         uint64  `json:"seed"`
 ```
 
-- `(p Provenance) String() string` — String is one line, meant to be printed above any number a script emits.
+- `(p Provenance) String() string` - String is one line, meant to be printed above any number a script emits.
 
 ### Report
 
@@ -1399,13 +1399,13 @@ Checks []Check `json:"results"`
 Provenance Provenance `json:"-"`
 ```
 
-- `(r Report) Failures() []Check` — Failures are the ones that did not hold.
+- `(r Report) Failures() []Check` - Failures are the ones that did not hold.
 
-- `(r Report) OK() bool` — OK reports whether every assertion held.
+- `(r Report) OK() bool` - OK reports whether every assertion held.
 
 - `(r Report) String() string`
 
-- `(r Report) WriteJUnit(path, suite string) error` — WriteJUnit writes a JUnit file, with the caveats inside it.
+- `(r Report) WriteJUnit(path, suite string) error` - WriteJUnit writes a JUnit file, with the caveats inside it.
 
 ### Restored
 
@@ -1499,19 +1499,19 @@ Subscription is a live stream of notifications, on a connection of its own so it
 
 Option configures a connection.
 
-- `Args(a ...string) Option` — Args passes extra flags to a launched process.
+- `Args(a ...string) Option` - Args passes extra flags to a launched process.
 
-- `Binary(path string) Option` — Binary names the meshbench executable to launch. The default is whatever "meshbench" resolves to on PATH.
+- `Binary(path string) Option` - Binary names the meshbench executable to launch. The default is whatever "meshbench" resolves to on PATH.
 
-- `Fixture(name string) Option` — Fixture opens a network as the session starts.
+- `Fixture(name string) Option` - Fixture opens a network as the session starts.
 
-- `LogTo(f *os.File) Option` — LogTo sends a launched process's stderr somewhere. The default is this process's own, because a scripted run that fails silently is the worst of both worlds.
+- `LogTo(f *os.File) Option` - LogTo sends a launched process's stderr somewhere. The default is this process's own, because a scripted run that fails silently is the worst of both worlds.
 
-- `Seed(n uint64) Option` — Seed fixes the run's seed. Same seed, same scenario, same result - which is what makes a changed result mean something.
+- `Seed(n uint64) Option` - Seed fixes the run's seed. Same seed, same scenario, same result - which is what makes a changed result mean something.
 
-- `Socket(path string) Option` — Socket chooses which socket to use, rather than the per-user default.
+- `Socket(path string) Option` - Socket chooses which socket to use, rather than the per-user default.
 
-- `StartTimeout(d time.Duration) Option` — StartTimeout bounds how long Launch and Headless wait for the socket.
+- `StartTimeout(d time.Duration) Option` - StartTimeout bounds how long Launch and Headless wait for the socket.
 
 ### `CodeOf`
 

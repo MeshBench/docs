@@ -5,8 +5,8 @@ The Node client is `pkg/client-js/meshbench.mjs` in the
 zero-dependency ES module on the same control socket as the Go and Python
 clients. `import { Workbench } from "./meshbench.mjs"`.
 
-It is the thinnest of the three — a connection, one `call` method, and the
-handshake — because Node scripting so far is the cookbook's `small-mesh` example
+It is the thinnest of the three - a connection, one `call` method, and the
+handshake - because Node scripting so far is the cookbook's `small-mesh` example
 and little else. This page is its whole surface, generated from the module's own
 JSDoc.
 
@@ -52,6 +52,6 @@ Where a workbench answers on this operating system unless told otherwise. Matche
 
 ## Constants
 
-- `PROTOCOL = 1` — The wire version this client speaks. A workbench answering anything else is refused rather than failing halfway through a script.
+- `PROTOCOL = 1` - The wire version this client speaks. A workbench answering anything else is refused rather than failing halfway through a script.
 
 <!-- END GENERATED API -->

@@ -70,7 +70,7 @@ which is a property of the test rather than of the network.
 
 For a pipeline, `-junit report.xml` writes a report most CI systems display
 natively, and `-offline` refuses to download anything and says what is missing
-instead — which is what a runner with a warm cache and no egress should do.
+instead - which is what a runner with a warm cache and no egress should do.
 
 ## A test in Go or Python
 
@@ -159,7 +159,7 @@ meshbench serve
 ### Whatever attaches must read
 
 A client that connects to the endpoint and never reads fills the link's buffer,
-and the mesh slows to a stop behind it — quietly, which is the difficulty: a
+and the mesh slows to a stop behind it - quietly, which is the difficulty: a
 stalled mesh looks exactly like a mesh with nothing to say. Anything that
 pauses a client mid-run, a debugger breakpoint included, will do this.
 
@@ -182,7 +182,7 @@ meshbench dev /path/to/MeshCore
 
 The comparison that matters is usually between two builds rather than against an
 absolute. Run half the repeaters on one and half on another, send the same
-traffic, and read the difference — the [experiments](experiments.html) page
+traffic, and read the difference - the [experiments](experiments.html) page
 covers the arrangement, and [firmware development](firmware-development.html)
 covers getting a build in.
 

@@ -254,7 +254,7 @@ def main():
             if t["doc"]:
                 blocks.append(t["doc"])
             vals = "\n".join(
-                "- `%s` — `%s`%s" % (nm, v, " · " + note if note else "")
+                "- `%s` - `%s`%s" % (nm, v, " · " + note if note else "")
                 for nm, v, note in t["values"])
             blocks.append(vals)
 
@@ -280,7 +280,7 @@ def main():
             if fields:
                 blocks.append("```go\n" + fields + "\n```")
             for sig, doc in t["funcs"]:
-                blocks.append("- `%s`%s" % (sig, " — " + doc.split("\n")[0] if doc else ""))
+                blocks.append("- `%s`%s" % (sig, " - " + doc.split("\n")[0] if doc else ""))
 
     if optionish or topfuncs:
         blocks.append("## Options and functions")
@@ -290,7 +290,7 @@ def main():
             if t["doc"]:
                 blocks.append(t["doc"])
             for sig, doc in t["funcs"]:
-                blocks.append("- `%s`%s" % (sig, " — " + doc.split("\n")[0] if doc else ""))
+                blocks.append("- `%s`%s" % (sig, " - " + doc.split("\n")[0] if doc else ""))
         for sig, doc in topfuncs:
             blocks.append("### `%s`" % sig.split("(")[0])
             blocks.append("```go\nfunc %s\n```" % sig)

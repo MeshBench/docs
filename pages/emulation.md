@@ -1,7 +1,7 @@
 # Emulating a board
 
-Emulation runs the **published firmware image** — the same file that is flashed
-onto hardware — on a model of the chip it was built for, against MeshBench's
+Emulation runs the **published firmware image** - the same file that is flashed
+onto hardware - on a model of the chip it was built for, against MeshBench's
 radio channel.
 
 It answers a question the native path cannot: does this release come up on this

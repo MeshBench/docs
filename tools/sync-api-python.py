@@ -181,7 +181,7 @@ def render_enum(cls):
                 val = ast.unparse(node.value)
             except Exception:
                 val = ""
-            members.append("- `%s`%s" % (name, " — `%s`" % val if val else ""))
+            members.append("- `%s`%s" % (name, " - `%s`" % val if val else ""))
     if members:
         out.append("\n".join(members))
     return "\n\n".join(out)
@@ -202,7 +202,7 @@ def render_value(cls):
     for node in cls.body:
         if is_public_method(node) and node.name != "parse":
             fields.append("- `%s`%s" % (
-                signature(node), " — " + doc(node).split("\n")[0] if doc(node) else ""))
+                signature(node), " - " + doc(node).split("\n")[0] if doc(node) else ""))
     if fields:
         out.append("\n".join(fields))
     return "\n\n".join(out)

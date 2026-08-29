@@ -60,6 +60,9 @@ blame, the machine names or the first person.
    pages use the third person throughout.
 7. **British English.**
 8. **Nothing aspirational.** If it is not built, it is not on the site.
+9. **No em-dashes.** Use a comma, a colon, a full stop, or a spaced
+   hyphen instead. They read simpler, and they match the application's own
+   voice.
 
 This file is not the site, and keeps the other register: the screenshot rule
 below is easier to follow because it says what nearly went wrong.
