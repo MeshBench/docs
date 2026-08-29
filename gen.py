@@ -685,7 +685,7 @@ def page(name, body, title):
 %s
 <footer>MeshBench documentation. Built from the running application, not from
 mock-ups. Screenshots are window-only captures; see CLAUDE.md for the rule that
-keeps them current. <a href="https://github.com/MeshBench/meshbench-docs/blob/main/pages/%s">Edit this page</a>.</footer>
+keeps them current. <a href="https://github.com/MeshBench/docs/blob/main/pages/%s">Edit this page</a>.</footer>
 </main>%s</div><script>%s</script></body></html>
 """ % (html.escape(title), html.escape(desc), html.escape(title),
        html.escape(desc), CSS, logo(), navlinks, body, pagenav,
