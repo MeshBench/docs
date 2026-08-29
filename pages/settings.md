@@ -101,8 +101,9 @@ always configured with them regardless of this switch.
 
 ## Energy
 
-Off by default. When on, each node's battery and solar panel come from its board
-profile and the model answers whether a site survives December at its latitude.
+Off by default, and **not fully implemented yet**: when on, a battery and
+panel are sketched from the board profile, but the numbers have not been
+validated against anything real. Do not use them for siting decisions.
 
 ## Automation
 
