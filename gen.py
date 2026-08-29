@@ -156,15 +156,23 @@ nav:not(:hover) { scrollbar-color: transparent transparent; }
 body { margin:0; background:var(--bg); color:var(--ink);
   font: 16px/1.65 var(--text); -webkit-font-smoothing:antialiased; }
 .wrap { display:flex; align-items:flex-start; max-width:1180px; margin:0 auto; }
+/* The navigation is a permanently dark rail in both themes: the identity
+   is set in the white logo, and a rail that follows the page theme would
+   wash it out for half the readers. Its colours are its own, not the
+   page tokens. */
 nav { position:sticky; top:0; width:230px; flex:0 0 230px; padding:26px 18px;
-  border-right:1px solid var(--line); height:100vh; overflow-y:auto; }
-nav .brand { display:block; margin:0 0 22px; color:var(--ink); }
+  background:#14131F; height:100vh; overflow-y:auto; }
+nav .brand { display:block; margin:0 0 22px; color:#FFFFFF; }
 nav .brand svg { width:158px; height:auto; display:block; }
-nav a { display:block; padding:5px 0; color:var(--ink); text-decoration:none; font-size:14.5px; }
-nav a:hover { color:var(--accent); }
-nav a.here { color:var(--accent); font-weight:600; }
+nav a { display:block; padding:5px 0; color:#C7C2D9; text-decoration:none; font-size:14.5px; }
+nav a:hover { color:#FF7A3D; }
+nav a.here { color:#FF7A3D; font-weight:600; }
 nav .navsec { font-family:var(--display); font-size:11.5px; letter-spacing:.11em;
-  text-transform:uppercase; color:var(--dim); margin:20px 0 5px; border:0; padding:0; font-weight:700; }
+  text-transform:uppercase; color:#837C9C; margin:20px 0 5px; border:0; padding:0; font-weight:700; }
+nav .search input { background:#1E1B2E; border-color:#2E2A44; color:#F2EFF9; }
+nav .search input::placeholder { color:#7D769B; }
+nav .search kbd { color:#7D769B; border-color:#2E2A44; }
+nav .menu-toggle { background:#1E1B2E; color:#F2EFF9; border-color:#2E2A44; }
 figure { margin:22px 0; }
 figure svg { max-width:100%; height:auto; display:block; }
 figcaption { color:var(--dim); font-size:13.5px; margin-top:8px; max-width:70ch; }
@@ -279,7 +287,7 @@ h2:hover .hl, h3:hover .hl, h2 .hl:focus-visible, h3 .hl:focus-visible { opacity
 }
 @media (max-width:820px) {
   .wrap { display:block; } nav { position:static; width:auto; height:auto;
-    border-right:0; border-bottom:1px solid var(--line); padding-bottom:14px; }
+    padding-bottom:14px; }
   nav .brand svg { width:140px; }
   nav a { display:inline-block; margin-right:14px; } main { padding:24px 18px 70px; }
   .menu-toggle { display:inline-block; border:1px solid var(--line); background:var(--panel);
@@ -505,11 +513,10 @@ def render(md):
 
 def logo():
     """The lockup, inlined rather than linked. The themed file takes its colours
-    from --mb-* custom properties, so the mark keeps its orange route in both
-    themes - the monochrome file is for one ink on paper, not for a page that
-    can show colour."""
+    from --mb-* custom properties. The rail is permanently dark, so the
+    lockup is the mono file in currentColor: the rail sets it white."""
     here = os.path.dirname(os.path.abspath(__file__))
-    return open(os.path.join(here, "brand", "meshbench-logo-themed.svg")).read().strip()
+    return open(os.path.join(here, "brand", "meshbench-logo-mono.svg")).read().strip()
 
 
 SCRIPT = """

@@ -1,57 +1,55 @@
-# MeshBench documentation
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="brand/meshbench-logo-white-800.png">
+  <img alt="MeshBench" src="brand/meshbench-logo-staged-800.png" width="800">
+</picture>
 
-Not published yet. This site is private until release.
+The source of the **[MeshBench documentation site](https://meshbench.github.io/docs/)**.
 
-## What is here
+## What this is
 
-26 pages, built by `gen.py` from the markdown in `pages/`.
+Markdown in `pages/`, one page per file, built into a static site by
+`gen.py`: shared navigation, search, the method tabs, syntax highlighting and
+a link checker, with no framework and nothing to install. Every push to
+`main` deploys.
 
-| section | what it answers |
-|---|---|
-| Getting started | install it, open it, load a network, run it |
-| **What it does not do** | what the model omits, and which way each omission biases a result |
-| Guides | one task per page: firmware, the bench, importing, debugging, experiments |
-| How it works | the architecture, the waveform, the RF chain, running real firmware |
-| Reference | settings, the CLI, the control socket, external tools, repositories and licences |
+```console
+python3 gen.py
+```
 
-*What it does not do* sits directly under Getting started rather than in
-Reference. The simulator's claim is that it is honest about being kinder than
-the air, and a reader who cannot find the limits cannot use any other number on
-the site.
+The build refuses to ship a broken internal link, a dead anchor, or a
+duplicate heading id.
 
-## Building
+## What is generated, and from where
 
-    python3 gen.py
+Some pages are written by tools rather than by hand, so they cannot drift
+from the code they describe. `gen.py` fails the build if a reachable
+MeshBench checkout disagrees with what is committed.
 
-Writes one `.html` beside `index.html` for every `.md` under `pages/`. The HTML
-is committed, so the site can be served from the repository directly.
+| page | source | regenerate with |
+|---|---|---|
+| `what-it-does-not-do.md` | `docs/shortcomings.md` in the main repository | `tools/sync-limits.py` |
+| `reference-control.md` (verb list) | `internal/app/session` | `tools/sync-verbs.py` |
+| `reference-python.md` | the Python client's docstrings | `tools/sync-api-python.py` |
+| `reference-go.md` | `go doc` over the Go client | `tools/sync-api-go.py` |
+| `reference-js.md` | the Node client's JSDoc | `tools/sync-api-js.py` |
 
-One page is generated rather than written — see **Generated pages** in
-`CLAUDE.md`:
+Point them at a checkout with `MESHBENCH_REPO=/path/to/meshbench`.
 
-    python3 tools/sync-limits.py ../meshcoresim
+## Writing rules
 
-## How screenshots are made
+[`CLAUDE.md`](CLAUDE.md) holds the register: present tense, third person,
+British English, no em-dashes, no selling, the limits admitted in the same
+breath as the claim. Screenshots are window-only captures from the running
+application, reviewed before commit; instructional marks are drawn by
+`tools/annotate.py`.
 
-From the running application on a real machine, not from mock-ups, and captured
-**window-only**:
+Every how-to leads with the workbench. The control socket, Python and Go are
+tabs on the same block, so a reader picks a method once and the whole site
+follows.
 
-    spectacle -a --new-instance -b -n -o shot.png
+## Related
 
-`-a` is the active window. A fullscreen grab takes whatever else is on the
-desktop with it, and the first attempt at this captured a browser showing
-MeshCIM pull requests, which is a private repository with a proprietary licence.
-Window-only, and look at the result before committing it.
-
-Step-by-step marks are drawn with `tools/annotate.py`, which takes fractions of
-the image rather than pixels so a re-capture at a different window size does not
-move every mark:
-
-    python3 tools/annotate.py in.png out.png  0.24 0.16 0.035  0.46 0.08 0.03
-
-## Keeping it true
-
-A page that describes a view the application no longer has is worse than no
-page, because somebody will follow it. The rule in `CLAUDE.md` names a trigger
-rather than asking for diligence: a change under `internal/ui/` means the
-screenshots and the page for that view are checked in the same piece of work.
+[`MeshBench/meshbench`](https://github.com/MeshBench/meshbench) is the
+application this site documents;
+[`MeshBench/meshbench-reports`](https://github.com/MeshBench/meshbench-reports)
+publishes the studies run with it.
