@@ -1,7 +1,13 @@
-# Why did that packet not arrive
+# Debugging packet delivery
 
 The event log records a cause for every reception and every failure, so the
 question has an answer rather than a theory.
+
+The workflow is a loop: a packet failed, find it on the timeline, read its
+cause, follow the cause to the panel that explains it, change the one
+variable it points at, and rerun. Because runs are
+[deterministic](timing.html), the rerun is an answer: same seed, same
+scenario, only your change differs.
 
 ## Start in the Debug view
 

@@ -1,5 +1,7 @@
 # MeshBench
 
+**MeshBench runs real MeshCore firmware. MeshBench models the air.**
+
 An RF-accurate MeshCore network simulator. It runs **real MeshCore firmware**
 against a modelled radio channel, so the question it answers is not "would a
 packet get through" but "what actually arrived at the antenna, and why".
@@ -9,6 +11,10 @@ budget against the demodulator's floor, fast enough for a national network.
 **Waveform** synthesises the actual chirps and runs a real demodulator over
 them, so capture and collision emerge from the physics rather than from a rule.
 Both price the same path; see [RF simulation](rf-simulation.html).
+The firmware is never simulated: every node is the real MeshCore
+application running against a modelled radio.
+[What is real, and what is modelled](concepts.html) is the two-minute
+version of that mental model.
 
 One binary on your machine. No service to deploy, no account, nothing to
 configure before the first run.
@@ -92,10 +98,13 @@ thing but the thing itself.</figcaption>
 
 | if you want to | read |
 |---|---|
-| run it for the first time | [Getting started](getting-started.html) |
+| understand what is real and what is modelled | [What is real](concepts.html) |
+| install and launch it | [Getting started](getting-started.html) |
+| run a real network in fifteen minutes | [Your first simulation](first-simulation.html) |
+| know how much to trust a number | [Reading a result](results.html) |
 | use a ready-made network | [Shipped networks](fixtures.html) |
 | bring in a real network | [Importing a network](importing.html) |
-| find out why a packet failed | [Why a packet failed](debugging.html) |
+| find out why a packet failed | [Debugging packet delivery](debugging.html) |
 | test a firmware change | [Firmware development](firmware-development.html) |
 | write a client against it | [App development](app-development.html) |
 | test your own firmware or app | [Testing your own code](testing.html) |
