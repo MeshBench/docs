@@ -17,12 +17,16 @@ watch a message flood across Scotland.
    node total; the big fixture takes about a minute and 4 GB.
 3. **Press play.** The transport control on the toolbar, or the space bar.
    Simulated time starts moving.
-4. **Make something happen.** Open the **Schedule** panel, type `advert` with
-   a node selected, and press **add send**. An advert is MeshCore's own
-   announcement packet, the thing nodes flood through the mesh. Watch the flood spread: the
+4. **Make something happen.** Double-click any repeater to open its own
+   window on the **Console** tab, type `advert`, and press Enter. That is
+   the node's real command line, and the reply is the firmware's own. An
+   advert is MeshCore's announcement packet, the thing nodes flood through
+   the mesh: watch it spread.
+
+![A repeater's console: a typed command, and the node's own answer](images/node-console.png) Watch the flood spread: the
    Events panel lists every transmission, reception and miss with a cause.
 
-![The Run view playing. The marks: the Schedule panel's add send button, and the scoreboard counting what each node sent](images/view-run.png)
+![The Run view playing. The mark: the scoreboard counting what each node sent and heard](images/view-run.png)
 
 > If the mesh looks dead, the usual cause is regions rather than radio. A
 > repeater only forwards flood traffic for regions it has been told about, and
@@ -64,8 +68,8 @@ on a second monitor. Each view remembers its own arrangement.
 
 ## What to try next
 
-- **Open a node's console.** Double-click any repeater and type `get name` on
-  its Console tab. The reply is the firmware's own.
+- **Put traffic on a timer.** The **Schedule** panel sends a command on a
+  repeat: `advert` every thirty seconds keeps the map breathing without you.
 - **Break a link.** Drag a hilltop repeater into a valley and watch its links
   thin as the terrain model reprices every path.
 - **Ask why a packet failed.** Pick a miss in the Events panel and follow
