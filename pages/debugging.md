@@ -87,12 +87,24 @@ that gives one number for "the link" is hiding half the answer.
 
 ## Capture the packets
 
-```
+:::ways
+::gui
+**Simulation**, then **Capture to a pcapng file** — or **Watch it live in
+Wireshark**, which starts the stream, installs the dissector and opens
+Wireshark as one action. **Stop capturing** ends either.
+::socket
+```json
 {"id":1,"method":"capture.file","params":{"path":"/tmp/run.pcapng"}}
 ```
+::python
+```python
+wb.call("capture.file", {"path": "/tmp/run.pcapng"})
+```
+:::
 
-Writes pcapng, which Wireshark reads with the MeshCore dissector in
-`tools/dissector/`. `capture.wireshark` opens a live stream instead.
+The file is pcapng, which Wireshark reads with the MeshCore dissector in
+`tools/dissector/`; `capture.wireshark` is the live stream the menu entry
+uses.
 
 **Capture is started per session, not per run.** A sweep rebuilds the engine
 between runs and the capture survives that, but a restarted workbench has no

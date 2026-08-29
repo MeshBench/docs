@@ -107,10 +107,11 @@ sudo apt install gcc pkg-config libgl1-mesa-dev xorg-dev
 
 ## Your first network
 
-1. **Load a shipped network.** `File` then `Open project`, and choose
+1. **Load a shipped network.** **File**, then **Open a saved network**, and choose
    `fixture-fife-strict`. Fifty-eight real nodes from the Fife area of ScotMesh,
    with the transport regions the real nodes actually hold.
-2. **Start the firmware.** `Simulation` then `Start firmware`. Every node
+2. **Start the firmware.** **Simulation**, then **Start firmware on every
+   node**. Every node
    launches a real MeshCore build and is told its name, position, clock and
    regions. Watch the count in the status bar reach the node total.
 3. **Press play.** The transport symbol on the toolbar. Simulated time starts
@@ -153,4 +154,4 @@ a second monitor. Each view remembers its own arrangement.
   Wireshark, SDR++, the emulators — and what happens when one is missing.
 - [Firmware development](firmware-development.html) if you are changing MeshCore
   itself.
-- [Companion bench](companion-bench.html) if you are writing a client.
+- [App development](app-development.html) if you are writing a client.

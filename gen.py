@@ -80,7 +80,6 @@ NAV = [
 
     ("SECTION", "Build an application"),
     ("app-development.html", "App development"),
-    ("companion-bench.html", "Companion bench"),
     ("testing.html", "Testing your own code"),
     ("scripting.html", "Scripting a session"),
     ("cookbook.html", "Scripting cookbook"),
@@ -260,6 +259,18 @@ h2:hover .hl, h3:hover .hl, h2 .hl:focus-visible, h3 .hl:focus-visible { opacity
 .search kbd { position:absolute; right:8px; top:6px; color:var(--dim);
   border:1px solid var(--line); border-radius:4px; font:11px var(--mono);
   padding:0 5px; pointer-events:none; }
+/* A task shown more than one way: in the workbench, over the socket, or from
+   a client. One choice, remembered across the whole site. */
+.ways { border:1px solid var(--line); border-radius:10px; margin:18px 0; overflow:hidden; }
+.ways-tabs { display:flex; gap:0; border-bottom:1px solid var(--line); background:var(--panel); }
+.ways-tabs button { border:0; background:none; color:var(--dim); font:600 13px var(--display);
+  letter-spacing:.02em; padding:9px 16px; cursor:pointer;
+  border-bottom:2px solid transparent; transition:color .12s ease; }
+.ways-tabs button:hover { color:var(--ink); }
+.ways-tabs button.on { color:var(--accent); border-bottom-color:var(--accent-mark); }
+.way { display:none; padding:4px 16px 10px; }
+.way.on { display:block; }
+.way > p:first-child, .way > ol:first-child, .way > ul:first-child { margin-top:10px; }
 .skip { position:absolute; left:-9999px; top:0; background:var(--accent); color:#fff;
   padding:8px 14px; border-radius:0 0 8px 0; z-index:40; }
 .skip:focus { left:0; }
@@ -375,11 +386,47 @@ def slug(text):
     return s
 
 
+WAY_TITLES = {"gui": "In the workbench", "socket": "Control socket",
+              "python": "Python", "go": "Go", "cli": "Command line"}
+
+
+def render_ways(body):
+    """A task in more than one way. The block is split on ::name markers, each
+    part rendered as ordinary Markdown, and the reader's chosen way applies
+    across the whole site - somebody who scripts should not have to click
+    every block back to the socket."""
+    parts, name = {}, None
+    order = []
+    for line in body.split("\n"):
+        m = re.match(r"^::([a-z]+)\s*$", line)
+        if m:
+            name = m.group(1)
+            order.append(name)
+            parts[name] = []
+        elif name:
+            parts[name].append(line)
+    tabs = "".join(
+        '<button type="button" data-way="%s"%s>%s</button>'
+        % (n, ' class="on"' if i == 0 else "", WAY_TITLES.get(n, n))
+        for i, n in enumerate(order))
+    panes = "".join(
+        '<div class="way%s" data-way="%s">%s</div>'
+        % (" on" if i == 0 else "", n, render("\n".join(parts[n])))
+        for i, n in enumerate(order))
+    return '<div class="ways"><div class="ways-tabs">%s</div>%s</div>' % (tabs, panes)
+
+
 def render(md):
     out, lines, i = [], md.split("\n"), 0
     while i < len(lines):
         l = lines[i]
-        if l.startswith("<!--"):
+        if l.startswith(":::ways"):
+            i += 1
+            body = []
+            while i < len(lines) and not lines[i].startswith(":::"):
+                body.append(lines[i]); i += 1
+            out.append(render_ways("\n".join(body)))
+        elif l.startswith("<!--"):
             # A comment, not content - the generated limits page carries one
             # saying where it came from. Skipped rather than escaped into the
             # body, which is what happened the first time.
@@ -479,6 +526,31 @@ SCRIPT = """
       });
     });
   });
+  var WAY_KEY = "meshbench-docs-way";
+  function applyWay(w){
+    document.querySelectorAll(".ways").forEach(function(b){
+      var want = b.querySelector('[data-way="' + w + '"]') ? w
+        : b.querySelector(".ways-tabs button").getAttribute("data-way");
+      b.querySelectorAll(".ways-tabs button").forEach(function(t){
+        t.classList.toggle("on", t.getAttribute("data-way") === want);
+      });
+      b.querySelectorAll(".way").forEach(function(p){
+        p.classList.toggle("on", p.getAttribute("data-way") === want);
+      });
+    });
+  }
+  document.querySelectorAll(".ways-tabs button").forEach(function(t){
+    t.addEventListener("click", function(){
+      var w = t.getAttribute("data-way");
+      try { localStorage.setItem(WAY_KEY, w); } catch (e) {}
+      applyWay(w);
+    });
+  });
+  if (document.querySelector(".ways")){
+    var saved = null;
+    try { saved = localStorage.getItem(WAY_KEY); } catch (e) {}
+    if (saved) applyWay(saved);
+  }
   var mt = document.querySelector(".menu-toggle");
   if (mt) mt.addEventListener("click", function(){
     var open = document.querySelector(".navlinks").classList.toggle("open");

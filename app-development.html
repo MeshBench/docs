@@ -157,6 +157,18 @@ h2:hover .hl, h3:hover .hl, h2 .hl:focus-visible, h3 .hl:focus-visible { opacity
 .search kbd { position:absolute; right:8px; top:6px; color:var(--dim);
   border:1px solid var(--line); border-radius:4px; font:11px var(--mono);
   padding:0 5px; pointer-events:none; }
+/* A task shown more than one way: in the workbench, over the socket, or from
+   a client. One choice, remembered across the whole site. */
+.ways { border:1px solid var(--line); border-radius:10px; margin:18px 0; overflow:hidden; }
+.ways-tabs { display:flex; gap:0; border-bottom:1px solid var(--line); background:var(--panel); }
+.ways-tabs button { border:0; background:none; color:var(--dim); font:600 13px var(--display);
+  letter-spacing:.02em; padding:9px 16px; cursor:pointer;
+  border-bottom:2px solid transparent; transition:color .12s ease; }
+.ways-tabs button:hover { color:var(--ink); }
+.ways-tabs button.on { color:var(--accent); border-bottom-color:var(--accent-mark); }
+.way { display:none; padding:4px 16px 10px; }
+.way.on { display:block; }
+.way > p:first-child, .way > ol:first-child, .way > ul:first-child { margin-top:10px; }
 .skip { position:absolute; left:-9999px; top:0; background:var(--accent); color:#fff;
   padding:8px 14px; border-radius:0 0 8px 0; z-index:40; }
 .skip:focus { left:0; }
@@ -205,7 +217,7 @@ h2:hover .hl, h3:hover .hl, h2 .hl:focus-visible, h3 .hl:focus-visible { opacity
 <div class="search"><input id="q" type="search" placeholder="Search the docs"
  autocomplete="off" aria-label="Search the documentation"><kbd>/</kbd>
 <div class="hits" id="hits"></div></div>
-<div class="navlinks"><a href="index.html">Overview</a><a href="getting-started.html">Getting started</a><a href="what-it-does-not-do.html">What it does not do</a><h2 class="navsec">Plan a network</h2><a href="fixtures.html">Shipped networks</a><a href="importing.html">Importing a network</a><a href="debugging.html">Why a packet failed</a><a href="studies.html">Studies</a><h2 class="navsec">Develop firmware</h2><a href="firmware-library.html">Firmware library</a><a href="firmware-development.html">Firmware development</a><a href="testing-repeaters.html">Testing a repeater</a><h2 class="navsec">Build an application</h2><a href="app-development.html" class="here">App development</a><a href="companion-bench.html">Companion bench</a><a href="testing.html">Testing your own code</a><a href="scripting.html">Scripting a session</a><a href="cookbook.html">Scripting cookbook</a><h2 class="navsec">Measure and observe</h2><a href="experiments.html">Experiments</a><a href="sdr-observer.html">Listening with SDR++</a><h2 class="navsec">How it works</h2><a href="architecture.html">Architecture</a><a href="native-vs-emulated.html">Native and emulated</a><a href="rf-simulation.html">RF simulation</a><a href="waveform.html">Waveform mode</a><a href="rf-chain.html">The RF chain</a><a href="golden-vectors.html">Golden vectors</a><a href="emulation.html">Emulation</a><a href="firmware-integration.html">Firmware integration</a><h2 class="navsec">Reference</h2><a href="settings.html">Settings</a><a href="reference-cli.html">CLI</a><a href="reference-control.html">Control socket</a><a href="reference-python.html">Python client</a><a href="reference-go.html">Go client</a><a href="reference-js.html">Node client</a><a href="resources.html">What gets downloaded</a><a href="tools.html">External tools</a><a href="quality-gates.html">What the build enforces</a><a href="repositories.html">Repositories and licences</a></div></nav>
+<div class="navlinks"><a href="index.html">Overview</a><a href="getting-started.html">Getting started</a><a href="what-it-does-not-do.html">What it does not do</a><h2 class="navsec">Plan a network</h2><a href="fixtures.html">Shipped networks</a><a href="importing.html">Importing a network</a><a href="debugging.html">Why a packet failed</a><a href="studies.html">Studies</a><h2 class="navsec">Develop firmware</h2><a href="firmware-library.html">Firmware library</a><a href="firmware-development.html">Firmware development</a><a href="testing-repeaters.html">Testing a repeater</a><h2 class="navsec">Build an application</h2><a href="app-development.html" class="here">App development</a><a href="testing.html">Testing your own code</a><a href="scripting.html">Scripting a session</a><a href="cookbook.html">Scripting cookbook</a><h2 class="navsec">Measure and observe</h2><a href="experiments.html">Experiments</a><a href="sdr-observer.html">Listening with SDR++</a><h2 class="navsec">How it works</h2><a href="architecture.html">Architecture</a><a href="native-vs-emulated.html">Native and emulated</a><a href="rf-simulation.html">RF simulation</a><a href="waveform.html">Waveform mode</a><a href="rf-chain.html">The RF chain</a><a href="golden-vectors.html">Golden vectors</a><a href="emulation.html">Emulation</a><a href="firmware-integration.html">Firmware integration</a><h2 class="navsec">Reference</h2><a href="settings.html">Settings</a><a href="reference-cli.html">CLI</a><a href="reference-control.html">Control socket</a><a href="reference-python.html">Python client</a><a href="reference-go.html">Go client</a><a href="reference-js.html">Node client</a><a href="resources.html">What gets downloaded</a><a href="tools.html">External tools</a><a href="quality-gates.html">What the build enforces</a><a href="repositories.html">Repositories and licences</a></div></nav>
 <main id="content"><h1>Writing an application against a mesh</h1>
 <p>One command gives you a running network and an address to point a client at.</p>
 <div class="codewrap"><pre><code>meshbench serve</code></pre><button class="copy" type="button" aria-label="Copy this code">copy</button></div>
@@ -249,11 +261,17 @@ from a mock.</figcaption>
 </figure>
 <h2 id="options">Options<a class="hl" href="#options" aria-label="Link to this section">#</a></h2>
 <table><thead><tr><th>flag</th><th>effect</th></tr></thead><tbody><tr><td><code>-fixture &lt;path&gt;</code></td><td>a different network; the shipped ones are in <code>fixtures/</code></td></tr><tr><td><code>-node &lt;name&gt;</code></td><td>expose a particular companion rather than the first</td></tr><tr><td><code>-serial</code></td><td>a virtual serial device instead of TCP, for clients that open a port</td></tr><tr><td><code>-addr 0.0.0.0:4403</code></td><td>listen on every interface, so a phone can connect</td></tr><tr><td><code>-quiet</code></td><td>print only the address, for scripting</td></tr></tbody></table>
-<h2 id="in-the-application-itself">In the application itself<a class="hl" href="#in-the-application-itself" aria-label="Link to this section">#</a></h2>
+<h2 id="the-companion-bench-in-the-application">The Companion bench, in the application<a class="hl" href="#the-companion-bench-in-the-application" aria-label="Link to this section">#</a></h2>
 <p>The <strong>Companion bench</strong> panel, in the App view, does the same thing with a button, and adds what a terminal cannot: the protocol decoded in both directions, whether a client is attached, and faults on demand.</p>
 <p><img src="images/view-app.png" alt="The App view: the Companion bench beside the live event counters and a node&#x27;s console"></p>
-<p><strong>Drop every client connection</strong> takes the listener away with the connection, so the device disappears the way an unplugged cable does. An application that reconnects cleanly from that is one that survives a phone going to sleep.</p>
+<p><strong>One click for both.</strong> <code>give me a mesh and an endpoint</code> starts firmware on every node if it is not already running, then serves the first companion over TCP and prints the address. Firmware starts a process per node, so on a large fixture it takes a few seconds and the button says so rather than handing over a port that answers nothing.</p>
+<p><strong>Two transports, per companion.</strong> <code>TCP</code> for a client that speaks sockets, <code>serial</code> for the many that only know how to open a port. Both carry the firmware&#x27;s own serial protocol byte for byte — this is not a mock, it is the same bytes the real device sends. The address gets a <code>copy</code> button beside it, because it is going into somebody else&#x27;s configuration file and retyping a port from a screen is how a digit gets lost.</p>
+<p><img src="images/companion-bench.png" alt="The Companion bench: transports, the companion table, and the fault buttons"></p>
+<p>The <code>client</code> column says whether anything is attached. A port that is listening and a port that has a client are different situations, and the difference matters when an application appears to be doing nothing.</p>
+<h3 id="faults">Faults<a class="hl" href="#faults" aria-label="Link to this section">#</a></h3>
+<p><strong>Drop every client connection</strong> takes the listener away with the connection, so the device disappears the way an unplugged cable does — &quot;the device was unplugged&quot;, not &quot;the link glitched&quot;. An application that reconnects cleanly from that is one that survives a phone going to sleep. Serving again is one click.</p>
 <p><strong>Inject a stray frame</strong> puts traffic into the stream that the client did not ask for and cannot parse, while it is busy with something else.</p>
+<p><strong>Two faults and not a page of them</strong>, because two are what the workbench can actually cause today. A button that pretends to inject a fault it cannot is worse than an absent one. Radio-level faults belong to the RF model: move the node, drop its transmit power, or place an emitter beside it and watch what happens to the link.</p>
 <h2 id="testing-against-it-in-a-pipeline">Testing against it in a pipeline<a class="hl" href="#testing-against-it-in-a-pipeline" aria-label="Link to this section">#</a></h2>
 <div class="codewrap"><pre><code>meshbench test -fixture fixtures/fixture-fife-strict.json \
   -endpoint tcp:AngusOutlaw1 -junit results.xml</code></pre><button class="copy" type="button" aria-label="Copy this code">copy</button></div>
@@ -262,11 +280,11 @@ from a mock.</figcaption>
 <h2 id="what-differs-from-hardware">What differs from hardware<a class="hl" href="#what-differs-from-hardware" aria-label="Link to this section">#</a></h2>
 <p>The protocol on the wire is identical: this is the firmware&#x27;s own serial code producing the bytes. What differs is the radio underneath it, which is a model. Links are cleaner than reality because there is no multipath, no body loss and no interference from outside the network, so treat delivery as a best case.</p>
 <p>Nothing about the timing is scaled down: a message that takes two seconds to cross four hops here takes about two seconds on hardware, because airtime is computed the way the firmware computes it.</p>
-<div class="pagenav"><a class="prev" href="testing-repeaters.html"><span>previous</span>Testing a repeater</a><a class="next" href="companion-bench.html"><span>next</span>Companion bench</a></div>
+<div class="pagenav"><a class="prev" href="testing-repeaters.html"><span>previous</span>Testing a repeater</a><a class="next" href="testing.html"><span>next</span>Testing your own code</a></div>
 <footer>MeshBench documentation. Built from the running application, not from
 mock-ups. Screenshots are window-only captures; see CLAUDE.md for the rule that
 keeps them current. <a href="https://github.com/MeshBench/meshbench-docs/blob/main/pages/app-development.md">Edit this page</a>.</footer>
-</main><aside class="toc" aria-label="On this page"><p class="tochead">On this page</p><a href="#what-you-are-connected-to" data-t="what-you-are-connected-to">What you are connected to</a><a href="#options" data-t="options">Options</a><a href="#in-the-application-itself" data-t="in-the-application-itself">In the application itself</a><a href="#testing-against-it-in-a-pipeline" data-t="testing-against-it-in-a-pipeline">Testing against it in a pipeline</a><a href="#what-differs-from-hardware" data-t="what-differs-from-hardware">What differs from hardware</a></aside></div><script>
+</main><aside class="toc" aria-label="On this page"><p class="tochead">On this page</p><a href="#what-you-are-connected-to" data-t="what-you-are-connected-to">What you are connected to</a><a href="#options" data-t="options">Options</a><a href="#the-companion-bench-in-the-application" data-t="the-companion-bench-in-the-application">The Companion bench, in the application</a><a href="#testing-against-it-in-a-pipeline" data-t="testing-against-it-in-a-pipeline">Testing against it in a pipeline</a><a href="#what-differs-from-hardware" data-t="what-differs-from-hardware">What differs from hardware</a></aside></div><script>
 (function(){
   document.querySelectorAll(".codewrap").forEach(function(w){
     var b = w.querySelector(".copy");
@@ -277,6 +295,31 @@ keeps them current. <a href="https://github.com/MeshBench/meshbench-docs/blob/ma
       });
     });
   });
+  var WAY_KEY = "meshbench-docs-way";
+  function applyWay(w){
+    document.querySelectorAll(".ways").forEach(function(b){
+      var want = b.querySelector('[data-way="' + w + '"]') ? w
+        : b.querySelector(".ways-tabs button").getAttribute("data-way");
+      b.querySelectorAll(".ways-tabs button").forEach(function(t){
+        t.classList.toggle("on", t.getAttribute("data-way") === want);
+      });
+      b.querySelectorAll(".way").forEach(function(p){
+        p.classList.toggle("on", p.getAttribute("data-way") === want);
+      });
+    });
+  }
+  document.querySelectorAll(".ways-tabs button").forEach(function(t){
+    t.addEventListener("click", function(){
+      var w = t.getAttribute("data-way");
+      try { localStorage.setItem(WAY_KEY, w); } catch (e) {}
+      applyWay(w);
+    });
+  });
+  if (document.querySelector(".ways")){
+    var saved = null;
+    try { saved = localStorage.getItem(WAY_KEY); } catch (e) {}
+    if (saved) applyWay(saved);
+  }
   var mt = document.querySelector(".menu-toggle");
   if (mt) mt.addEventListener("click", function(){
     var open = document.querySelector(".navlinks").classList.toggle("open");

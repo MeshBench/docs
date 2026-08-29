@@ -157,6 +157,18 @@ h2:hover .hl, h3:hover .hl, h2 .hl:focus-visible, h3 .hl:focus-visible { opacity
 .search kbd { position:absolute; right:8px; top:6px; color:var(--dim);
   border:1px solid var(--line); border-radius:4px; font:11px var(--mono);
   padding:0 5px; pointer-events:none; }
+/* A task shown more than one way: in the workbench, over the socket, or from
+   a client. One choice, remembered across the whole site. */
+.ways { border:1px solid var(--line); border-radius:10px; margin:18px 0; overflow:hidden; }
+.ways-tabs { display:flex; gap:0; border-bottom:1px solid var(--line); background:var(--panel); }
+.ways-tabs button { border:0; background:none; color:var(--dim); font:600 13px var(--display);
+  letter-spacing:.02em; padding:9px 16px; cursor:pointer;
+  border-bottom:2px solid transparent; transition:color .12s ease; }
+.ways-tabs button:hover { color:var(--ink); }
+.ways-tabs button.on { color:var(--accent); border-bottom-color:var(--accent-mark); }
+.way { display:none; padding:4px 16px 10px; }
+.way.on { display:block; }
+.way > p:first-child, .way > ol:first-child, .way > ul:first-child { margin-top:10px; }
 .skip { position:absolute; left:-9999px; top:0; background:var(--accent); color:#fff;
   padding:8px 14px; border-radius:0 0 8px 0; z-index:40; }
 .skip:focus { left:0; }
@@ -205,7 +217,7 @@ h2:hover .hl, h3:hover .hl, h2 .hl:focus-visible, h3 .hl:focus-visible { opacity
 <div class="search"><input id="q" type="search" placeholder="Search the docs"
  autocomplete="off" aria-label="Search the documentation"><kbd>/</kbd>
 <div class="hits" id="hits"></div></div>
-<div class="navlinks"><a href="index.html" class="here">Overview</a><a href="getting-started.html">Getting started</a><a href="what-it-does-not-do.html">What it does not do</a><h2 class="navsec">Plan a network</h2><a href="fixtures.html">Shipped networks</a><a href="importing.html">Importing a network</a><a href="debugging.html">Why a packet failed</a><a href="studies.html">Studies</a><h2 class="navsec">Develop firmware</h2><a href="firmware-library.html">Firmware library</a><a href="firmware-development.html">Firmware development</a><a href="testing-repeaters.html">Testing a repeater</a><h2 class="navsec">Build an application</h2><a href="app-development.html">App development</a><a href="companion-bench.html">Companion bench</a><a href="testing.html">Testing your own code</a><a href="scripting.html">Scripting a session</a><a href="cookbook.html">Scripting cookbook</a><h2 class="navsec">Measure and observe</h2><a href="experiments.html">Experiments</a><a href="sdr-observer.html">Listening with SDR++</a><h2 class="navsec">How it works</h2><a href="architecture.html">Architecture</a><a href="native-vs-emulated.html">Native and emulated</a><a href="rf-simulation.html">RF simulation</a><a href="waveform.html">Waveform mode</a><a href="rf-chain.html">The RF chain</a><a href="golden-vectors.html">Golden vectors</a><a href="emulation.html">Emulation</a><a href="firmware-integration.html">Firmware integration</a><h2 class="navsec">Reference</h2><a href="settings.html">Settings</a><a href="reference-cli.html">CLI</a><a href="reference-control.html">Control socket</a><a href="reference-python.html">Python client</a><a href="reference-go.html">Go client</a><a href="reference-js.html">Node client</a><a href="resources.html">What gets downloaded</a><a href="tools.html">External tools</a><a href="quality-gates.html">What the build enforces</a><a href="repositories.html">Repositories and licences</a></div></nav>
+<div class="navlinks"><a href="index.html" class="here">Overview</a><a href="getting-started.html">Getting started</a><a href="what-it-does-not-do.html">What it does not do</a><h2 class="navsec">Plan a network</h2><a href="fixtures.html">Shipped networks</a><a href="importing.html">Importing a network</a><a href="debugging.html">Why a packet failed</a><a href="studies.html">Studies</a><h2 class="navsec">Develop firmware</h2><a href="firmware-library.html">Firmware library</a><a href="firmware-development.html">Firmware development</a><a href="testing-repeaters.html">Testing a repeater</a><h2 class="navsec">Build an application</h2><a href="app-development.html">App development</a><a href="testing.html">Testing your own code</a><a href="scripting.html">Scripting a session</a><a href="cookbook.html">Scripting cookbook</a><h2 class="navsec">Measure and observe</h2><a href="experiments.html">Experiments</a><a href="sdr-observer.html">Listening with SDR++</a><h2 class="navsec">How it works</h2><a href="architecture.html">Architecture</a><a href="native-vs-emulated.html">Native and emulated</a><a href="rf-simulation.html">RF simulation</a><a href="waveform.html">Waveform mode</a><a href="rf-chain.html">The RF chain</a><a href="golden-vectors.html">Golden vectors</a><a href="emulation.html">Emulation</a><a href="firmware-integration.html">Firmware integration</a><h2 class="navsec">Reference</h2><a href="settings.html">Settings</a><a href="reference-cli.html">CLI</a><a href="reference-control.html">Control socket</a><a href="reference-python.html">Python client</a><a href="reference-go.html">Go client</a><a href="reference-js.html">Node client</a><a href="resources.html">What gets downloaded</a><a href="tools.html">External tools</a><a href="quality-gates.html">What the build enforces</a><a href="repositories.html">Repositories and licences</a></div></nav>
 <main id="content"><h1>MeshBench</h1>
 <p>An RF-accurate MeshCore network simulator. It runs <strong>real MeshCore firmware</strong> against a modelled radio channel, so the question it answers is not &quot;would a packet get through&quot; but &quot;what actually arrived at the antenna, and why&quot;.</p>
 <p>Reception is decided one of two ways. <strong>Calculated</strong> is the default: a link budget against the demodulator&#x27;s floor, fast enough for a national network. <strong>Waveform</strong> synthesises the actual chirps and runs a real demodulator over them, so capture and collision emerge from the physics rather than from a rule. Both price the same path; see <a href="rf-simulation.html">RF simulation</a>.</p>
@@ -295,6 +307,31 @@ keeps them current. <a href="https://github.com/MeshBench/meshbench-docs/blob/ma
       });
     });
   });
+  var WAY_KEY = "meshbench-docs-way";
+  function applyWay(w){
+    document.querySelectorAll(".ways").forEach(function(b){
+      var want = b.querySelector('[data-way="' + w + '"]') ? w
+        : b.querySelector(".ways-tabs button").getAttribute("data-way");
+      b.querySelectorAll(".ways-tabs button").forEach(function(t){
+        t.classList.toggle("on", t.getAttribute("data-way") === want);
+      });
+      b.querySelectorAll(".way").forEach(function(p){
+        p.classList.toggle("on", p.getAttribute("data-way") === want);
+      });
+    });
+  }
+  document.querySelectorAll(".ways-tabs button").forEach(function(t){
+    t.addEventListener("click", function(){
+      var w = t.getAttribute("data-way");
+      try { localStorage.setItem(WAY_KEY, w); } catch (e) {}
+      applyWay(w);
+    });
+  });
+  if (document.querySelector(".ways")){
+    var saved = null;
+    try { saved = localStorage.getItem(WAY_KEY); } catch (e) {}
+    if (saved) applyWay(saved);
+  }
   var mt = document.querySelector(".menu-toggle");
   if (mt) mt.addEventListener("click", function(){
     var open = document.querySelector(".navlinks").classList.toggle("open");

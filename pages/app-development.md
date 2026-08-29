@@ -62,7 +62,7 @@ from a mock.</figcaption>
 | `-addr 0.0.0.0:4403` | listen on every interface, so a phone can connect |
 | `-quiet` | print only the address, for scripting |
 
-## In the application itself
+## The Companion bench, in the application
 
 The **Companion bench** panel, in the App view, does the same thing with a
 button, and adds what a terminal cannot: the protocol decoded in both
@@ -70,12 +70,40 @@ directions, whether a client is attached, and faults on demand.
 
 ![The App view: the Companion bench beside the live event counters and a node's console](images/view-app.png)
 
+**One click for both.** `give me a mesh and an endpoint` starts firmware on
+every node if it is not already running, then serves the first companion over
+TCP and prints the address. Firmware starts a process per node, so on a large
+fixture it takes a few seconds and the button says so rather than handing over
+a port that answers nothing.
+
+**Two transports, per companion.** `TCP` for a client that speaks sockets,
+`serial` for the many that only know how to open a port. Both carry the
+firmware's own serial protocol byte for byte — this is not a mock, it is the
+same bytes the real device sends. The address gets a `copy` button beside it,
+because it is going into somebody else's configuration file and retyping a port
+from a screen is how a digit gets lost.
+
+![The Companion bench: transports, the companion table, and the fault buttons](images/companion-bench.png)
+
+The `client` column says whether anything is attached. A port that is listening
+and a port that has a client are different situations, and the difference
+matters when an application appears to be doing nothing.
+
+### Faults
+
 **Drop every client connection** takes the listener away with the connection, so
-the device disappears the way an unplugged cable does. An application that
-reconnects cleanly from that is one that survives a phone going to sleep.
+the device disappears the way an unplugged cable does — "the device was
+unplugged", not "the link glitched". An application that reconnects cleanly from
+that is one that survives a phone going to sleep. Serving again is one click.
 
 **Inject a stray frame** puts traffic into the stream that the client did not
 ask for and cannot parse, while it is busy with something else.
+
+**Two faults and not a page of them**, because two are what the workbench can
+actually cause today. A button that pretends to inject a fault it cannot is
+worse than an absent one. Radio-level faults belong to the RF model: move the
+node, drop its transmit power, or place an emitter beside it and watch what
+happens to the link.
 
 ## Testing against it in a pipeline
 

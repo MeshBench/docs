@@ -157,6 +157,18 @@ h2:hover .hl, h3:hover .hl, h2 .hl:focus-visible, h3 .hl:focus-visible { opacity
 .search kbd { position:absolute; right:8px; top:6px; color:var(--dim);
   border:1px solid var(--line); border-radius:4px; font:11px var(--mono);
   padding:0 5px; pointer-events:none; }
+/* A task shown more than one way: in the workbench, over the socket, or from
+   a client. One choice, remembered across the whole site. */
+.ways { border:1px solid var(--line); border-radius:10px; margin:18px 0; overflow:hidden; }
+.ways-tabs { display:flex; gap:0; border-bottom:1px solid var(--line); background:var(--panel); }
+.ways-tabs button { border:0; background:none; color:var(--dim); font:600 13px var(--display);
+  letter-spacing:.02em; padding:9px 16px; cursor:pointer;
+  border-bottom:2px solid transparent; transition:color .12s ease; }
+.ways-tabs button:hover { color:var(--ink); }
+.ways-tabs button.on { color:var(--accent); border-bottom-color:var(--accent-mark); }
+.way { display:none; padding:4px 16px 10px; }
+.way.on { display:block; }
+.way > p:first-child, .way > ol:first-child, .way > ul:first-child { margin-top:10px; }
 .skip { position:absolute; left:-9999px; top:0; background:var(--accent); color:#fff;
   padding:8px 14px; border-radius:0 0 8px 0; z-index:40; }
 .skip:focus { left:0; }
@@ -205,7 +217,7 @@ h2:hover .hl, h3:hover .hl, h2 .hl:focus-visible, h3 .hl:focus-visible { opacity
 <div class="search"><input id="q" type="search" placeholder="Search the docs"
  autocomplete="off" aria-label="Search the documentation"><kbd>/</kbd>
 <div class="hits" id="hits"></div></div>
-<div class="navlinks"><a href="index.html">Overview</a><a href="getting-started.html">Getting started</a><a href="what-it-does-not-do.html">What it does not do</a><h2 class="navsec">Plan a network</h2><a href="fixtures.html">Shipped networks</a><a href="importing.html">Importing a network</a><a href="debugging.html">Why a packet failed</a><a href="studies.html">Studies</a><h2 class="navsec">Develop firmware</h2><a href="firmware-library.html">Firmware library</a><a href="firmware-development.html">Firmware development</a><a href="testing-repeaters.html">Testing a repeater</a><h2 class="navsec">Build an application</h2><a href="app-development.html">App development</a><a href="companion-bench.html">Companion bench</a><a href="testing.html">Testing your own code</a><a href="scripting.html">Scripting a session</a><a href="cookbook.html">Scripting cookbook</a><h2 class="navsec">Measure and observe</h2><a href="experiments.html" class="here">Experiments</a><a href="sdr-observer.html">Listening with SDR++</a><h2 class="navsec">How it works</h2><a href="architecture.html">Architecture</a><a href="native-vs-emulated.html">Native and emulated</a><a href="rf-simulation.html">RF simulation</a><a href="waveform.html">Waveform mode</a><a href="rf-chain.html">The RF chain</a><a href="golden-vectors.html">Golden vectors</a><a href="emulation.html">Emulation</a><a href="firmware-integration.html">Firmware integration</a><h2 class="navsec">Reference</h2><a href="settings.html">Settings</a><a href="reference-cli.html">CLI</a><a href="reference-control.html">Control socket</a><a href="reference-python.html">Python client</a><a href="reference-go.html">Go client</a><a href="reference-js.html">Node client</a><a href="resources.html">What gets downloaded</a><a href="tools.html">External tools</a><a href="quality-gates.html">What the build enforces</a><a href="repositories.html">Repositories and licences</a></div></nav>
+<div class="navlinks"><a href="index.html">Overview</a><a href="getting-started.html">Getting started</a><a href="what-it-does-not-do.html">What it does not do</a><h2 class="navsec">Plan a network</h2><a href="fixtures.html">Shipped networks</a><a href="importing.html">Importing a network</a><a href="debugging.html">Why a packet failed</a><a href="studies.html">Studies</a><h2 class="navsec">Develop firmware</h2><a href="firmware-library.html">Firmware library</a><a href="firmware-development.html">Firmware development</a><a href="testing-repeaters.html">Testing a repeater</a><h2 class="navsec">Build an application</h2><a href="app-development.html">App development</a><a href="testing.html">Testing your own code</a><a href="scripting.html">Scripting a session</a><a href="cookbook.html">Scripting cookbook</a><h2 class="navsec">Measure and observe</h2><a href="experiments.html" class="here">Experiments</a><a href="sdr-observer.html">Listening with SDR++</a><h2 class="navsec">How it works</h2><a href="architecture.html">Architecture</a><a href="native-vs-emulated.html">Native and emulated</a><a href="rf-simulation.html">RF simulation</a><a href="waveform.html">Waveform mode</a><a href="rf-chain.html">The RF chain</a><a href="golden-vectors.html">Golden vectors</a><a href="emulation.html">Emulation</a><a href="firmware-integration.html">Firmware integration</a><h2 class="navsec">Reference</h2><a href="settings.html">Settings</a><a href="reference-cli.html">CLI</a><a href="reference-control.html">Control socket</a><a href="reference-python.html">Python client</a><a href="reference-go.html">Go client</a><a href="reference-js.html">Node client</a><a href="resources.html">What gets downloaded</a><a href="tools.html">External tools</a><a href="quality-gates.html">What the build enforces</a><a href="repositories.html">Repositories and licences</a></div></nav>
 <main id="content"><h1>Experiments</h1>
 <p>A sweep is a matrix, not an A/B: arms crossed with seeds, run one at a time against the same network, with the results tabulated side by side.</p>
 <h2 id="running-one">Running one<a class="hl" href="#running-one" aria-label="Link to this section">#</a></h2>
@@ -221,15 +233,18 @@ instead of with the mesh. <code>experiment.senders</code> takes the node names.<
 settles, sends, and tears down.</li><li><strong>Export.</strong> <code>experiment.export</code> writes an HTML report with every arm, every
 run and the deltas between them.</li></ol>
 <p><img src="images/view-bench.png" alt="The Bench view: the sweep definition, past runs, the experiment log and per-node timelines"></p>
-<p>From a script, the whole thing:</p>
-<div class="codewrap"><pre><code>{<span class="tok-str">&quot;id&quot;</span>:<span class="tok-num">1</span>,<span class="tok-str">&quot;method&quot;</span>:<span class="tok-str">&quot;experiment.senders&quot;</span>,<span class="tok-str">&quot;params&quot;</span>:{<span class="tok-str">&quot;senders&quot;</span>:[<span class="tok-str">&quot;Abernethy Repeater&quot;</span>,<span class="tok-str">&quot;Largo Law&quot;</span>,<span class="tok-str">&quot;Cluny Clay&quot;</span>,<span class="tok-str">&quot;West Lomond&quot;</span>]}}
+<p>The numbered steps above are the Bench view&#x27;s <strong>Sweep</strong> panel, top to bottom; <strong>define</strong> stores the matrix and <strong>run it</strong> starts it.</p>
+<div class="ways"><div class="ways-tabs"><button type="button" data-way="gui" class="on">In the workbench</button><button type="button" data-way="socket">Control socket</button><button type="button" data-way="python">Python</button></div><div class="way on" data-way="gui"><p>Everything is on the <strong>Sweep</strong> panel in the order listed above. The <strong>Runs</strong> panel fills as each cell completes, and <strong>Results</strong> tabulates the arms side by side.</p></div><div class="way" data-way="socket"><div class="codewrap"><pre><code>{<span class="tok-str">&quot;id&quot;</span>:<span class="tok-num">1</span>,<span class="tok-str">&quot;method&quot;</span>:<span class="tok-str">&quot;experiment.senders&quot;</span>,<span class="tok-str">&quot;params&quot;</span>:{<span class="tok-str">&quot;senders&quot;</span>:[<span class="tok-str">&quot;Abernethy Repeater&quot;</span>,<span class="tok-str">&quot;Largo Law&quot;</span>,<span class="tok-str">&quot;Cluny Clay&quot;</span>,<span class="tok-str">&quot;West Lomond&quot;</span>]}}
 {<span class="tok-str">&quot;id&quot;</span>:<span class="tok-num">2</span>,<span class="tok-str">&quot;method&quot;</span>:<span class="tok-str">&quot;experiment.define&quot;</span>,<span class="tok-str">&quot;params&quot;</span>:{
    <span class="tok-str">&quot;arms&quot;</span>:[{<span class="tok-str">&quot;label&quot;</span>:<span class="tok-str">&quot;control&quot;</span>,<span class="tok-str">&quot;repeater_version&quot;</span>:<span class="tok-str">&quot;repeater-v1.<span class="tok-num">17.0</span>&quot;</span>},
            {<span class="tok-str">&quot;label&quot;</span>:<span class="tok-str">&quot;my branch&quot;</span>,<span class="tok-str">&quot;repeater_version&quot;</span>:<span class="tok-str">&quot;my-arm&quot;</span>}],
    <span class="tok-str">&quot;seeds&quot;</span>:[<span class="tok-num">1</span>,<span class="tok-num">2</span>,<span class="tok-num">3</span>],<span class="tok-str">&quot;scope&quot;</span>:<span class="tok-str">&quot;#sco&quot;</span>,<span class="tok-str">&quot;run_for_ms&quot;</span>:<span class="tok-num">90000</span>}}
 {<span class="tok-str">&quot;id&quot;</span>:<span class="tok-num">3</span>,<span class="tok-str">&quot;method&quot;</span>:<span class="tok-str">&quot;experiment.start&quot;</span>}
 {<span class="tok-str">&quot;id&quot;</span>:<span class="tok-num">4</span>,<span class="tok-str">&quot;method&quot;</span>:<span class="tok-str">&quot;experiment.state&quot;</span>}
-{<span class="tok-str">&quot;id&quot;</span>:<span class="tok-num">5</span>,<span class="tok-str">&quot;method&quot;</span>:<span class="tok-str">&quot;experiment.export&quot;</span>}</code></pre><button class="copy" type="button" aria-label="Copy this code">copy</button></div>
+{<span class="tok-str">&quot;id&quot;</span>:<span class="tok-num">5</span>,<span class="tok-str">&quot;method&quot;</span>:<span class="tok-str">&quot;experiment.export&quot;</span>}</code></pre><button class="copy" type="button" aria-label="Copy this code">copy</button></div></div><div class="way" data-way="python"><div class="codewrap"><pre><code>wb.<span class="tok-fn">call</span>(<span <span class="tok-kw">class</span>="tok-str">&quot;experiment.senders&quot;</span>, {<span <span class="tok-kw">class</span>="tok-str">&quot;senders&quot;</span>: [<span <span class="tok-kw">class</span>="tok-str">&quot;Abernethy Repeater&quot;</span>, <span <span class="tok-kw">class</span>="tok-str">&quot;Largo Law&quot;</span>]})
+wb.<span class="tok-fn">call</span>(<span <span class="tok-kw">class</span>="tok-str">&quot;experiment.define&quot;</span>, {<span <span class="tok-kw">class</span>="tok-str">&quot;arms&quot;</span>: [...], <span <span class="tok-kw">class</span>="tok-str">&quot;seeds&quot;</span>: [<span <span class="tok-kw">class</span>="tok-num">1</span>, <span <span class="tok-kw">class</span>="tok-num">2</span>, <span <span class="tok-kw">class</span>="tok-num">3</span>],
+                              <span <span class="tok-kw">class</span>="tok-str">&quot;scope&quot;</span>: <span <span class="tok-kw">class</span>="tok-str">&quot;#sco&quot;</span>, <span <span class="tok-kw">class</span>="tok-str">&quot;run_for_ms&quot;</span>: <span <span class="tok-kw">class</span>="tok-num">90000</span>})
+wb.<span class="tok-fn">call</span>(<span <span class="tok-kw">class</span>="tok-str">&quot;experiment.start&quot;</span>)</code></pre><button class="copy" type="button" aria-label="Copy this code">copy</button></div></div></div>
 <h2 id="what-comes-out">What comes out<a class="hl" href="#what-comes-out" aria-label="Link to this section">#</a></h2>
 <table><thead><tr><th>metric</th><th>meaning</th></tr></thead><tbody><tr><td><code>tx</code></td><td>transmissions, summed over every node</td></tr><tr><td><code>rx</code></td><td>successful receptions</td></tr><tr><td><code>delivered</code></td><td>unique deliveries — a message reaching a node it had not reached</td></tr><tr><td><code>redundant</code></td><td>receptions of something already heard, the cost of flooding</td></tr><tr><td><code>collisions</code></td><td>receptions lost to overlapping transmissions</td></tr><tr><td><code>airtime_ms</code></td><td>total time the network spent transmitting</td></tr><tr><td><code>rx_spread</code></td><td>how much <code>rx</code> varied across the arm&#x27;s seeds — the arm&#x27;s own noise floor</td></tr><tr><td><code>at_risk_2db</code></td><td>deliveries within 2 dB of the demodulator floor, absent when no run measured it</td></tr></tbody></table>
 <p>Airtime, collisions and redundancy are the metrics that answer &quot;is this change good for the network&quot; rather than &quot;did this message arrive&quot;. They are reported for every arm without being asked for, and <code>rx_spread</code> is the number every delta must beat before it means anything.</p>
@@ -256,6 +271,31 @@ keeps them current. <a href="https://github.com/MeshBench/meshbench-docs/blob/ma
       });
     });
   });
+  var WAY_KEY = "meshbench-docs-way";
+  function applyWay(w){
+    document.querySelectorAll(".ways").forEach(function(b){
+      var want = b.querySelector('[data-way="' + w + '"]') ? w
+        : b.querySelector(".ways-tabs button").getAttribute("data-way");
+      b.querySelectorAll(".ways-tabs button").forEach(function(t){
+        t.classList.toggle("on", t.getAttribute("data-way") === want);
+      });
+      b.querySelectorAll(".way").forEach(function(p){
+        p.classList.toggle("on", p.getAttribute("data-way") === want);
+      });
+    });
+  }
+  document.querySelectorAll(".ways-tabs button").forEach(function(t){
+    t.addEventListener("click", function(){
+      var w = t.getAttribute("data-way");
+      try { localStorage.setItem(WAY_KEY, w); } catch (e) {}
+      applyWay(w);
+    });
+  });
+  if (document.querySelector(".ways")){
+    var saved = null;
+    try { saved = localStorage.getItem(WAY_KEY); } catch (e) {}
+    if (saved) applyWay(saved);
+  }
   var mt = document.querySelector(".menu-toggle");
   if (mt) mt.addEventListener("click", function(){
     var open = document.querySelector(".navlinks").classList.toggle("open");

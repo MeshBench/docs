@@ -70,15 +70,37 @@ skipped one fails silently, later, looking like bad RF.</figcaption>
 
 ![The Import panel: the five steps in order, and the study area they act on](images/import-panel.png)
 
+The whole chain is on the Import panel, whose buttons are numbered in this
+order — and from Python or Go it is one call, `wb.live.pull(url)` /
+`wb.Live().Pull(ctx, url, 0, 0)`, which runs fetch, commit, inference and
+apply together. The steps below are for doing it a step at a time.
+
+![The Import panel's numbered steps](images/crop-import-steps.png)
+
 ## 1. Choose the area first
 
 The import is filtered by the chosen boundary, so setting it first avoids
 fetching a continent to keep a county.
 
-```
+:::ways
+::gui
+On the **Import** panel, type the place into *a place: Fife, Scotland,
+Ireland* and press **1. add area**. Add each area the study needs — areas
+union, so Scotland plus Ireland is two presses.
+::socket
+```json
 {"id":1,"method":"boundary.set","params":{"query":"Fife"}}
 {"id":2,"method":"boundary.accept"}
 ```
+::python
+```python
+print(wb.boundary.use("Fife"))   # searches, accepts, and says what it chose
+```
+::go
+```go
+studying, err := wb.Boundary().Use(ctx, "Fife")
+```
+:::
 
 Areas union, so Scotland plus Ireland is two accepts. Boundaries come from
 OpenStreetMap and are cached; a hand-drawn latitude and longitude box keeps
@@ -88,12 +110,19 @@ null-island nodes and cuts coastline wrongly.
 
 ## 2. Fetch and commit
 
-```
+:::ways
+::gui
+Paste the deployment address into *a CoreScope deployment URL*, press
+**2. fetch**, read the counts it reports, then press **3. commit**. Nothing
+changes until the commit — fetching only describes what an import would do.
+::socket
+```json
 {"id":3,"method":"import.set_source","params":{
    "source":"corescope","url":"https://your-corescope.example"}}
 {"id":4,"method":"import.fetch"}
 {"id":5,"method":"import.commit","params":{"strategy":"replace-all"}}
 ```
+:::
 
 There are two strategies. `replace-all` clears the current nodes and starts
 from the import; `add` keeps them and puts the imported nodes alongside.
@@ -106,9 +135,16 @@ dropped, and the counts are reported.
 
 ## 3. Prune
 
-```
+:::ways
+::gui
+On the **Boundary** panel, press **delete what is outside**. The margin box
+beside it keeps what is just over the line — a repeater 20 km outside the
+boundary is still heard inside it.
+::socket
+```json
 {"id":6,"method":"boundary.prune"}
 ```
+:::
 
 Removes anything outside the chosen areas, and reports the before and after
 counts.
@@ -119,10 +155,20 @@ Imported nodes carry no firmware reference, which resolves to MeshCore `main`,
 for which nothing is published. A run then fails with firmware on none of the
 nodes.
 
-```
+:::ways
+::gui
+In the [firmware library](firmware-library.html), press **use for role** on
+the build each role should run — it sets every node of that role at once.
+::socket
+```json
 {"id":7,"method":"firmware.set","params":{
    "node":"Abernethy Repeater","role":"simple_repeater","version":"repeater-v1.17.0"}}
 ```
+::python
+```python
+wb.firmware.use_what_is_here()   # newest on-disk build, per role
+```
+:::
 
 **Pass a node.** `firmware.set` with a role and no node applies to every node
 that runs firmware *and sets its role*, so three calls in a row convert the
@@ -133,11 +179,17 @@ whole network three times rather than pinning three roles.
 Transport regions are not in any node API. They are inferred from days of packet
 traffic, by matching each packet's transport code against candidate region keys.
 
-```
+:::ways
+::gui
+On the **Import** panel, press **4. read traffic**, wait for the result line,
+then press **5. apply regions**. The panel reports how many nodes changed.
+::socket
+```json
 {"id":8,"method":"infer.run","params":{"hours":168}}
 {"id":9,"method":"infer.result"}
 {"id":10,"method":"infer.apply"}
 ```
+:::
 
 `infer.apply` is a separate call and returns how many nodes it changed. A result
 of zero means inference ran and nothing was written.
@@ -151,9 +203,18 @@ handful hold produces the same silence for the same reason.
 
 ## 6. Save it
 
-```
+:::ways
+::gui
+**File**, then **Save this network** (Ctrl+S).
+::socket
+```json
 {"id":11,"method":"project.save","params":{"name":"my-network"}}
 ```
+::python
+```python
+wb.project.save("my-network")
+```
+:::
 
 A saved project holds the nodes, the boundary polygons, the seed, the traffic
 schedule and the assertions, so it opens later with no network access and no

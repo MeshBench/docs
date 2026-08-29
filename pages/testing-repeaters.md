@@ -5,7 +5,7 @@ does adding it help, and what does it cost the network.
 
 ## 1. Load a network
 
-`File` then `Open project`, and choose `fixture-scotland-strict`. 161 real nodes
+**File**, then **Open a saved network**, and choose `fixture-scotland-strict`. 161 real nodes
 from ScotMesh with the transport regions the real ones hold.
 
 The view switcher along the top selects what kind of work you are doing. Start
@@ -15,17 +15,27 @@ in **Plan**.
 
 ## 2. Place the repeater
 
-In **Plan**, choose the repeater tool and click where the site is. Set its
+:::ways
+::gui
+In **Plan**, choose the *place* tool on the map's toolbar and click where the
+site is — it puts down a repeater unless another kind is chosen. Then set its
 height and transmit power in the Inspector: height above ground matters more
 than power on almost every link.
 
-Over the control socket:
-
-```
+![The map toolbar](images/crop-place-tool.png)
+::socket
+```json
 {"id":1,"method":"nodes.place","params":{
    "kind":"simple-repeater","name":"Test Site","lat":56.12,"lon":-3.45,
    "height_m":25,"tx_dbm":22}}
 ```
+::python
+```python
+wb.call("nodes.place", {"kind": "simple-repeater", "name": "Test Site",
+                        "lat": 56.12, "lon": -3.45,
+                        "height_m": 25, "tx_dbm": 22})
+```
+:::
 
 ## 3. Give it the regions its neighbours hold
 
@@ -33,9 +43,24 @@ A repeater forwards flood traffic only for the transport regions it has been
 told about. A node with none receives everything and forwards nothing, and
 reports no error while doing so.
 
-```
+:::ways
+::gui
+The **Fleet** panel sets regions for every node of a kind at once — type them
+space-separated and press **set regions**. For a node placed by hand, the
+**Provisioning** panel's *define a region from the study area* toggle covers
+the common case at the next firmware start. One specific node is a job for the
+socket or a client; its window's Settings tab shows what it holds.
+
+![The Fleet panel's regions controls](images/crop-fleet-regions.png)
+::socket
+```json
 {"id":2,"method":"nodes.regions","params":{"node":"Test Site","regions":["#sco"]}}
 ```
+::python
+```python
+wb.call("nodes.regions", {"node": "Test Site", "regions": ["#sco"]})
+```
+:::
 
 The node's *default scope* — what it sends on when nothing says otherwise — is
 a separate setting, applied at import or through the provisioning panel, not by
@@ -43,7 +68,7 @@ this verb.
 
 ## 4. Start firmware and watch it
 
-`Simulation` then `Start firmware`. Every node launches a real MeshCore build,
+**Simulation**, then **Start firmware on every node**. Every node launches a real MeshCore build,
 and is told its name, position, clock and regions. The count in the status bar
 reaches the node total when they are all up.
 
@@ -56,9 +81,22 @@ demodulator floor" are different lines.
 The console runs a line on the node's own CLI and returns what it said, which is
 the quickest way to check configuration actually landed:
 
-```
+:::ways
+::gui
+Double-click the node (or find it in the **Nodes** panel) to open its own
+window, on the **Console** tab. Type the command and press Enter; the reply
+arrives when the engine next steps.
+
+![A repeater's console: the command, and the node's own answer](images/node-console.png)
+::socket
+```json
 {"id":3,"method":"console.type","params":{"node":"Test Site","command":"get repeat"}}
 ```
+::python
+```python
+print(wb.nodes["Test Site"].console.ask("get repeat"))
+```
+:::
 
 Useful commands: `get name`, `get repeat`, `get flood.max`, `get path.hash.mode`,
 `region put <r>`, `region allowf <r>`, `region save`. The full list is at

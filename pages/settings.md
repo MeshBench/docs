@@ -110,6 +110,7 @@ profile and the model answers whether a site survives December at its latitude.
 |---|---|
 | let agents drive this workbench | opens the control socket at `$XDG_RUNTIME_DIR/meshbench.sock` |
 | compute the link matrix in the background | keeps reachability current while editing |
+| `MESHBENCH_CARTO_KEY` in the environment | unlocks the CARTO basemaps and makes the dark map the first-run default; without it they answer every tile with an API-key watermark |
 
 The control socket is how every scripted run, the test runner and the MCP server
 drive the application. See the [control socket reference](reference-control.html).
