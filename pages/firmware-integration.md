@@ -125,9 +125,19 @@ disagree.
 the fastest way to find out what a node actually believes rather than what its
 configuration was assumed to say.
 
-```
+:::ways
+::gui
+Open the node's own window on its **Console** tab, type the command, press
+Enter.
+::socket
+```json
 {"id":1,"method":"console.type","params":{"node":"Bathgate room","command":"get repeat"}}
 ```
+::python
+```python
+print(wb.nodes["Bathgate room"].console.ask("get repeat"))
+```
+:::
 
 The command reference is at <https://docs.meshcore.io/cli_commands/>. There is
 no `region list` and no `help`; both answer `Err - ??`, which looks like a
@@ -141,5 +151,5 @@ the experiment first.
 
 A companion node's serial protocol is offered over TCP or a virtual serial
 device, byte for byte as the firmware produces it. That is what the
-[Companion bench](companion-bench.html) is for, and what `meshbench test
+[Companion bench](app-development.html) is for, and what `meshbench test
 -endpoint` exposes headlessly.

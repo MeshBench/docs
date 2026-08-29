@@ -25,9 +25,16 @@ against the same network, with the results tabulated side by side.
 
 ![The Bench view: the sweep definition, past runs, the experiment log and per-node timelines](images/view-bench.png)
 
-From a script, the whole thing:
+The numbered steps above are the Bench view's **Sweep** panel, top to
+bottom; **define** stores the matrix and **run it** starts it.
 
-```
+:::ways
+::gui
+Everything is on the **Sweep** panel in the order listed above. The **Runs**
+panel fills as each cell completes, and **Results** tabulates the arms side
+by side.
+::socket
+```json
 {"id":1,"method":"experiment.senders","params":{"senders":["Abernethy Repeater","Largo Law","Cluny Clay","West Lomond"]}}
 {"id":2,"method":"experiment.define","params":{
    "arms":[{"label":"control","repeater_version":"repeater-v1.17.0"},
@@ -37,6 +44,14 @@ From a script, the whole thing:
 {"id":4,"method":"experiment.state"}
 {"id":5,"method":"experiment.export"}
 ```
+::python
+```python
+wb.call("experiment.senders", {"senders": ["Abernethy Repeater", "Largo Law"]})
+wb.call("experiment.define", {"arms": [...], "seeds": [1, 2, 3],
+                              "scope": "#sco", "run_for_ms": 90000})
+wb.call("experiment.start")
+```
+:::
 
 ## What comes out
 

@@ -19,18 +19,39 @@ other four are placed, and they hold the regions their nearest neighbours hold.
 
 ## Loading one
 
-1. `File` then `Open project`.
+:::ways
+::gui
+1. **File**, then **Open a saved network**.
 2. Choose a fixture. `-strict` or `-permissive`; read the next section before
    choosing.
-3. `Simulation` then `Start firmware`, and wait for the count to reach the node
-   total. At 378 nodes this takes a minute and about 4 GB.
+3. **Simulation**, then **Start firmware on every node**, and wait for the
+   count to reach the node total. At 378 nodes this takes a minute and about
+   4 GB.
 4. Press play.
-
-From a script:
-
-```
+::socket
+```json
 {"id":1,"method":"project.open","params":{"name":"fixture-scotland-ireland-strict"}}
+{"id":2,"method":"sim.start"}
 ```
+::python
+```python
+wb.project.open("fixture-scotland-ireland-strict")
+wb.sim.start()
+wb.firmware.wait_started(timedelta(minutes=10))
+```
+::go
+```go
+if err := wb.Project().Open(ctx, "fixture-scotland-ireland-strict"); err != nil {
+    log.Fatal(err)
+}
+if err := wb.Sim().Start(ctx); err != nil {
+    log.Fatal(err)
+}
+if err := wb.Firmware().WaitStarted(ctx, 10*time.Minute); err != nil {
+    log.Fatal(err)
+}
+```
+:::
 
 ## Strict and permissive, and why it matters
 
