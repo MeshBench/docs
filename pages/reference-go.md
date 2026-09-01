@@ -26,7 +26,7 @@ Every exported type in the Go client, its methods, and the shape of each call - 
 
 **Errors** · [ProtocolMismatch](#protocolmismatch) · [Refused](#refused) · [Timeout](#timeout)
 
-**Values** · [Assertion](#assertion) · [Build](#build) · [BuildChange](#buildchange) · [BuildDetails](#builddetails) · [BuildID](#buildid) · [CardChange](#cardchange) · [CardSlot](#cardslot) · [Check](#check) · [Checkpoint](#checkpoint) · [Describe](#describe) · [Event](#event) · [FirmwareState](#firmwarestate) · [Hello](#hello) · [ImportPreview](#importpreview) · [JobInfo](#jobinfo) · [Journal](#journal) · [JournalEntry](#journalentry) · [Match](#match) · [NameMatch](#namematch) · [Neighbour](#neighbour) · [NodeInfo](#nodeinfo) · [NodeStat](#nodestat) · [Notification](#notification) · [Placement](#placement) · [Provenance](#provenance) · [Report](#report) · [Restored](#restored) · [RoleNeed](#roleneed) · [Screen](#screen) · [Send](#send) · [Shot](#shot) · [SimState](#simstate) · [Subscription](#subscription)
+**Values** · [Aimed](#aimed) · [Antenna](#antenna) · [AntennaChange](#antennachange) · [Assertion](#assertion) · [Build](#build) · [BuildChange](#buildchange) · [BuildDetails](#builddetails) · [BuildID](#buildid) · [CardChange](#cardchange) · [CardSlot](#cardslot) · [Check](#check) · [Checkpoint](#checkpoint) · [Describe](#describe) · [Event](#event) · [FirmwareState](#firmwarestate) · [Hello](#hello) · [ImportPreview](#importpreview) · [JobInfo](#jobinfo) · [Journal](#journal) · [JournalEntry](#journalentry) · [Match](#match) · [NameMatch](#namematch) · [Neighbour](#neighbour) · [NodeInfo](#nodeinfo) · [NodeStat](#nodestat) · [Notification](#notification) · [Placement](#placement) · [Provenance](#provenance) · [Report](#report) · [Restored](#restored) · [RoleNeed](#roleneed) · [Screen](#screen) · [Send](#send) · [Shot](#shot) · [SimState](#simstate) · [Subscription](#subscription)
 
 **Options and functions** · [Option](#option) · [CodeOf](#codeof)
 
@@ -76,7 +76,7 @@ Boundary reaches the study area.
 
 Call runs one verb and returns its result as raw JSON.
 
-Public and documented, not an escape hatch to be ashamed of: the façade will never cover all 213 verbs, and a verb added tomorrow is usable today.
+Public and documented, not an escape hatch to be ashamed of: the façade will never cover every verb the socket answers, and a verb added tomorrow is usable today. Ask session.verbs for the list this build actually offers - two counts written down here have already gone stale, and a number nothing checks is worse than no number.
 
 ### `(w *Workbench) CallInto(ctx context.Context, verb string, params, into any) error`
 
@@ -312,9 +312,25 @@ Select replaces the selection, or adds to it.
 
 Selected is who is selected now.
 
+### `(n Nodes) SetAntenna(ctx context.Context, kind Kind, c AntennaChange) error`
+
+SetAntenna gives every node the same antenna, or every node of one kind.
+
+The fleet-level default, and the only way a large scenario gets one: setting fifty-eight nodes by hand is not a workflow anybody will use. Pass an empty kind for every node.
+
 ## Node
 
 Node is one node. Live: a handle, not a copy - it holds a name, and asks.
+
+### `(n Node) Aim(ctx context.Context, at string) (Aimed, error)`
+
+Aim turns this node's antenna towards another node.
+
+The bearing between two placed nodes is exact, so this is a better answer than reading one off a map and typing it back.
+
+### `(n Node) Antenna(ctx context.Context) (Antenna, error)`
+
+Antenna reports what this node stands under and which way it points.
 
 ### `(n Node) Build(ctx context.Context) (Build, bool, error)`
 
@@ -387,6 +403,10 @@ Running reports whether its firmware process is up.
 ### `(n Node) Serve(ctx context.Context, over Transport) (string, error)`
 
 Serve hands this companion to a real client - meshcore-cli, or an app over a bridge - and returns where to point it.
+
+### `(n Node) SetAntenna(ctx context.Context, c AntennaChange) error`
+
+SetAntenna changes this node's antenna. What is left nil is left alone, so turning a beam does not restate the beam.
 
 ### `(n Node) SetBoard(ctx context.Context, board Board) error`
 
@@ -609,6 +629,8 @@ The lines come back under "tail" and "lines" is how many there are in total, so 
 ### `(c Console) Send(ctx context.Context, line string) error`
 
 Send types a line at it.
+
+Which verb that is depends on what the node runs. A companion or a room server speaks the framed companion protocol, so its console takes a command rather than keystrokes, and console.type reaches a node of that kind without ever being delivered.
 
 ## Events
 
@@ -850,7 +872,10 @@ Class is what happened to an event.
 - `ClassReceived` - `"received"` · ClassReceived is this node decoded it, for the first time.
 - `ClassHalfDuplex` - `"half-duplex"` · keyed; LoRa is half duplex.
 - `ClassInterference` - `"interference"` · ClassInterference is would have decoded, but a stronger signal took it.
+- `ClassCollision` - `"collision"` · symbols than the coding rate could repair.
+- `ClassReceiverBusy` - `"receiver-busy"` · packet; a LoRa receiver decodes one at a time.
 - `ClassFloor` - `"floor"` · spreading factor.
+- `ClassUnclassified` - `"unclassified"` · never assume it was a weak signal.
 
 ### Kind
 
@@ -914,6 +939,7 @@ Tab is a pane of a node's own window.
 - `TabSDR` - `"SDR"` · TabSDR is an observer's antenna: serve it, read the address.
 - `TabSettings` - `"Settings"` · TabSettings is what this node is: identity, radio, regions, firmware.
 - `TabRadio` - `"Radio"` · TabRadio is what the chip is really doing.
+- `TabAntenna` - `"Antenna"` · TabAntenna is what this node stands under and which way it points.
 - `TabStats` - `"Stats"` · TabStats is what it has cost and what it has carried.
 - `TabActivity` - `"Activity"` · TabActivity is what it has heard and sent, in order.
 - `TabConnect` - `"Connect"` · TabConnect is hand this companion to a real client.
@@ -933,9 +959,14 @@ Transport is how a served companion is reached.
 
 ProtocolMismatch is a client and a workbench that cannot speak to each other, reported at connect rather than discovered later.
 
+Either end may be the one to notice. When the workbench refuses the connection over its declared version, Said carries that refusal and Workbench is the zero value, because the workbench stopped the connection before it would say what it was.
+
 ```go
 Client    int
 Workbench Hello
+// Said is the workbench's own refusal, kept whole. Its words are better
+// than a paraphrase: it knows its build and which end is the older one.
+Said string
 ```
 
 ### Refused
@@ -964,6 +995,66 @@ Last string
 ```
 
 ## Values
+
+### Aimed
+
+Aimed is where an antenna ended up pointing, and what that won.
+
+GainDBi is the point of it: on an omni the answer is the same as before, and a call that reported success while changing nothing would be one to distrust.
+
+```go
+Node       string  `json:"node"`
+At         string  `json:"at"`
+BearingDeg float64 `json:"bearing_deg"`
+DistanceKm float64 `json:"distance_km"`
+GainDBi    float64 `json:"gain_dbi"`
+```
+
+### Antenna
+
+Antenna is what a node stands under: which sort, and where it points.
+
+Directional in azimuth, so the bearing is not decoration. A beam is twenty decibels or more down off its boresight, and the difference between a node aimed down a valley and the same node aimed at a hillside is the difference between a link and no link.
+
+```go
+Node string `json:"node"`
+// Pattern is "isotropic", "dipole", "collinear" or "yagi", and empty for a
+// node that has no antenna at all - which is not the same as an omni at 0
+// dBi, and is reported rather than filled in.
+Pattern       string  `json:"pattern"`
+GainDBiPeak   float64 `json:"gain_dbi_peak"`
+BeamwidthDeg  float64 `json:"beamwidth_deg"`
+FrontToBackDB float64 `json:"front_to_back_db"`
+// BearingDeg is the compass bearing of the boresight, 0 at north.
+BearingDeg float64 `json:"bearing_deg"`
+// DowntiltDeg tilts the beam below the horizon, which is what a mast on a
+// hill does to reach the town underneath it.
+DowntiltDeg float64 `json:"downtilt_deg"`
+// Polarisation is "vertical", "horizontal" or "circular", and empty for a
+// node that has not said. Unstated costs nothing; a mismatch costs 3 dB
+// circular to linear and 20 dB vertical to horizontal.
+Polarisation string `json:"polarisation"`
+// FeedlineDB is cable and connector loss, as a positive number.
+FeedlineDB float64 `json:"feedline_db"`
+// PeakDBi is what the pattern manages on its own boresight, before the
+// feedline.
+PeakDBi float64 `json:"peak_dbi"`
+```
+
+### AntennaChange
+
+AntennaChange is what to change about an antenna. Nil leaves a field alone, because "leave this" and "set it to zero" are different answers and a float cannot say both - the same reason CardChange takes pointers.
+
+```go
+Pattern       *string
+GainDBiPeak   *float64
+BeamwidthDeg  *float64
+FrontToBackDB *float64
+BearingDeg    *float64
+DowntiltDeg   *float64
+Polarisation  *string
+FeedlineDB    *float64
+```
 
 ### Assertion
 

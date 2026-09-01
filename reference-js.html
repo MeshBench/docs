@@ -238,11 +238,11 @@ h2:hover .hl, h3:hover .hl, h2 .hl:focus-visible, h3 .hl:focus-visible { opacity
 <h2 id="workbench">Workbench<a class="hl" href="#workbench" aria-label="Link to this section">#</a></h2>
 <p>One connection to a workbench, and the queue that keeps two callers from interleaving a half-frame on the wire.</p>
 <h3 id="static-attach-opts"><code>static attach(opts = {})</code><a class="hl" href="#static-attach-opts" aria-label="Link to this section">#</a></h3>
-<p>Open a connection to a running workbench.</p>
-<h3 id="call-verb-params"><code>call(verb, params)</code><a class="hl" href="#call-verb-params" aria-label="Link to this section">#</a></h3>
-<p>Run one verb and return its result.</p>
+<p>Open a connection to a running workbench, and do the protocol handshake before handing it back - a workbench speaking a version this client does not understand is refused here, not on whichever call happens to notice.</p>
+<h3 id="call-verb-params-timeoutms"><code>call(verb, params, timeoutMs)</code><a class="hl" href="#call-verb-params-timeoutms" aria-label="Link to this section">#</a></h3>
+<p>Run one verb and return its result. Rejects if the workbench has not answered within <code>timeoutMs</code> - the default is <code>DEFAULT_CALL_TIMEOUT_MS</code>, set at <code>attach()</code> via <code>callTimeoutMs</code>, the same length Python&#x27;s socket timeout defaults to. Pass <code>null</code> to wait indefinitely for a call known to take a while.</p>
 <h3 id="async-hello"><code>async hello()</code><a class="hl" href="#async-hello" aria-label="Link to this section">#</a></h3>
-<p>Ask the workbench what it is, and refuse a protocol this client does not speak - at connect rather than halfway through a script.</p>
+<p>Ask the workbench what it is, and refuse a protocol this client does not speak. <code>attach()</code> calls this itself before handing back a connection, so calling it again is only useful to re-check.</p>
 <h3 id="close"><code>close()</code><a class="hl" href="#close" aria-label="Link to this section">#</a></h3>
 <p>Close the connection. Any calls still in flight reject.</p>
 <h2 id="module-functions">Module functions<a class="hl" href="#module-functions" aria-label="Link to this section">#</a></h2>
@@ -250,6 +250,8 @@ h2:hover .hl, h3:hover .hl, h2 .hl:focus-visible, h3 .hl:focus-visible { opacity
 <p>Where a workbench answers on this operating system unless told otherwise. Matches the Go and Python clients exactly, because the choice is by OS, not by language: all three must name the same address on one machine.</p>
 <h2 id="constants">Constants<a class="hl" href="#constants" aria-label="Link to this section">#</a></h2>
 <ul><li><code>PROTOCOL = 1</code> - The wire version this client speaks. A workbench answering anything else is refused rather than failing halfway through a script.</li></ul>
+<ul><li><code>DEFAULT_CALL_TIMEOUT_MS = 300000</code> - How long a call waits for a reply before it gives up, unless a caller says otherwise. Matches the Python client&#x27;s socket timeout, so a script ported between the two waits the same length of time before it hears about a verb the workbench never answered.</li></ul>
+<ul><li><code>MAX_UNIX_PATH = 104</code> - The shortest sun_path any platform we run on allows: 108 on Linux, 104 on macOS and the BSDs. Matches the Go and Python clients exactly.</li></ul>
 <div class="pagenav"><a class="prev" href="reference-go.html"><span>previous</span>Go client</a><a class="next" href="settings.html"><span>next</span>Settings</a></div>
 <footer>MeshBench documentation. Built from the running application, not from
 mock-ups. Screenshots are window-only captures; see CLAUDE.md for the rule that

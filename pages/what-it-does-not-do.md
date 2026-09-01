@@ -178,6 +178,32 @@ feeder loss beyond a scalar, no ground-plane interaction.
 pattern that our idealised one does not. Nothing models the mast blocking the
 back of its own antenna.
 
+Any of the four can be chosen per node, aimed and tilted, from the node
+window's Antenna tab or from `nodes.antenna` and `node.aim`. What that buys is
+the *shape* of a real directional antenna and not the article: a beam here has
+a Gaussian main lobe in both planes and a flat floor at its front-to-back
+figure, so it has no side lobes, no nulls between them, and no pattern
+asymmetry. Reading a specific antenna's advertised gain and beamwidth into this
+model gets the boresight right and the first 20 degrees or so approximately
+right; it does not tell you what that antenna does 70 degrees off, which is
+where a real one has structure and this has a smooth curve.
+
+### 1.8 Polarisation is a flat penalty, not a geometry
+
+Cross-polarisation costs a fixed 3 dB circular against linear and 20 dB
+vertical against horizontal, charged once per link between the two ends. Two
+nodes that have not said what they are cost each other nothing, which is what
+keeps a scenario built before anybody chose priced the way it always was.
+
+**Consequence.** The real figure depends on the antennas' cross-polar rejection
+and on how the path rotates the wave, neither of which is modelled: 20 dB is a
+representative rejection rather than a measurement, and a real path can do
+better or worse. There is no tilt-angle model either, so a handheld at 45
+degrees is either matched or not, with nothing in between. Nothing else applies
+it - the coverage raster's remote end is a scalar gain with no polarisation at
+all, so a coverage map does not charge a mismatch the link budget beside it
+would.
+
 ---
 
 ## 2. Measured error we already know about
@@ -891,8 +917,10 @@ gone stale is the failure mode it exists to prevent.
   MeshCore is a separate process fetched at runtime rather than linked, and the
   emulator forks are aggregated beside the binary rather than combined with it.
   The one dependency that needed a decision — `eclipse/paho.mqtt.golang`, which
-  is EPL-2.0 *or* EDL-1.0 — is taken under its EDL branch, and `tools/licgen`
-  fails the build if a future dependency arrives under EPL alone.
+  was EPL-2.0 *or* EDL-1.0 — was taken under its EDL branch for as long as it
+  was there; it backed an MQTT feed no user could reach, so it was removed
+  rather than kept unused, and `tools/licgen` still fails the build if a future
+  dependency arrives under EPL alone.
 - **Attribution is generated and enforced, not maintained by hand.**
   `tools/licgen` walks the build graph of `./cmd/meshbench`, reads every linked
   module's licence out of the module cache, and **fails the run** on a module
