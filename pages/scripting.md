@@ -258,3 +258,10 @@ Two further limits belong to scripting itself. A run is only reproducible
 against the same seed and the same scenario, so a comparison that varies the
 build must hold both. And a mesh brought up by a script is emulated one board at
 a time on an ordinary machine: several emulated boards at once will exhaust it.
+
+## Scripting with a coding agent
+
+The verb list says what can be called. It does not say which reply is a refusal
+wearing the shape of a success, or which wait has a premise that does not hold.
+MeshBench publishes that as [agent skills](agent-skills.html), which install
+into Claude Code, Cursor, VS Code, Gemini CLI and Codex.

@@ -94,6 +94,7 @@ NAV = [
     ("SECTION", "Automate"),
     ("scripting.html", "Scripting a session"),
     ("cookbook.html", "Scripting cookbook"),
+    ("agent-skills.html", "Agent skills"),
     ("reference-cli.html", "CLI"),
     ("reference-control.html", "Control socket"),
     ("reference-python.html", "Python client"),
