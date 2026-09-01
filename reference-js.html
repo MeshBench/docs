@@ -231,35 +231,52 @@ h2:hover .hl, h3:hover .hl, h2 .hl:focus-visible, h3 .hl:focus-visible { opacity
 <div class="codewrap"><pre><code>npm install @meshbench/client</code></pre><button class="copy" type="button" aria-label="Copy this code">copy</button></div>
 <div class="codewrap"><pre><code><span class="tok-kw">import</span> { Workbench } <span class="tok-kw">from</span> <span <span class="tok-kw">class</span>="tok-str">&quot;@meshbench/client&quot;</span>;</code></pre><button class="copy" type="button" aria-label="Copy this code">copy</button></div>
 <p>Needs Node 18 or newer, and the <code>meshbench</code> binary on <code>PATH</code>. See <a href="scripting.html#installing-a-client">Installing a client</a>.</p>
-<p>It is the thinnest of the three - a connection, one <code>call</code> method, and the handshake - because Node scripting so far is the cookbook&#x27;s <code>small-mesh</code> example and little else. This page is its whole surface, generated from the module&#x27;s own JSDoc.</p>
+<p>It is the thinnest of the three - a connection, one <code>call</code> method, and the handshake - because Node scripting so far is the cookbook&#x27;s <code>small-mesh</code> example and little else. Where the Go and Python clients put a generated façade of typed methods and closed enums over the socket, this one does not: a generated enum buys compile-time safety that a client with no compiler cannot spend. Every verb is still reachable, by name, through <code>call</code>; the <a href="reference-control.html">control socket reference</a> lists them.</p>
 <h2 id="the-surface">The surface<a class="hl" href="#the-surface" aria-label="Link to this section">#</a></h2>
-<p>The whole Node client - one zero-dependency ES module, <code>pkg/client-js/meshbench.mjs</code>, on the same control socket as the Go and Python clients. Generated from its JSDoc. See <a href="scripting.html">Scripting a session</a> and the <a href="cookbook.html">cookbook</a> for how it is used.</p>
-<p><strong>Classes</strong> · <a href="#workbencherror">WorkbenchError</a> · <a href="#workbench">Workbench</a></p>
-<h2 id="workbencherror">WorkbenchError<a class="hl" href="#workbencherror" aria-label="Link to this section">#</a></h2>
-<p>Extends <code>Error</code>.</p>
-<p>A verb the workbench refused, carrying its classification so a caller can tell &quot;no such node&quot; from &quot;the workbench is closing&quot; without matching prose.</p>
+<p>Every export of the Node client - the classes with their constructors, properties and methods, the module functions and the constants - lifted from the JSDoc in <code>pkg/client-js/meshbench.mjs</code>, so it cannot drift from the module a script imports. Start at <a href="scripting.html">Scripting a session</a> for how a session is opened, and the <a href="cookbook.html">cookbook</a> for whole programs.</p>
+<p><strong>The workbench</strong> · <a href="#workbench">Workbench</a></p>
+<p><strong>Errors</strong> · <a href="#workbencherror">WorkbenchError</a></p>
+<p><strong>Module functions</strong> · <a href="#defaultaddress">defaultAddress</a></p>
+<p><strong>Constants</strong> · <a href="#protocol">PROTOCOL</a> · <a href="#default-call-timeout-ms">DEFAULT_CALL_TIMEOUT_MS</a> · <a href="#max-unix-path">MAX_UNIX_PATH</a></p>
 <h2 id="workbench">Workbench<a class="hl" href="#workbench" aria-label="Link to this section">#</a></h2>
 <p>One connection to a workbench, and the queue that keeps two callers from interleaving a half-frame on the wire.</p>
-<h3 id="static-attach-opts"><code>static attach(opts = {})</code><a class="hl" href="#static-attach-opts" aria-label="Link to this section">#</a></h3>
+<div class="codewrap"><pre><code><span class="tok-kw">new</span> <span class="tok-fn">Workbench</span>(sock, address, callTimeoutMs)</code></pre><button class="copy" type="button" aria-label="Copy this code">copy</button></div>
+<p><strong>Properties</strong></p>
+<ul><li><code>address</code></li></ul>
+<h3 id="static-workbench-attach-opts"><code>static Workbench.attach(opts = {})</code><a class="hl" href="#static-workbench-attach-opts" aria-label="Link to this section">#</a></h3>
 <p>Open a connection to a running workbench, and do the protocol handshake before handing it back - a workbench speaking a version this client does not understand is refused here, not on whichever call happens to notice.</p>
-<h3 id="call-verb-params-timeoutms"><code>call(verb, params, timeoutMs)</code><a class="hl" href="#call-verb-params-timeoutms" aria-label="Link to this section">#</a></h3>
+<h3 id="workbench-call-verb-params-timeoutms"><code>Workbench.call(verb, params, timeoutMs)</code><a class="hl" href="#workbench-call-verb-params-timeoutms" aria-label="Link to this section">#</a></h3>
 <p>Run one verb and return its result. Rejects if the workbench has not answered within <code>timeoutMs</code> - the default is <code>DEFAULT_CALL_TIMEOUT_MS</code>, set at <code>attach()</code> via <code>callTimeoutMs</code>, the same length Python&#x27;s socket timeout defaults to. Pass <code>null</code> to wait indefinitely for a call known to take a while.</p>
-<h3 id="async-hello"><code>async hello()</code><a class="hl" href="#async-hello" aria-label="Link to this section">#</a></h3>
+<h3 id="async-workbench-hello"><code>async Workbench.hello()</code><a class="hl" href="#async-workbench-hello" aria-label="Link to this section">#</a></h3>
 <p>Ask the workbench what it is, and refuse a protocol this client does not speak. <code>attach()</code> calls this itself before handing back a connection, so calling it again is only useful to re-check.</p>
-<h3 id="close"><code>close()</code><a class="hl" href="#close" aria-label="Link to this section">#</a></h3>
+<h3 id="workbench-close"><code>Workbench.close()</code><a class="hl" href="#workbench-close" aria-label="Link to this section">#</a></h3>
 <p>Close the connection. Any calls still in flight reject.</p>
+<h2 id="errors">Errors<a class="hl" href="#errors" aria-label="Link to this section">#</a></h2>
+<h3 id="workbencherror">WorkbenchError<a class="hl" href="#workbencherror" aria-label="Link to this section">#</a></h3>
+<p>Extends <code>Error</code>.</p>
+<p>A verb the workbench refused, carrying its classification so a caller can tell &quot;no such node&quot; from &quot;the workbench is closing&quot; without matching prose.</p>
+<div class="codewrap"><pre><code><span class="tok-kw">new</span> <span class="tok-fn">WorkbenchError</span>(message, code)</code></pre><button class="copy" type="button" aria-label="Copy this code">copy</button></div>
+<p><strong>Properties</strong></p>
+<ul><li><code>name</code></li><li><code>code</code></li></ul>
 <h2 id="module-functions">Module functions<a class="hl" href="#module-functions" aria-label="Link to this section">#</a></h2>
-<h3 id="defaultaddress"><code>defaultAddress()</code><a class="hl" href="#defaultaddress" aria-label="Link to this section">#</a></h3>
+<h3 id="defaultaddress"><code>defaultAddress</code><a class="hl" href="#defaultaddress" aria-label="Link to this section">#</a></h3>
+<div class="codewrap"><pre><code><span class="tok-fn">defaultAddress</span>()</code></pre><button class="copy" type="button" aria-label="Copy this code">copy</button></div>
 <p>Where a workbench answers on this operating system unless told otherwise. Matches the Go and Python clients exactly, because the choice is by OS, not by language: all three must name the same address on one machine.</p>
 <h2 id="constants">Constants<a class="hl" href="#constants" aria-label="Link to this section">#</a></h2>
-<ul><li><code>PROTOCOL = 1</code> - The wire version this client speaks. A workbench answering anything else is refused rather than failing halfway through a script.</li></ul>
-<ul><li><code>DEFAULT_CALL_TIMEOUT_MS = 300000</code> - How long a call waits for a reply before it gives up, unless a caller says otherwise. Matches the Python client&#x27;s socket timeout, so a script ported between the two waits the same length of time before it hears about a verb the workbench never answered.</li></ul>
-<ul><li><code>MAX_UNIX_PATH = 104</code> - The shortest sun_path any platform we run on allows: 108 on Linux, 104 on macOS and the BSDs. Matches the Go and Python clients exactly.</li></ul>
+<h3 id="protocol"><code>PROTOCOL</code><a class="hl" href="#protocol" aria-label="Link to this section">#</a></h3>
+<div class="codewrap"><pre><code><span class="tok-kw">export</span> <span class="tok-kw">const</span> PROTOCOL = <span <span class="tok-kw">class</span>="tok-num">1</span>;</code></pre><button class="copy" type="button" aria-label="Copy this code">copy</button></div>
+<p>The wire version this client speaks. A workbench answering anything else is refused rather than failing halfway through a script.</p>
+<h3 id="default-call-timeout-ms"><code>DEFAULT_CALL_TIMEOUT_MS</code><a class="hl" href="#default-call-timeout-ms" aria-label="Link to this section">#</a></h3>
+<div class="codewrap"><pre><code><span class="tok-kw">export</span> <span class="tok-kw">const</span> DEFAULT_CALL_TIMEOUT_MS = <span <span class="tok-kw">class</span>="tok-num">300000</span>;</code></pre><button class="copy" type="button" aria-label="Copy this code">copy</button></div>
+<p>How long a call waits for a reply before it gives up, unless a caller says otherwise. Matches the Python client&#x27;s socket timeout, so a script ported between the two waits the same length of time before it hears about a verb the workbench never answered.</p>
+<h3 id="max-unix-path"><code>MAX_UNIX_PATH</code><a class="hl" href="#max-unix-path" aria-label="Link to this section">#</a></h3>
+<div class="codewrap"><pre><code><span class="tok-kw">export</span> <span class="tok-kw">const</span> MAX_UNIX_PATH = <span <span class="tok-kw">class</span>="tok-num">104</span>;</code></pre><button class="copy" type="button" aria-label="Copy this code">copy</button></div>
+<p>The shortest sun_path any platform we run on allows: 108 on Linux, 104 on macOS and the BSDs. Matches the Go and Python clients exactly.</p>
 <div class="pagenav"><a class="prev" href="reference-go.html"><span>previous</span>Go client</a><a class="next" href="settings.html"><span>next</span>Settings</a></div>
 <footer>MeshBench documentation. Built from the running application, not from
 mock-ups. Screenshots are window-only captures; see CLAUDE.md for the rule that
 keeps them current. <a href="https://github.com/MeshBench/docs/blob/main/pages/reference-js.md">Edit this page</a>.</footer>
-</main><aside class="toc" aria-label="On this page"><p class="tochead">On this page</p><a href="#the-surface" data-t="the-surface">The surface</a><a href="#workbencherror" data-t="workbencherror">WorkbenchError</a><a href="#workbench" data-t="workbench">Workbench</a><a href="#module-functions" data-t="module-functions">Module functions</a><a href="#constants" data-t="constants">Constants</a></aside></div><script>
+</main><aside class="toc" aria-label="On this page"><p class="tochead">On this page</p><a href="#the-surface" data-t="the-surface">The surface</a><a href="#workbench" data-t="workbench">Workbench</a><a href="#errors" data-t="errors">Errors</a><a href="#module-functions" data-t="module-functions">Module functions</a><a href="#constants" data-t="constants">Constants</a></aside></div><script>
 (function(){
   document.querySelectorAll(".codewrap").forEach(function(w){
     var b = w.querySelector(".copy");
