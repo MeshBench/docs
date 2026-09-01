@@ -232,7 +232,9 @@ h2:hover .hl, h3:hover .hl, h2 .hl:focus-visible, h3 .hl:focus-visible { opacity
 <ol class="steps"><li><strong>Load a shipped network.</strong> <strong>File</strong>, then <strong>Open a saved network</strong>, and
 choose <code>fixture-fife-strict</code> to see it moving in seconds (58 nodes), or
 <code>fixture-scotland-ireland-strict</code> for the full map (378 nodes, about a
-minute to boot).</li><li><strong>Start the firmware.</strong> <strong>Simulation</strong>, then <strong>Start firmware on every
+minute to boot).</li></ol>
+<p>   &gt; <strong>The first run asks about terrain, and waits for your answer.</strong> Measuring    &gt; the links needs ground elevation this machine has not downloaded yet, so    &gt; the measurement stops and says so rather than quietly assuming flat earth.    &gt; Until you answer, the map shows no links. Allow it in <strong>Configuration</strong>,    &gt; <strong>System</strong>, and the measurement finishes on its own. Refusing is a real    &gt; answer too: the run continues over whatever terrain is already cached, and    &gt; every study afterwards reports which ground it used, so a result can never    &gt; silently be the optimistic one.</p>
+<ol class="steps"><li><strong>Start the firmware.</strong> <strong>Simulation</strong>, then <strong>Start firmware on every
 node</strong>. Each node launches a real MeshCore build and is told its name,
 position, clock and regions. Watch the count in the status bar reach the
 node total; the big fixture takes about a minute and 4 GB.</li><li><strong>Press play.</strong> The transport control on the toolbar, or the space bar.
