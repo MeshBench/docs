@@ -90,6 +90,9 @@ is the class of finding a per-file linter cannot produce.
 ## What only reports
 
 Some limits are stated but not enforced, and it is worth knowing which.
+The house rules for the interface are one of them: they are carried as an
+[agent skill](agent-skills.html) rather than as a check, because most of them
+are about what a control means rather than about what compiles.
 
 Function length is a **soft** 50 lines and 256 functions exceed it; enforcing
 that would be inventing a rule rather than mechanising one. Nesting depth has

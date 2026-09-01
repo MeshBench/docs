@@ -22,7 +22,8 @@ SYNCED = {
     # page -> (source in the MeshBench repository, the script that renders it).
     # These are not edited here; the script rewrites them.
     "what-it-does-not-do.md": ("docs/shortcomings.md", "tools/sync-limits.py"),
-    "reference-control.md": ("internal/app/session", "tools/sync-verbs.py"),
+    "reference-control.md": ("docs/verb-reference.md", "tools/sync-verbs.py"),
+    "reference-cli.md": ("docs/cli-reference.md", "tools/sync-cli.py"),
     "reference-python.md": ("pkg/client-python/meshbench", "tools/sync-api-python.py"),
     "reference-go.md": ("pkg/client-go/meshbench", "tools/sync-api-go.py"),
     "reference-js.md": ("pkg/client-js/meshbench.mjs", "tools/sync-api-js.py"),
@@ -94,6 +95,7 @@ NAV = [
     ("SECTION", "Automate"),
     ("scripting.html", "Scripting a session"),
     ("cookbook.html", "Scripting cookbook"),
+    ("agent-skills.html", "Agent skills"),
     ("reference-cli.html", "CLI"),
     ("reference-control.html", "Control socket"),
     ("reference-python.html", "Python client"),
