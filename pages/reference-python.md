@@ -2,8 +2,10 @@
 
 The Python client is `pkg/client-python/meshbench` in the
 [meshbench repository](https://github.com/MeshBench/meshbench) - one dependency,
-the standard library, and a control socket. Install it with
-`pip install -e pkg/client-python`, then `from meshbench import Workbench`.
+the standard library, and a control socket. Install it from a checkout with
+`pip install -e pkg/client-python`, then `from meshbench import Workbench`. It
+needs Python 3.10 or newer and the `meshbench` binary on `PATH`, which it drives
+rather than contains. See [Installing a client](scripting.html#installing-a-client).
 
 This page is the whole exported surface. It is generated from the client's own
 docstrings and type annotations, so it says exactly what the code says and no

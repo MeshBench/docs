@@ -3,7 +3,15 @@
 The Node client is `pkg/client-js/meshbench.mjs` in the
 [meshbench repository](https://github.com/MeshBench/meshbench): one
 zero-dependency ES module on the same control socket as the Go and Python
-clients. `import { Workbench } from "./meshbench.mjs"`.
+clients. It is imported by path from a checkout, because it is not published to
+a package index:
+
+```js
+import { Workbench } from "./pkg/client-js/meshbench.mjs";
+```
+
+Needs Node 18 or newer, and the `meshbench` binary on `PATH`. See
+[Installing a client](scripting.html#installing-a-client).
 
 It is the thinnest of the three - a connection, one `call` method, and the
 handshake - because Node scripting so far is the cookbook's `small-mesh` example
