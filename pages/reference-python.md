@@ -24,7 +24,7 @@ Every class the client exports, its methods, and the shape of each call - genera
 
 **Enumerations** · [Board](#board) · [Class](#class) · [Kind](#kind) · [Preset](#preset) · [Role](#role) · [Strategy](#strategy) · [Tab](#tab) · [Transport](#transport)
 
-**Values** · [Event](#event) · [Build](#build) · [BuildDetails](#builddetails) · [CardSlot](#cardslot) · [Check](#check) · [Hello](#hello) · [ImportPreview](#importpreview) · [JobInfo](#jobinfo) · [NameMatch](#namematch) · [NodeInfo](#nodeinfo) · [NodeStat](#nodestat) · [Notification](#notification) · [Provenance](#provenance) · [Report](#report) · [Screen](#screen) · [Shot](#shot) · [SimState](#simstate)
+**Values** · [Event](#event) · [Aimed](#aimed) · [Antenna](#antenna) · [Build](#build) · [BuildDetails](#builddetails) · [CardSlot](#cardslot) · [Check](#check) · [Hello](#hello) · [ImportPreview](#importpreview) · [JobInfo](#jobinfo) · [NameMatch](#namematch) · [NodeInfo](#nodeinfo) · [NodeStat](#nodestat) · [Notification](#notification) · [Provenance](#provenance) · [Report](#report) · [Screen](#screen) · [Shot](#shot) · [SimState](#simstate)
 
 **Errors** · [BadParams](#badparams) · [Closing](#closing) · [Conflict](#conflict) · [MeshbenchError](#meshbencherror) · [NotFound](#notfound) · [ProtocolMismatch](#protocolmismatch) · [Refused](#refused) · [Timeout](#timeout) · [Unavailable](#unavailable) · [UnknownVerb](#unknownverb)
 
@@ -87,8 +87,10 @@ Whether closing this will stop the workbench.
 Run one verb and return its result.
 
 Public and documented, not an escape hatch to be ashamed of: the shaped
-API will never cover all 213 verbs, and a verb added tomorrow should be
-usable today.
+API will never cover every verb the socket answers, and a verb added
+tomorrow should be usable today. Ask `session.verbs` for the list this
+build actually offers: two counts written down here have already gone
+stale, and a number nothing checks is worse than no number.
 
 ### `Workbench.subscribe(*topics: str) -> Subscription`
 
@@ -338,6 +340,19 @@ cannot be computed against a list that changed in between.
 
 ### `Nodes.stats() -> list[NodeStat]`
 
+### `Nodes.set_antenna(kind: str = '', **change: float | str) -> None`
+
+Give every node the same antenna, or every node of one kind.
+
+The fleet-level default, and the only way a large scenario gets one:
+setting fifty-eight nodes by hand is not a workflow anybody will use.
+What is not named is left alone, so this can retune the whole mesh's
+feedlines without restating what is on top of the masts.
+
+The named parameters are `pattern`, `gain_dbi_peak`,
+`beamwidth_deg`, `front_to_back_db`, `bearing_deg`,
+`downtilt_deg`, `polarisation` and `feedline_db`.
+
 ## Node
 
 One node. Live: a handle, not a copy - it holds a name and asks.
@@ -381,6 +396,32 @@ What this node's radio is set to - the same thing the workbench
 shows under Radio. What the model assumes, and, for a node that is
 running, what it reports back and where the two differ. Left as a dict
 because a repeater and a companion answer it differently.
+
+### `property Node.antenna() -> Antenna`
+
+What this node stands under, and which way it points.
+
+Gain is directional in azimuth, so the bearing is not decoration: a
+beam is twenty decibels or more down off its boresight, and which way
+it faces decides which links close.
+
+### `Node.set_antenna(**change: float | str) -> None`
+
+Choose and aim this node's antenna.
+
+What is not named is left alone, so turning a beam does not restate the
+beam. The named parameters are `pattern` (isotropic, dipole,
+collinear or yagi), `gain_dbi_peak`, `beamwidth_deg`,
+`front_to_back_db`, `bearing_deg`, `downtilt_deg`,
+`polarisation` and `feedline_db`.
+
+### `Node.aim(at: Node | str) -> Aimed`
+
+Turn this node's antenna towards another node.
+
+The bearing between two placed nodes is exact, so this is a better
+answer than reading one off a map and typing it back. What comes back
+says what the turn won, which on an omni is nothing.
 
 ### `Node.wipe() -> None`
 
@@ -1058,7 +1099,10 @@ What happened to an event.
 - `RECEIVED` - `'received'`
 - `HALF_DUPLEX` - `'half-duplex'`
 - `INTERFERENCE` - `'interference'`
+- `COLLISION` - `'collision'`
+- `RECEIVER_BUSY` - `'receiver-busy'`
 - `FLOOR` - `'floor'`
+- `UNCLASSIFIED` - `'unclassified'`
 
 ### Kind
 
@@ -1131,6 +1175,7 @@ A pane of a node's own window.
 - `SDR` - `'SDR'`
 - `SETTINGS` - `'Settings'`
 - `RADIO` - `'Radio'`
+- `ANTENNA` - `'Antenna'`
 - `STATS` - `'Stats'`
 - `ACTIVITY` - `'Activity'`
 - `CONNECT` - `'Connect'`
@@ -1162,6 +1207,40 @@ and the one packet somebody wants is asked for by id.
 - `snr_db: float | None`
 - `detail: str`
 - `class_: Class | str`
+
+### Aimed
+
+Where an antenna ended up pointing, and what that won.
+
+`gain_dbi` is the point of it: on an omni the answer is the same as
+before, and a call that reported success while changing nothing would be
+one to distrust.
+
+- `node: str`
+- `at: str`
+- `bearing_deg: float`
+- `distance_km: float`
+- `gain_dbi: float`
+
+### Antenna
+
+What a node stands under: which sort, and where it points.
+
+Directional in azimuth, so `bearing_deg` is not decoration. A beam is
+twenty decibels or more down off its boresight, and the difference between
+a node aimed down a valley and the same node aimed at a hillside is the
+difference between a link and no link.
+
+- `node: str`
+- `pattern: str`
+- `gain_dbi_peak: float`
+- `beamwidth_deg: float`
+- `front_to_back_db: float`
+- `bearing_deg: float`
+- `downtilt_deg: float`
+- `polarisation: str`
+- `feedline_db: float`
+- `peak_dbi: float`
 
 ### Build
 
@@ -1439,6 +1518,11 @@ A client and a workbench that cannot speak to each other.
 Raised at connect rather than discovered on the fortieth call, because a
 mismatch found halfway through a script looks like the simulation
 misbehaving - and in a CI run that reads as a firmware regression.
+
+Either end may be the one to notice. When the workbench refuses the
+connection over the version this client declared, `said` carries that
+refusal whole and `workbench` is 0: it stopped the connection before it
+would say what it was, and its own sentence has the number in it.
 
 ### Refused
 

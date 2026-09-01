@@ -235,7 +235,7 @@ h2:hover .hl, h3:hover .hl, h2 .hl:focus-visible, h3 .hl:focus-visible { opacity
 <p><strong>The parts</strong> · <a href="#project">Project</a> · <a href="#nodes">Nodes</a> · <a href="#node">Node</a> · <a href="#sim">Sim</a> · <a href="#firmware">Firmware</a> · <a href="#console">Console</a> · <a href="#events">Events</a> · <a href="#boundary">Boundary</a> · <a href="#live">Live</a> · <a href="#assertions">Assertions</a> · <a href="#schedule">Schedule</a> · <a href="#device">Device</a> · <a href="#job">Job</a></p>
 <p><strong>Enumerations</strong> · <a href="#board">Board</a> · <a href="#class">Class</a> · <a href="#kind">Kind</a> · <a href="#preset">Preset</a> · <a href="#role">Role</a> · <a href="#strategy">Strategy</a> · <a href="#tab">Tab</a> · <a href="#transport">Transport</a></p>
 <p><strong>Errors</strong> · <a href="#protocolmismatch">ProtocolMismatch</a> · <a href="#refused">Refused</a> · <a href="#timeout">Timeout</a></p>
-<p><strong>Values</strong> · <a href="#assertion">Assertion</a> · <a href="#build">Build</a> · <a href="#buildchange">BuildChange</a> · <a href="#builddetails">BuildDetails</a> · <a href="#buildid">BuildID</a> · <a href="#cardchange">CardChange</a> · <a href="#cardslot">CardSlot</a> · <a href="#check">Check</a> · <a href="#checkpoint">Checkpoint</a> · <a href="#describe">Describe</a> · <a href="#event">Event</a> · <a href="#firmwarestate">FirmwareState</a> · <a href="#hello">Hello</a> · <a href="#importpreview">ImportPreview</a> · <a href="#jobinfo">JobInfo</a> · <a href="#journal">Journal</a> · <a href="#journalentry">JournalEntry</a> · <a href="#match">Match</a> · <a href="#namematch">NameMatch</a> · <a href="#neighbour">Neighbour</a> · <a href="#nodeinfo">NodeInfo</a> · <a href="#nodestat">NodeStat</a> · <a href="#notification">Notification</a> · <a href="#placement">Placement</a> · <a href="#provenance">Provenance</a> · <a href="#report">Report</a> · <a href="#restored">Restored</a> · <a href="#roleneed">RoleNeed</a> · <a href="#screen">Screen</a> · <a href="#send">Send</a> · <a href="#shot">Shot</a> · <a href="#simstate">SimState</a> · <a href="#subscription">Subscription</a></p>
+<p><strong>Values</strong> · <a href="#aimed">Aimed</a> · <a href="#antenna">Antenna</a> · <a href="#antennachange">AntennaChange</a> · <a href="#assertion">Assertion</a> · <a href="#build">Build</a> · <a href="#buildchange">BuildChange</a> · <a href="#builddetails">BuildDetails</a> · <a href="#buildid">BuildID</a> · <a href="#cardchange">CardChange</a> · <a href="#cardslot">CardSlot</a> · <a href="#check">Check</a> · <a href="#checkpoint">Checkpoint</a> · <a href="#describe">Describe</a> · <a href="#event">Event</a> · <a href="#firmwarestate">FirmwareState</a> · <a href="#hello">Hello</a> · <a href="#importpreview">ImportPreview</a> · <a href="#jobinfo">JobInfo</a> · <a href="#journal">Journal</a> · <a href="#journalentry">JournalEntry</a> · <a href="#match">Match</a> · <a href="#namematch">NameMatch</a> · <a href="#neighbour">Neighbour</a> · <a href="#nodeinfo">NodeInfo</a> · <a href="#nodestat">NodeStat</a> · <a href="#notification">Notification</a> · <a href="#placement">Placement</a> · <a href="#provenance">Provenance</a> · <a href="#report">Report</a> · <a href="#restored">Restored</a> · <a href="#roleneed">RoleNeed</a> · <a href="#screen">Screen</a> · <a href="#send">Send</a> · <a href="#shot">Shot</a> · <a href="#simstate">SimState</a> · <a href="#subscription">Subscription</a></p>
 <p><strong>Options and functions</strong> · <a href="#option">Option</a> · <a href="#codeof">CodeOf</a></p>
 <h2 id="workbench">Workbench<a class="hl" href="#workbench" aria-label="Link to this section">#</a></h2>
 <p>Workbench is a connection to a running session.</p>
@@ -260,7 +260,7 @@ h2:hover .hl, h3:hover .hl, h2 .hl:focus-visible, h3 .hl:focus-visible { opacity
 <p>Boundary reaches the study area.</p>
 <h3 id="w-workbench-call-ctx-context-context-verb-string-params-any-json-rawmessage-error"><code>(w *Workbench) Call(ctx context.Context, verb string, params any) (json.RawMessage, error)</code><a class="hl" href="#w-workbench-call-ctx-context-context-verb-string-params-any-json-rawmessage-error" aria-label="Link to this section">#</a></h3>
 <p>Call runs one verb and returns its result as raw JSON.</p>
-<p>Public and documented, not an escape hatch to be ashamed of: the façade will never cover all 213 verbs, and a verb added tomorrow is usable today.</p>
+<p>Public and documented, not an escape hatch to be ashamed of: the façade will never cover every verb the socket answers, and a verb added tomorrow is usable today. Ask session.verbs for the list this build actually offers - two counts written down here have already gone stale, and a number nothing checks is worse than no number.</p>
 <h3 id="w-workbench-callinto-ctx-context-context-verb-string-params-into-any-error"><code>(w *Workbench) CallInto(ctx context.Context, verb string, params, into any) error</code><a class="hl" href="#w-workbench-callinto-ctx-context-context-verb-string-params-into-any-error" aria-label="Link to this section">#</a></h3>
 <p>CallInto runs a verb and decodes its result.</p>
 <h3 id="w-workbench-checkpoint-ctx-context-context-name-string-checkpoint-error"><code>(w *Workbench) Checkpoint(ctx context.Context, name string) (Checkpoint, error)</code><a class="hl" href="#w-workbench-checkpoint-ctx-context-context-name-string-checkpoint-error" aria-label="Link to this section">#</a></h3>
@@ -378,8 +378,16 @@ h2:hover .hl, h3:hover .hl, h2 .hl:focus-visible, h3 .hl:focus-visible { opacity
 <p>Select replaces the selection, or adds to it.</p>
 <h3 id="n-nodes-selected-ctx-context-context-string-error"><code>(n Nodes) Selected(ctx context.Context) ([]string, error)</code><a class="hl" href="#n-nodes-selected-ctx-context-context-string-error" aria-label="Link to this section">#</a></h3>
 <p>Selected is who is selected now.</p>
+<h3 id="n-nodes-setantenna-ctx-context-context-kind-kind-c-antennachange-error"><code>(n Nodes) SetAntenna(ctx context.Context, kind Kind, c AntennaChange) error</code><a class="hl" href="#n-nodes-setantenna-ctx-context-context-kind-kind-c-antennachange-error" aria-label="Link to this section">#</a></h3>
+<p>SetAntenna gives every node the same antenna, or every node of one kind.</p>
+<p>The fleet-level default, and the only way a large scenario gets one: setting fifty-eight nodes by hand is not a workflow anybody will use. Pass an empty kind for every node.</p>
 <h2 id="node">Node<a class="hl" href="#node" aria-label="Link to this section">#</a></h2>
 <p>Node is one node. Live: a handle, not a copy - it holds a name, and asks.</p>
+<h3 id="n-node-aim-ctx-context-context-at-string-aimed-error"><code>(n Node) Aim(ctx context.Context, at string) (Aimed, error)</code><a class="hl" href="#n-node-aim-ctx-context-context-at-string-aimed-error" aria-label="Link to this section">#</a></h3>
+<p>Aim turns this node&#x27;s antenna towards another node.</p>
+<p>The bearing between two placed nodes is exact, so this is a better answer than reading one off a map and typing it back.</p>
+<h3 id="n-node-antenna-ctx-context-context-antenna-error"><code>(n Node) Antenna(ctx context.Context) (Antenna, error)</code><a class="hl" href="#n-node-antenna-ctx-context-context-antenna-error" aria-label="Link to this section">#</a></h3>
+<p>Antenna reports what this node stands under and which way it points.</p>
 <h3 id="n-node-build-ctx-context-context-build-bool-error"><code>(n Node) Build(ctx context.Context) (Build, bool, error)</code><a class="hl" href="#n-node-build-ctx-context-context-build-bool-error" aria-label="Link to this section">#</a></h3>
 <p>SetFirmware changes what it runs.</p>
 <p>Applied by default, which means stop, provision, start: firmware is chosen when a node launches, so recording it and leaving the node on its old build is the control somebody presses twice and then distrusts. Pass false to record it for the next start instead - and know that is what you have done. Build is the build this node runs, and false when it is pinned to nothing.</p>
@@ -416,6 +424,8 @@ h2:hover .hl, h3:hover .hl, h2 .hl:focus-visible, h3 .hl:focus-visible { opacity
 <p>Running reports whether its firmware process is up.</p>
 <h3 id="n-node-serve-ctx-context-context-over-transport-string-error"><code>(n Node) Serve(ctx context.Context, over Transport) (string, error)</code><a class="hl" href="#n-node-serve-ctx-context-context-over-transport-string-error" aria-label="Link to this section">#</a></h3>
 <p>Serve hands this companion to a real client - meshcore-cli, or an app over a bridge - and returns where to point it.</p>
+<h3 id="n-node-setantenna-ctx-context-context-c-antennachange-error"><code>(n Node) SetAntenna(ctx context.Context, c AntennaChange) error</code><a class="hl" href="#n-node-setantenna-ctx-context-context-c-antennachange-error" aria-label="Link to this section">#</a></h3>
+<p>SetAntenna changes this node&#x27;s antenna. What is left nil is left alone, so turning a beam does not restate the beam.</p>
 <h3 id="n-node-setboard-ctx-context-context-board-board-error"><code>(n Node) SetBoard(ctx context.Context, board Board) error</code><a class="hl" href="#n-node-setboard-ctx-context-context-board-board-error" aria-label="Link to this section">#</a></h3>
 <p>SetBoard changes what hardware this node is.</p>
 <p>A change to the physics rather than a label, so it rebuilds and re-warms - and it clears a firmware pin made for a different board, because that image cannot run on this one and a pin nobody can honour reads as a configured node right up until it refuses to start.</p>
@@ -527,6 +537,7 @@ h2:hover .hl, h3:hover .hl, h2 .hl:focus-visible, h3 .hl:focus-visible { opacity
 <p>The lines come back under &quot;tail&quot; and &quot;lines&quot; is how many there are in total, so reading &quot;lines&quot; hands you a number where you asked for text. The tail is the last 200; a node up for an hour has thousands and nobody reads the first one.</p>
 <h3 id="c-console-send-ctx-context-context-line-string-error"><code>(c Console) Send(ctx context.Context, line string) error</code><a class="hl" href="#c-console-send-ctx-context-context-line-string-error" aria-label="Link to this section">#</a></h3>
 <p>Send types a line at it.</p>
+<p>Which verb that is depends on what the node runs. A companion or a room server speaks the framed companion protocol, so its console takes a command rather than keystrokes, and console.type reaches a node of that kind without ever being delivered.</p>
 <h2 id="events">Events<a class="hl" href="#events" aria-label="Link to this section">#</a></h2>
 <p>Events is what the engine has done. Live.</p>
 <h3 id="e-events-dump-ctx-context-context-path-string-int-error"><code>(e Events) Dump(ctx context.Context, path string) (int, error)</code><a class="hl" href="#e-events-dump-ctx-context-context-path-string-int-error" aria-label="Link to this section">#</a></h3>
@@ -633,7 +644,7 @@ h2:hover .hl, h3:hover .hl, h2 .hl:focus-visible, h3 .hl:focus-visible { opacity
 <ul><li><code>BoardEbyteEoRaS3</code> - <code>&quot;Ebyte_EoRa-S3&quot;</code> · Ebyte_EoRa-S3: ESP32-S3, SX1262, by Ebyte.</li><li><code>BoardGenericE22Sx1262</code> - <code>&quot;Generic_E22_sx1262&quot;</code> · Generic_E22_sx1262: ESP32, SX1262, by Ebyte.</li><li><code>BoardHeltecE213</code> - <code>&quot;Heltec_E213&quot;</code> · Heltec_E213: ESP32-S3, SX1262, by Heltec.</li><li><code>BoardHeltecE290</code> - <code>&quot;Heltec_E290&quot;</code> · Heltec_E290: ESP32-S3, SX1262, by Heltec.</li><li><code>BoardHeltecWSL3</code> - <code>&quot;Heltec_WSL3&quot;</code> · Heltec_WSL3: ESP32-S3, SX1262, by Heltec.</li><li><code>BoardHeltecWirelessPaper</code> - <code>&quot;Heltec_Wireless_Paper&quot;</code> · Heltec_Wireless_Paper: ESP32-S3, SX1262, by Heltec.</li><li><code>BoardHeltecWirelessTracker</code> - <code>&quot;Heltec_Wireless_Tracker&quot;</code> · Heltec_Wireless_Tracker: ESP32-S3, SX1262, by Heltec.</li><li><code>BoardHeltecMeshSolar</code> - <code>&quot;Heltec_mesh_solar&quot;</code> · Heltec_mesh_solar: nRF52840, SX1262, by Heltec.</li><li><code>BoardHeltecT096</code> - <code>&quot;Heltec_t096&quot;</code> · Heltec_t096: nRF52840, SX1262, by Heltec.</li><li><code>BoardHeltecT114</code> - <code>&quot;Heltec_t114&quot;</code> · Heltec_t114: nRF52840, SX1262, by Heltec.</li><li><code>BoardHeltecV2</code> - <code>&quot;Heltec_v2&quot;</code> · Heltec_v2: ESP32, SX1276, by Heltec.</li><li><code>BoardHeltecV3</code> - <code>&quot;Heltec_v3&quot;</code> · Heltec_v3: ESP32-S3, SX1262, by Heltec.</li><li><code>BoardLilyGoT3S3Sx1262</code> - <code>&quot;LilyGo_T3S3_sx1262&quot;</code> · LilyGo_T3S3_sx1262: ESP32-S3, SX1262, by LILYGO.</li><li><code>BoardLilyGoTBeam1W</code> - <code>&quot;LilyGo_TBeam_1W&quot;</code> · LilyGo_TBeam_1W: ESP32-S3, SX1262, by LILYGO.</li><li><code>BoardLilyGoTDeck</code> - <code>&quot;LilyGo_TDeck&quot;</code> · LilyGo_TDeck: ESP32-S3, SX1262, by LILYGO.</li><li><code>BoardRAK3112</code> - <code>&quot;RAK_3112&quot;</code> · RAK_3112: ESP32-S3, SX1262, by RAKwireless.</li><li><code>BoardRAK4631</code> - <code>&quot;RAK_4631&quot;</code> · RAK_4631: nRF52840, SX1262, by RAKwireless.</li><li><code>BoardStationG2</code> - <code>&quot;Station_G2&quot;</code> · Station_G2: ESP32-S3, SX1262, by LILYGO.</li><li><code>BoardStationG3ESP32</code> - <code>&quot;Station_G3_ESP32&quot;</code> · Station_G3_ESP32: ESP32-S3, SX1262, by LILYGO.</li><li><code>BoardTbeamSX1262</code> - <code>&quot;Tbeam_SX1262&quot;</code> · Tbeam_SX1262: ESP32, SX1262, by LILYGO.</li><li><code>BoardXiaoS3</code> - <code>&quot;Xiao_S3&quot;</code> · Xiao_S3: ESP32-S3, SX1262, by Seeed.</li><li><code>BoardXiaoS3WIO</code> - <code>&quot;Xiao_S3_WIO&quot;</code> · Xiao_S3_WIO: ESP32-S3, SX1262, by Seeed.</li><li><code>BoardXiaoNrf52</code> - <code>&quot;Xiao_nrf52&quot;</code> · Xiao_nrf52: nRF52840, SX1262, by Seeed.</li><li><code>BoardHeltecTrackerV2</code> - <code>&quot;heltec_tracker_v2&quot;</code> · heltec_tracker_v2: ESP32-S3, SX1262, by Heltec.</li><li><code>BoardHeltecV4</code> - <code>&quot;heltec_v4&quot;</code> · heltec_v4: ESP32-S3, SX1262, by Heltec.</li></ul>
 <h3 id="class">Class<a class="hl" href="#class" aria-label="Link to this section">#</a></h3>
 <p>Class is what happened to an event.</p>
-<ul><li><code>ClassSent</code> - <code>&quot;sent&quot;</code> · ClassSent is this node transmitted it.</li><li><code>ClassReceived</code> - <code>&quot;received&quot;</code> · ClassReceived is this node decoded it, for the first time.</li><li><code>ClassHalfDuplex</code> - <code>&quot;half-duplex&quot;</code> · keyed; LoRa is half duplex.</li><li><code>ClassInterference</code> - <code>&quot;interference&quot;</code> · ClassInterference is would have decoded, but a stronger signal took it.</li><li><code>ClassFloor</code> - <code>&quot;floor&quot;</code> · spreading factor.</li></ul>
+<ul><li><code>ClassSent</code> - <code>&quot;sent&quot;</code> · ClassSent is this node transmitted it.</li><li><code>ClassReceived</code> - <code>&quot;received&quot;</code> · ClassReceived is this node decoded it, for the first time.</li><li><code>ClassHalfDuplex</code> - <code>&quot;half-duplex&quot;</code> · keyed; LoRa is half duplex.</li><li><code>ClassInterference</code> - <code>&quot;interference&quot;</code> · ClassInterference is would have decoded, but a stronger signal took it.</li><li><code>ClassCollision</code> - <code>&quot;collision&quot;</code> · symbols than the coding rate could repair.</li><li><code>ClassReceiverBusy</code> - <code>&quot;receiver-busy&quot;</code> · packet; a LoRa receiver decodes one at a time.</li><li><code>ClassFloor</code> - <code>&quot;floor&quot;</code> · spreading factor.</li><li><code>ClassUnclassified</code> - <code>&quot;unclassified&quot;</code> · never assume it was a weak signal.</li></ul>
 <h3 id="kind">Kind<a class="hl" href="#kind" aria-label="Link to this section">#</a></h3>
 <p>Kind is what a node is.</p>
 <ul><li><code>SimpleRepeater</code> - <code>&quot;simple-repeater&quot;</code> · SimpleRepeater forwards, and nothing else.</li><li><code>AdvancedRepeater</code> - <code>&quot;advanced-repeater&quot;</code> · AdvancedRepeater forwards, serves clients, holds state.</li><li><code>Companion</code> - <code>&quot;companion&quot;</code> · Companion a user&#x27;s device - the thing a phone connects to.</li><li><code>RoomServer</code> - <code>&quot;room-server&quot;</code> · mesh that treats one as a repeater overstates its own reach.</li><li><code>SDRObserver</code> - <code>&quot;sdr-observer&quot;</code> · field at its antenna and hands back IQ.</li><li><code>Emitter</code> - <code>&quot;emitter&quot;</code> · terrain as everything else.</li></ul>
@@ -648,15 +659,19 @@ h2:hover .hl, h3:hover .hl, h2 .hl:focus-visible, h3 .hl:focus-visible { opacity
 <ul><li><code>Replace</code> - <code>&quot;replace-all&quot;</code> · shipped fixtures were built with.</li><li><code>Add</code> - <code>&quot;add&quot;</code> · Add is keep what is loaded and add the names it has not got.</li></ul>
 <h3 id="tab">Tab<a class="hl" href="#tab" aria-label="Link to this section">#</a></h3>
 <p>Tab is a pane of a node&#x27;s own window.</p>
-<ul><li><code>TabConsole</code> - <code>&quot;Console&quot;</code> · TabConsole is the firmware&#x27;s text console, which only a repeater has.</li><li><code>TabCompanion</code> - <code>&quot;Companion&quot;</code> · TabCompanion is channels, contacts and the companion command line.</li><li><code>TabSDR</code> - <code>&quot;SDR&quot;</code> · TabSDR is an observer&#x27;s antenna: serve it, read the address.</li><li><code>TabSettings</code> - <code>&quot;Settings&quot;</code> · TabSettings is what this node is: identity, radio, regions, firmware.</li><li><code>TabRadio</code> - <code>&quot;Radio&quot;</code> · TabRadio is what the chip is really doing.</li><li><code>TabStats</code> - <code>&quot;Stats&quot;</code> · TabStats is what it has cost and what it has carried.</li><li><code>TabActivity</code> - <code>&quot;Activity&quot;</code> · TabActivity is what it has heard and sent, in order.</li><li><code>TabConnect</code> - <code>&quot;Connect&quot;</code> · TabConnect is hand this companion to a real client.</li><li><code>TabHardware</code> - <code>&quot;Hardware&quot;</code> · grows it.</li><li><code>TabOutput</code> - <code>&quot;Output&quot;</code> · running it, or the radio model beside it.</li></ul>
+<ul><li><code>TabConsole</code> - <code>&quot;Console&quot;</code> · TabConsole is the firmware&#x27;s text console, which only a repeater has.</li><li><code>TabCompanion</code> - <code>&quot;Companion&quot;</code> · TabCompanion is channels, contacts and the companion command line.</li><li><code>TabSDR</code> - <code>&quot;SDR&quot;</code> · TabSDR is an observer&#x27;s antenna: serve it, read the address.</li><li><code>TabSettings</code> - <code>&quot;Settings&quot;</code> · TabSettings is what this node is: identity, radio, regions, firmware.</li><li><code>TabRadio</code> - <code>&quot;Radio&quot;</code> · TabRadio is what the chip is really doing.</li><li><code>TabAntenna</code> - <code>&quot;Antenna&quot;</code> · TabAntenna is what this node stands under and which way it points.</li><li><code>TabStats</code> - <code>&quot;Stats&quot;</code> · TabStats is what it has cost and what it has carried.</li><li><code>TabActivity</code> - <code>&quot;Activity&quot;</code> · TabActivity is what it has heard and sent, in order.</li><li><code>TabConnect</code> - <code>&quot;Connect&quot;</code> · TabConnect is hand this companion to a real client.</li><li><code>TabHardware</code> - <code>&quot;Hardware&quot;</code> · grows it.</li><li><code>TabOutput</code> - <code>&quot;Output&quot;</code> · running it, or the radio model beside it.</li></ul>
 <h3 id="transport">Transport<a class="hl" href="#transport" aria-label="Link to this section">#</a></h3>
 <p>Transport is how a served companion is reached.</p>
 <ul><li><code>OverTCP</code> - <code>&quot;tcp&quot;</code> · one to point a phone or another machine at.</li><li><code>OverSerial</code> - <code>&quot;serial&quot;</code> · OverSerial is a pseudo-terminal, for a client that wants a serial port.</li></ul>
 <h2 id="errors">Errors<a class="hl" href="#errors" aria-label="Link to this section">#</a></h2>
 <h3 id="protocolmismatch">ProtocolMismatch<a class="hl" href="#protocolmismatch" aria-label="Link to this section">#</a></h3>
 <p>ProtocolMismatch is a client and a workbench that cannot speak to each other, reported at connect rather than discovered later.</p>
+<p>Either end may be the one to notice. When the workbench refuses the connection over its declared version, Said carries that refusal and Workbench is the zero value, because the workbench stopped the connection before it would say what it was.</p>
 <div class="codewrap"><pre><code>Client    int
-Workbench Hello</code></pre><button class="copy" type="button" aria-label="Copy this code">copy</button></div>
+Workbench Hello
+<span class="tok-com">// Said is the workbench&#x27;s own refusal, kept whole. Its words are better</span>
+<span class="tok-com">// than a paraphrase: it knows its build and which end is the older one.</span>
+Said string</code></pre><button class="copy" type="button" aria-label="Copy this code">copy</button></div>
 <h3 id="refused">Refused<a class="hl" href="#refused" aria-label="Link to this section">#</a></h3>
 <p>Refused is one verb&#x27;s refusal: what was asked, what came back, and its kind.</p>
 <div class="codewrap"><pre><code>Verb string
@@ -672,6 +687,49 @@ After time.Duration
 <span class="tok-com">// Last is what the final check saw.</span>
 Last string</code></pre><button class="copy" type="button" aria-label="Copy this code">copy</button></div>
 <h2 id="values">Values<a class="hl" href="#values" aria-label="Link to this section">#</a></h2>
+<h3 id="aimed">Aimed<a class="hl" href="#aimed" aria-label="Link to this section">#</a></h3>
+<p>Aimed is where an antenna ended up pointing, and what that won.</p>
+<p>GainDBi is the point of it: on an omni the answer is the same as before, and a call that reported success while changing nothing would be one to distrust.</p>
+<div class="codewrap"><pre><code>Node       string  <span class="tok-str">`json:&quot;node&quot;`</span>
+At         string  <span class="tok-str">`json:&quot;at&quot;`</span>
+BearingDeg float64 <span class="tok-str">`json:&quot;bearing_deg&quot;`</span>
+DistanceKm float64 <span class="tok-str">`json:&quot;distance_km&quot;`</span>
+GainDBi    float64 <span class="tok-str">`json:&quot;gain_dbi&quot;`</span></code></pre><button class="copy" type="button" aria-label="Copy this code">copy</button></div>
+<h3 id="antenna">Antenna<a class="hl" href="#antenna" aria-label="Link to this section">#</a></h3>
+<p>Antenna is what a node stands under: which sort, and where it points.</p>
+<p>Directional in azimuth, so the bearing is not decoration. A beam is twenty decibels or more down off its boresight, and the difference between a node aimed down a valley and the same node aimed at a hillside is the difference between a link and no link.</p>
+<div class="codewrap"><pre><code>Node string <span class="tok-str">`json:&quot;node&quot;`</span>
+<span class="tok-com">// Pattern is &quot;isotropic&quot;, &quot;dipole&quot;, &quot;collinear&quot; or &quot;yagi&quot;, and empty for a</span>
+<span class="tok-com">// node that has no antenna at all - which is not the same as an omni at 0</span>
+<span class="tok-com">// dBi, and is reported rather than filled in.</span>
+Pattern       string  <span class="tok-str">`json:&quot;pattern&quot;`</span>
+GainDBiPeak   float64 <span class="tok-str">`json:&quot;gain_dbi_peak&quot;`</span>
+BeamwidthDeg  float64 <span class="tok-str">`json:&quot;beamwidth_deg&quot;`</span>
+FrontToBackDB float64 <span class="tok-str">`json:&quot;front_to_back_db&quot;`</span>
+<span class="tok-com">// BearingDeg is the compass bearing of the boresight, 0 at north.</span>
+BearingDeg float64 <span class="tok-str">`json:&quot;bearing_deg&quot;`</span>
+<span class="tok-com">// DowntiltDeg tilts the beam below the horizon, which is what a mast on a</span>
+<span class="tok-com">// hill does to reach the town underneath it.</span>
+DowntiltDeg float64 <span class="tok-str">`json:&quot;downtilt_deg&quot;`</span>
+<span class="tok-com">// Polarisation is &quot;vertical&quot;, &quot;horizontal&quot; or &quot;circular&quot;, and empty for a</span>
+<span class="tok-com">// node that has not said. Unstated costs nothing; a mismatch costs 3 dB</span>
+<span class="tok-com">// circular to linear and 20 dB vertical to horizontal.</span>
+Polarisation string <span class="tok-str">`json:&quot;polarisation&quot;`</span>
+<span class="tok-com">// FeedlineDB is cable and connector loss, as a positive number.</span>
+FeedlineDB float64 <span class="tok-str">`json:&quot;feedline_db&quot;`</span>
+<span class="tok-com">// PeakDBi is what the pattern manages on its own boresight, before the</span>
+<span class="tok-com">// feedline.</span>
+PeakDBi float64 <span class="tok-str">`json:&quot;peak_dbi&quot;`</span></code></pre><button class="copy" type="button" aria-label="Copy this code">copy</button></div>
+<h3 id="antennachange">AntennaChange<a class="hl" href="#antennachange" aria-label="Link to this section">#</a></h3>
+<p>AntennaChange is what to change about an antenna. Nil leaves a field alone, because &quot;leave this&quot; and &quot;set it to zero&quot; are different answers and a float cannot say both - the same reason CardChange takes pointers.</p>
+<div class="codewrap"><pre><code>Pattern       *string
+GainDBiPeak   *float64
+BeamwidthDeg  *float64
+FrontToBackDB *float64
+BearingDeg    *float64
+DowntiltDeg   *float64
+Polarisation  *string
+FeedlineDB    *float64</code></pre><button class="copy" type="button" aria-label="Copy this code">copy</button></div>
 <h3 id="assertion">Assertion<a class="hl" href="#assertion" aria-label="Link to this section">#</a></h3>
 <p>Assertion is one claim, in the general form.</p>
 <div class="codewrap"><pre><code><span class="tok-com">// Kind is what is being counted. AssertDelivered and AssertSent are the</span>

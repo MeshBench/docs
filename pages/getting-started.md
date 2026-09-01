@@ -19,8 +19,14 @@ cover the macOS and Windows signing caveats.
   so a machine without a usable GPU loses time rather than features.
 - **RAM**: about 500 MB for the application, plus roughly 10 MB per simulated
   node. The 378-node network wants about 4 GB free.
-- **Disk**: 200 MB for the bundle, and a cache under `~/.cache/meshbench`
-  that grows with the firmware builds and map tiles you use.
+- **Disk**: 200 MB for the bundle, and a cache under `~/.cache/meshbench`.
+  Budget about **1 GB for a first session**: the network the workbench opens
+  with covers Scotland and Ireland, and the ground under its links is roughly
+  500 MB of terrain that arrives on first launch. After that the cache grows
+  only with the firmware builds and map tiles you actually use.
+- **Bandwidth on the first run.** That terrain is fetched before you have done
+  anything else, so a metered connection is worth knowing about in advance.
+  Opening a smaller network first, or starting with `-fixture ""`, avoids it.
 
 ## Install and launch
 
@@ -39,6 +45,12 @@ cover the macOS and Windows signing caveats.
 There is no installer, no root, and nothing to configure. Firmware builds and
 map tiles download on first use; the emulators, if the bundle carries them,
 sit beside the binary and are found automatically.
+
+The first launch is the slow one. The workbench opens on a network spanning
+Scotland and Ireland and measures every link in it, which means fetching the
+terrain underneath: roughly 500 MB, before you have clicked anything. The
+status line reads `measuring every link` while that happens, so a percentage
+that barely moves early on is the download rather than a stall.
 
 The workbench opens on the Plan view with a map. You are ready for
 [your first simulation](first-simulation.html).

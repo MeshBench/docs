@@ -30,15 +30,15 @@ One connection to a workbench, and the queue that keeps two callers from interle
 
 ### `static attach(opts = {})`
 
-Open a connection to a running workbench.
+Open a connection to a running workbench, and do the protocol handshake before handing it back - a workbench speaking a version this client does not understand is refused here, not on whichever call happens to notice.
 
-### `call(verb, params)`
+### `call(verb, params, timeoutMs)`
 
-Run one verb and return its result.
+Run one verb and return its result. Rejects if the workbench has not answered within `timeoutMs` - the default is `DEFAULT_CALL_TIMEOUT_MS`, set at `attach()` via `callTimeoutMs`, the same length Python's socket timeout defaults to. Pass `null` to wait indefinitely for a call known to take a while.
 
 ### `async hello()`
 
-Ask the workbench what it is, and refuse a protocol this client does not speak - at connect rather than halfway through a script.
+Ask the workbench what it is, and refuse a protocol this client does not speak. `attach()` calls this itself before handing back a connection, so calling it again is only useful to re-check.
 
 ### `close()`
 
@@ -53,5 +53,9 @@ Where a workbench answers on this operating system unless told otherwise. Matche
 ## Constants
 
 - `PROTOCOL = 1` - The wire version this client speaks. A workbench answering anything else is refused rather than failing halfway through a script.
+
+- `DEFAULT_CALL_TIMEOUT_MS = 300000` - How long a call waits for a reply before it gives up, unless a caller says otherwise. Matches the Python client's socket timeout, so a script ported between the two waits the same length of time before it hears about a verb the workbench never answered.
+
+- `MAX_UNIX_PATH = 104` - The shortest sun_path any platform we run on allows: 108 on Linux, 104 on macOS and the BSDs. Matches the Go and Python clients exactly.
 
 <!-- END GENERATED API -->
