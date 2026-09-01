@@ -11,6 +11,16 @@ watch a message flood across Scotland.
    choose `fixture-fife-strict` to see it moving in seconds (58 nodes), or
    `fixture-scotland-ireland-strict` for the full map (378 nodes, about a
    minute to boot).
+
+   > **The first run asks about terrain, and waits for your answer.** Measuring
+   > the links needs ground elevation this machine has not downloaded yet, so
+   > the measurement stops and says so rather than quietly assuming flat earth.
+   > Until you answer, the map shows no links. Allow it in **Configuration**,
+   > **System**, and the measurement finishes on its own. Refusing is a real
+   > answer too: the run continues over whatever terrain is already cached, and
+   > every study afterwards reports which ground it used, so a result can never
+   > silently be the optimistic one.
+
 2. **Start the firmware.** **Simulation**, then **Start firmware on every
    node**. Each node launches a real MeshCore build and is told its name,
    position, clock and regions. Watch the count in the status bar reach the
