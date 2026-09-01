@@ -27,6 +27,44 @@ own doc comments so it cannot drift from the code: the
 session at all - a link budget, a coverage raster, downloading terrain - the
 [CLI](reference-cli.html) is quicker than a script.
 
+## Installing a client
+
+None of the three is published to a package index yet, so each is installed
+from a checkout of the [meshbench repository](https://github.com/MeshBench/meshbench).
+All three drive the `meshbench` binary rather than containing it, so that needs
+to be on `PATH` (or named by `MESHBENCH_BINARY`) whichever client you use.
+
+**Python**, from the repository root:
+
+```
+pip install -e pkg/client-python
+```
+
+```python
+from meshbench import Workbench
+```
+
+Needs Python 3.10 or newer. The editable install is deliberate: the client and
+the binary it drives come from the same tree, so a checkout you update updates
+both together.
+
+**Go** needs no install step, because the client is a package in the same module
+as the application:
+
+```go
+import "github.com/MeshBench/meshbench/pkg/client-go/meshbench"
+```
+
+From outside that module, `go get github.com/MeshBench/meshbench` first.
+
+**Node** is one file with no dependencies, so it is imported by path:
+
+```js
+import { Workbench } from "./pkg/client-js/meshbench.mjs";
+```
+
+Needs Node 18 or newer, for the standard library it uses.
+
 ## Opening a session
 
 ```python

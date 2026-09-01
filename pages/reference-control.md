@@ -16,7 +16,7 @@ does not.
 
 <!-- BEGIN GENERATED VERBS -->
 
-There are 208, grouped by what they are for rather than alphabetically.
+There are 209, grouped by what they are for rather than alphabetically.
 
 **Driving a run** - `log.path` · `logs.export` · `panel.close` · `panel.dock` · `panel.open` · `panel.pop_out` · `session.checkpoint` · `session.checkpoints` · `session.describe` · `session.journal` · `session.restore` · `session.status` · `sim.faster` · `sim.inject` · `sim.kind` · `sim.pause` · `sim.play` · `sim.reset` · `sim.run` · `sim.seed` · `sim.settle` · `sim.slower` · `sim.speed` · `sim.start` · `sim.state` · `sim.step` · `sim.toggle` · `sim.unverified_wiring` · `ui.keep_above` · `ui.said` · `ui.scale` · `ui.state` · `view.delete` · `view.list` · `view.load` · `view.save` · `window.close` · `window.open`
 
@@ -32,7 +32,7 @@ There are 208, grouped by what they are for rather than alphabetically.
 
 **Analysis** - `budget.for_selection` · `coverage.clear` · `coverage.compute` · `coverage.map` · `coverage.resolution` · `coverage.start` · `energy.for_selection` · `environ.fetch` · `environ.list` · `link.pair` · `link.profile` · `plan.routes` · `rf.environment` · `rf.excess_loss` · `rf.mode` · `rf.realism` · `rf.toggle` · `terrain.allow` · `terrain.cache` · `terrain.cache_dir` · `terrain.prefetch` · `terrain.shade` · `validate.calibrate` · `validate.fetch` · `validate.uncalibrate`
 
-**Everything else** - `app.quit` · `assert.add` · `assert.check` · `board.key` · `board.matrix` · `board.press` · `board.probe` · `board.screen` · `board.screenshot` · `board.touch` · `events.dump` · `events.recent` · `gpu.set` · `gpu.state` · `job.cancel` · `job.list` · `layout.reset` · `links.recompute` · `packet.close` · `packet.open` · `panels.list` · `radio.preset` · `resource.fetch` · `resource.licence` · `resource.licence.hide` · `resource.list` · `resource.remove` · `study.margin` · `tool.set` · `waterfall.capture` · `workspace.set`
+**Everything else** - `app.quit` · `assert.add` · `assert.check` · `board.key` · `board.matrix` · `board.press` · `board.probe` · `board.screen` · `board.screenshot` · `board.touch` · `events.dump` · `events.recent` · `gpu.set` · `gpu.state` · `job.cancel` · `job.list` · `layout.reset` · `links.recompute` · `packet.close` · `packet.open` · `panels.list` · `radio.preset` · `resource.fetch` · `resource.licence` · `resource.licence.hide` · `resource.list` · `resource.remove` · `setup.check` · `study.margin` · `tool.set` · `waterfall.capture` · `workspace.set`
 
 <!-- END GENERATED VERBS -->
 
