@@ -28,6 +28,7 @@ MeshBench checkout disagrees with what is committed.
 | page | source | regenerate with |
 |---|---|---|
 | `what-it-does-not-do.md` | `docs/shortcomings.md` in the main repository | `tools/sync-limits.py` |
+| `reference-cli.md` | `docs/cli-reference.md` in the main repository, itself generated from the flag declarations | `tools/sync-cli.py` |
 | `reference-control.md` (verb list) | `internal/app/session` | `tools/sync-verbs.py` |
 | `reference-python.md` | the Python client's docstrings | `tools/sync-api-python.py` |
 | `reference-go.md` | `go doc` over the Go client | `tools/sync-api-go.py` |
