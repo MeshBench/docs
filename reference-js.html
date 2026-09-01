@@ -241,9 +241,8 @@ h2:hover .hl, h3:hover .hl, h2 .hl:focus-visible, h3 .hl:focus-visible { opacity
 <h2 id="workbench">Workbench<a class="hl" href="#workbench" aria-label="Link to this section">#</a></h2>
 <p>One connection to a workbench, and the queue that keeps two callers from interleaving a half-frame on the wire.</p>
 <div class="codewrap"><pre><code><span class="tok-kw">new</span> <span class="tok-fn">Workbench</span>(sock, address, callTimeoutMs)</code></pre><button class="copy" type="button" aria-label="Copy this code">copy</button></div>
-<p>Wraps a socket that is already connected. Scripts call <code>attach()</code> instead: a connection built here has not been through the handshake, so it would find out on some later verb that the workbench speaks a protocol this client does not.</p>
 <p><strong>Properties</strong></p>
-<ul><li><code>address</code> - The address this connection was asked for, as the caller wrote it or as <code>defaultAddress()</code> chose it, so a script driving more than one workbench can say which of them refused. It is not re-read from the socket: with <code>tcp</code> it stays the word <code>tcp</code>, not the loopback port behind it.</li></ul>
+<ul><li><code>address</code></li></ul>
 <h3 id="static-workbench-attach-opts"><code>static Workbench.attach(opts = {})</code><a class="hl" href="#static-workbench-attach-opts" aria-label="Link to this section">#</a></h3>
 <p>Open a connection to a running workbench, and do the protocol handshake before handing it back - a workbench speaking a version this client does not understand is refused here, not on whichever call happens to notice.</p>
 <h3 id="workbench-call-verb-params-timeoutms"><code>Workbench.call(verb, params, timeoutMs)</code><a class="hl" href="#workbench-call-verb-params-timeoutms" aria-label="Link to this section">#</a></h3>
@@ -251,15 +250,14 @@ h2:hover .hl, h3:hover .hl, h2 .hl:focus-visible, h3 .hl:focus-visible { opacity
 <h3 id="async-workbench-hello"><code>async Workbench.hello()</code><a class="hl" href="#async-workbench-hello" aria-label="Link to this section">#</a></h3>
 <p>Ask the workbench what it is, and refuse a protocol this client does not speak. <code>attach()</code> calls this itself before handing back a connection, so calling it again is only useful to re-check.</p>
 <h3 id="workbench-close"><code>Workbench.close()</code><a class="hl" href="#workbench-close" aria-label="Link to this section">#</a></h3>
-<p>Close the connection. Calls still in flight reject rather than wait on a socket nobody will answer on, so a script that closes early fails where it closed instead of hanging until its timeout.</p>
+<p>Close the connection. Any calls still in flight reject.</p>
 <h2 id="errors">Errors<a class="hl" href="#errors" aria-label="Link to this section">#</a></h2>
 <h3 id="workbencherror">WorkbenchError<a class="hl" href="#workbencherror" aria-label="Link to this section">#</a></h3>
 <p>Extends <code>Error</code>.</p>
 <p>A verb the workbench refused, carrying its classification so a caller can tell &quot;no such node&quot; from &quot;the workbench is closing&quot; without matching prose.</p>
 <div class="codewrap"><pre><code><span class="tok-kw">new</span> <span class="tok-fn">WorkbenchError</span>(message, code)</code></pre><button class="copy" type="button" aria-label="Copy this code">copy</button></div>
-<p>Carries the code beside the message rather than folding it into the prose, because a caller that has to match on prose breaks the day the workbench rewords a refusal.</p>
 <p><strong>Properties</strong></p>
-<ul><li><code>name</code> - Always <code>WorkbenchError</code>, so a refusal is distinguishable from a connection or a programming fault in a log line that has only the name to go on.</li><li><code>code</code> - How the refusal was classified, so a caller can branch on it instead of on prose: the workbench&#x27;s own code (<code>not_found</code>, <code>conflict</code>, <code>closing</code> and the rest the control socket defines) when a verb was refused, and <code>protocol</code> when this client was the end that refused, at the handshake. Empty when a refusal arrived without one, so test it rather than assume it is set.</li></ul>
+<ul><li><code>name</code></li><li><code>code</code></li></ul>
 <h2 id="module-functions">Module functions<a class="hl" href="#module-functions" aria-label="Link to this section">#</a></h2>
 <h3 id="defaultaddress"><code>defaultAddress</code><a class="hl" href="#defaultaddress" aria-label="Link to this section">#</a></h3>
 <div class="codewrap"><pre><code><span class="tok-fn">defaultAddress</span>()</code></pre><button class="copy" type="button" aria-label="Copy this code">copy</button></div>

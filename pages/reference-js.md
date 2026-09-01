@@ -46,11 +46,9 @@ One connection to a workbench, and the queue that keeps two callers from interle
 new Workbench(sock, address, callTimeoutMs)
 ```
 
-Wraps a socket that is already connected. Scripts call `attach()` instead: a connection built here has not been through the handshake, so it would find out on some later verb that the workbench speaks a protocol this client does not.
-
 **Properties**
 
-- `address` - The address this connection was asked for, as the caller wrote it or as `defaultAddress()` chose it, so a script driving more than one workbench can say which of them refused. It is not re-read from the socket: with `tcp` it stays the word `tcp`, not the loopback port behind it.
+- `address`
 
 ### `static Workbench.attach(opts = {})`
 
@@ -66,7 +64,7 @@ Ask the workbench what it is, and refuse a protocol this client does not speak. 
 
 ### `Workbench.close()`
 
-Close the connection. Calls still in flight reject rather than wait on a socket nobody will answer on, so a script that closes early fails where it closed instead of hanging until its timeout.
+Close the connection. Any calls still in flight reject.
 
 ## Errors
 
@@ -80,12 +78,10 @@ A verb the workbench refused, carrying its classification so a caller can tell "
 new WorkbenchError(message, code)
 ```
 
-Carries the code beside the message rather than folding it into the prose, because a caller that has to match on prose breaks the day the workbench rewords a refusal.
-
 **Properties**
 
-- `name` - Always `WorkbenchError`, so a refusal is distinguishable from a connection or a programming fault in a log line that has only the name to go on.
-- `code` - How the refusal was classified, so a caller can branch on it instead of on prose: the workbench's own code (`not_found`, `conflict`, `closing` and the rest the control socket defines) when a verb was refused, and `protocol` when this client was the end that refused, at the handshake. Empty when a refusal arrived without one, so test it rather than assume it is set.
+- `name`
+- `code`
 
 ## Module functions
 
