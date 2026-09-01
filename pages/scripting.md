@@ -5,17 +5,20 @@ builds or imports a network, brings the firmware up, runs the clock, and reads
 what happened — the same code path a person clicks, so a driven session shows
 its work on screen.
 
-There are two clients, in Python and in Go. They are peers: neither wraps the
-other, and both speak the control socket directly.
+There are three clients, in Python, Go and Node. None wraps another: each speaks
+the control socket directly.
 
 ```
-clients/python/meshbench     clients/go/meshbench
-clients/python/examples      clients/go/examples
+pkg/client-python/meshbench     pkg/client-go/meshbench     pkg/client-js
+pkg/client-python/examples      pkg/client-go/examples      pkg/client-js/examples
 ```
 
 Python is the one most scripts are written in — MeshCore's tooling is Python,
-and a firmware developer writing a regression test reaches for pytest. Go is
-the reference implementation. Each ships the same seven runnable examples.
+and a firmware developer writing a regression test reaches for pytest. Go is the
+reference implementation, and ships the runnable examples the rest are checked
+against. The Node client is a thinner surface than the other two: it makes the
+same calls, but without the convenience wrappers and generated parameter sets
+Python and Go carry, so a verb's parameters are spelled as plain strings there.
 
 ## Opening a session
 
@@ -67,6 +70,56 @@ wb.sim.run(timedelta(minutes=5))
 `start()` does three things in order: it waits for the link measurement to
 finish, starts firmware on every node that is not already running, and then
 starts the clock.
+
+<figure>
+<svg viewBox="0 0 760 372" role="img" aria-label="The order a run comes up in: start waits for links, starts firmware, waits for the nodes, and only then advances the clock. Starting the clock on its own leaves every node unstarted.">
+  <defs>
+    <marker id="sq" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="var(--dim)"/>
+    </marker>
+    <marker id="sqw" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="var(--warn)"/>
+    </marker>
+  </defs>
+
+  <text x="110" y="26" font-size="12" font-weight="600" fill="var(--ink)" text-anchor="middle">your script</text>
+  <text x="380" y="26" font-size="12" font-weight="600" fill="var(--ink)" text-anchor="middle">the workbench</text>
+  <text x="640" y="26" font-size="12" font-weight="600" fill="var(--ink)" text-anchor="middle">every node</text>
+
+  <path d="M110 38 V228" stroke="var(--rule)" stroke-dasharray="3 4" fill="none"/>
+  <path d="M380 38 V228" stroke="var(--rule)" stroke-dasharray="3 4" fill="none"/>
+  <path d="M640 38 V228" stroke="var(--rule)" stroke-dasharray="3 4" fill="none"/>
+
+  <path d="M110 62 H372" stroke="var(--dim)" fill="none" marker-end="url(#sq)"/>
+  <text x="241" y="56" font-size="11" fill="var(--ink)" text-anchor="middle">1. sim.start</text>
+
+  <rect x="316" y="74" width="128" height="26" rx="5" fill="var(--card)" stroke="var(--rule)"/>
+  <text x="380" y="91" font-size="10.5" fill="var(--dim)" text-anchor="middle">2. links measured?</text>
+
+  <path d="M380 114 H632" stroke="var(--dim)" fill="none" marker-end="url(#sq)"/>
+  <text x="506" y="108" font-size="11" fill="var(--ink)" text-anchor="middle">3. start firmware</text>
+
+  <path d="M632 142 H388" stroke="var(--good)" fill="none" marker-end="url(#sq)"/>
+  <text x="510" y="136" font-size="11" fill="var(--good)" text-anchor="middle">4. running</text>
+
+  <path d="M110 172 H372" stroke="var(--dim)" fill="none" marker-end="url(#sq)"/>
+  <text x="241" y="166" font-size="11" fill="var(--ink)" text-anchor="middle">5. sim.run</text>
+
+  <path d="M380 200 H632" stroke="var(--accent)" fill="none" marker-end="url(#sq)"/>
+  <text x="506" y="194" font-size="11" fill="var(--accent)" text-anchor="middle">6. the clock advances</text>
+
+  <rect x="12" y="252" width="736" height="106" rx="8" fill="none" stroke="var(--warn)" stroke-dasharray="5 4"/>
+  <text x="32" y="276" font-size="12" font-weight="600" fill="var(--warn)">Starting the clock on its own</text>
+  <path d="M110 296 H372" stroke="var(--warn)" fill="none" marker-end="url(#sqw)"/>
+  <text x="241" y="290" font-size="11" fill="var(--warn)" text-anchor="middle">sim.play</text>
+  <path d="M380 296 H632" stroke="var(--warn)" fill="none" marker-end="url(#sqw)"/>
+  <text x="506" y="290" font-size="11" fill="var(--warn)" text-anchor="middle">the clock advances</text>
+  <text x="640" y="318" font-size="11" fill="var(--dim)" text-anchor="middle">never started</text>
+  <text x="380" y="344" font-size="11" fill="var(--dim)" text-anchor="middle">Simulated time passes, nothing transmits, and the run reports success.</text>
+</svg>
+<figcaption>Steps 2 to 4 are what <code>start()</code> adds. Skipping them does not
+fail: the clock moves, no node is running, and the run ends without an error.</figcaption>
+</figure>
 
 It is three calls rather than one because the verb behind the play button
 behaves differently depending on what the run is already doing — it stops a
@@ -182,7 +235,7 @@ report.write_junit("results.xml")
 ```
 
 A fixture can carry its own traffic and its own claims, which is what
-`meshcoresim test` runs. A script can add both, which is what a regression check
+`meshbench test` runs. A script can add both, which is what a regression check
 in another repository does. The report prints the provenance above the numbers,
 because that is the half that gets dropped when a result is pasted somewhere
 else.

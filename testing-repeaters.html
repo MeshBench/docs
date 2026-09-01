@@ -160,7 +160,7 @@ a { color:var(--accent); text-underline-offset:2px; }
 <p>A repeater that raises reach and lowers collisions is helping. One that raises reach and raises airtime sharply is buying delivery with spectrum, which may still be the right trade on a quiet band and the wrong one on a busy one.</p>
 <h2>What to be careful about</h2>
 <p><strong>Two runs, one changed thing.</strong> A sweep holds the network, the seeds and the traffic constant so the only difference is the one you made.</p>
-<p><strong>Position uncertainty propagates.</strong> A node imported at plus or minus five kilometres does not produce a confident answer about a marginal link.</p>
+<p><strong>Position uncertainty is recorded, not yet propagated.</strong> An imported node carries the uncertainty it arrived with, and the import filters on it, but that figure does not widen a coverage cell or a link margin downstream. A node placed to plus or minus five kilometres therefore produces a result that reads as confidently as a surveyed one; check the uncertainty before trusting a marginal link.</p>
 <p><strong>Reachability is asymmetric.</strong> A hilltop repeater with a good antenna hears a handheld that cannot hear it back. Results state both directions.</p>
 <p><strong>The model is a best case.</strong> No multipath, no body loss, no interference from outside the network. A link that fails here fails in reality; a link that works here may not.</p>
 <footer>MeshBench documentation. Built from the running application, not from

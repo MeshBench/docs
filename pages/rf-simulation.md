@@ -18,7 +18,7 @@ a result means, so it is stamped into every saved run.
   </defs>
 
   <rect x="40" y="16" width="680" height="58" rx="8" fill="var(--sunk)" stroke="var(--rule)"/>
-  <text x="380" y="40" font-size="12.5" font-weight="600" fill="var(--ink)" text-anchor="middle">Shared by both: transmit power, antenna gain in the true direction,</text>
+  <text x="380" y="40" font-size="12.5" font-weight="600" fill="var(--ink)" text-anchor="middle">Shared by both: transmit power, antenna gain at the pattern peak,</text>
   <text x="380" y="60" font-size="12.5" font-weight="600" fill="var(--ink)" text-anchor="middle">free space + terrain diffraction + buildings, the receiver's noise floor</text>
 
   <path d="M240 74 L 200 104" stroke="var(--rule)" stroke-width="2" fill="none"/>

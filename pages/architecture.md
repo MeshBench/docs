@@ -2,8 +2,8 @@
 
 MeshBench is one binary on one machine. There is no service, no worker, no
 backend. The only things that cross the network are *data*: terrain tiles, map
-tiles, and the optional CoreScope, Beacon and MQTT feeds. Nothing in the
-simulation depends on anything remote.
+tiles, and the optional CoreScope and Beacon feeds. Nothing in the simulation
+depends on anything remote.
 
 <figure>
 <svg viewBox="0 0 780 430" role="img" aria-label="How a packet gets from one node's firmware to another's">
@@ -23,7 +23,7 @@ simulation depends on anything remote.
   <text x="390" y="76" class="svg-dim" font-size="11.5" text-anchor="middle">modulate to complex samples</text>
   <text x="390" y="96" class="svg-dim" font-size="11.5" text-anchor="middle">delay by distance / c</text>
   <text x="390" y="116" class="svg-dim" font-size="11.5" text-anchor="middle">path loss, terrain diffraction</text>
-  <text x="390" y="136" class="svg-dim" font-size="11.5" text-anchor="middle">antenna gain, per direction</text>
+  <text x="390" y="136" class="svg-dim" font-size="11.5" text-anchor="middle">antenna gain, at the pattern peak</text>
   <text x="390" y="156" class="svg-dim" font-size="11.5" text-anchor="middle">sum every transmission in flight</text>
   <text x="390" y="176" class="svg-dim" font-size="11.5" text-anchor="middle">add thermal noise</text>
   <text x="390" y="206" class="svg-ink" font-size="12" text-anchor="middle" font-weight="600">It decides nothing.</text>
@@ -63,11 +63,16 @@ must *emerge*, or the simulator is a packet model with extra steps.
 antennas, heights, powers and noise figures. Every result states which
 direction, because one that does not is wrong even when the arithmetic is right.
 
-**Antenna gain is directional.** The pattern is evaluated in the true direction
-to the far end, per direction. A scalar gain field is a bug.
+**Antenna patterns are directional; the running simulation is not yet.** The
+pattern model evaluates gain in the true direction to a far end, and the
+coverage rasters use it. The engine that decides individual receptions applies
+the pattern's peak instead, so a link's margin does not currently change with
+antenna pointing or elevation angle. Every node is given a collinear omni, so
+azimuth makes no difference to it in any case.
 
-**Position uncertainty propagates.** A node imported at ±5 km does not get a
-confident answer.
+**Position uncertainty is recorded, not yet propagated.** An imported node keeps
+the uncertainty it arrived with, and the import filters on it, but that figure
+does not widen a coverage cell or a link margin downstream.
 
 **Airtime must match the firmware's own `getEstAirtimeFor()`.** The firmware's
 CSMA timing is built on it. If the channel disagrees, the two desynchronise
@@ -79,7 +84,7 @@ RNG, never a stateful stream shared across goroutines.
 ## Where the code is
 
 <figure>
-<svg viewBox="0 0 760 380" role="img" aria-label="The seven layers of internal, with imports running downward only">
+<svg viewBox="0 0 760 424" role="img" aria-label="The eight stacked layers of internal, with imports running downward only">
   <text x="396" y="24" font-size="12.5" font-weight="600" fill="var(--ink)" text-anchor="middle">internal/ — a package imports its own layer and everything below it</text>
 
   <rect x="96" y="46" width="600" height="38" rx="6" fill="var(--warn)" fill-opacity=".10" stroke="var(--warn)" stroke-opacity=".45"/>
@@ -87,7 +92,7 @@ RNG, never a stateful stream shared across goroutines.
   <text x="182" y="70" font-size="11.5" fill="var(--dim)">Gio: panels, the map, the shell</text>
   <rect x="96" y="90" width="600" height="38" rx="6" fill="var(--warn)" fill-opacity=".10" stroke="var(--warn)" stroke-opacity=".45"/>
   <text x="120" y="114" font-size="13" font-weight="600" fill="var(--ink)">app</text>
-  <text x="182" y="114" font-size="11.5" fill="var(--dim)">the store, the headless session, the control socket, MCP</text>
+  <text x="182" y="114" font-size="11.5" fill="var(--dim)">the store, the headless session, the control socket</text>
   <rect x="96" y="134" width="600" height="38" rx="6" fill="var(--accent)" fill-opacity=".10" stroke="var(--accent)" stroke-opacity=".45"/>
   <text x="120" y="158" font-size="13" font-weight="600" fill="var(--ink)">study</text>
   <text x="182" y="158" font-size="11.5" fill="var(--dim)">coverage, margins, siting, why a link missed, validation</text>
@@ -98,26 +103,30 @@ RNG, never a stateful stream shared across goroutines.
   <text x="120" y="246" font-size="13" font-weight="600" fill="var(--ink)">world</text>
   <text x="182" y="246" font-size="11.5" fill="var(--dim)">the scenario, live feeds, areas, basemap, the SDR observer</text>
   <rect x="96" y="266" width="600" height="38" rx="6" fill="var(--good)" fill-opacity=".10" stroke="var(--good)" stroke-opacity=".45"/>
-  <text x="120" y="290" font-size="13" font-weight="600" fill="var(--ink)">mesh</text>
-  <text x="182" y="290" font-size="11.5" fill="var(--dim)">firmware, the radio shim, the companion protocol, packets</text>
+  <text x="120" y="290" font-size="13" font-weight="600" fill="var(--ink)">firmware</text>
+  <text x="182" y="290" font-size="11.5" fill="var(--dim)">running real firmware: boards, the native backend, QEMU and Renode</text>
   <rect x="96" y="310" width="600" height="38" rx="6" fill="var(--good)" fill-opacity=".10" stroke="var(--good)" stroke-opacity=".45"/>
-  <text x="120" y="334" font-size="13" font-weight="600" fill="var(--ink)">rf</text>
-  <text x="182" y="334" font-size="11.5" fill="var(--dim)">the channel, DSP, GPU twins, LoRa coding, terrain, buildings</text>
+  <text x="120" y="334" font-size="13" font-weight="600" fill="var(--ink)">mesh</text>
+  <text x="182" y="334" font-size="11.5" fill="var(--dim)">the radio shim, the companion protocol, packets, energy</text>
+  <rect x="96" y="354" width="600" height="38" rx="6" fill="var(--good)" fill-opacity=".10" stroke="var(--good)" stroke-opacity=".45"/>
+  <text x="120" y="378" font-size="13" font-weight="600" fill="var(--ink)">rf</text>
+  <text x="182" y="378" font-size="11.5" fill="var(--dim)">the channel, DSP, GPU twins, LoRa coding, terrain, buildings</text>
 
-  <path d="M62 52 L 62 336" stroke="var(--rule)" stroke-width="2" fill="none"/>
-  <path d="M62 336 l -5 -9 l 10 0 z" fill="var(--rule)"/>
-  <text x="40" y="200" font-size="11" fill="var(--faint)" text-anchor="middle" transform="rotate(-90 40 200)">imports point down</text>
+  <path d="M62 52 L 62 380" stroke="var(--rule)" stroke-width="2" fill="none"/>
+  <path d="M62 380 l -5 -9 l 10 0 z" fill="var(--rule)"/>
+  <text x="40" y="216" font-size="11" fill="var(--faint)" text-anchor="middle" transform="rotate(-90 40 216)">imports point down</text>
 
-  <text x="396" y="366" font-size="11.5" fill="var(--dim)" text-anchor="middle">So ui can reach the physics, and the physics cannot reach a widget. A test fails the build otherwise.</text>
+  <text x="396" y="410" font-size="11.5" fill="var(--dim)" text-anchor="middle">So ui can reach the physics, and the physics cannot reach a widget. A test fails the build otherwise.</text>
 </svg>
 <figcaption>The order was read off the import graph rather than imposed on it.
 Making it true cost two packages that were each doing two jobs, and one
 interface moved down a level.</figcaption>
 </figure>
 
-Seven layers, and the rule is mechanical: `internal/layers_test.go` walks every
-file and fails if an import points upward, or if a package appears outside the
-seven.
+Eight stacked layers, plus `diag`: opt-in diagnostic logging, which sits beside
+the stack rather than in it. The rule is mechanical: `internal/layers_test.go`
+walks every file and fails if an import points upward, or if a package appears
+outside the set.
 
 ## The engine loop
 

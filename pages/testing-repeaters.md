@@ -93,8 +93,12 @@ still be the right trade on a quiet band and the wrong one on a busy one.
 **Two runs, one changed thing.** A sweep holds the network, the seeds and the
 traffic constant so the only difference is the one you made.
 
-**Position uncertainty propagates.** A node imported at plus or minus five
-kilometres does not produce a confident answer about a marginal link.
+**Position uncertainty is recorded, not yet propagated.** An imported node
+carries the uncertainty it arrived with, and the import filters on it, but that
+figure does not widen a coverage cell or a link margin downstream. A node placed
+to plus or minus five kilometres therefore produces a result that reads as
+confidently as a surveyed one; check the uncertainty before trusting a marginal
+link.
 
 **Reachability is asymmetric.** A hilltop repeater with a good antenna hears a
 handheld that cannot hear it back. Results state both directions.

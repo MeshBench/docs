@@ -34,7 +34,7 @@ The link budget between two points, in both directions:
 - terrain profile sampled from DEM tiles, cached permanently, with an offline
   mode that fails loudly rather than quietly returning flat earth
 - diffraction over obstructions
-- feedline loss and antenna gain, evaluated in the true direction to the far end
+- feedline loss and antenna gain, at the pattern's peak
 
 **Both directions, always.** A hilltop repeater with a big antenna and a
 handheld with a rubber duck have an asymmetric link, and a result that reports

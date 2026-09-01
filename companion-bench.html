@@ -142,7 +142,7 @@ a { color:var(--accent); text-underline-offset:2px; }
 <p><strong>Two faults and not a page of them</strong>, because two are what the workbench can actually cause today. A button that pretends to inject a fault it cannot is worse than an absent one. Radio-level faults belong to the RF model: move the node, drop its transmit power, or place an emitter beside it and watch what happens to the link.</p>
 <h2>The same thing without a screen</h2>
 <p>The harness serves an endpoint too, so a test in a pipeline can point a client at a mesh:</p>
-<p>    meshcoresim test -fixture fixtures/fixture-fife-strict.json \       -endpoint tcp:AngusOutlaw1 -junit out.xml</p>
+<p>    meshbench test -fixture fixtures/fixture-fife-strict.json \       -endpoint tcp:AngusOutlaw1 -junit out.xml</p>
 <p>It prints <code>endpoint: tcp 127.0.0.1:36273 (node AngusOutlaw1)</code> and holds it open for the run. That address was connected to with a plain socket, which read back 4,096 bytes of companion protocol beginning <code>3e</code> - the device-to-host frame marker. Real firmware, real bytes, no display anywhere.</p>
 <p>The command exits non-zero when an assertion fails and writes JUnit, which is what a pipeline reads.</p>
 <footer>MeshBench documentation. Built from the running application, not from

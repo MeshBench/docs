@@ -15,21 +15,21 @@ There are three ways in, and they differ in who drives the run.
   </defs>
 
   <rect x="12" y="20" width="228" height="118" rx="9" fill="var(--card)" stroke="var(--rule)"/>
-  <text x="126" y="44" font-size="12.5" font-weight="600" fill="var(--ink)" text-anchor="middle">meshcoresim test</text>
+  <text x="126" y="44" font-size="12.5" font-weight="600" fill="var(--ink)" text-anchor="middle">meshbench test</text>
   <text x="126" y="64" font-size="11" fill="var(--dim)" text-anchor="middle">the fixture drives</text>
   <text x="126" y="88" font-size="11" fill="var(--faint)" text-anchor="middle">a network, a schedule and</text>
   <text x="126" y="103" font-size="11" fill="var(--faint)" text-anchor="middle">assertions, in one file</text>
   <text x="126" y="126" font-size="11" fill="var(--accent)" text-anchor="middle">JUnit XML for CI</text>
 
   <rect x="266" y="20" width="228" height="118" rx="9" fill="var(--card)" stroke="var(--rule)"/>
-  <text x="380" y="44" font-size="12.5" font-weight="600" fill="var(--ink)" text-anchor="middle">meshtest</text>
-  <text x="380" y="64" font-size="11" fill="var(--dim)" text-anchor="middle">your Go test drives</text>
-  <text x="380" y="88" font-size="11" fill="var(--faint)" text-anchor="middle">time only moves when you</text>
-  <text x="380" y="103" font-size="11" fill="var(--faint)" text-anchor="middle">ask, so nothing races a clock</text>
-  <text x="380" y="126" font-size="11" fill="var(--accent)" text-anchor="middle">assert on what was heard</text>
+  <text x="380" y="44" font-size="12.5" font-weight="600" fill="var(--ink)" text-anchor="middle">the client libraries</text>
+  <text x="380" y="64" font-size="11" fill="var(--dim)" text-anchor="middle">your code drives</text>
+  <text x="380" y="88" font-size="11" fill="var(--faint)" text-anchor="middle">a session with no window,</text>
+  <text x="380" y="103" font-size="11" fill="var(--faint)" text-anchor="middle">stepped from your own test</text>
+  <text x="380" y="126" font-size="11" fill="var(--accent)" text-anchor="middle">Go, Python or Node</text>
 
   <rect x="520" y="20" width="228" height="118" rx="9" fill="var(--card)" stroke="var(--rule)"/>
-  <text x="634" y="44" font-size="12.5" font-weight="600" fill="var(--ink)" text-anchor="middle">meshcoresim serve</text>
+  <text x="634" y="44" font-size="12.5" font-weight="600" fill="var(--ink)" text-anchor="middle">meshbench serve</text>
   <text x="634" y="64" font-size="11" fill="var(--dim)" text-anchor="middle">your application drives</text>
   <text x="634" y="88" font-size="11" fill="var(--faint)" text-anchor="middle">an address to point a client</text>
   <text x="634" y="103" font-size="11" fill="var(--faint)" text-anchor="middle">at, in any language</text>
@@ -49,10 +49,10 @@ There are three ways in, and they differ in who drives the run.
 ## A fixture with assertions
 
 A fixture is a network, an optional traffic schedule and a list of claims about
-what should happen. `meshcoresim test` runs it and reports which claims held.
+what should happen. `meshbench test` runs it and reports which claims held.
 
 ```
-meshcoresim test -fixture fife-strict -for 60000
+meshbench test -fixture fife-strict -for 60000
 ```
 
 ```
@@ -72,68 +72,78 @@ For a pipeline, `-junit report.xml` writes a report most CI systems display
 natively, and `-offline` refuses to download anything and says what is missing
 instead — which is what a runner with a warm cache and no egress should do.
 
-## A Go test
+## From your own code
 
-`meshtest` runs a network inside a Go test. Every node runs MeshCore's firmware
-and the frames cross the same channel, so a packet that would be lost on a
-hillside is lost in the test.
+The client libraries open a session with no window and drive it. `Headless`
+starts the binary, takes the control socket, and hands back a workbench the test
+owns; every node runs MeshCore's firmware and the frames cross the same channel,
+so a packet that would be lost on a hillside is lost in the test.
 
 ```go
-import "github.com/MeshBench/meshbench/meshtest"
+import "github.com/MeshBench/meshbench/pkg/client-go/meshbench"
 
 func TestMyAppSurvivesAQuietMesh(t *testing.T) {
-    m, err := meshtest.Start(context.Background(), meshtest.Options{})
+    ctx := t.Context()
+    wb, err := meshbench.Headless(ctx,
+        meshbench.Fixture("fife-strict"), meshbench.Seed(9001))
     if err != nil {
         t.Fatal(err)
     }
-    defer m.Close()
+    defer func() { _ = wb.Close() }()
 
-    conn, err := net.Dial("tcp", m.Endpoint())   // your client, unmodified
+    // Bring the mesh up before running the clock.
+    if err := wb.Sim().Start(ctx); err != nil {
+        t.Fatal(err)
+    }
+    if err := wb.Firmware().WaitStarted(ctx, 0); err != nil {
+        t.Fatal(err)
+    }
+
+    if err := wb.Sim().Run(ctx, 5*time.Minute, time.Hour); err != nil {
+        t.Fatal(err)
+    }
+
+    total, err := wb.Events().Total(ctx)
     if err != nil {
         t.Fatal(err)
     }
-    defer conn.Close()
-    go io.Copy(io.Discard, conn)                 // something must read it
-
-    if err := m.Advance(30 * time.Second); err != nil {
-        t.Fatal(err)
-    }
-    if len(m.Received("")) == 0 {
-        t.Fatal("nothing was heard anywhere in thirty seconds")
+    if total == 0 {
+        t.Fatal("nothing was heard anywhere in five minutes")
     }
 }
 ```
 
-Two properties make it a test rather than a demonstration.
+**Start the mesh before running the clock.** `Run` only advances time. Without
+`Sim().Start` the firmware never starts, nothing transmits, and the run reports
+every assertion failed against a network with nothing wrong with it: the worst
+thing a regression check can do, because it looks like a result. `Sim().Start`
+brings the firmware up and refuses if any node has no build; `Firmware()
+.WaitStarted` waits for the processes to be ready.
 
-**Time is yours.** Nothing advances until `Advance` is called, so a test is not
-racing a wall clock and needs no `sleep` to be reliable. Advance exactly as far
-as the behaviour needs, then assert.
+**Time is simulated.** `Run` takes how much simulated time to cover and how long
+to allow in real time, so a test is not pacing itself with `sleep` and a slower
+machine does not change what is simulated.
 
-**It is deterministic.** The same seed and fixture produce the same run on every
-machine, so a failure can be handed to somebody else and reproduced.
+**It is seeded.** The same seed and fixture produce the same run, so a failure
+can be handed to somebody else and reproduced.
 
-`Received` reports failed receptions as well as successful ones, marked. A test
-that counts only successes cannot tell a quiet mesh from a colliding one.
+The same shape works from Python and Node. `pkg/client-python` ships a pytest
+plugin, and the [scripting](scripting.html) page covers the verb surface all
+three sit on. A complete, runnable version of this is
+`pkg/client-go/examples/headless-regression`, which is the one CI runs.
 
-### Whatever attaches must read
-
-A client that connects to the endpoint and never reads fills the link's buffer,
-and the mesh slows to a stop behind it. Sixty seconds of simulated time did not
-finish in two and a half minutes of real time; the same sixty take about seven
-once the connection is being drained.
-
-It stops quietly, which is the difficulty — a stalled mesh looks exactly like a
-mesh with nothing to say. Anything that pauses a client mid-test, a debugger
-breakpoint included, will do this.
+**A refusal comes back as a value, not an error.** The workbench answers "no" by
+returning a result that says so, so a call that succeeds at the transport level
+has not necessarily done anything. Check what a verb returned, not only that it
+returned.
 
 ## An application in any language
 
-`meshcoresim serve` needs no Go at all. It prints an address; a client points at
+`meshbench serve` needs no Go at all. It prints an address; a client points at
 it and cannot tell the difference from a radio.
 
 ```
-meshcoresim serve
+meshbench serve
 ```
 
 ```
@@ -151,13 +161,24 @@ app discovers and connects to a simulated node exactly as it would to hardware.
 That is the arrangement for testing a mobile application: forty nodes and a hill
 between the app and the far end, without leaving the room.
 
+### Whatever attaches must read
+
+A client that connects to the endpoint and never reads fills the link's buffer,
+and the mesh slows to a stop behind it. Sixty seconds of simulated time did not
+finish in two and a half minutes of real time; the same sixty take about seven
+once the connection is being drained.
+
+It stops quietly, which is the difficulty — a stalled mesh looks exactly like a
+mesh with nothing to say. Anything that pauses a client mid-test, a debugger
+breakpoint included, will do this.
+
 ## Testing firmware
 
 Point MeshBench at a MeshCore checkout and it builds and runs that instead of a
 published release:
 
 ```
-meshcoresim dev /path/to/MeshCore
+meshbench dev -from /path/to/MeshCore
 ```
 
 The comparison that matters is usually between two builds rather than against an

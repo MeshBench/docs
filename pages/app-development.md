@@ -89,12 +89,10 @@ drive, checks the network's own assertions, writes JUnit and exits non-zero if
 anything failed. Everything is native firmware, so the same seed gives the same
 run and a failure is reproducible.
 
-Note the command is `meshcoresim`, not `meshbench` — the binary is named for the
-simulator it runs.
-
-If your application is written in Go, `meshtest` gives the same thing without a
-subprocess: a mesh inside the test, an endpoint to dial, and time that only
-moves when the test says so. [Testing your own code](testing.html) covers both.
+If your application is written in Go, the Go client gives the same thing from
+inside a test: `meshbench.Headless` starts a session with no window, and the
+test owns it and steps it. [Testing your own code](testing.html) covers that
+and the equivalents in Python and Node.
 
 ## What differs from hardware
 

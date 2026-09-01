@@ -69,9 +69,9 @@ receivers, because unit-amplitude baseband does not depend on who is listening.
 ### The channel
 
 For each transmission and each receiver (`internal/sim/engine/baseband.go`) the
-engine applies transmit power, antenna gain in the true direction to the far
-end, path loss, the timing offset into the receive window, and the oscillator
-disagreement between the two nodes as a per-sample phase ramp.
+engine applies transmit power, antenna gain at the pattern's peak, path loss,
+the timing offset into the receive window, and the oscillator disagreement
+between the two nodes as a per-sample phase ramp.
 
 Path loss is free-space plus ITU-R P.526 terrain diffraction, plus buildings
 when an environment is loaded, plus a calibration term.

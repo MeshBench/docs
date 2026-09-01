@@ -179,8 +179,7 @@ from a mock.</figcaption>
 <pre><code>meshbench test -fixture fixtures/fixture-fife-strict.json \
   -endpoint tcp:AngusOutlaw1 -junit results.xml</code></pre>
 <p>Runs the network for a fixed time, holds the endpoint open for your test to drive, checks the network&#x27;s own assertions, writes JUnit and exits non-zero if anything failed. Everything is native firmware, so the same seed gives the same run and a failure is reproducible.</p>
-<p>Note the command is <code>meshcoresim</code>, not <code>meshbench</code> — the binary is named for the simulator it runs.</p>
-<p>If your application is written in Go, <code>meshtest</code> gives the same thing without a subprocess: a mesh inside the test, an endpoint to dial, and time that only moves when the test says so. <a href="testing.html">Testing your own code</a> covers both.</p>
+<p>If your application is written in Go, the Go client gives the same thing from inside a test: <code>meshbench.Headless</code> starts a session with no window, and the test owns it and steps it. <a href="testing.html">Testing your own code</a> covers that and the equivalents in Python and Node.</p>
 <h2>What differs from hardware</h2>
 <p>The protocol on the wire is identical: this is the firmware&#x27;s own serial code producing the bytes. What differs is the radio underneath it, which is a model. Links are cleaner than reality because there is no multipath, no body loss and no interference from outside the network, so treat delivery as a best case.</p>
 <p>Nothing about the timing is scaled down: a message that takes two seconds to cross four hops here takes about two seconds on hardware, because airtime is computed the way the firmware computes it.</p>

@@ -137,7 +137,7 @@ a { color:var(--accent); text-underline-offset:2px; }
 <p>Distance over the speed of light. At mesh distances this is tens of microseconds, which sounds negligible and is not: it is the difference between two transmissions overlapping symbol-aligned and overlapping half a symbol out, and the demodulator treats those very differently.</p>
 <h2>3. Path loss and terrain</h2>
 <p>The link budget between two points, in both directions:</p>
-<ul><li>free space loss at the carrier frequency</li><li>terrain profile sampled from DEM tiles, cached permanently, with an offline mode that fails loudly rather than quietly returning flat earth</li><li>diffraction over obstructions</li><li>feedline loss and antenna gain, evaluated in the true direction to the far end</li></ul>
+<ul><li>free space loss at the carrier frequency</li><li>terrain profile sampled from DEM tiles, cached permanently, with an offline mode that fails loudly rather than quietly returning flat earth</li><li>diffraction over obstructions</li><li>feedline loss and antenna gain, at the pattern&#x27;s peak</li></ul>
 <p><strong>Both directions, always.</strong> A hilltop repeater with a big antenna and a handheld with a rubber duck have an asymmetric link, and a result that reports one number for &quot;the link&quot; is hiding half the answer.</p>
 <h2>4. Summation</h2>
 <p>Every transmission in flight is summed at the receiver&#x27;s antenna, as complex samples, with its own delay and its own attenuation.</p>
