@@ -3,11 +3,14 @@
 The Node client is `pkg/client-js/meshbench.mjs` in the
 [meshbench repository](https://github.com/MeshBench/meshbench): one
 zero-dependency ES module on the same control socket as the Go and Python
-clients. It is imported by path from a checkout, because it is not published to
-a package index:
+clients:
+
+```
+npm install @meshbench/client
+```
 
 ```js
-import { Workbench } from "./pkg/client-js/meshbench.mjs";
+import { Workbench } from "@meshbench/client";
 ```
 
 Needs Node 18 or newer, and the `meshbench` binary on `PATH`. See

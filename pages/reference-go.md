@@ -2,9 +2,19 @@
 
 The Go client is `pkg/client-go/meshbench` in the
 [meshbench repository](https://github.com/MeshBench/meshbench):
-`import "github.com/MeshBench/meshbench/pkg/client-go/meshbench"`. It is a peer
-of the Python client, not a wrapper - both speak the control socket, and
-anything either can do the other can.
+
+```
+go get github.com/MeshBench/meshbench
+```
+
+```go
+import "github.com/MeshBench/meshbench/pkg/client-go/meshbench"
+```
+
+A checkout of the repository already has it, since the client is a package in
+the application's own module. Needs the `meshbench` binary on `PATH`, which it
+drives rather than contains. It is a peer of the Python client, not a wrapper:
+both speak the control socket, and anything either can do the other can.
 
 This page is the whole exported surface, taken from the package's own `go doc`.
 `Call` is the entire API; everything else is a typed shape over it, so a verb the

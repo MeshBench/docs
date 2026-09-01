@@ -29,41 +29,53 @@ session at all - a link budget, a coverage raster, downloading terrain - the
 
 ## Installing a client
 
-None of the three is published to a package index yet, so each is installed
-from a checkout of the [meshbench repository](https://github.com/MeshBench/meshbench).
-All three drive the `meshbench` binary rather than containing it, so that needs
-to be on `PATH` (or named by `MESHBENCH_BINARY`) whichever client you use.
+All three drive the `meshbench` binary rather than containing it, so it needs to
+be on `PATH`, or named by `MESHBENCH_BINARY`, whichever client you use.
 
-**Python**, from the repository root:
+**Python**:
 
 ```
-pip install -e pkg/client-python
+pip install meshbench
 ```
 
 ```python
 from meshbench import Workbench
 ```
 
-Needs Python 3.10 or newer. The editable install is deliberate: the client and
-the binary it drives come from the same tree, so a checkout you update updates
-both together.
+Needs Python 3.10 or newer.
 
-**Go** needs no install step, because the client is a package in the same module
-as the application:
+**Go**:
+
+```
+go get github.com/MeshBench/meshbench
+```
 
 ```go
 import "github.com/MeshBench/meshbench/pkg/client-go/meshbench"
 ```
 
-From outside that module, `go get github.com/MeshBench/meshbench` first.
+The client is a package in the application's own module, so a checkout of the
+repository already has it and needs no `go get` at all.
 
-**Node** is one file with no dependencies, so it is imported by path:
+**Node**:
 
-```js
-import { Workbench } from "./pkg/client-js/meshbench.mjs";
+```
+npm install @meshbench/client
 ```
 
-Needs Node 18 or newer, for the standard library it uses.
+```js
+import { Workbench } from "@meshbench/client";
+```
+
+Needs Node 18 or newer. It is one ES module with no dependencies, so a checkout
+can import `./pkg/client-js/meshbench.mjs` by path instead.
+
+Working from a checkout rather than a release, the Python client installs from
+the tree it belongs to, which keeps it in step with the binary it drives:
+
+```
+pip install -e pkg/client-python
+```
 
 ## Opening a session
 

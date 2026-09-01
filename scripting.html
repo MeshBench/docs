@@ -233,17 +233,21 @@ h2:hover .hl, h3:hover .hl, h2 .hl:focus-visible, h3 .hl:focus-visible { opacity
 <p>Python is the one most scripts are written in - MeshCore&#x27;s tooling is Python, and a firmware developer writing a regression test reaches for pytest. Go is the reference implementation. Node is one ES module with no dependencies, for a companion app or a dashboard in the JavaScript world. The Python and Go clients ship the same seven runnable examples; the <a href="cookbook.html">cookbook</a> indexes them.</p>
 <p>Every function each client exports is documented, generated from the clients&#x27; own doc comments so it cannot drift from the code: the <a href="reference-python.html">Python client reference</a>, the <a href="reference-go.html">Go client reference</a>, and the <a href="reference-js.html">Node client reference</a>. For one-shot jobs that need no session at all - a link budget, a coverage raster, downloading terrain - the <a href="reference-cli.html">CLI</a> is quicker than a script.</p>
 <h2 id="installing-a-client">Installing a client<a class="hl" href="#installing-a-client" aria-label="Link to this section">#</a></h2>
-<p>None of the three is published to a package index yet, so each is installed from a checkout of the <a href="https://github.com/MeshBench/meshbench">meshbench repository</a>. All three drive the <code>meshbench</code> binary rather than containing it, so that needs to be on <code>PATH</code> (or named by <code>MESHBENCH_BINARY</code>) whichever client you use.</p>
-<p><strong>Python</strong>, from the repository root:</p>
-<div class="codewrap"><pre><code>pip install -e pkg/client-python</code></pre><button class="copy" type="button" aria-label="Copy this code">copy</button></div>
+<p>All three drive the <code>meshbench</code> binary rather than containing it, so it needs to be on <code>PATH</code>, or named by <code>MESHBENCH_BINARY</code>, whichever client you use.</p>
+<p><strong>Python</strong>:</p>
+<div class="codewrap"><pre><code>pip install meshbench</code></pre><button class="copy" type="button" aria-label="Copy this code">copy</button></div>
 <div class="codewrap"><pre><code><span class="tok-kw">from</span> meshbench <span class="tok-kw">import</span> Workbench</code></pre><button class="copy" type="button" aria-label="Copy this code">copy</button></div>
-<p>Needs Python 3.10 or newer. The editable install is deliberate: the client and the binary it drives come from the same tree, so a checkout you update updates both together.</p>
-<p><strong>Go</strong> needs no install step, because the client is a package in the same module as the application:</p>
+<p>Needs Python 3.10 or newer.</p>
+<p><strong>Go</strong>:</p>
+<div class="codewrap"><pre><code>go get github.com/MeshBench/meshbench</code></pre><button class="copy" type="button" aria-label="Copy this code">copy</button></div>
 <div class="codewrap"><pre><code><span class="tok-kw">import</span> <span class="tok-str">&quot;github.com/MeshBench/meshbench/pkg/client-<span class="tok-kw">go</span>/meshbench&quot;</span></code></pre><button class="copy" type="button" aria-label="Copy this code">copy</button></div>
-<p>From outside that module, <code>go get github.com/MeshBench/meshbench</code> first.</p>
-<p><strong>Node</strong> is one file with no dependencies, so it is imported by path:</p>
-<div class="codewrap"><pre><code><span class="tok-kw">import</span> { Workbench } <span class="tok-kw">from</span> <span <span class="tok-kw">class</span>="tok-str">&quot;./pkg/client-js/meshbench.mjs&quot;</span>;</code></pre><button class="copy" type="button" aria-label="Copy this code">copy</button></div>
-<p>Needs Node 18 or newer, for the standard library it uses.</p>
+<p>The client is a package in the application&#x27;s own module, so a checkout of the repository already has it and needs no <code>go get</code> at all.</p>
+<p><strong>Node</strong>:</p>
+<div class="codewrap"><pre><code>npm install @meshbench/client</code></pre><button class="copy" type="button" aria-label="Copy this code">copy</button></div>
+<div class="codewrap"><pre><code><span class="tok-kw">import</span> { Workbench } <span class="tok-kw">from</span> <span <span class="tok-kw">class</span>="tok-str">&quot;@meshbench/client&quot;</span>;</code></pre><button class="copy" type="button" aria-label="Copy this code">copy</button></div>
+<p>Needs Node 18 or newer. It is one ES module with no dependencies, so a checkout can import <code>./pkg/client-js/meshbench.mjs</code> by path instead.</p>
+<p>Working from a checkout rather than a release, the Python client installs from the tree it belongs to, which keeps it in step with the binary it drives:</p>
+<div class="codewrap"><pre><code>pip install -e pkg/client-python</code></pre><button class="copy" type="button" aria-label="Copy this code">copy</button></div>
 <h2 id="opening-a-session">Opening a session<a class="hl" href="#opening-a-session" aria-label="Link to this section">#</a></h2>
 <div class="codewrap"><pre><code><span class="tok-kw">from</span> meshbench <span class="tok-kw">import</span> Workbench
 
