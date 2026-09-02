@@ -237,8 +237,8 @@ h2:hover .hl, h3:hover .hl, h2 .hl:focus-visible, h3 .hl:focus-visible { opacity
 <p><strong>The workbench</strong> · <a href="#workbench">Workbench</a></p>
 <p><strong>The parts</strong> · <a href="#project">Project</a> · <a href="#nodes">Nodes</a> · <a href="#node">Node</a> · <a href="#sim">Sim</a> · <a href="#firmware">Firmware</a> · <a href="#console">Console</a> · <a href="#events">Events</a> · <a href="#boundary">Boundary</a> · <a href="#live">Live</a> · <a href="#assertions">Assertions</a> · <a href="#schedule">Schedule</a> · <a href="#device">Device</a> · <a href="#job">Job</a></p>
 <p><strong>Enumerations</strong> · <a href="#board">Board</a> · <a href="#class">Class</a> · <a href="#kind">Kind</a> · <a href="#preset">Preset</a> · <a href="#role">Role</a> · <a href="#strategy">Strategy</a> · <a href="#tab">Tab</a> · <a href="#transport">Transport</a></p>
-<p><strong>Errors</strong> · <a href="#protocolmismatch">ProtocolMismatch</a> · <a href="#refused">Refused</a> · <a href="#timeout">Timeout</a></p>
-<p><strong>Values</strong> · <a href="#aimed">Aimed</a> · <a href="#antenna">Antenna</a> · <a href="#antennachange">AntennaChange</a> · <a href="#assertion">Assertion</a> · <a href="#build">Build</a> · <a href="#buildchange">BuildChange</a> · <a href="#builddetails">BuildDetails</a> · <a href="#buildid">BuildID</a> · <a href="#cardchange">CardChange</a> · <a href="#cardslot">CardSlot</a> · <a href="#check">Check</a> · <a href="#checkpoint">Checkpoint</a> · <a href="#describe">Describe</a> · <a href="#event">Event</a> · <a href="#firmwarestate">FirmwareState</a> · <a href="#hello">Hello</a> · <a href="#importpreview">ImportPreview</a> · <a href="#jobinfo">JobInfo</a> · <a href="#journal">Journal</a> · <a href="#journalentry">JournalEntry</a> · <a href="#match">Match</a> · <a href="#namematch">NameMatch</a> · <a href="#neighbour">Neighbour</a> · <a href="#nodeinfo">NodeInfo</a> · <a href="#nodestat">NodeStat</a> · <a href="#notification">Notification</a> · <a href="#placement">Placement</a> · <a href="#provenance">Provenance</a> · <a href="#report">Report</a> · <a href="#restored">Restored</a> · <a href="#roleneed">RoleNeed</a> · <a href="#screen">Screen</a> · <a href="#send">Send</a> · <a href="#shot">Shot</a> · <a href="#simstate">SimState</a> · <a href="#subscription">Subscription</a></p>
+<p><strong>Errors</strong> · <a href="#protocolmismatch">ProtocolMismatch</a> · <a href="#refused">Refused</a> · <a href="#timeout">Timeout</a> · <a href="#versionmismatch">VersionMismatch</a></p>
+<p><strong>Values</strong> · <a href="#aimed">Aimed</a> · <a href="#antenna">Antenna</a> · <a href="#antennachange">AntennaChange</a> · <a href="#assertion">Assertion</a> · <a href="#build">Build</a> · <a href="#buildchange">BuildChange</a> · <a href="#builddetails">BuildDetails</a> · <a href="#buildid">BuildID</a> · <a href="#cardchange">CardChange</a> · <a href="#cardslot">CardSlot</a> · <a href="#check">Check</a> · <a href="#checkpoint">Checkpoint</a> · <a href="#describe">Describe</a> · <a href="#event">Event</a> · <a href="#firmwarestate">FirmwareState</a> · <a href="#ground">Ground</a> · <a href="#hello">Hello</a> · <a href="#importpreview">ImportPreview</a> · <a href="#jobinfo">JobInfo</a> · <a href="#journal">Journal</a> · <a href="#journalentry">JournalEntry</a> · <a href="#match">Match</a> · <a href="#namematch">NameMatch</a> · <a href="#neighbour">Neighbour</a> · <a href="#nodeinfo">NodeInfo</a> · <a href="#nodestat">NodeStat</a> · <a href="#notification">Notification</a> · <a href="#placement">Placement</a> · <a href="#provenance">Provenance</a> · <a href="#report">Report</a> · <a href="#restored">Restored</a> · <a href="#roleneed">RoleNeed</a> · <a href="#screen">Screen</a> · <a href="#send">Send</a> · <a href="#session">Session</a> · <a href="#shot">Shot</a> · <a href="#simstate">SimState</a> · <a href="#subscription">Subscription</a></p>
 <p><strong>Options and functions</strong> · <a href="#option">Option</a> · <a href="#codeof">CodeOf</a></p>
 <h2 id="workbench">Workbench<a class="hl" href="#workbench" aria-label="Link to this section">#</a></h2>
 <p>Workbench is a connection to a running session.</p>
@@ -252,6 +252,10 @@ h2:hover .hl, h3:hover .hl, h2 .hl:focus-visible, h3 .hl:focus-visible { opacity
 <p>AttachOrLaunch uses the session that is already running, or opens one.</p>
 <p>For a script somebody runs repeatedly by hand: the second run carries on from the first rather than clearing everything down and starting again.</p>
 <p>Note which half you got, because they differ in one important way. Attaching does not own the process and Close leaves it running; launching owns it and Close stops it. Owned reports which happened, so a script that must not take the session down with it can say so.</p>
+<h3 id="attachto-ctx-context-context-s-session-workbench-error"><code>AttachTo(ctx context.Context, s Session) (*Workbench, error)</code><a class="hl" href="#attachto-ctx-context-context-s-session-workbench-error" aria-label="Link to this section">#</a></h3>
+<p>AttachTo connects to a session from Sessions, rather than to an address typed out again.</p>
+<p>It exists because a TCP session cannot be reattached to by address alone: its token is in its own file and not in the per-user rendezvous file, which two of them share. The row carries the token, so this works where Attach(ctx, Socket(row.Address)) would reach the wrong session or none.</p>
+<p>Deliberately no &quot;attach to whatever is running&quot;: where several are up and none was named, guessing is how a script ends up driving the session somebody else was watching. Ask Sessions, choose, and say which.</p>
 <h3 id="headless-ctx-context-context-options-option-workbench-error"><code>Headless(ctx context.Context, options ...Option) (*Workbench, error)</code><a class="hl" href="#headless-ctx-context-context-options-option-workbench-error" aria-label="Link to this section">#</a></h3>
 <p>Headless starts a session with no window and owns it.</p>
 <p>The one to use from a test or from CI: no display, no GPU, no toolkit.</p>
@@ -318,6 +322,9 @@ h2:hover .hl, h3:hover .hl, h2 .hl:focus-visible, h3 .hl:focus-visible { opacity
 <p>Say puts a line in the session&#x27;s log, which is how a script leaves a note for whoever is watching the window or reading the run&#x27;s stderr.</p>
 <h3 id="w-workbench-schedule-schedule"><code>(w *Workbench) Schedule() Schedule</code><a class="hl" href="#w-workbench-schedule-schedule" aria-label="Link to this section">#</a></h3>
 <p>Schedule reaches the fixture&#x27;s traffic.</p>
+<h3 id="w-workbench-sessions-ctx-context-context-session-error"><code>(w *Workbench) Sessions(ctx context.Context) ([]Session, error)</code><a class="hl" href="#w-workbench-sessions-ctx-context-context-session-error" aria-label="Link to this section">#</a></h3>
+<p>Sessions asks this workbench what else is running beside it, for a script that is already attached to one.</p>
+<p>The same list Sessions returns, with two differences: the row for this session has Self set and is described from the inside rather than by being asked over its own socket, and no row carries a token - a secret that belongs in the 0600 file it came from, not in a reply. So the rows are for choosing by; AttachTo wants one from Sessions.</p>
 <h3 id="w-workbench-setkeepabove-ctx-context-context-on-bool-bool-error"><code>(w *Workbench) SetKeepAbove(ctx context.Context, on bool) (bool, error)</code><a class="hl" href="#w-workbench-setkeepabove-ctx-context-context-on-bool-bool-error" aria-label="Link to this section">#</a></h3>
 <p>SetKeepAbove sets it, and reports what it now is.</p>
 <h3 id="w-workbench-sim-sim"><code>(w *Workbench) Sim() Sim</code><a class="hl" href="#w-workbench-sim-sim" aria-label="Link to this section">#</a></h3>
@@ -331,6 +338,9 @@ h2:hover .hl, h3:hover .hl, h2 .hl:focus-visible, h3 .hl:focus-visible { opacity
 <p>Topics known today: &quot;status&quot; (a new console line) and &quot;snapshot&quot; (a compact summary after each publish, coalesced by the server so a busy run cannot flood a slow reader).</p>
 <h3 id="w-workbench-verbs-ctx-context-context-string-error"><code>(w *Workbench) Verbs(ctx context.Context) ([]string, error)</code><a class="hl" href="#w-workbench-verbs-ctx-context-context-string-error" aria-label="Link to this section">#</a></h3>
 <p>Verbs is every method this build answers.</p>
+<h3 id="w-workbench-versioncheck-string"><code>(w *Workbench) VersionCheck() string</code><a class="hl" href="#w-workbench-versioncheck-string" aria-label="Link to this section">#</a></h3>
+<p>VersionCheck says what became of the release check at connect: empty when the two ends compared equal, and a sentence naming what was skipped and why when one of them was not a release build.</p>
+<p>Reported rather than logged, because a client is a library: a script that wants the line in its output can print it, and one that does not is not made noisy by a rule that did not apply to it.</p>
 <h3 id="w-workbench-waitidle-ctx-context-context-timeout-time-duration-error"><code>(w *Workbench) WaitIdle(ctx context.Context, timeout time.Duration) error</code><a class="hl" href="#w-workbench-waitidle-ctx-context-context-timeout-time-duration-error" aria-label="Link to this section">#</a></h3>
 <p>WaitIdle waits for every job to finish - the honest way to wait out a warm, which is what most of them are.</p>
 <p>Finished jobs are ignored rather than waited for. Some are removed when they end and some are only marked - infer.run&#x27;s is marked - so waiting for the list to empty waits forever on half of them. That is a difference between the verbs, and not a caller&#x27;s to know about.</p>
@@ -689,6 +699,17 @@ Message string
 After time.Duration
 <span class="tok-com">// Last is what the final check saw.</span>
 Last string</code></pre><button class="copy" type="button" aria-label="Copy this code">copy</button></div>
+<h3 id="versionmismatch">VersionMismatch<a class="hl" href="#versionmismatch" aria-label="Link to this section">#</a></h3>
+<p>VersionMismatch is a released client driving a workbench from a different release, reported at connect rather than discovered later.</p>
+<p>Distinct from ProtocolMismatch, and from a verb&#x27;s Refused, because a script has to be able to tell &quot;these two were never meant to be used together&quot; from &quot;this build declined what I asked&quot;. The remedies have nothing in common.</p>
+<div class="codewrap"><pre><code><span class="tok-com">// Client and Workbench are the releases each end belongs to, as they are</span>
+<span class="tok-com">// spelled on PyPI, npm and the release page.</span>
+Client    string
+Workbench string
+<span class="tok-com">// Said is the workbench&#x27;s own refusal when it was the end that noticed,</span>
+<span class="tok-com">// kept whole. Empty when this client noticed first, which happens against</span>
+<span class="tok-com">// a build old enough to ignore what the client declared.</span>
+Said string</code></pre><button class="copy" type="button" aria-label="Copy this code">copy</button></div>
 <h2 id="values">Values<a class="hl" href="#values" aria-label="Link to this section">#</a></h2>
 <h3 id="aimed">Aimed<a class="hl" href="#aimed" aria-label="Link to this section">#</a></h3>
 <p>Aimed is where an antenna ended up pointing, and what that won.</p>
@@ -885,10 +906,23 @@ Class  Class    <span class="tok-str">`json:&quot;class&quot;`</span></code></pr
 Nodes    int  <span class="tok-str">`json:&quot;nodes&quot;`</span>
 Total    int  <span class="tok-str">`json:&quot;total&quot;`</span>
 Starting bool <span class="tok-str">`json:&quot;starting&quot;`</span></code></pre><button class="copy" type="button" aria-label="Copy this code">copy</button></div>
+<h3 id="ground">Ground<a class="hl" href="#ground" aria-label="Link to this section">#</a></h3>
+<p>Ground is what elevation data a study actually had under it, and whether having none of it was a decision.</p>
+<p>Every study answers with the same keys, so a script checks one thing however it asked the question. Chosen is the distinction that matters: a bare-earth run the operator asked for is a legitimate offline result, and one nobody was asked about is the model being quietly more optimistic than its own documented best case.</p>
+<div class="codewrap"><pre><code>State        string <span class="tok-str">`json:&quot;state&quot;`</span>
+Chosen       bool   <span class="tok-str">`json:&quot;chosen&quot;`</span>
+Note         string <span class="tok-str">`json:&quot;note&quot;`</span>
+TilesSampled int    <span class="tok-str">`json:&quot;tiles_sampled&quot;`</span>
+TilesCached  int    <span class="tok-str">`json:&quot;tiles_cached&quot;`</span></code></pre><button class="copy" type="button" aria-label="Copy this code">copy</button></div>
+<ul><li><code>(g Ground) Bare() bool</code> - Bare reports a study with no elevation under it anywhere, which the propagation model prices as free space: the most optimistic answer it has.</li></ul>
 <h3 id="hello">Hello<a class="hl" href="#hello" aria-label="Link to this section">#</a></h3>
 <p>Hello is what a connection is talking to. Snapshot, read once at connect.</p>
 <div class="codewrap"><pre><code>Protocol int    <span class="tok-str">`json:&quot;protocol&quot;`</span>
 Version  string <span class="tok-str">`json:&quot;version&quot;`</span>
+<span class="tok-com">// Release is the release the workbench belongs to, empty for a build from</span>
+<span class="tok-com">// a working copy. Version is prose; this is the number the pairing rule is</span>
+<span class="tok-com">// decided on.</span>
+Release string <span class="tok-str">`json:&quot;release&quot;`</span>
 <span class="tok-com">// Mode is &quot;workbench&quot; or &quot;headless&quot;.</span>
 Mode   string <span class="tok-str">`json:&quot;mode&quot;`</span>
 Socket string <span class="tok-str">`json:&quot;socket&quot;`</span>
@@ -897,7 +931,11 @@ Verbs  int    <span class="tok-str">`json:&quot;verbs&quot;`</span>
 <span class="tok-com">// not survive a restart, so a script picking up a session it did not</span>
 <span class="tok-com">// start has to be able to ask.</span>
 PID       int       <span class="tok-str">`json:&quot;pid&quot;`</span>
-StartedAt time.Time <span class="tok-str">`json:&quot;started_at&quot;`</span></code></pre><button class="copy" type="button" aria-label="Copy this code">copy</button></div>
+StartedAt time.Time <span class="tok-str">`json:&quot;started_at&quot;`</span>
+<span class="tok-com">// Project and Nodes are what this session has open, which is what tells</span>
+<span class="tok-com">// two of them apart in a list.</span>
+Project string <span class="tok-str">`json:&quot;project&quot;`</span>
+Nodes   int    <span class="tok-str">`json:&quot;nodes&quot;`</span></code></pre><button class="copy" type="button" aria-label="Copy this code">copy</button></div>
 <h3 id="importpreview">ImportPreview<a class="hl" href="#importpreview" aria-label="Link to this section">#</a></h3>
 <p>ImportPreview is what a fetch found, before anything has been changed.</p>
 <p>SkippedNoPosition and Uncertain are the two worth reading before committing. A node with no position cannot be simulated at all, and an uncertain one is being placed to within kilometres - the answer it gives is that vague too, however confident the rest of the output looks.</p>
@@ -968,9 +1006,11 @@ Firmware string   <span class="tok-str">`json:&quot;firmware&quot;`</span>
 <span class="tok-com">// is pointed at a T-Deck, which is an ordinary thing to do.</span>
 Board         Board  <span class="tok-str">`json:&quot;board&quot;`</span>
 FirmwareBoard string <span class="tok-str">`json:&quot;firmware_board&quot;`</span>
-Sent          int    <span class="tok-str">`json:&quot;sent&quot;`</span>
-Heard         int    <span class="tok-str">`json:&quot;heard&quot;`</span>
-Selected      bool   <span class="tok-str">`json:&quot;selected&quot;`</span></code></pre><button class="copy" type="button" aria-label="Copy this code">copy</button></div>
+<span class="tok-com">// No Sent or Heard: what a node has transmitted and received is on</span>
+<span class="tok-com">// NodeStat, from the engine&#x27;s own scoreboard. They were carried here as</span>
+<span class="tok-com">// well and answered nought for every node in every reply, which reads as a</span>
+<span class="tok-com">// silent mesh rather than as a field nobody filled in.</span>
+Selected bool <span class="tok-str">`json:&quot;selected&quot;`</span></code></pre><button class="copy" type="button" aria-label="Copy this code">copy</button></div>
 <h3 id="nodestat">NodeStat<a class="hl" href="#nodestat" aria-label="Link to this section">#</a></h3>
 <p>NodeStats is what every node is costing and doing. Snapshot.</p>
 <p>Separate from NodeInfo because one is what the network *is* and the other is what it is *doing*: they change on different timescales and the store publishes them apart.</p>
@@ -1061,6 +1101,10 @@ Command string
 At      time.Duration
 <span class="tok-com">// Every repeats it. Zero sends once.</span>
 Every time.Duration</code></pre><button class="copy" type="button" aria-label="Copy this code">copy</button></div>
+<h3 id="session">Session<a class="hl" href="#session" aria-label="Link to this section">#</a></h3>
+<p>Session is one running workbench: where it answers, what process it is, when it started, and what it has open. Snapshot, read once.</p>
+<p>The description - version, mode, project, node count - is asked of the session while the list is being built, so it is what was true a moment ago rather than what was true when the session started. It is empty for a session too busy to answer in the moment it was asked; the session is still listed, because it is still running.</p>
+<ul><li><code>Sessions() ([]Session, error)</code> - Sessions lists the workbenches running on this machine, oldest first.</li></ul>
 <h3 id="shot">Shot<a class="hl" href="#shot" aria-label="Link to this section">#</a></h3>
 <p>Shot is a captured display: a PNG written under the node&#x27;s own work directory, with the frame&#x27;s dimensions.</p>
 <div class="codewrap"><pre><code>Path   string <span class="tok-str">`json:&quot;path&quot;`</span>
@@ -1075,7 +1119,29 @@ NowMs   uint32 <span class="tok-str">`json:&quot;now_ms&quot;`</span>
 UntilMs uint32 <span class="tok-str">`json:&quot;until_ms&quot;`</span>
 Events  int    <span class="tok-str">`json:&quot;events&quot;`</span>
 StepMs  uint32 <span class="tok-str">`json:&quot;step_ms&quot;`</span>
-Seed    uint64 <span class="tok-str">`json:&quot;seed&quot;`</span></code></pre><button class="copy" type="button" aria-label="Copy this code">copy</button></div>
+Seed    uint64 <span class="tok-str">`json:&quot;seed&quot;`</span>
+<span class="tok-com">// Warming, LinksMeasured and WarmHeld are the three states of the link</span>
+<span class="tok-com">// measurement, and they are three because a warm that stopped to ask</span>
+<span class="tok-com">// permission to download terrain is neither running nor finished. Reading</span>
+<span class="tok-com">// &quot;not warming&quot; as &quot;measured&quot; is how a script came to read a study over</span>
+<span class="tok-com">// ground the workbench never fetched.</span>
+Warming       bool <span class="tok-str">`json:&quot;warming&quot;`</span>
+LinksMeasured bool <span class="tok-str">`json:&quot;links_measured&quot;`</span>
+WarmHeld      bool <span class="tok-str">`json:&quot;warm_held&quot;`</span>
+<span class="tok-com">// Ground is what elevation data the studies here have under them.</span>
+Ground Ground <span class="tok-str">`json:&quot;ground&quot;`</span>
+<span class="tok-com">// Reproducible says whether running this scenario again on Seed would put</span>
+<span class="tok-com">// the same traffic at the same instants, and NotReproducibleWhy says why</span>
+<span class="tok-com">// not when it would not.</span>
+<span class="tok-com">//</span>
+<span class="tok-com">// Beside the seed because the seed is what invites the assumption. It is</span>
+<span class="tok-com">// false wherever the network carries a node running in an emulator: that</span>
+<span class="tok-com">// node&#x27;s firmware is stepped by the emulator&#x27;s clock rather than by the</span>
+<span class="tok-com">// run&#x27;s, so its timing came from somewhere the seed does not reach. A</span>
+<span class="tok-com">// script that diffs two runs, or subtracts one arm from another, has to</span>
+<span class="tok-com">// read this before it believes the difference.</span>
+Reproducible       bool   <span class="tok-str">`json:&quot;reproducible&quot;`</span>
+NotReproducibleWhy string <span class="tok-str">`json:&quot;not_reproducible_why&quot;`</span></code></pre><button class="copy" type="button" aria-label="Copy this code">copy</button></div>
 <h3 id="subscription">Subscription<a class="hl" href="#subscription" aria-label="Link to this section">#</a></h3>
 <p>Subscription is a live stream of notifications, on a connection of its own so it never interleaves with this workbench&#x27;s request/response calls.</p>
 <h2 id="options-and-functions">Options and functions<a class="hl" href="#options-and-functions" aria-label="Link to this section">#</a></h2>

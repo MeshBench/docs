@@ -17,8 +17,8 @@ meshbench <command> [flags]
 ```
 
 There are **16** commands and
-**164** flags between them, of which
-**34** exist only so a panel, a menu or a view can be
+**166** flags between them, of which
+**35** exist only so a panel, a menu or a view can be
 reached without a click.
 
 Everything below the first heading is generated from the flag declarations
@@ -71,7 +71,7 @@ Every flag below carries one of these, because a flag that arranges a screenshot
 | `serve` | run a mesh and expose a companion to your app | 8 |
 | `test` | run a fixture on real firmware and check its assertions | 9 |
 | `headless` | run the verbs over the control socket, with no window | 7 |
-| `workbench` | open the desktop workbench: build a scenario on a map and run it | 38 |
+| `workbench` | open the desktop workbench: build a scenario on a map and run it | 40 |
 
 ## `meshbench link`
 
@@ -345,7 +345,7 @@ Run a mesh and expose a companion to your app.
 meshbench serve -fixture fixtures/fixture-fife-strict.json
 ```
 
-58 nodes on real firmware, one companion on a loopback port it prints. Point a client at that address; -serial gives a pty instead.
+56 of the fixture's 58 nodes on real firmware - the SDR observer and the emitter boot none - and one companion on a loopback port it prints. Point a client at that address; -serial gives a pty instead.
 
 | flag | default | for | meaning |
 |---|---|---|---|
@@ -454,6 +454,8 @@ One panel filling the window, filtered, over a fixed view, closing itself. That 
 | `-terrain` | `false` | capture | shade the relief at startup |
 | `-theme` | `dark` | capture | dark or light |
 | `-unverified-wiring` | `false` | result | run boards whose emulation wiring nobody has watched boot yet |
+| `-update-check` | `false` | capture | ask whether a newer release exists shortly after startup, whatever the schedule says |
+| `-update-feed` | none | data | ask this URL whether a newer release exists instead of the published release feed |
 | `-version` | `false` | output | print the version and exit |
 | `-view` | `plan` | capture | which view to open |
 

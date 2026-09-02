@@ -35,11 +35,11 @@ Every class the client exports, its methods, and the shape of each call - genera
 
 **Enumerations** · [Board](#board) · [Class](#class) · [Kind](#kind) · [Preset](#preset) · [Role](#role) · [Strategy](#strategy) · [Tab](#tab) · [Transport](#transport)
 
-**Values** · [Event](#event) · [Aimed](#aimed) · [Antenna](#antenna) · [Build](#build) · [BuildDetails](#builddetails) · [CardSlot](#cardslot) · [Check](#check) · [Hello](#hello) · [ImportPreview](#importpreview) · [JobInfo](#jobinfo) · [NameMatch](#namematch) · [NodeInfo](#nodeinfo) · [NodeStat](#nodestat) · [Notification](#notification) · [Provenance](#provenance) · [Report](#report) · [Screen](#screen) · [Shot](#shot) · [SimState](#simstate)
+**Values** · [Event](#event) · [Aimed](#aimed) · [Antenna](#antenna) · [Build](#build) · [BuildDetails](#builddetails) · [CardSlot](#cardslot) · [Check](#check) · [Hello](#hello) · [ImportPreview](#importpreview) · [JobInfo](#jobinfo) · [NameMatch](#namematch) · [NodeInfo](#nodeinfo) · [NodeStat](#nodestat) · [Notification](#notification) · [Provenance](#provenance) · [Report](#report) · [Screen](#screen) · [Session](#session) · [Shot](#shot) · [SimState](#simstate)
 
-**Errors** · [BadParams](#badparams) · [Closing](#closing) · [Conflict](#conflict) · [MeshbenchError](#meshbencherror) · [NotFound](#notfound) · [ProtocolMismatch](#protocolmismatch) · [Refused](#refused) · [Timeout](#timeout) · [Unavailable](#unavailable) · [UnknownVerb](#unknownverb)
+**Errors** · [BadParams](#badparams) · [Closing](#closing) · [Conflict](#conflict) · [MeshbenchError](#meshbencherror) · [NotFound](#notfound) · [ProtocolMismatch](#protocolmismatch) · [Refused](#refused) · [Timeout](#timeout) · [Unavailable](#unavailable) · [UnknownVerb](#unknownverb) · [VersionMismatch](#versionmismatch)
 
-**Module functions** · [default_address](#default-address) · [subscribe](#subscribe)
+**Module functions** · [default_address](#default-address) · [paired_release](#paired-release) · [pairing_note](#pairing-note) · [release](#release) · [sessions](#sessions) · [sessions_dir](#sessions-dir) · [subscribe](#subscribe)
 
 ## Workbench
 
@@ -50,9 +50,18 @@ started and stop it on the way out; `attach` never does - a script must not
 be able to close the workbench somebody is looking at by falling off the
 end of a `with`.
 
-### `classmethod Workbench.attach(cls, socket: str | None = None, timeout: float = 300.0) -> Workbench`
+### `classmethod Workbench.attach(cls, socket: str | Session | None = None, timeout: float = 300.0) -> Workbench`
 
 Connect to a workbench that is already running.
+
+Takes an address, or a row from :func:`meshbench.sessions`. A row is
+the way to reach a second TCP session: its token sits beside its
+address in its own file, where the per-user rendezvous file two of them
+share has only one of the two.
+
+There is deliberately no "attach to whatever is running". Where several
+are up and none was named, guessing is how a script ends up driving the
+session somebody else was watching.
 
 ### `classmethod Workbench.headless(cls, fixture: str | None = None, seed: int | None = None, socket: str | None = None, binary: str | None = None, extra: list[str] | None = None, start_timeout: float = 90.0, stderr: Any = None) -> Workbench`
 
@@ -146,6 +155,18 @@ the world got here, and whether it has been restarted.
 ### `Workbench.verbs() -> list[str]`
 
 Every method this build answers.
+
+### `Workbench.sessions() -> list[Session]`
+
+What else is running on this machine, this session included.
+
+The same list :func:`meshbench.sessions` reads from disk, asked of the
+workbench instead - useful once a script is already attached to one.
+Two differences: the row for this session has `is_self` set and
+describes itself from the inside, and no row carries a token, because a
+token belongs in the 0600 file it came from and not in a reply. So
+these rows are for choosing by; pass one from :func:`meshbench.sessions`
+to `attach` to connect.
 
 ### `Workbench.say(text: str) -> None`
 
@@ -1331,11 +1352,14 @@ What a connection is talking to. Read once, at connect.
 
 - `protocol: int`
 - `version: str`
+- `release: str`
 - `mode: str`
 - `socket: str`
 - `verbs: int`
 - `pid: int`
 - `started_at: str`
+- `project: str`
+- `nodes: int`
 - `headless() -> bool`
 
 ### ImportPreview
@@ -1395,8 +1419,6 @@ timescales, and the store publishes them apart.
 - `firmware: str`
 - `board: str`
 - `firmware_board: str`
-- `sent: int`
-- `heard: int`
 - `selected: bool`
 
 ### NodeStat
@@ -1475,6 +1497,28 @@ ask for a screenshot.
 - `lit: int`
 - `digest: str`
 
+### Session
+
+One running workbench, as somebody choosing between several sees it.
+
+Snapshot, read once. The description - version, mode, project, node count -
+is asked of the session while the list is being built, so it is what was
+true a moment ago rather than what was true when the session started. It is
+empty for a session too busy to answer in the moment it was asked; that
+session is still listed, because it is still running.
+
+- `address: str`
+- `pid: int`
+- `started_at: str`
+- `version: str`
+- `mode: str`
+- `project: str`
+- `nodes: int`
+- `token: str`
+- `is_self: bool`
+- `windowed() -> bool` - Whether it has an interface. False when it did not say.
+- `connect(timeout: float | None = 300.0) -> Connection` - Open a connection to this session, with its own token.
+
 ### Shot
 
 A captured display: a PNG under the node's own work directory, and the
@@ -1497,6 +1541,12 @@ The clock.
 - `events: int`
 - `step_ms: int`
 - `seed: int`
+- `warming: bool`
+- `links_measured: bool`
+- `warm_held: bool`
+- `ground: dict[str, Any]`
+- `reproducible: bool`
+- `not_reproducible_why: str`
 
 ## Errors
 
@@ -1559,6 +1609,18 @@ Not a method this build has.
 Nearly always a client older or newer than the workbench - which connecting
 is supposed to have caught first, so seeing this is worth looking into.
 
+### VersionMismatch
+
+A released client driving a workbench from a different release.
+
+Its own class rather than a Refused with a code, because a script has to be
+able to tell "these two were never meant to be used together" from "this
+build declined what I asked": the remedies have nothing in common.
+
+`said` carries the workbench's own refusal whole when it was the end that
+noticed. This client is the one that notices only against a build old enough
+to ignore what the client declared.
+
 ## Module functions
 
 ### `default_address`
@@ -1568,6 +1630,72 @@ default_address() -> str
 ```
 
 Where a workbench answers on this operating system unless told otherwise.
+
+### `paired_release`
+
+```python
+paired_release(ours: str, theirs: str) -> bool
+```
+
+Whether these two releases may be used together.
+
+An exact match, or one of the two ends not being a release at all.
+
+The second half is what keeps the tree usable by the people working on it. A
+workbench built from a working copy has no release stamped in it, so
+insisting on equality would refuse every pair a developer has, for a
+disagreement that does not exist. Nothing is lost: what the rule exists to
+catch is a released client meeting a released workbench of another number,
+and both ends of that pair carry their stamp.
+
+### `pairing_note`
+
+```python
+pairing_note(ours: str, theirs: str) -> str
+```
+
+What to say about a check that did not compare anything.
+
+A pair nothing verified should be visible rather than quietly assumed sound.
+Returned rather than logged, because a client is a library: a script that
+wants the line in its output can print it, and one that does not is not made
+noisy by a rule that did not apply to it.
+
+### `release`
+
+```python
+release() -> str
+```
+
+The release this client belongs to, as PyPI spells it.
+
+Read from `__version__` rather than kept here, because the release
+workflow stamps that one line and a second copy would be a second thing to
+remember. Imported inside the function on purpose: the package's
+`__init__` imports this module, so a top-level import would be a cycle.
+
+A checkout carries whatever `__version__` last said, which is the previous
+release. That is not worth guarding against: a workbench built from the same
+checkout carries no release at all, so the pair is never compared.
+
+### `sessions`
+
+```python
+sessions() -> list[Session]
+```
+
+The workbenches running on this machine, oldest first.
+
+A session that has died is not listed, however it died, and what it left
+behind is removed on the way past.
+
+### `sessions_dir`
+
+```python
+sessions_dir() -> Path
+```
+
+The per-user directory the session files live in.
 
 ### `subscribe`
 

@@ -237,14 +237,16 @@ h2:hover .hl, h3:hover .hl, h2 .hl:focus-visible, h3 .hl:focus-visible { opacity
 <p><strong>The workbench</strong> · <a href="#workbench">Workbench</a></p>
 <p><strong>The parts</strong> · <a href="#project">Project</a> · <a href="#nodes">Nodes</a> · <a href="#node">Node</a> · <a href="#sim">Sim</a> · <a href="#firmware">Firmware</a> · <a href="#console">Console</a> · <a href="#events">Events</a> · <a href="#boundary">Boundary</a> · <a href="#live">Live</a> · <a href="#assertions">Assertions</a> · <a href="#schedule">Schedule</a> · <a href="#device">Device</a> · <a href="#subscription">Subscription</a> · <a href="#job">Job</a></p>
 <p><strong>Enumerations</strong> · <a href="#board">Board</a> · <a href="#class">Class</a> · <a href="#kind">Kind</a> · <a href="#preset">Preset</a> · <a href="#role">Role</a> · <a href="#strategy">Strategy</a> · <a href="#tab">Tab</a> · <a href="#transport">Transport</a></p>
-<p><strong>Values</strong> · <a href="#event">Event</a> · <a href="#aimed">Aimed</a> · <a href="#antenna">Antenna</a> · <a href="#build">Build</a> · <a href="#builddetails">BuildDetails</a> · <a href="#cardslot">CardSlot</a> · <a href="#check">Check</a> · <a href="#hello">Hello</a> · <a href="#importpreview">ImportPreview</a> · <a href="#jobinfo">JobInfo</a> · <a href="#namematch">NameMatch</a> · <a href="#nodeinfo">NodeInfo</a> · <a href="#nodestat">NodeStat</a> · <a href="#notification">Notification</a> · <a href="#provenance">Provenance</a> · <a href="#report">Report</a> · <a href="#screen">Screen</a> · <a href="#shot">Shot</a> · <a href="#simstate">SimState</a></p>
-<p><strong>Errors</strong> · <a href="#badparams">BadParams</a> · <a href="#closing">Closing</a> · <a href="#conflict">Conflict</a> · <a href="#meshbencherror">MeshbenchError</a> · <a href="#notfound">NotFound</a> · <a href="#protocolmismatch">ProtocolMismatch</a> · <a href="#refused">Refused</a> · <a href="#timeout">Timeout</a> · <a href="#unavailable">Unavailable</a> · <a href="#unknownverb">UnknownVerb</a></p>
-<p><strong>Module functions</strong> · <a href="#default-address">default_address</a> · <a href="#subscribe">subscribe</a></p>
+<p><strong>Values</strong> · <a href="#event">Event</a> · <a href="#aimed">Aimed</a> · <a href="#antenna">Antenna</a> · <a href="#build">Build</a> · <a href="#builddetails">BuildDetails</a> · <a href="#cardslot">CardSlot</a> · <a href="#check">Check</a> · <a href="#hello">Hello</a> · <a href="#importpreview">ImportPreview</a> · <a href="#jobinfo">JobInfo</a> · <a href="#namematch">NameMatch</a> · <a href="#nodeinfo">NodeInfo</a> · <a href="#nodestat">NodeStat</a> · <a href="#notification">Notification</a> · <a href="#provenance">Provenance</a> · <a href="#report">Report</a> · <a href="#screen">Screen</a> · <a href="#session">Session</a> · <a href="#shot">Shot</a> · <a href="#simstate">SimState</a></p>
+<p><strong>Errors</strong> · <a href="#badparams">BadParams</a> · <a href="#closing">Closing</a> · <a href="#conflict">Conflict</a> · <a href="#meshbencherror">MeshbenchError</a> · <a href="#notfound">NotFound</a> · <a href="#protocolmismatch">ProtocolMismatch</a> · <a href="#refused">Refused</a> · <a href="#timeout">Timeout</a> · <a href="#unavailable">Unavailable</a> · <a href="#unknownverb">UnknownVerb</a> · <a href="#versionmismatch">VersionMismatch</a></p>
+<p><strong>Module functions</strong> · <a href="#default-address">default_address</a> · <a href="#paired-release">paired_release</a> · <a href="#pairing-note">pairing_note</a> · <a href="#release">release</a> · <a href="#sessions">sessions</a> · <a href="#sessions-dir">sessions_dir</a> · <a href="#subscribe">subscribe</a></p>
 <h2 id="workbench">Workbench<a class="hl" href="#workbench" aria-label="Link to this section">#</a></h2>
 <p>A running session.</p>
 <p>Use it as a context manager. <code>launch</code> and <code>headless</code> own the process they started and stop it on the way out; <code>attach</code> never does - a script must not be able to close the workbench somebody is looking at by falling off the end of a <code>with</code>.</p>
-<h3 id="classmethod-workbench-attach-cls-socket-str-none-none-timeout-float-300-0-gt-workbench"><code>classmethod Workbench.attach(cls, socket: str | None = None, timeout: float = 300.0) -&gt; Workbench</code><a class="hl" href="#classmethod-workbench-attach-cls-socket-str-none-none-timeout-float-300-0-gt-workbench" aria-label="Link to this section">#</a></h3>
+<h3 id="classmethod-workbench-attach-cls-socket-str-session-none-none-timeout-float-300-0-gt-workbench"><code>classmethod Workbench.attach(cls, socket: str | Session | None = None, timeout: float = 300.0) -&gt; Workbench</code><a class="hl" href="#classmethod-workbench-attach-cls-socket-str-session-none-none-timeout-float-300-0-gt-workbench" aria-label="Link to this section">#</a></h3>
 <p>Connect to a workbench that is already running.</p>
+<p>Takes an address, or a row from :func:<code>meshbench.sessions</code>. A row is the way to reach a second TCP session: its token sits beside its address in its own file, where the per-user rendezvous file two of them share has only one of the two.</p>
+<p>There is deliberately no &quot;attach to whatever is running&quot;. Where several are up and none was named, guessing is how a script ends up driving the session somebody else was watching.</p>
 <h3 id="classmethod-workbench-headless-cls-fixture-str-none-none-seed-int-none-none-socket-str-none-none-binary-str-none-none-extra-list-str-none-none-start-timeout-float-90-0-stderr-any-none-gt-workbench"><code>classmethod Workbench.headless(cls, fixture: str | None = None, seed: int | None = None, socket: str | None = None, binary: str | None = None, extra: list[str] | None = None, start_timeout: float = 90.0, stderr: Any = None) -&gt; Workbench</code><a class="hl" href="#classmethod-workbench-headless-cls-fixture-str-none-none-seed-int-none-none-socket-str-none-none-binary-str-none-none-extra-list-str-none-none-start-timeout-float-90-0-stderr-any-none-gt-workbench" aria-label="Link to this section">#</a></h3>
 <p>Start a session with no window, and own it.</p>
 <p>The one to use from a test or from CI: no display, no GPU, no toolkit.</p>
@@ -282,6 +284,9 @@ h2:hover .hl, h3:hover .hl, h2 .hl:focus-visible, h3 .hl:focus-visible { opacity
 <p>Every command this workbench has been driven with, newest last, and when the process started - so a session picked up cold can be told how the world got here, and whether it has been restarted.</p>
 <h3 id="workbench-verbs-gt-list-str"><code>Workbench.verbs() -&gt; list[str]</code><a class="hl" href="#workbench-verbs-gt-list-str" aria-label="Link to this section">#</a></h3>
 <p>Every method this build answers.</p>
+<h3 id="workbench-sessions-gt-list-session"><code>Workbench.sessions() -&gt; list[Session]</code><a class="hl" href="#workbench-sessions-gt-list-session" aria-label="Link to this section">#</a></h3>
+<p>What else is running on this machine, this session included.</p>
+<p>The same list :func:<code>meshbench.sessions</code> reads from disk, asked of the workbench instead - useful once a script is already attached to one. Two differences: the row for this session has <code>is_self</code> set and describes itself from the inside, and no row carries a token, because a token belongs in the 0600 file it came from and not in a reply. So these rows are for choosing by; pass one from :func:<code>meshbench.sessions</code> to <code>attach</code> to connect.</p>
 <h3 id="workbench-say-text-str-gt-none"><code>Workbench.say(text: str) -&gt; None</code><a class="hl" href="#workbench-say-text-str-gt-none" aria-label="Link to this section">#</a></h3>
 <p>Leave a line in the session&#x27;s log, for whoever is watching.</p>
 <h3 id="workbench-keep-above-on-bool-none-none-gt-bool"><code>Workbench.keep_above(on: bool | None = None) -&gt; bool</code><a class="hl" href="#workbench-keep-above-on-bool-none-none-gt-bool" aria-label="Link to this section">#</a></h3>
@@ -691,7 +696,7 @@ h2:hover .hl, h3:hover .hl, h2 .hl:focus-visible, h3 .hl:focus-visible { opacity
 <ul><li><code>kind: str</code></li><li><code>node: str</code></li><li><code>passed: bool</code></li><li><code>got: str</code></li><li><code>want: str</code></li></ul>
 <h3 id="hello">Hello<a class="hl" href="#hello" aria-label="Link to this section">#</a></h3>
 <p>What a connection is talking to. Read once, at connect.</p>
-<ul><li><code>protocol: int</code></li><li><code>version: str</code></li><li><code>mode: str</code></li><li><code>socket: str</code></li><li><code>verbs: int</code></li><li><code>pid: int</code></li><li><code>started_at: str</code></li><li><code>headless() -&gt; bool</code></li></ul>
+<ul><li><code>protocol: int</code></li><li><code>version: str</code></li><li><code>release: str</code></li><li><code>mode: str</code></li><li><code>socket: str</code></li><li><code>verbs: int</code></li><li><code>pid: int</code></li><li><code>started_at: str</code></li><li><code>project: str</code></li><li><code>nodes: int</code></li><li><code>headless() -&gt; bool</code></li></ul>
 <h3 id="importpreview">ImportPreview<a class="hl" href="#importpreview" aria-label="Link to this section">#</a></h3>
 <p>What a fetch found, before anything has been changed.</p>
 <p><code>skipped_no_position</code> and <code>uncertain</code> are the two numbers worth reading before committing. A node with no position cannot be simulated at all, and an uncertain one is being placed to within kilometres - the answer it gives is that vague too, however confident the rest of the output looks.</p>
@@ -706,7 +711,7 @@ h2:hover .hl, h3:hover .hl, h2 .hl:focus-visible, h3 .hl:focus-visible { opacity
 <h3 id="nodeinfo">NodeInfo<a class="hl" href="#nodeinfo" aria-label="Link to this section">#</a></h3>
 <p>What the network is, per node.</p>
 <p>What a node is *doing* is NodeStat: the two change on completely different timescales, and the store publishes them apart.</p>
-<ul><li><code>name: str</code></li><li><code>kind: Kind | str</code></li><li><code>lat: float</code></li><li><code>lon: float</code></li><li><code>height_m: float</code></li><li><code>tx_dbm: float</code></li><li><code>regions: list[str]</code></li><li><code>firmware: str</code></li><li><code>board: str</code></li><li><code>firmware_board: str</code></li><li><code>sent: int</code></li><li><code>heard: int</code></li><li><code>selected: bool</code></li></ul>
+<ul><li><code>name: str</code></li><li><code>kind: Kind | str</code></li><li><code>lat: float</code></li><li><code>lon: float</code></li><li><code>height_m: float</code></li><li><code>tx_dbm: float</code></li><li><code>regions: list[str]</code></li><li><code>firmware: str</code></li><li><code>board: str</code></li><li><code>firmware_board: str</code></li><li><code>selected: bool</code></li></ul>
 <h3 id="nodestat">NodeStat<a class="hl" href="#nodestat" aria-label="Link to this section">#</a></h3>
 <p>What one node is costing and doing right now.</p>
 <ul><li><code>name: str</code></li><li><code>backend: str</code></li><li><code>firmware: str</code></li><li><code>running: bool</code></li><li><code>state: str</code></li><li><code>board: str</code></li><li><code>pid: int</code></li><li><code>rss_bytes: int</code></li><li><code>cpu_ms: int</code></li><li><code>cpu_pct: float</code></li><li><code>sent: int</code></li><li><code>heard: int</code></li><li><code>last_sent_ms: int</code></li><li><code>last_heard_ms: int</code></li><li><code>last_sent_to: str</code></li><li><code>last_heard_from: str</code></li><li><code>irq_reads: int</code></li><li><code>busy_reads: int</code></li><li><code>busy_ms: int</code></li><li><code>spurious: int</code></li></ul>
@@ -724,12 +729,16 @@ h2:hover .hl, h3:hover .hl, h2 .hl:focus-visible, h3 .hl:focus-visible { opacity
 <p>What a board&#x27;s display is showing, as numbers rather than a picture.</p>
 <p>Enough to answer &quot;did anything change&quot; after a press or a touch, which is the question every check of an input comes down to; for the picture itself ask for a screenshot.</p>
 <ul><li><code>node: str</code></li><li><code>has_screen: bool</code></li><li><code>width: int</code></li><li><code>height: int</code></li><li><code>bpp: int</code></li><li><code>on: bool</code></li><li><code>lit: int</code></li><li><code>digest: str</code></li></ul>
+<h3 id="session">Session<a class="hl" href="#session" aria-label="Link to this section">#</a></h3>
+<p>One running workbench, as somebody choosing between several sees it.</p>
+<p>Snapshot, read once. The description - version, mode, project, node count - is asked of the session while the list is being built, so it is what was true a moment ago rather than what was true when the session started. It is empty for a session too busy to answer in the moment it was asked; that session is still listed, because it is still running.</p>
+<ul><li><code>address: str</code></li><li><code>pid: int</code></li><li><code>started_at: str</code></li><li><code>version: str</code></li><li><code>mode: str</code></li><li><code>project: str</code></li><li><code>nodes: int</code></li><li><code>token: str</code></li><li><code>is_self: bool</code></li><li><code>windowed() -&gt; bool</code> - Whether it has an interface. False when it did not say.</li><li><code>connect(timeout: float | None = 300.0) -&gt; Connection</code> - Open a connection to this session, with its own token.</li></ul>
 <h3 id="shot">Shot<a class="hl" href="#shot" aria-label="Link to this section">#</a></h3>
 <p>A captured display: a PNG under the node&#x27;s own work directory, and the frame&#x27;s dimensions. The frame is exactly what the controller holds.</p>
 <ul><li><code>node: str</code></li><li><code>path: str</code></li><li><code>width: int</code></li><li><code>height: int</code></li><li><code>bpp: int</code></li><li><code>on: bool</code></li></ul>
 <h3 id="simstate">SimState<a class="hl" href="#simstate" aria-label="Link to this section">#</a></h3>
 <p>The clock.</p>
-<ul><li><code>playing: bool</code></li><li><code>now_ms: int</code></li><li><code>until_ms: int</code></li><li><code>events: int</code></li><li><code>step_ms: int</code></li><li><code>seed: int</code></li></ul>
+<ul><li><code>playing: bool</code></li><li><code>now_ms: int</code></li><li><code>until_ms: int</code></li><li><code>events: int</code></li><li><code>step_ms: int</code></li><li><code>seed: int</code></li><li><code>warming: bool</code></li><li><code>links_measured: bool</code></li><li><code>warm_held: bool</code></li><li><code>ground: dict[str, Any]</code></li><li><code>reproducible: bool</code></li><li><code>not_reproducible_why: str</code></li></ul>
 <h2 id="errors">Errors<a class="hl" href="#errors" aria-label="Link to this section">#</a></h2>
 <h3 id="badparams">BadParams<a class="hl" href="#badparams" aria-label="Link to this section">#</a></h3>
 <p>The verb refused what it was given.</p>
@@ -757,10 +766,35 @@ h2:hover .hl, h3:hover .hl, h2 .hl:focus-visible, h3 .hl:focus-visible { opacity
 <h3 id="unknownverb">UnknownVerb<a class="hl" href="#unknownverb" aria-label="Link to this section">#</a></h3>
 <p>Not a method this build has.</p>
 <p>Nearly always a client older or newer than the workbench - which connecting is supposed to have caught first, so seeing this is worth looking into.</p>
+<h3 id="versionmismatch">VersionMismatch<a class="hl" href="#versionmismatch" aria-label="Link to this section">#</a></h3>
+<p>A released client driving a workbench from a different release.</p>
+<p>Its own class rather than a Refused with a code, because a script has to be able to tell &quot;these two were never meant to be used together&quot; from &quot;this build declined what I asked&quot;: the remedies have nothing in common.</p>
+<p><code>said</code> carries the workbench&#x27;s own refusal whole when it was the end that noticed. This client is the one that notices only against a build old enough to ignore what the client declared.</p>
 <h2 id="module-functions">Module functions<a class="hl" href="#module-functions" aria-label="Link to this section">#</a></h2>
 <h3 id="default-address"><code>default_address</code><a class="hl" href="#default-address" aria-label="Link to this section">#</a></h3>
 <div class="codewrap"><pre><code><span class="tok-fn">default_address</span>() -&gt; str</code></pre><button class="copy" type="button" aria-label="Copy this code">copy</button></div>
 <p>Where a workbench answers on this operating system unless told otherwise.</p>
+<h3 id="paired-release"><code>paired_release</code><a class="hl" href="#paired-release" aria-label="Link to this section">#</a></h3>
+<div class="codewrap"><pre><code><span class="tok-fn">paired_release</span>(ours: str, theirs: str) -&gt; bool</code></pre><button class="copy" type="button" aria-label="Copy this code">copy</button></div>
+<p>Whether these two releases may be used together.</p>
+<p>An exact match, or one of the two ends not being a release at all.</p>
+<p>The second half is what keeps the tree usable by the people working on it. A workbench built from a working copy has no release stamped in it, so insisting on equality would refuse every pair a developer has, for a disagreement that does not exist. Nothing is lost: what the rule exists to catch is a released client meeting a released workbench of another number, and both ends of that pair carry their stamp.</p>
+<h3 id="pairing-note"><code>pairing_note</code><a class="hl" href="#pairing-note" aria-label="Link to this section">#</a></h3>
+<div class="codewrap"><pre><code><span class="tok-fn">pairing_note</span>(ours: str, theirs: str) -&gt; str</code></pre><button class="copy" type="button" aria-label="Copy this code">copy</button></div>
+<p>What to say about a check that did not compare anything.</p>
+<p>A pair nothing verified should be visible rather than quietly assumed sound. Returned rather than logged, because a client is a library: a script that wants the line in its output can print it, and one that does not is not made noisy by a rule that did not apply to it.</p>
+<h3 id="release"><code>release</code><a class="hl" href="#release" aria-label="Link to this section">#</a></h3>
+<div class="codewrap"><pre><code><span class="tok-fn">release</span>() -&gt; str</code></pre><button class="copy" type="button" aria-label="Copy this code">copy</button></div>
+<p>The release this client belongs to, as PyPI spells it.</p>
+<p>Read from <code>__version__</code> rather than kept here, because the release workflow stamps that one line and a second copy would be a second thing to remember. Imported inside the function on purpose: the package&#x27;s <code>__init__</code> imports this module, so a top-level import would be a cycle.</p>
+<p>A checkout carries whatever <code>__version__</code> last said, which is the previous release. That is not worth guarding against: a workbench built from the same checkout carries no release at all, so the pair is never compared.</p>
+<h3 id="sessions"><code>sessions</code><a class="hl" href="#sessions" aria-label="Link to this section">#</a></h3>
+<div class="codewrap"><pre><code><span class="tok-fn">sessions</span>() -&gt; list[Session]</code></pre><button class="copy" type="button" aria-label="Copy this code">copy</button></div>
+<p>The workbenches running on this machine, oldest first.</p>
+<p>A session that has died is not listed, however it died, and what it left behind is removed on the way past.</p>
+<h3 id="sessions-dir"><code>sessions_dir</code><a class="hl" href="#sessions-dir" aria-label="Link to this section">#</a></h3>
+<div class="codewrap"><pre><code><span class="tok-fn">sessions_dir</span>() -&gt; Path</code></pre><button class="copy" type="button" aria-label="Copy this code">copy</button></div>
+<p>The per-user directory the session files live in.</p>
 <h3 id="subscribe"><code>subscribe</code><a class="hl" href="#subscribe" aria-label="Link to this section">#</a></h3>
 <div class="codewrap"><pre><code><span class="tok-fn">subscribe</span>(*topics: str, address: str | <span class="tok-kw">None</span> = <span class="tok-kw">None</span>) -&gt; Subscription</code></pre><button class="copy" type="button" aria-label="Copy this code">copy</button></div>
 <p>Open a subscription to the given topics - &quot;status&quot;, &quot;snapshot&quot;, and whatever else the workbench publishes.</p>

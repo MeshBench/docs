@@ -99,13 +99,72 @@ is not a hill.**
 
 Loading a building environment (Configuration's Buildings card - a runtime
 pull from OpenStreetMap or Microsoft's ML footprints, or tiles prepared with
-`tools/envgen`) closes part of this: each crossed building becomes a rooftop
-knife edge plus one wall of material loss. It is still not clutter, trees or
+`tools/envgen`) closes part of this: the leading rooftop on a path becomes a
+knife edge, the rows behind it a settled field, and the walls the alternative
+route through rather than over. It is still not clutter, trees or
 body loss, and a pulled database inherits that database's gaps - ML
 footprints carry no materials, so those buildings fall back to a regional
 default with the low confidence that implies. The merged pull narrows that
 where OSM has surveyed the building - explicit type and material override
 the inference - but only there; the unsurveyed majority keeps the default.
+
+**How much of the excess-loss term buildings actually buy has been measured,
+and the answer is nothing.** Against 4.5 million Microsoft ML footprints over
+Scotland and 455 live ScotMesh nodes, the fitted term went from 29.475 dB over
+bare earth to 29.515 dB with footprints loaded, on the same import in one
+session: it grew by 0.04 dB. The same footprints removed 27.0% of the link
+matrix. An environment therefore changes what the model says about a town a
+great deal and changes the constant that stands in for towns not at all, which
+is the right way round: the constant is what a session with no environment
+gets. An earlier run of the same protocol measured a 0.70 dB shrink and a
+37.6% matrix loss, but it was measured against a building rule that summed a
+knife edge and a wall per crossed footprint, so most of what it saw was
+buildings deleting paths rather than explaining them.
+`docs/studies/excess-loss-buildings-saturated.md` has the arms, the counts and
+the censoring, and `excess-loss-with-buildings.md` has the run that found the
+fault.
+
+**A town is priced as one obstacle, and only near the ends of a path.** The
+leading rooftop takes its full ITU-R P.526 knife edge and the rows behind it
+add 18 log10 of their number, which is the settled field the COST 231
+multi-screen term is built on, so a hundred crossings cost tens of decibels
+rather than hundreds. Two limits ride with it. The price covers only the
+crossings within 3 km of either end, because a rooftop's few metres mid-way
+across tens of kilometres carries almost no Fresnel weight, and because making
+that a rule of the price rather than of one caller's search is what holds the
+engine and the coverage raster to the same number - they disagreed before, and
+a raster that shows a different network from the one the packets cross is
+worse than a pessimistic one. Anything over 20 m is charged wherever it stands,
+because the Fresnel argument is about rooftops and a tower is not one. On the
+23 km path across Glasgow that used to price at 2,235 dB, 7 of its 114
+crossings fall inside that aperture and it now prices at 33.9 dB. Across the
+613 priced sub-25 km pairs of `fixtures/fixture-scotland-strict.json` the
+median is 27.8 dB and the worst 57.4 dB. The other limit is that the
+multi-screen term counts rows rather than measuring roofs. That suits a
+dataset publishing no heights in the United Kingdom, where every footprint
+stands at envgen's 6 m default, but it means the model answers "are the
+antennas below roof level" rather than "how tall is the town", and on this
+dataset nothing is ever tall enough to earn the exemption above.
+
+**A DEM that is not there is worse than a bare-earth one.** Terrain tiles
+download at runtime, and downloading them is the one thing this application
+asks permission for. Where the tiles under a study are not cached - refused,
+never asked, a fetch that failed, or an offline machine - the profile has no
+elevation at all and the model falls back to free space, which is more
+optimistic than everything described above: the hill that would have blocked
+the link is not merely rounded off, it is absent. That is not a caveat anybody
+can be expected to infer, so it is stated rather than left to be noticed. A
+study over ground with nothing cached carries a `ground` block in its own
+result (`state` of `terrain`, `partial` or `bare-earth`, and `chosen` saying
+whether the operator answered the terrain question); `terrain.ground` and
+`sim.state` report the same thing to a script; the caveat line in the chrome
+leads with it; and a study asked for over bare earth nobody chose is refused
+outright rather than answered. A warm held waiting for that permission reports
+itself held, not warmed, so nothing downstream reads an unmeasured matrix as a
+measured one.
+
+**Direction of error: strongly optimistic, and unbounded - a free-space answer
+over a blocked path can be 40 dB out.**
 
 ### 1.4 Diffraction is knife-edge, and single-mechanism
 
@@ -362,6 +421,49 @@ semantics.
 bites hardest on real boards — will not reproduce. This also means the
 emulated/native cross-check (MSIM-40) currently compares two things that agree
 by construction on timing, which weakens it.
+
+### 3.2a An emulated node has no reproducible timing, and the run says so
+
+Determinism is a feature everywhere else here: the noise is counter-based, the
+boot stagger is derived from the run seed, and a native node's clock is handed
+to it by the engine's tick rather than read off the host. A node running in an
+emulator is outside all of that, and structurally rather than by oversight.
+
+Its firmware is a published image. There is nothing in it that could receive a
+tick, so what acknowledges the engine is `radioserver`, the chip model on our
+side of the socket, and the acknowledgement means the message was handled, not
+that the guest has reached that instant. The guest is meanwhile running against
+QEMU's or Renode's own clock, under neither `-icount` nor a Renode quantum, so
+how much firmware executes between two ticks is decided by this machine's load.
+
+**Measured.** One `Generic_E22_sx1262` repeater, seed 4417, three runs after a
+discarded warm-up boot, the engine stepped 10 ms at a time against the wall as
+the workbench itself steps it. Its first transmission landed at **49.83 s,
+45.72 s and 55.86 s** of simulated time: three different answers, a spread of
+10.1 s, where a native node answers with the same instant every time
+(`TestRadioStackIsDeterministic`). `TestLiveEmulatedTimingIsNotReproducible` in
+`internal/sim/engine` is that measurement, and is the harness for anybody who
+sets out to close the gap.
+
+The resolution of the harness matters, and is worth knowing before anybody
+repeats this. A first attempt stepped half a second at a time and slept through
+it, which stamps every frame arriving during the sleep with the first instant of
+the next stretch: two of its three runs then reported the same millisecond and
+the third was 21.5 s away, which reads as an occasional glitch rather than as
+what it is.
+
+Two smaller sources sit behind the same wall and would have to go with it: the
+GPS feed emits a sentence a real second rather than a simulated one, and a
+native node is handed a seeded identity on its command line while an emulated
+one generates its own on first boot.
+
+**Consequence.** A run containing an emulated node can be compared with nothing
+but itself, so a firmware A/B with an emulated arm is not measuring what it
+appears to. That is now said rather than left to be discovered: `sim.state`
+answers `reproducible` and `not_reproducible_why`, `experiment.start` answers
+the same pair and puts it in the status line, the sweep panel prints it beside
+the cost estimate before the run starts, and the results panel repeats it above
+the table. Use native for anything being compared.
 
 ### 3.3 Native nodes cannot catch anything architecture-dependent
 
@@ -857,10 +959,12 @@ then go quiet:
 - **Two ESP32 boards boot and then assert inside ESP-IDF startup**
   (Xiao S3 WIO, Heltec V3).
 - **Two have not been attempted** (Station G2, Heltec V2).
-- **No emulated board has a console**, because the firmware talks to `Serial`
-  — USB CDC — and neither emulator platform models USB. Anything that can only
-  be established by asking the node a question is reported as untested rather
-  than as passing.
+- ~~**No emulated board has a console**, because the firmware talks to `Serial`
+  — USB CDC — and neither emulator platform models USB.~~ Both platforms model
+  it now: the ESP32 boards over USB Serial/JTAG, and the nRF52 ones over
+  `NRF52840_USBD`, which a published RAK4631 repeater image enumerates and then
+  answers a typed `ver` through. What is still true is that a board whose
+  profile names the wrong wire reads as silent rather than as misconfigured.
 
 That is the gap a new user meets first: they own a board, and the odds are it is
 not one of the three that work. Everything in the physics above matters less to
@@ -935,10 +1039,11 @@ gone stale is the failure mode it exists to prevent.
   carries its own attribution string and the map renders it; that is an ODbL and
   CARTO requirement rather than a courtesy, and it is why the field is not
   optional on a layer.
-- **The source offer is met by the pipeline.** GPL-3.0 §6 obliges a recipient of
-  a binary to be able to get the corresponding source. The repository is private,
-  so every release attaches `meshbench-<tag>-source.tar.gz`. When the repository
-  is made public that archive can be replaced with a link.
+- **The source offer is met twice over.** GPL-3.0 §6 obliges a recipient of a
+  binary to be able to get the corresponding source. The repository is public,
+  so the source of any release is already beside the binaries at the same tag;
+  every release also attaches `meshbench-<tag>-source.tar.gz`, which pins the
+  exact tree the binary came from rather than a tag somebody could move.
 - **`MeshBench/meshcore-native` exists and is public**, under MeshCore's own MIT
   terms. That is where MeshCore is compiled; nothing of it is linked here.
 

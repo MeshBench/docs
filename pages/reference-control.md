@@ -19,7 +19,7 @@ of it, and what `Call` takes is below.
 
 <!-- BEGIN GENERATED VERBS -->
 
-There are 246 verbs. 246 of them say what they are for, what they take and what they answer, in the code that registers them; the rest carry what can be read out of the handler and are marked as not described yet.
+There are 254 verbs. 254 of them say what they are for, what they take and what they answer, in the code that registers them; the rest carry what can be read out of the handler and are marked as not described yet.
 
 Every entry below is generated from the MeshBench source, so it cannot drift from the verb it describes. An example that is not marked otherwise is made against a running session by that repository's test suite.
 
@@ -57,7 +57,7 @@ Every entry below is generated from the MeshBench source, so it cannot drift fro
 
 **Provisioning, schedule and assertions** - [`assert.add`](#assert-add) · [`assert.check`](#assert-check) · [`provisioning.apply`](#provisioning-apply) · [`provisioning.get`](#provisioning-get) · [`provisioning.set`](#provisioning-set) · [`run.save`](#run-save) · [`schedule.add`](#schedule-add) · [`schedule.clear`](#schedule-clear)
 
-**Machine resources** - [`gpu.set`](#gpu-set) · [`gpu.state`](#gpu-state) · [`job.cancel`](#job-cancel) · [`job.done`](#job-done) · [`job.list`](#job-list) · [`job.progress`](#job-progress) · [`resource.fetch`](#resource-fetch) · [`resource.fetched`](#resource-fetched) · [`resource.licence`](#resource-licence) · [`resource.licence.hide`](#resource-licence-hide) · [`resource.list`](#resource-list) · [`resource.remove`](#resource-remove) · [`setup.check`](#setup-check) · [`terrain.allow`](#terrain-allow) · [`terrain.cache`](#terrain-cache) · [`terrain.cache_dir`](#terrain-cache-dir) · [`terrain.cache_moved`](#terrain-cache-moved) · [`terrain.ground`](#terrain-ground) · [`terrain.prefetch`](#terrain-prefetch) · [`terrain.shade`](#terrain-shade) · [`terrain.shade_failed`](#terrain-shade-failed) · [`terrain.shade_set`](#terrain-shade-set)
+**Machine resources** - [`gpu.set`](#gpu-set) · [`gpu.state`](#gpu-state) · [`job.cancel`](#job-cancel) · [`job.done`](#job-done) · [`job.list`](#job-list) · [`job.progress`](#job-progress) · [`resource.fetch`](#resource-fetch) · [`resource.fetched`](#resource-fetched) · [`resource.licence`](#resource-licence) · [`resource.licence.hide`](#resource-licence-hide) · [`resource.list`](#resource-list) · [`resource.remove`](#resource-remove) · [`setup.check`](#setup-check) · [`terrain.allow`](#terrain-allow) · [`terrain.cache`](#terrain-cache) · [`terrain.cache_dir`](#terrain-cache-dir) · [`terrain.cache_moved`](#terrain-cache-moved) · [`terrain.ground`](#terrain-ground) · [`terrain.prefetch`](#terrain-prefetch) · [`terrain.shade`](#terrain-shade) · [`terrain.shade_failed`](#terrain-shade-failed) · [`terrain.shade_set`](#terrain-shade-set) · [`update.allow`](#update-allow) · [`update.check`](#update-check) · [`update.checked`](#update-checked) · [`update.download`](#update-download) · [`update.notes`](#update-notes) · [`update.reveal`](#update-reveal) · [`update.staged`](#update-staged) · [`update.status`](#update-status)
 
 **The window** - [`layout.reset`](#layout-reset) · [`map.basemap`](#map-basemap) · [`map.centre`](#map-centre) · [`map.filter`](#map-filter) · [`map.fit`](#map-fit) · [`map.layer`](#map-layer) · [`map.layers`](#map-layers) · [`map.zoom`](#map-zoom) · [`panel.close`](#panel-close) · [`panel.dock`](#panel-dock) · [`panel.open`](#panel-open) · [`panel.pop_out`](#panel-pop-out) · [`panels.list`](#panels-list) · [`tool.set`](#tool-set) · [`view.delete`](#view-delete) · [`view.list`](#view-list) · [`view.load`](#view-load) · [`view.save`](#view-save) · [`window.close`](#window-close) · [`window.open`](#window-open) · [`workspace.set`](#workspace-set)
 
@@ -99,6 +99,8 @@ Not made by the test suite: this call needs more than the two-node headless sess
 
 **Client** `wb.log.path`
 
+Planned, not written: no client defines `wb.log` yet - the session log's path and its export. Call the verb itself in the meantime.
+
 ### `logs.export`
 
 Put a copy of the log as it stands somewhere the operator chose, so a run can be attached to a report without the reader needing the machine it ran on.
@@ -120,6 +122,8 @@ Put a copy of the log as it stands somewhere the operator chose, so a run can be
 Not made by the test suite: this call needs more than the two-node headless session the runnable examples go to.
 
 **Client** `wb.log.export(path)`
+
+Planned, not written: no client defines `wb.log` yet - the session log's path and its export. Call the verb itself in the meantime.
 
 ### `session.checkpoint`
 
@@ -310,6 +314,8 @@ Not made by the test suite: this call needs more than the two-node headless sess
 
 **Client** `wb.ui.scale = x`
 
+Planned, not written: no client defines `wb.ui` yet - the window: panels, views, layouts and the map camera. Call the verb itself in the meantime.
+
 ### `ui.state`
 
 **Refuses when no window is attached.**
@@ -330,15 +336,17 @@ Not made by the test suite: this call needs more than the two-node headless sess
 
 **Client** `wb.ui.state()`
 
+Planned, not written: no client defines `wb.ui` yet - the window: panels, views, layouts and the map camera. Call the verb itself in the meantime.
+
 ## Project
 
 ### `project.list`
 
-Name what project.save has written and say where it writes them, since the directory belongs to the user's configuration rather than to anything the scenario knows about.
+Name everything that can be opened: what project.save has written, where it writes them, and the networks that shipped with this copy.
 
 **Takes** nothing.
 
-**Answers** `projects`, `dir`. A projects directory that does not exist yet answers with an empty `projects` and no `dir` at all, which is the first-run case and not a fault.
+**Answers** `projects`, `dir`, `fixtures`. `projects` is the user's own saved networks, by name, and `dir` is the directory they are read from - always said, whether or not it exists yet, since a caller building a path needs it either way. `fixtures` is the shipped networks, named as the files name them (`fixture-fife-strict`), found on disk beside an install and inside the binary; they are listed rather than copied into the projects directory, so a later release can correct one without overwriting somebody's edit. On a machine that has never run MeshBench `projects` is empty and `fixtures` is not, which is the first-run case and not a fault. A name from `fixtures` is opened by passing it to project.open as it stands; a saved project is opened by joining `dir` and `<name>.json`.
 
 **Example** - see what can be opened
 
@@ -358,7 +366,7 @@ Throw away what is loaded and start on an empty network, through the same path a
 |---|---|---|---|
 | `place` | string | optional, primary | somewhere to start, looked up the way a study area is, so "Fife" means the same thing here as in the Import panel; empty leaves the map where it was, and a name nothing can be found for is said in the status line rather than refused |
 
-**Answers** `nodes`, `place`. `nodes` is always zero, and `place` appears only where one was named. The lookup runs on a worker, so the map and the study area move after this has already answered.
+**Answers** `nodes`, `place`. `nodes` is always zero, and `place` appears only where one was named. A run that was going is stopped first, and the firmware behind it with it, since both belonged to the network being discarded. The lookup runs on a worker, so the map and the study area move after this has already answered.
 
 **Example** - an empty network to place nodes on by hand
 
@@ -382,7 +390,7 @@ Load a fixture and put the camera on what it holds, on the open rather than at t
 |---|---|---|---|
 | `path` | string | required, primary | the fixture's path; one that will not load is refused and the session keeps whatever it already had |
 
-**Answers** `opened`, `nodes`, `links`. `links` is zero on every open, because the matrix is cleared here and re-measured as the job `links`: a path loss over real terrain is minutes of work, so the map draws proximity links until it finishes. Nothing else moves the camera on an open, so a script that wants to be somewhere else says so afterwards with map.centre.
+**Answers** `opened`, `nodes`, `links`. `links` is zero on every open, because the matrix is cleared here and re-measured as the job `links`: a path loss over real terrain is minutes of work, so the map draws proximity links until it finishes. A run that was going is stopped first and the status line says so: the clock steps whichever engine is live, and this replaces it and stops the firmware processes behind it, so a script that opens a network mid-run plays again itself once it is ready. Nothing else moves the camera on an open, so a script that wants to be somewhere else says so afterwards with map.centre.
 
 **Example** - open a network that ships with the build
 
@@ -933,7 +941,7 @@ Remove a set of nodes in one rebuild, rather than one call each rebuilding the s
 
 | parameter | type | | what |
 |---|---|---|---|
-| `nodes` | array | optional, primary | the names to remove; one this network has not got refuses the whole call and removes nothing, and naming none is accepted and does nothing |
+| `nodes` | array | optional, primary | the names to remove, as a list, one name, or {"nodes": [...]}; one this network has not got refuses the whole call and removes nothing, naming none is accepted and does nothing, and a shape outside that set is refused rather than read as no names |
 
 **Answers** `deleted`, `nodes`. `deleted` is the names that went and `nodes` is how many are left. Every link is dropped and the matrix re-measured behind the answer, because the network is not the one that was measured.
 
@@ -955,7 +963,7 @@ Cut a network down to the nodes named and remove everything else, which is how t
 
 | parameter | type | | what |
 |---|---|---|---|
-| `nodes` | array | optional, primary | the names to keep; one this network has not got refuses the whole call and removes nothing, and naming none keeps nothing, which empties the network |
+| `nodes` | array | optional, primary | the names to keep, as a list, one name, or {"nodes": [...]}; one this network has not got refuses the whole call and removes nothing, and naming none keeps nothing, which empties the network. A shape outside that set is refused rather than read as no names, because here that reading empties the network and answers success |
 
 **Answers** `deleted`, `nodes`. `deleted` names what was removed rather than what was kept, and `nodes` is how many are left.
 
@@ -975,7 +983,7 @@ Read back the whole network as it stands, which is what anything automated does 
 
 **Takes** nothing.
 
-**Answers** `nodes`, `count`. A row per node under `nodes` and `count` beside them, so a caller need not measure the list to know how big the network is. Each row carries two boards, which are two facts: `board` is what the node is and `firmware_board` what its image was built for, and they come apart the moment a host build is pointed at a T-Deck. There is no limit and no paging, so an imported deployment answers with all of it.
+**Answers** `nodes`, `count`. A row per node under `nodes` and `count` beside them, so a caller need not measure the list to know how big the network is. Each row carries two boards, which are two facts: `board` is what the node is and `firmware_board` what its image was built for, and they come apart the moment a host build is pointed at a T-Deck. There is no limit and no paging, so an imported deployment answers with all of it. What a node has *done* is not here: a row carries no packet counts, because this describes what the network is and the counters change every tick. nodes.stats has them, measured from the engine's own scoreboard.
 
 **Example** - see what is in the scenario
 
@@ -993,16 +1001,16 @@ Put a node at a position and move its physics with its marker, forgetting the lo
 
 | parameter | type | | what |
 |---|---|---|---|
-| `name` | string | required | which node moves; absent, blank or unknown is refused |
+| `node` | string | required | which node moves; absent, blank or unknown is refused. Spelt `node`, as every other verb that acts on a node it did not create spells it; `name` is still read, because it is what this one verb asked for and it is in saved scripts |
 | `lat` | number | required | degrees north, minus 90 to 90; absent or outside that is refused rather than read as nought, which used to put the node in the Gulf of Guinea and report it as asked for |
 | `lon` | number | required | degrees east, minus 180 to 180; absent or outside that is refused |
 
-**Answers** `name`, `lat`, `lon`
+**Answers** `node`, `name`, `lat`, `lon`. `node` and `name` both carry the node that moved, so a caller reading either spelling back gets an answer.
 
 **Example** - move a node onto the hill it is named after
 
 ```json
-{"id":1,"method":"nodes.move","params":{"lat":56.25,"lon":-3.29,"name":"West Lomond"}}
+{"id":1,"method":"nodes.move","params":{"lat":56.25,"lon":-3.29,"node":"West Lomond"}}
 ```
 
 **Client** `node.move(lat, lon)`
@@ -1199,6 +1207,8 @@ Publish what every board in the catalogue was last measured to demonstrate, for 
 
 **Client** `wb.boards.matrix(version)`
 
+Planned, not written: no client defines `wb.boards` yet - the board-probe verbs; node.device covers a board that is already placed. Call the verb itself in the meantime.
+
 ### `board.press`
 
 Hold one of a board's own buttons down, or let it go, so a long press reaches the firmware as a long press rather than as a tap.
@@ -1245,6 +1255,8 @@ Boot one board in the emulator for real and measure what it demonstrates, overwr
 Not made by the test suite: this call needs more than the two-node headless session the runnable examples go to.
 
 **Client** `wb.boards.probe(board, version)`
+
+Planned, not written: no client defines `wb.boards` yet - the board-probe verbs; node.device covers a board that is already placed. Call the verb itself in the meantime.
 
 ### `board.probe_finished`
 
@@ -1561,7 +1573,7 @@ Report where the run has got to, cheaply enough to poll and safely enough to cal
 
 **Takes** nothing.
 
-**Answers** `playing`, `now_ms`, `until_ms`, `events`, `step_ms`, `seed`, `warming`, `links_measured`, `warm_held`, `ground`. `until_ms` is zero unless `sim.run` set a limit. `events` is the count since the engine was built, not since the last call. The link measurement has three states, not two: `warming` while it runs, `links_measured` once every pair has been walked, and `warm_held` for a warm that stopped to ask permission to download terrain, which is neither. A held warm finishes its own job row, so a wait for the workbench to go idle returns in a moment having waited for nothing - reading that as a measurement is how a study came to be believed over ground nobody fetched. `ground` is what the studies here are standing on, in the shape `terrain.ground` returns.
+**Answers** `playing`, `now_ms`, `until_ms`, `events`, `step_ms`, `seed`, `warming`, `links_measured`, `warm_held`, `ground`, `reproducible`, `not_reproducible_why`. `until_ms` is zero unless `sim.run` set a limit. `events` is the count since the engine was built, not since the last call. The link measurement has three states, not two: `warming` while it runs, `links_measured` once every pair has been walked, and `warm_held` for a warm that stopped to ask permission to download terrain, which is neither. A held warm finishes its own job row, so a wait for the workbench to go idle returns in a moment having waited for nothing - reading that as a measurement is how a study came to be believed over ground nobody fetched. `ground` is what the studies here are standing on, in the shape `terrain.ground` returns. `reproducible` says whether running this scenario again on the same seed would put the same traffic at the same instants: false wherever a node runs in an emulator, because that node's firmware is stepped by the emulator's clock rather than by the run's, and `not_reproducible_why` is the sentence saying which node and what follows from it. A script comparing two runs, or quoting a timing against another run's, has to read it.
 
 **Example** - ask whether the run has finished
 
@@ -2112,6 +2124,8 @@ Not made by the test suite: this call needs more than the two-node headless sess
 
 **Client** `wb.fleet.send(command, kind=|node=)`
 
+Planned, not written: no client defines `wb.fleet` yet - one command to every node of a kind. Call the verb itself in the meantime.
+
 ## Companion
 
 ### `companion.add_channel`
@@ -2420,9 +2434,9 @@ Open a real endpoint onto one simulated node, so an unmodified companion client 
 | parameter | type | | what |
 |---|---|---|---|
 | `node` | string | optional | the node to serve; absent takes the first companion in the scenario, because an endpoint is what is wanted before a node has been chosen |
-| `kind` | string | optional | "serial" for a pseudo-terminal a serial client opens; anything else, absent included, listens on TCP on every interface and a port the operating system picks |
+| `kind` | string | optional | "serial" for a pseudo-terminal a serial client opens; anything else, absent included, listens on TCP on every interface and a port the operating system picks the first time this node is served |
 
-**Answers** `node`, `addr`. Serving takes the port off the workbench, so a companion session on that node is released rather than shared. A second call for the same node replaces the listener rather than adding one.
+**Answers** `node`, `addr`. Serving takes the port off the workbench, so a companion session on that node is released rather than shared. A second call for the same node replaces the listener rather than adding one, and keeps the address: the port is drawn once per node and asked for again on every serve after, including after a drop, because a client already pointed at the first address cannot be told about a second. A port taken by something else in the meantime moves the endpoint and says so.
 
 **Example** - put a node on a TCP port for a real client
 
@@ -2452,6 +2466,8 @@ Not made by the test suite: this call needs more than the two-node headless sess
 
 **Client** `wb.endpoints.stray()`
 
+Planned, not written: no client defines `wb.endpoints` yet - the TCP and serial endpoints a node is served on. Call the verb itself in the meantime.
+
 ### `sdr.serve`
 
 Offer what one node's antenna hears as an rtl_tcp source, so real SDR software can be pointed at the simulated spectrum rather than at a drawing of it.
@@ -2462,7 +2478,7 @@ Offer what one node's antenna hears as an rtl_tcp source, so real SDR software c
 |---|---|---|---|
 | `node` | string | required, primary | the node whose antenna is served; refused when it is absent, not in the scenario, or not in the engine |
 
-**Answers** `node`, `addr`, `rate_hz`. `rate_hz` is the node's own receiver bandwidth, one sample per hertz, and 250 kHz where the scenario states none. It is what the stream is rendered at, not what a client is held to: the client's own rate setting is followed. Serving a node already served replaces the listener. The IQ is signal only, with the noise floor added at the server, so a paused run streams a bare floor rather than stopping.
+**Answers** `node`, `addr`, `rate_hz`. `rate_hz` is the node's own receiver bandwidth, one sample per hertz, and 250 kHz where the scenario states none. It is what the stream is rendered at, not what a client is held to: the client's own rate setting is followed. Serving a node already served replaces the listener and keeps the address, and so does stopping and serving again, so SDR software pointed at it once stays pointed at it; a port taken by something else in the meantime moves the endpoint and says so. The IQ is signal only, with the noise floor added at the server, so a paused run streams a bare floor rather than stopping.
 
 **Example** - point SDR software at a node's antenna
 
@@ -2520,6 +2536,8 @@ Not made by the test suite: this call needs more than the two-node headless sess
 
 **Client** `wb.capture.start(path)`
 
+Planned, not written: no client defines `wb.capture` yet - frame capture to a pcapng, and the Wireshark launch beside it. Call the verb itself in the meantime.
+
 ### `capture.stop`
 
 Close whichever capture is running, file or stream, and say how much of the run it caught.
@@ -2538,6 +2556,8 @@ Not made by the test suite: this call needs more than the two-node headless sess
 
 **Client** `wb.capture.stop()`
 
+Planned, not written: no client defines `wb.capture` yet - frame capture to a pcapng, and the Wireshark launch beside it. Call the verb itself in the meantime.
+
 ### `capture.wireshark`
 
 Stream the same frames as datagrams to 127.0.0.1:5555 and open Wireshark on loopback filtered to that port, with both dissectors loaded in the order that makes them read.
@@ -2555,6 +2575,8 @@ Stream the same frames as datagrams to 127.0.0.1:5555 and open Wireshark on loop
 Not made by the test suite: this call needs more than the two-node headless session the runnable examples go to.
 
 **Client** `wb.capture.wireshark()`
+
+Planned, not written: no client defines `wb.capture` yet - frame capture to a pcapng, and the Wireshark launch beside it. Call the verb itself in the meantime.
 
 ### `events.dump`
 
@@ -2614,6 +2636,8 @@ Put the open packet away, which is also what stops the per-tick rebuild that kee
 
 **Client** `wb.packets.close()`
 
+Planned, not written: no client defines `wb.packets` yet - opening one captured frame. Call the verb itself in the meantime.
+
 ### `packet.open`
 
 Dissect one transmission and gather what every node did with it, and leave it as the packet the view keeps following while its message is still spreading.
@@ -2637,6 +2661,8 @@ Not made by the test suite: this call needs more than the two-node headless sess
 
 **Client** `wb.packets.open(id, seek=)`
 
+Planned, not written: no client defines `wb.packets` yet - opening one captured frame. Call the verb itself in the meantime.
+
 ### `waterfall.capture`
 
 Take one 200 ms window of what a node's receiver hears and turn it into a spectrogram, of the instant it was asked for rather than of whenever a worker got round to it.
@@ -2657,6 +2683,8 @@ Take one 200 ms window of what a node's receiver hears and turn it into a spectr
 
 **Client** `wb.capture.waterfall(node)`
 
+Planned, not written: no client defines `wb.capture` yet - frame capture to a pcapng, and the Wireshark launch beside it. Call the verb itself in the meantime.
+
 ## Links, budgets and profiles
 
 ### `budget.for_selection`
@@ -2674,6 +2702,8 @@ Break the selected node's strongest measured link into the decibels it is made o
 ```
 
 **Client** `wb.links.budget()`
+
+Planned, not written: no client defines `wb.links` yet - the link matrix, one pair, and a terrain profile through it. Call the verb itself in the meantime.
 
 ### `link.pair`
 
@@ -2697,6 +2727,8 @@ Answer why two particular places do or do not hear each other, without the engin
 Not made by the test suite: this call needs more than the two-node headless session the runnable examples go to.
 
 **Client** `wb.links.pair(a, b)`
+
+Planned, not written: no client defines `wb.links` yet - the link matrix, one pair, and a terrain profile through it. Call the verb itself in the meantime.
 
 ### `link.pair_set`
 
@@ -2728,6 +2760,8 @@ Not made by the test suite: this call needs more than the two-node headless sess
 
 **Client** `wb.links.profile(a, b)`
 
+Planned, not written: no client defines `wb.links` yet - the link matrix, one pair, and a terrain profile through it. Call the verb itself in the meantime.
+
 ### `link.profile_set`
 
 **The workbench's own callback. The socket refuses it.**
@@ -2757,6 +2791,8 @@ Measure every pair's path loss again over the real terrain, which is what a move
 Not made by the test suite: this call needs more than the two-node headless session the runnable examples go to.
 
 **Client** `wb.links.recompute()`
+
+Planned, not written: no client defines `wb.links` yet - the link matrix, one pair, and a terrain profile through it. Call the verb itself in the meantime.
 
 ### `links.set`
 
@@ -2790,6 +2826,8 @@ Read or set how far outside the study boundary a node still counts, which decide
 
 **Client** `wb.study.margin_km = n`
 
+Planned, not written: no client defines `wb.study` yet - coverage, planning and the study margin. Call the verb itself in the meantime.
+
 ## Coverage and planning
 
 ### `coverage.clear`
@@ -2807,6 +2845,8 @@ Take the raster off the map without recomputing anything, for when it is coverin
 ```
 
 **Client** `wb.study.clear_coverage()`
+
+Planned, not written: no client defines `wb.study` yet - coverage, planning and the study margin. Call the verb itself in the meantime.
 
 ### `coverage.combined`
 
@@ -2841,6 +2881,8 @@ Raster what one node reaches over its own 60 km study square, which is the quest
 Not made by the test suite: this call needs more than the two-node headless session the runnable examples go to.
 
 **Client** `wb.study.coverage(node)`
+
+Planned, not written: no client defines `wb.study` yet - coverage, planning and the study margin. Call the verb itself in the meantime.
 
 ### `coverage.failed`
 
@@ -2881,6 +2923,8 @@ Not made by the test suite: this call needs more than the two-node headless sess
 
 **Client** `wb.study.coverage_map()`
 
+Planned, not written: no client defines `wb.study` yet - coverage, planning and the study margin. Call the verb itself in the meantime.
+
 ### `coverage.resolution`
 
 Read or set how sharp every shared-grid raster is, which is the one knob that trades minutes for detail: the cost scales with the square of it.
@@ -2900,6 +2944,8 @@ Read or set how sharp every shared-grid raster is, which is the one knob that tr
 ```
 
 **Client** `wb.study.coverage_cells = n`
+
+Planned, not written: no client defines `wb.study` yet - coverage, planning and the study margin. Call the verb itself in the meantime.
 
 ### `coverage.set`
 
@@ -2935,6 +2981,8 @@ Not made by the test suite: this call needs more than the two-node headless sess
 
 **Client** `wb.study.coverage(mode=)`
 
+Planned, not written: no client defines `wb.study` yet - coverage, planning and the study margin. Call the verb itself in the meantime.
+
 ### `energy.for_selection`
 
 Run the same year of sun and battery at whichever node is selected, for the panel that has a selection and no name.
@@ -2952,6 +3000,8 @@ Run the same year of sun and battery at whichever node is selected, for the pane
 Not made by the test suite: this call needs more than the two-node headless session the runnable examples go to.
 
 **Client** `wb.study.energy()`
+
+Planned, not written: no client defines `wb.study` yet - coverage, planning and the study margin. Call the verb itself in the meantime.
 
 ### `plan.failed`
 
@@ -2982,6 +3032,8 @@ Search for the paths a message could take between the first and last selected no
 Not made by the test suite: this call needs more than the two-node headless session the runnable examples go to.
 
 **Client** `wb.study.plan(a, b)`
+
+Planned, not written: no client defines `wb.study` yet - coverage, planning and the study margin. Call the verb itself in the meantime.
 
 ### `plan.set`
 
@@ -3144,7 +3196,7 @@ Fetch the last hour of a deployment's real receptions and put them beside this s
 
 | parameter | type | | what |
 |---|---|---|---|
-| `url` | string | required, primary | the deployment to pull from, as a bare string or under this key; an empty one is refused, and so is an object whose single key is anything else |
+| `url` | string | required, primary | the deployment to pull from, under this key or as a bare string; an empty one is refused, and an object whose one key is something else is read as the url it holds, the way the old socket's callers write it |
 
 **Answers** `url`. It returns as soon as the pull is accepted, not when the receptions land: they arrive later, and the residuals against this scenario's links are computed with them rather than behind a second call. A pull that comes back after feed.stop is thrown away. The fetch has ninety seconds.
 
@@ -3157,6 +3209,8 @@ Fetch the last hour of a deployment's real receptions and put them beside this s
 Not made by the test suite: this call needs more than the two-node headless session the runnable examples go to.
 
 **Client** `wb.feed.pull(url)`
+
+Planned, not written: no client defines `wb.feed` yet - the live reception feed, which wb.live half covers and does not name. Call the verb itself in the meantime.
 
 ### `feed.set`
 
@@ -3186,6 +3240,8 @@ Stop following a deployment's live traffic, which means not starting the next pu
 
 **Client** `wb.feed.stop()`
 
+Planned, not written: no client defines `wb.feed` yet - the live reception feed, which wb.live half covers and does not name. Call the verb itself in the meantime.
+
 ### `import.commit`
 
 Make the fetched nodes the scenario, either in place of what is loaded or alongside it, and start measuring the links again.
@@ -3208,6 +3264,8 @@ Not made by the test suite: this call needs more than the two-node headless sess
 
 **Client** `wb.import_.commit(strategy=)`
 
+Planned, not written: no client defines `wb.import_` yet - bringing a real deployment in; wb.live carries the feed half of it. Call the verb itself in the meantime.
+
 ### `import.describe`
 
 Count what a deployment would bring in, without setting it as the import source or changing a node, so a URL can be weighed before it is committed to.
@@ -3216,7 +3274,7 @@ Count what a deployment would bring in, without setting it as the import source 
 
 | parameter | type | | what |
 |---|---|---|---|
-| `url` | string | optional, primary | the deployment to read, as a bare string or the one key of an object; it is not checked here, so an empty or unreachable one is reported by the read failing a moment later rather than by this call being refused |
+| `url` | string | required, primary | the deployment to read, under this key or as a bare string; a call with no url in it is refused outright rather than starting a ninety second read of the empty string and answering as though it had been accepted. Whether the url is reachable is still the read's business, and a failure there arrives on the snapshot a moment later |
 
 **Answers** `url`. It returns at once with the URL it started on. The counts arrive later on the snapshot, as records, importable, no position and placed loosely: the last of those is the nodes whose published position is too loose to trust to a decibel, which are kept and marked rather than dropped. An accepted study area narrows it, which is read here rather than in the worker. The read has ninety seconds.
 
@@ -3229,6 +3287,8 @@ Count what a deployment would bring in, without setting it as the import source 
 Not made by the test suite: this call needs more than the two-node headless session the runnable examples go to.
 
 **Client** `wb.import_.describe(url)`
+
+Planned, not written: no client defines `wb.import_` yet - bringing a real deployment in; wb.live carries the feed half of it. Call the verb itself in the meantime.
 
 ### `import.failed`
 
@@ -3264,6 +3324,8 @@ Not made by the test suite: this call needs more than the two-node headless sess
 
 **Client** `wb.import_.fetch(url)`
 
+Planned, not written: no client defines `wb.import_` yet - bringing a real deployment in; wb.live carries the feed half of it. Call the verb itself in the meantime.
+
 ### `import.set`
 
 **The workbench's own callback. The socket refuses it.**
@@ -3296,6 +3358,8 @@ Name the CoreScope deployment every later import and inference verb reads from, 
 
 **Client** `wb.import_.source = url`
 
+Planned, not written: no client defines `wb.import_` yet - bringing a real deployment in; wb.live carries the feed half of it. Call the verb itself in the meantime.
+
 ### `infer.apply`
 
 Write the inferred regions onto the nodes, which is the step that gets forgotten and the one that decides whether anything relays: without it a mesh has regions inferred and not applied, which transmits everything, relays nothing and reports no error.
@@ -3313,6 +3377,8 @@ Write the inferred regions onto the nodes, which is the step that gets forgotten
 Not made by the test suite: this call needs more than the two-node headless session the runnable examples go to.
 
 **Client** `wb.import_.apply_inference()`
+
+Planned, not written: no client defines `wb.import_` yet - bringing a real deployment in; wb.live carries the feed half of it. Call the verb itself in the meantime.
 
 ### `infer.progress`
 
@@ -3360,6 +3426,8 @@ Not made by the test suite: this call needs more than the two-node headless sess
 
 **Client** `wb.import_.infer(hours=)`
 
+Planned, not written: no client defines `wb.import_` yet - bringing a real deployment in; wb.live carries the feed half of it. Call the verb itself in the meantime.
+
 ## Experiments and sweeps
 
 ### `experiment.base`
@@ -3382,6 +3450,8 @@ Set the two timings every arm shares, how long a cell runs and when its burst is
 ```
 
 **Client** `wb.experiment.base(...)`
+
+Planned, not written: no client defines `wb.experiment` yet - the whole experiment chain, which is the largest thing still only reachable by verb. Call the verb itself in the meantime.
 
 ### `experiment.compare`
 
@@ -3406,6 +3476,8 @@ Not made by the test suite: this call needs more than the two-node headless sess
 
 **Client** `wb.experiment.compare(a, b)`
 
+Planned, not written: no client defines `wb.experiment` yet - the whole experiment chain, which is the largest thing still only reachable by verb. Call the verb itself in the meantime.
+
 ### `experiment.define`
 
 State a whole matrix in one call - the arms, the seeds, the senders and the burst's timing - which is how a script sets up a sweep it did not build in the panel.
@@ -3420,7 +3492,7 @@ State a whole matrix in one call - the arms, the seeds, the senders and the burs
 | `run_for_ms` | number | optional | how long each cell runs, in simulated milliseconds; zero or less is ignored and the current length kept |
 | `send_at_ms` | number | optional | the simulated instant the burst is fired, which is the same in every arm; zero or less is ignored |
 | `spread_ms` | number | optional | milliseconds to stagger the senders over; zero fires them all at once, which is the sharpest test of contention and the least like anything real, and a negative value is ignored |
-| `bytes` | number | optional | pad the message to this size, since airtime scales with payload and airtime is what collides; zero sends the label alone, and a negative value is ignored |
+| `bytes` | number | optional | pad the message to at least this size, since airtime scales with payload and airtime is what collides; it is a floor rather than the width, because every cell of the matrix floods the same number of bytes whatever its label and seed are, and zero leaves that common width to the widest cell; a negative value is ignored |
 | `scope` | string | optional | the region every sender originates under; empty sends unscoped, which is carried by a different set of repeaters and so measures a different network |
 
 **Answers** `arms`, `seeds`, `senders`, `runs`, `run_for_ms`, `send_at_ms`, `spread_ms`, `bytes`, `scope`, `arm_labels`. Counts of what is now defined rather than the definition itself, except `arm_labels`, which names every arm: a count cannot tell a cross that produced the six arms wanted from one that produced six others.
@@ -3432,6 +3504,8 @@ State a whole matrix in one call - the arms, the seeds, the senders and the burs
 ```
 
 **Client** `wb.experiment.define(...)`
+
+Planned, not written: no client defines `wb.experiment` yet - the whole experiment chain, which is the largest thing still only reachable by verb. Call the verb itself in the meantime.
 
 ### `experiment.export`
 
@@ -3452,6 +3526,8 @@ Write the whole experiment to a file, its definition beside every cell's raw num
 ```
 
 **Client** `wb.experiment.export(path)`
+
+Planned, not written: no client defines `wb.experiment` yet - the whole experiment chain, which is the largest thing still only reachable by verb. Call the verb itself in the meantime.
 
 ### `experiment.finished`
 
@@ -3481,6 +3557,8 @@ Read the sweep back as one row per finished cell and one summary per arm, and pu
 
 **Client** `wb.experiment.results(arm=)`
 
+Planned, not written: no client defines `wb.experiment` yet - the whole experiment chain, which is the largest thing still only reachable by verb. Call the verb itself in the meantime.
+
 ### `experiment.seeds`
 
 Replace the seeds every arm is repeated over, which is the only thing that gives a difference between arms something to be called larger than.
@@ -3500,6 +3578,8 @@ Replace the seeds every arm is repeated over, which is the only thing that gives
 ```
 
 **Client** `wb.experiment.seeds = [...]`
+
+Planned, not written: no client defines `wb.experiment` yet - the whole experiment chain, which is the largest thing still only reachable by verb. Call the verb itself in the meantime.
 
 ### `experiment.senders`
 
@@ -3521,13 +3601,15 @@ Choose which nodes originate the burst, which decides more than it looks like: w
 
 **Client** `wb.experiment.senders = [...]`
 
+Planned, not written: no client defines `wb.experiment` yet - the whole experiment chain, which is the largest thing still only reachable by verb. Call the verb itself in the meantime.
+
 ### `experiment.start`
 
 Put every arm through every seed on a worker, each cell in its own engine with node storage of its own, and answer as soon as the worker is away rather than when it is done.
 
 **Takes** nothing.
 
-**Answers** `running`, `runs`. `runs` is how many cells were queued. Poll experiment.state until `running` goes false. It refuses where a sweep is already running, where no network is loaded, where no sender has been named, and where the last sweep's cell in flight has not yet let go of the results table.
+**Answers** `running`, `runs`, `reproducible`, `not_reproducible_why`. `runs` is how many cells were queued. Poll experiment.state until `running` goes false. It refuses where a sweep is already running, where no network is loaded, where no sender has been named, and where the last sweep's cell in flight has not yet let go of the results table. `reproducible` is false where the network carries a node running in an emulator, whose firmware is stepped by the emulator's clock rather than by the run's: the cells then differ for reasons the matrix does not record, so the arms measure nothing against each other, and `not_reproducible_why` says which node, empty when there is none. The sweep still runs - a single arm on emulated firmware is a legitimate thing to watch - but a script comparing arms should stop here.
 
 **Example** - start the matrix that is defined
 
@@ -3538,6 +3620,8 @@ Put every arm through every seed on a worker, each cell in its own engine with n
 Not made by the test suite: this call needs more than the two-node headless session the runnable examples go to.
 
 **Client** `wb.experiment.start()`
+
+Planned, not written: no client defines `wb.experiment` yet - the whole experiment chain, which is the largest thing still only reachable by verb. Call the verb itself in the meantime.
 
 ### `experiment.state`
 
@@ -3555,6 +3639,8 @@ Ask the runner where it has got to without disturbing it, which is what a script
 
 **Client** `wb.experiment.state()`
 
+Planned, not written: no client defines `wb.experiment` yet - the whole experiment chain, which is the largest thing still only reachable by verb. Call the verb itself in the meantime.
+
 ### `experiment.stop`
 
 Ask a sweep to stop and say whether it actually has, since the cell in flight finishes before the worker leaves and waiting for it here would deadlock the worker.
@@ -3570,6 +3656,8 @@ Ask a sweep to stop and say whether it actually has, since the cell in flight fi
 ```
 
 **Client** `wb.experiment.stop()`
+
+Planned, not written: no client defines `wb.experiment` yet - the whole experiment chain, which is the largest thing still only reachable by verb. Call the verb itself in the meantime.
 
 ### `experiment.vary`
 
@@ -3592,6 +3680,8 @@ Cross the arms already defined with one parameter's values, so three path hash m
 
 **Client** `wb.experiment.vary(parameter, values)`
 
+Planned, not written: no client defines `wb.experiment` yet - the whole experiment chain, which is the largest thing still only reachable by verb. Call the verb itself in the meantime.
+
 ### `sweep.run`
 
 Push a rising offered load through one node until the network stops carrying what it is given, which is the point a delivery figure taken at one load cannot show.
@@ -3609,6 +3699,8 @@ Push a rising offered load through one node until the network stops carrying wha
 Not made by the test suite: this call needs more than the two-node headless session the runnable examples go to.
 
 **Client** `wb.sweep.run()`
+
+Planned, not written: no client defines `wb.sweep` yet - the offered-load sweep. Call the verb itself in the meantime.
 
 ### `sweep.set`
 
@@ -3645,6 +3737,8 @@ Set the excess path loss term from what the comparison measured, or from a state
 Not made by the test suite: this call needs more than the two-node headless session the runnable examples go to.
 
 **Client** `wb.validate.calibrate(db=None)`
+
+Planned, not written: no client defines `wb.validate` yet - predicted against actually heard. Call the verb itself in the meantime.
 
 ### `validate.compare`
 
@@ -3693,6 +3787,8 @@ Not made by the test suite: this call needs more than the two-node headless sess
 
 **Client** `wb.validate.fetch(url, hours=)`
 
+Planned, not written: no client defines `wb.validate` yet - predicted against actually heard. Call the verb itself in the meantime.
+
 ### `validate.uncalibrate`
 
 Put the excess path loss back to the default, which is a stated guess rather than a measurement, and rebuild every link on it.
@@ -3710,6 +3806,8 @@ Put the excess path loss back to the default, which is a stated guess rather tha
 Not made by the test suite: this call needs more than the two-node headless session the runnable examples go to.
 
 **Client** `wb.validate.uncalibrate()`
+
+Planned, not written: no client defines `wb.validate` yet - predicted against actually heard. Call the verb itself in the meantime.
 
 ## The radio model
 
@@ -3749,6 +3847,8 @@ Not made by the test suite: this call needs more than the two-node headless sess
 
 **Client** `wb.rf.fetch_environment(source)`
 
+Planned, not written: no client defines `wb.rf` yet - the radio model: which physics, what realism, how much excess loss. Call the verb itself in the meantime.
+
 ### `environ.fetched`
 
 **The workbench's own callback. The socket refuses it.**
@@ -3779,6 +3879,8 @@ Name every building pull already on this disk, so moving between environments is
 
 **Client** `wb.rf.environments`
 
+Planned, not written: no client defines `wb.rf` yet - the radio model: which physics, what realism, how much excess loss. Call the verb itself in the meantime.
+
 ### `radio.preset`
 
 Put the nodes on one of the community's agreed modem settings, which decides sensitivity and airtime and therefore every number downstream of them, or list the settings there are to choose from.
@@ -3802,18 +3904,20 @@ Not made by the test suite: this call needs more than the two-node headless sess
 
 **Client** `wb.radio.presets  /  wb.radio.apply(preset, node=)`
 
+Planned, not written: no client defines `wb.radio` yet - the preset list and applying one. Call the verb itself in the meantime.
+
 ### `rf.environment`
 
-Point the session at a directory of environment tiles so both RF modes price buildings into the path budget, or take it away again and go back to bare earth.
+Point the session at a directory of environment tiles so both RF modes price buildings into the path budget, or take it away again and go back to bare earth; asked with nothing it reports the tiles in force instead of setting any.
 
 **Takes**
 
 | parameter | type | | what |
 |---|---|---|---|
-| `dir` | string | optional, primary | the tile directory, as tools/envgen or environ.fetch wrote it; absent is refused unless on is false, because a switch with nothing to switch on would silently leave the model bare |
+| `dir` | string | optional, primary | the tile directory, as tools/envgen or environ.fetch wrote it; named and empty is refused unless on is false, because a switch with nothing to switch on would silently leave the model bare. No parameters at all is the question rather than the switch, and reports what is loaded |
 | `on` | bool | optional | false drops the environment and returns the model to bare earth; absent or true expects a dir |
 
-**Answers** `environment`. `environment` is the directory now in force, and empty means bare earth. Every path loss already cached was priced without buildings, so a live engine drops its link cache and the links are measured again.
+**Answers** `environment`. `environment` is the directory in force after the call, and empty means bare earth, so the reply is the same shape whether the tiles were set or asked for. Every path loss already cached was priced without buildings, so a live engine drops its link cache and the links are measured again.
 
 **Example** - charge the paths for the buildings they cross
 
@@ -3824,6 +3928,8 @@ Point the session at a directory of environment tiles so both RF modes price bui
 Not made by the test suite: this call needs more than the two-node headless session the runnable examples go to.
 
 **Client** `wb.rf.environment = dir`
+
+Planned, not written: no client defines `wb.rf` yet - the radio model: which physics, what realism, how much excess loss. Call the verb itself in the meantime.
 
 ### `rf.excess_loss`
 
@@ -3847,17 +3953,19 @@ Not made by the test suite: this call needs more than the two-node headless sess
 
 **Client** `wb.rf.excess_loss_db = n`
 
+Planned, not written: no client defines `wb.rf` yet - the radio model: which physics, what realism, how much excess loss. Call the verb itself in the meantime.
+
 ### `rf.mode`
 
-Choose which physics decides reception, and stamp the choice into the world so every snapshot, saved run and export says which of the two models produced it.
+Choose which physics decides reception, and stamp the choice into the world so every snapshot, saved run and export says which of the two models produced it; asked with nothing it reports the mode in force instead of setting one.
 
 **Takes**
 
 | parameter | type | | what |
 |---|---|---|---|
-| `mode` | string | required, primary | calculated for link budgets against demodulator floors, which is the fast model, or waveform for the full receive chain of demodulation, FEC and CRC; any other value is refused, and so is the empty string a caller who named nothing sends |
+| `mode` | string | optional, primary | calculated for link budgets against demodulator floors, which is the fast model, or waveform for the full receive chain of demodulation, FEC and CRC; absent altogether reports the mode in force and changes nothing, and any other value - the empty string included - is refused rather than read as the absent case |
 
-**Answers** `mode`
+**Answers** `mode`. `mode` is the mode in force after the call, so the reply is the same shape whether the mode was set or asked for. A caller that needs to know which physics produced a number can ask without setting one, which used to be impossible: the only reader was the snapshot, and a socket client has not got one.
 
 **Example** - let the receive chain decide, rather than a link budget
 
@@ -3866,6 +3974,8 @@ Choose which physics decides reception, and stamp the choice into the world so e
 ```
 
 **Client** `wb.rf.mode = 'calculated'|'waveform'`
+
+Planned, not written: no client defines `wb.rf` yet - the radio model: which physics, what realism, how much excess loss. Call the verb itself in the meantime.
 
 ### `rf.realism`
 
@@ -3891,6 +4001,8 @@ Price in the imperfections the channel otherwise leaves out - crystal error, a d
 
 **Client** `wb.rf.realism(...)`
 
+Planned, not written: no client defines `wb.rf` yet - the radio model: which physics, what realism, how much excess loss. Call the verb itself in the meantime.
+
 ### `rf.toggle`
 
 Flip to whichever RF physics is not running, for a control that is one button rather than a choice of two.
@@ -3906,6 +4018,8 @@ Flip to whichever RF physics is not running, for a control that is one button ra
 ```
 
 **Client** `wb.rf.toggle()`
+
+Planned, not written: no client defines `wb.rf` yet - the radio model: which physics, what realism, how much excess loss. Call the verb itself in the meantime.
 
 ## Provisioning, schedule and assertions
 
@@ -3970,6 +4084,8 @@ Not made by the test suite: this call needs more than the two-node headless sess
 
 **Client** `wb.provisioning.apply()`
 
+Planned, not written: no client defines `wb.provisioning` yet - the settings a node is provisioned with, at the network level. Call the verb itself in the meantime.
+
 ### `provisioning.get`
 
 Read the switches every node is told at boot, which is what decides whether a mesh comes up named, positioned and in the same conversation as the rest.
@@ -3985,6 +4101,8 @@ Read the switches every node is told at boot, which is what decides whether a me
 ```
 
 **Client** `wb.provisioning.settings`
+
+Planned, not written: no client defines `wb.provisioning` yet - the settings a node is provisioned with, at the network level. Call the verb itself in the meantime.
 
 ### `provisioning.set`
 
@@ -4018,6 +4136,8 @@ Change what a future run tells its nodes, a switch at a time, leaving every sett
 ```
 
 **Client** `wb.provisioning.set(...)`
+
+Planned, not written: no client defines `wb.provisioning` yet - the settings a node is provisioned with, at the network level. Call the verb itself in the meantime.
 
 ### `run.save`
 
@@ -4101,6 +4221,8 @@ Choose whether the link matrix is measured on the GPU or on the processor, which
 ```
 
 **Client** `wb.gpu.enabled = bool`
+
+Planned, not written: no client defines `wb.gpu` yet - whether the link matrix is measured on the GPU. Call the verb itself in the meantime.
 
 ### `gpu.state`
 
@@ -4208,6 +4330,8 @@ Not made by the test suite: this call needs more than the two-node headless sess
 
 **Client** `wb.resources.fetch(kind, name, version)`
 
+Planned, not written: no client defines `wb.resources` yet - what has been downloaded, and its licence. Call the verb itself in the meantime.
+
 ### `resource.fetched`
 
 **The workbench's own callback. The socket refuses it.**
@@ -4248,6 +4372,8 @@ Read the terms a cached resource arrived under, and leave them open in the snaps
 Not made by the test suite: this call needs more than the two-node headless session the runnable examples go to.
 
 **Client** `wb.resources.licence(kind, name, version)`
+
+Planned, not written: no client defines `wb.resources` yet - what has been downloaded, and its licence. Call the verb itself in the meantime.
 
 ### `resource.licence.hide`
 
@@ -4305,6 +4431,8 @@ Not made by the test suite: this call needs more than the two-node headless sess
 
 **Client** `wb.resources.remove(kind, name, version)`
 
+Planned, not written: no client defines `wb.resources` yet - what has been downloaded, and its licence. Call the verb itself in the meantime.
+
 ### `setup.check`
 
 What this machine has, what it is missing, and what each one costs.
@@ -4320,6 +4448,8 @@ What this machine has, what it is missing, and what each one costs.
 ```
 
 **Client** `wb.setup.check()`
+
+Planned, not written: no client defines `wb.setup` yet - the first-run readiness check. Call the verb itself in the meantime.
 
 ### `terrain.allow`
 
@@ -4341,6 +4471,8 @@ Allow or refuse terrain downloads on this machine, and remember it.
 
 **Client** `wb.terrain.allow(on=True)`
 
+Planned, not written: no client defines `wb.terrain` yet - the elevation cache, its consent and its prefetch. Call the verb itself in the meantime.
+
 ### `terrain.cache`
 
 Say how much memory decoded terrain may occupy, in the unit people think in, and read back where the tiles are kept and whether this machine is allowed to fetch more.
@@ -4360,6 +4492,8 @@ Say how much memory decoded terrain may occupy, in the unit people think in, and
 ```
 
 **Client** `wb.terrain.cache_gb = n`
+
+Planned, not written: no client defines `wb.terrain` yet - the elevation cache, its consent and its prefetch. Call the verb itself in the meantime.
 
 ### `terrain.cache_dir`
 
@@ -4382,6 +4516,8 @@ Move the terrain cache to another disk, files and all, so a permanent cache that
 Not made by the test suite: this call needs more than the two-node headless session the runnable examples go to.
 
 **Client** `wb.terrain.cache_dir = path`
+
+Planned, not written: no client defines `wb.terrain` yet - the elevation cache, its consent and its prefetch. Call the verb itself in the meantime.
 
 ### `terrain.cache_moved`
 
@@ -4416,6 +4552,8 @@ Report what elevation data the current network actually has under it, and whethe
 
 **Client** `wb.terrain.ground()`
 
+Planned, not written: no client defines `wb.terrain` yet - the elevation cache, its consent and its prefetch. Call the verb itself in the meantime.
+
 ### `terrain.prefetch`
 
 Download the ground under the loaded network before anything needs it, so the minutes of network time a first measurement would spend invisibly are a visible, priced, stoppable job instead.
@@ -4433,6 +4571,8 @@ Download the ground under the loaded network before anything needs it, so the mi
 Not made by the test suite: this call needs more than the two-node headless session the runnable examples go to.
 
 **Client** `wb.terrain.prefetch()`
+
+Planned, not written: no client defines `wb.terrain` yet - the elevation cache, its consent and its prefetch. Call the verb itself in the meantime.
 
 ### `terrain.shade`
 
@@ -4455,6 +4595,8 @@ Hillshade the relief under one view, which is a tile fetch and a pass over every
 Not made by the test suite: this call needs more than the two-node headless session the runnable examples go to.
 
 **Client** `wb.ui.map.shade()`
+
+Planned, not written: no client defines `wb.ui` yet - the window: panels, views, layouts and the map camera. Call the verb itself in the meantime.
 
 ### `terrain.shade_failed`
 
@@ -4480,6 +4622,154 @@ Hold the finished hillshade, and warn where most of the view was blank ground ra
 
 **Client** none: the hillshade worker publishing its raster
 
+### `update.allow`
+
+Allow or refuse update checks on this machine, and remember it.
+
+**Takes**
+
+| parameter | type | | what |
+|---|---|---|---|
+| `on` | bool | optional, primary | true to ask the release page once a day whether a newer release exists, false never to ask |
+
+**Answers** `on`, `asked`, `checking`. `asked` is whether this machine had already answered before the call, never asked being the third state a fresh install is in and the one that spends nothing. Off is the default and stays the default: nothing in the simulation depends on knowing whether a release exists, so a machine with no network, or an operator who does not want the question, loses nothing by never answering it. `checking` is true where the grant started a check straight away, which it does because nothing is watching for permission to arrive and a switch that promises something and does it tomorrow is a switch nobody believes. Allowing a check never downloads anything.
+
+**Example** - let this machine find out when a newer release is published
+
+```json
+{"id":1,"method":"update.allow","params":true}
+```
+
+**Client** `wb.update.allow(on=True)`
+
+Planned, not written: no client defines `wb.update` yet - whether a newer release exists and getting it onto the disk. Call the verb itself in the meantime.
+
+### `update.check`
+
+Ask the release feed whether a newer release exists.
+
+**Takes** nothing.
+
+**Answers** `checking`, `build`. Starts the check and returns immediately: asking is a network call, and one made on the store's own goroutine would stop the simulation for as long as a socket takes to time out. It announces itself in the jobs strip and the answer lands in `update.status`, which is what a script polls. The routine question is answered by the redirect the releases page already serves - a 302 naming the newest tag, no API call - because GitHub allows an unauthenticated caller 60 requests an hour per address, and an address is a household, an office or an ISP doing carrier-grade NAT; the API is asked once a newer release is found, for the assets and their sizes. A check that could not reach either is an error with a reason, never a report that this build is current: a rate limit, a captive portal and an up-to-date build are three answers and only one of them is about this build. A working copy is refused rather than checked, and says so: a build with no release stamped in it is not behind anything, it is unreleased. Calling this by hand is its own consent for that one check - the preference `update.allow` sets governs the check nobody asked for, the one on a timer.
+
+**Example** - find out now whether a newer release has been published
+
+```json
+{"id":1,"method":"update.check","params":{}}
+```
+
+Not made by the test suite: this call needs more than the two-node headless session the runnable examples go to.
+
+**Client** `wb.update.check()`
+
+Planned, not written: no client defines `wb.update` yet - whether a newer release exists and getting it onto the disk. Call the verb itself in the meantime.
+
+### `update.checked`
+
+**The workbench's own callback. The socket refuses it.**
+
+Take a finished check back onto the store's goroutine: publish what the release feed said and say it once.
+
+**Takes** nothing.
+
+**Answers** Internal: the check reporting back to itself from the worker it runs on. The result it carries is the whole of what `update.status` then answers.
+
+**Client** none: the release check reporting back from its own worker
+
+### `update.download`
+
+Download the release the last check found, beside this build rather than over it.
+
+**Takes** nothing.
+
+**Answers** `downloading`, `bytes`, `release`, `into`. Refuses unless a check has already found a release this machine could take, and says which of the four reasons applies - nothing has asked yet, the last check could not reach the feed, there is a newer release but nothing published for this platform or this bundle, or this build is already the newest. The fetch runs in the background with its size announced in the jobs strip before it is spent, and it is verified before it is offered: the release publishes SHA256SUMS beside its artefacts, and a file whose digest does not match is deleted rather than kept. That digest comes from the same release as the file, so what it proves is that the download arrived intact; what says the release is ours is the connection to github.com, which is why an asset served from anywhere else is refused outright. Nothing is replaced: the download lands in the update cache and the answer says how to swap it by hand, because a run holds unsaved state and replacing a binary underneath one is a way to lose somebody's work.
+
+**Example** - fetch the release the last check found
+
+```json
+{"id":1,"method":"update.download","params":{}}
+```
+
+Not made by the test suite: this call needs more than the two-node headless session the runnable examples go to.
+
+**Client** `wb.update.download()`
+
+Planned, not written: no client defines `wb.update` yet - whether a newer release exists and getting it onto the disk. Call the verb itself in the meantime.
+
+### `update.notes`
+
+Open the release page for what the last check found.
+
+**Takes** nothing.
+
+**Answers** `opened`. The notes are linked rather than embedded: they are prose, and prose outgrows any panel it is put in. Refuses when no check has named a release page yet.
+
+**Example** - read what changed in the release being offered
+
+```json
+{"id":1,"method":"update.notes","params":{}}
+```
+
+Not made by the test suite: this call needs more than the two-node headless session the runnable examples go to.
+
+**Client** `wb.update.notes()`
+
+Planned, not written: no client defines `wb.update` yet - whether a newer release exists and getting it onto the disk. Call the verb itself in the meantime.
+
+### `update.reveal`
+
+Open the folder a downloaded release landed in.
+
+**Takes** nothing.
+
+**Answers** `opened`. Refuses when nothing has been downloaded, because there is then no folder to open. Hands the path to whatever this desktop uses - xdg-open, open, or the Windows file protocol handler - and says so when the machine has none rather than failing silently.
+
+**Example** - look at the release that was just downloaded
+
+```json
+{"id":1,"method":"update.reveal","params":{}}
+```
+
+Not made by the test suite: this call needs more than the two-node headless session the runnable examples go to.
+
+**Client** `wb.update.reveal()`
+
+Planned, not written: no client defines `wb.update` yet - whether a newer release exists and getting it onto the disk. Call the verb itself in the meantime.
+
+### `update.staged`
+
+**The workbench's own callback. The socket refuses it.**
+
+Take a finished download back onto the store's goroutine: record where it landed and say what to do with it.
+
+**Takes**
+
+| parameter | type | | what |
+|---|---|---|---|
+| `path` | string | required, primary | where the verified download landed |
+
+**Answers** `staged`. Internal: the download reporting back from the worker it runs on. What it says is the whole instruction for this platform's bundle, including that a client pinned to the old release will be refused by the new workbench.
+
+**Client** none: the update download reporting back from its own worker
+
+### `update.status`
+
+What the last update check found, without asking anything.
+
+**Takes** nothing.
+
+**Answers** `build`, `latest`, `tag`, `newer`, `available`, `notes`, `published`, `checked`, `asset`, `bytes`, `artefact`, `why`, `staged`, `feed`, `error`, `allowed`, `asked`. Read-only and offline: every field is empty until something has asked, because nothing here is filled at startup. `newer` is whether a higher release exists at all and `available` is whether one exists that this machine could actually take - they differ where a release is published for platforms this is not one of, or where the package manager owns this copy, and `why` is the reason in words. `artefact` names which bundle this build came out of, because what can honestly be done with a download afterwards differs per bundle. `staged` is where a verified download landed, always beside this build and never on top of it. `error` is why the last check could not answer, which is a different thing from there being nothing newer. `feed` is only set when somebody pointed the check at something other than the published release feed.
+
+**Example** - ask whether this build is the newest one, without touching the network
+
+```json
+{"id":1,"method":"update.status","params":{}}
+```
+
+**Client** `wb.update.status()`
+
+Planned, not written: no client defines `wb.update` yet - whether a newer release exists and getting it onto the disk. Call the verb itself in the meantime.
+
 ## The window
 
 ### `layout.reset`
@@ -4502,6 +4792,8 @@ Not made by the test suite: this call needs more than the two-node headless sess
 
 **Client** `wb.ui.layouts.reset()`
 
+Planned, not written: no client defines `wb.ui` yet - the window: panels, views, layouts and the map camera. Call the verb itself in the meantime.
+
 ### `map.basemap`
 
 Choose which map is drawn under the simulation and remember the choice, or read the one in force.
@@ -4521,6 +4813,8 @@ Choose which map is drawn under the simulation and remember the choice, or read 
 ```
 
 **Client** `wb.ui.map.basemap = id`
+
+Planned, not written: no client defines `wb.ui` yet - the window: panels, views, layouts and the map camera. Call the verb itself in the meantime.
 
 ### `map.centre`
 
@@ -4549,6 +4843,8 @@ Not made by the test suite: this call needs more than the two-node headless sess
 
 **Client** `wb.ui.map.centre(node=|lat=, lon=, zoom=)`
 
+Planned, not written: no client defines `wb.ui` yet - the window: panels, views, layouts and the map camera. Call the verb itself in the meantime.
+
 ### `map.filter`
 
 **Refuses when no window is attached.**
@@ -4573,6 +4869,8 @@ Not made by the test suite: this call needs more than the two-node headless sess
 
 **Client** `wb.ui.map.filter = query`
 
+Planned, not written: no client defines `wb.ui` yet - the window: panels, views, layouts and the map camera. Call the verb itself in the meantime.
+
 ### `map.fit`
 
 **Refuses when no window is attached.**
@@ -4592,6 +4890,8 @@ Zoom the map so every node is on it.
 Not made by the test suite: this call needs more than the two-node headless session the runnable examples go to.
 
 **Client** `wb.ui.map.fit()`
+
+Planned, not written: no client defines `wb.ui` yet - the window: panels, views, layouts and the map camera. Call the verb itself in the meantime.
 
 ### `map.layer`
 
@@ -4618,6 +4918,8 @@ Not made by the test suite: this call needs more than the two-node headless sess
 
 **Client** `wb.ui.map.layers[name] = bool`
 
+Planned, not written: no client defines `wb.ui` yet - the window: panels, views, layouts and the map camera. Call the verb itself in the meantime.
+
 ### `map.layers`
 
 **Refuses when no window is attached.**
@@ -4637,6 +4939,8 @@ Read every layer the map knows and whether it is being drawn, which is the list 
 Not made by the test suite: this call needs more than the two-node headless session the runnable examples go to.
 
 **Client** `wb.ui.map.layers`
+
+Planned, not written: no client defines `wb.ui` yet - the window: panels, views, layouts and the map camera. Call the verb itself in the meantime.
 
 ### `map.zoom`
 
@@ -4662,6 +4966,8 @@ Not made by the test suite: this call needs more than the two-node headless sess
 
 **Client** `wb.ui.map.zoom(factor)`
 
+Planned, not written: no client defines `wb.ui` yet - the window: panels, views, layouts and the map camera. Call the verb itself in the meantime.
+
 ### `panel.close`
 
 **Refuses when no window is attached.**
@@ -4685,6 +4991,8 @@ Take a panel out of the layout, giving the room to what is left.
 Not made by the test suite: this call needs more than the two-node headless session the runnable examples go to.
 
 **Client** `wb.ui.panel(name).close()`
+
+Planned, not written: no client defines `wb.ui` yet - the window: panels, views, layouts and the map camera. Call the verb itself in the meantime.
 
 ### `panel.dock`
 
@@ -4710,6 +5018,8 @@ Not made by the test suite: this call needs more than the two-node headless sess
 
 **Client** `wb.ui.panel(name).dock()`
 
+Planned, not written: no client defines `wb.ui` yet - the window: panels, views, layouts and the map camera. Call the verb itself in the meantime.
+
 ### `panel.open`
 
 **Refuses when no window is attached.**
@@ -4733,6 +5043,8 @@ Put a panel in the layout, switching to the view it belongs to on the way, which
 Not made by the test suite: this call needs more than the two-node headless session the runnable examples go to.
 
 **Client** `wb.ui.panel(name).open()`
+
+Planned, not written: no client defines `wb.ui` yet - the window: panels, views, layouts and the map camera. Call the verb itself in the meantime.
 
 ### `panel.pop_out`
 
@@ -4758,6 +5070,8 @@ Not made by the test suite: this call needs more than the two-node headless sess
 
 **Client** `wb.ui.panel(name).pop_out()`
 
+Planned, not written: no client defines `wb.ui` yet - the window: panels, views, layouts and the map camera. Call the verb itself in the meantime.
+
 ### `panels.list`
 
 **Refuses when no window is attached.**
@@ -4777,6 +5091,8 @@ Name every panel the interface has registered.
 Not made by the test suite: this call needs more than the two-node headless session the runnable examples go to.
 
 **Client** `wb.ui.panels`
+
+Planned, not written: no client defines `wb.ui` yet - the window: panels, views, layouts and the map camera. Call the verb itself in the meantime.
 
 ### `tool.set`
 
@@ -4802,6 +5118,8 @@ Not made by the test suite: this call needs more than the two-node headless sess
 
 **Client** `wb.ui.map.tool = name`
 
+Planned, not written: no client defines `wb.ui` yet - the window: panels, views, layouts and the map camera. Call the verb itself in the meantime.
+
 ### `view.delete`
 
 **Refuses when no window is attached.**
@@ -4826,6 +5144,8 @@ Not made by the test suite: this call needs more than the two-node headless sess
 
 **Client** `wb.ui.layouts.delete(name)`
 
+Planned, not written: no client defines `wb.ui` yet - the window: panels, views, layouts and the map camera. Call the verb itself in the meantime.
+
 ### `view.list`
 
 **Refuses when no window is attached.**
@@ -4845,6 +5165,8 @@ Name the saved arrangements there are to load, which is the only way to find out
 Not made by the test suite: this call needs more than the two-node headless session the runnable examples go to.
 
 **Client** `wb.ui.layouts`
+
+Planned, not written: no client defines `wb.ui` yet - the window: panels, views, layouts and the map camera. Call the verb itself in the meantime.
 
 ### `view.load`
 
@@ -4870,6 +5192,8 @@ Not made by the test suite: this call needs more than the two-node headless sess
 
 **Client** `wb.ui.layouts.load(name)`
 
+Planned, not written: no client defines `wb.ui` yet - the window: panels, views, layouts and the map camera. Call the verb itself in the meantime.
+
 ### `view.save`
 
 **Refuses when no window is attached.**
@@ -4893,6 +5217,8 @@ Keep the arrangement on screen under a name, so a layout built for one kind of w
 Not made by the test suite: this call needs more than the two-node headless session the runnable examples go to.
 
 **Client** `wb.ui.layouts.save(name)`
+
+Planned, not written: no client defines `wb.ui` yet - the window: panels, views, layouts and the map camera. Call the verb itself in the meantime.
 
 ### `window.close`
 
@@ -4918,6 +5244,8 @@ Not made by the test suite: this call needs more than the two-node headless sess
 
 **Client** `wb.ui.window(name).close()`
 
+Planned, not written: no client defines `wb.ui` yet - the window: panels, views, layouts and the map camera. Call the verb itself in the meantime.
+
 ### `window.open`
 
 **Refuses when no window is attached.**
@@ -4942,6 +5270,8 @@ Not made by the test suite: this call needs more than the two-node headless sess
 
 **Client** `wb.ui.window(name).open()`
 
+Planned, not written: no client defines `wb.ui` yet - the window: panels, views, layouts and the map camera. Call the verb itself in the meantime.
+
 ### `workspace.set`
 
 **Refuses when no window is attached.**
@@ -4965,6 +5295,8 @@ Show one of the workbench's top-level views.
 Not made by the test suite: this call needs more than the two-node headless session the runnable examples go to.
 
 **Client** `wb.ui.view = name`
+
+Planned, not written: no client defines `wb.ui` yet - the window: panels, views, layouts and the map camera. Call the verb itself in the meantime.
 
 <!-- END GENERATED VERBS -->
 

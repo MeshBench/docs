@@ -34,9 +34,9 @@ Every exported type in the Go client, its methods, and the shape of each call - 
 
 **Enumerations** · [Board](#board) · [Class](#class) · [Kind](#kind) · [Preset](#preset) · [Role](#role) · [Strategy](#strategy) · [Tab](#tab) · [Transport](#transport)
 
-**Errors** · [ProtocolMismatch](#protocolmismatch) · [Refused](#refused) · [Timeout](#timeout)
+**Errors** · [ProtocolMismatch](#protocolmismatch) · [Refused](#refused) · [Timeout](#timeout) · [VersionMismatch](#versionmismatch)
 
-**Values** · [Aimed](#aimed) · [Antenna](#antenna) · [AntennaChange](#antennachange) · [Assertion](#assertion) · [Build](#build) · [BuildChange](#buildchange) · [BuildDetails](#builddetails) · [BuildID](#buildid) · [CardChange](#cardchange) · [CardSlot](#cardslot) · [Check](#check) · [Checkpoint](#checkpoint) · [Describe](#describe) · [Event](#event) · [FirmwareState](#firmwarestate) · [Hello](#hello) · [ImportPreview](#importpreview) · [JobInfo](#jobinfo) · [Journal](#journal) · [JournalEntry](#journalentry) · [Match](#match) · [NameMatch](#namematch) · [Neighbour](#neighbour) · [NodeInfo](#nodeinfo) · [NodeStat](#nodestat) · [Notification](#notification) · [Placement](#placement) · [Provenance](#provenance) · [Report](#report) · [Restored](#restored) · [RoleNeed](#roleneed) · [Screen](#screen) · [Send](#send) · [Shot](#shot) · [SimState](#simstate) · [Subscription](#subscription)
+**Values** · [Aimed](#aimed) · [Antenna](#antenna) · [AntennaChange](#antennachange) · [Assertion](#assertion) · [Build](#build) · [BuildChange](#buildchange) · [BuildDetails](#builddetails) · [BuildID](#buildid) · [CardChange](#cardchange) · [CardSlot](#cardslot) · [Check](#check) · [Checkpoint](#checkpoint) · [Describe](#describe) · [Event](#event) · [FirmwareState](#firmwarestate) · [Ground](#ground) · [Hello](#hello) · [ImportPreview](#importpreview) · [JobInfo](#jobinfo) · [Journal](#journal) · [JournalEntry](#journalentry) · [Match](#match) · [NameMatch](#namematch) · [Neighbour](#neighbour) · [NodeInfo](#nodeinfo) · [NodeStat](#nodestat) · [Notification](#notification) · [Placement](#placement) · [Provenance](#provenance) · [Report](#report) · [Restored](#restored) · [RoleNeed](#roleneed) · [Screen](#screen) · [Send](#send) · [Session](#session) · [Shot](#shot) · [SimState](#simstate) · [Subscription](#subscription)
 
 **Options and functions** · [Option](#option) · [CodeOf](#codeof)
 
@@ -63,6 +63,14 @@ AttachOrLaunch uses the session that is already running, or opens one.
 For a script somebody runs repeatedly by hand: the second run carries on from the first rather than clearing everything down and starting again.
 
 Note which half you got, because they differ in one important way. Attaching does not own the process and Close leaves it running; launching owns it and Close stops it. Owned reports which happened, so a script that must not take the session down with it can say so.
+
+### `AttachTo(ctx context.Context, s Session) (*Workbench, error)`
+
+AttachTo connects to a session from Sessions, rather than to an address typed out again.
+
+It exists because a TCP session cannot be reattached to by address alone: its token is in its own file and not in the per-user rendezvous file, which two of them share. The row carries the token, so this works where Attach(ctx, Socket(row.Address)) would reach the wrong session or none.
+
+Deliberately no "attach to whatever is running": where several are up and none was named, guessing is how a script ends up driving the session somebody else was watching. Ask Sessions, choose, and say which.
 
 ### `Headless(ctx context.Context, options ...Option) (*Workbench, error)`
 
@@ -196,6 +204,12 @@ Say puts a line in the session's log, which is how a script leaves a note for wh
 
 Schedule reaches the fixture's traffic.
 
+### `(w *Workbench) Sessions(ctx context.Context) ([]Session, error)`
+
+Sessions asks this workbench what else is running beside it, for a script that is already attached to one.
+
+The same list Sessions returns, with two differences: the row for this session has Self set and is described from the inside rather than by being asked over its own socket, and no row carries a token - a secret that belongs in the 0600 file it came from, not in a reply. So the rows are for choosing by; AttachTo wants one from Sessions.
+
 ### `(w *Workbench) SetKeepAbove(ctx context.Context, on bool) (bool, error)`
 
 SetKeepAbove sets it, and reports what it now is.
@@ -221,6 +235,12 @@ Topics known today: "status" (a new console line) and "snapshot" (a compact summ
 ### `(w *Workbench) Verbs(ctx context.Context) ([]string, error)`
 
 Verbs is every method this build answers.
+
+### `(w *Workbench) VersionCheck() string`
+
+VersionCheck says what became of the release check at connect: empty when the two ends compared equal, and a sentence naming what was skipped and why when one of them was not a release build.
+
+Reported rather than logged, because a client is a library: a script that wants the line in its output can print it, and one that does not is not made noisy by a rule that did not apply to it.
 
 ### `(w *Workbench) WaitIdle(ctx context.Context, timeout time.Duration) error`
 
@@ -1004,6 +1024,23 @@ After time.Duration
 Last string
 ```
 
+### VersionMismatch
+
+VersionMismatch is a released client driving a workbench from a different release, reported at connect rather than discovered later.
+
+Distinct from ProtocolMismatch, and from a verb's Refused, because a script has to be able to tell "these two were never meant to be used together" from "this build declined what I asked". The remedies have nothing in common.
+
+```go
+// Client and Workbench are the releases each end belongs to, as they are
+// spelled on PyPI, npm and the release page.
+Client    string
+Workbench string
+// Said is the workbench's own refusal when it was the end that noticed,
+// kept whole. Empty when this client noticed first, which happens against
+// a build old enough to ignore what the client declared.
+Said string
+```
+
 ## Values
 
 ### Aimed
@@ -1287,6 +1324,22 @@ Total    int  `json:"total"`
 Starting bool `json:"starting"`
 ```
 
+### Ground
+
+Ground is what elevation data a study actually had under it, and whether having none of it was a decision.
+
+Every study answers with the same keys, so a script checks one thing however it asked the question. Chosen is the distinction that matters: a bare-earth run the operator asked for is a legitimate offline result, and one nobody was asked about is the model being quietly more optimistic than its own documented best case.
+
+```go
+State        string `json:"state"`
+Chosen       bool   `json:"chosen"`
+Note         string `json:"note"`
+TilesSampled int    `json:"tiles_sampled"`
+TilesCached  int    `json:"tiles_cached"`
+```
+
+- `(g Ground) Bare() bool` - Bare reports a study with no elevation under it anywhere, which the propagation model prices as free space: the most optimistic answer it has.
+
 ### Hello
 
 Hello is what a connection is talking to. Snapshot, read once at connect.
@@ -1294,6 +1347,10 @@ Hello is what a connection is talking to. Snapshot, read once at connect.
 ```go
 Protocol int    `json:"protocol"`
 Version  string `json:"version"`
+// Release is the release the workbench belongs to, empty for a build from
+// a working copy. Version is prose; this is the number the pairing rule is
+// decided on.
+Release string `json:"release"`
 // Mode is "workbench" or "headless".
 Mode   string `json:"mode"`
 Socket string `json:"socket"`
@@ -1303,6 +1360,10 @@ Verbs  int    `json:"verbs"`
 // start has to be able to ask.
 PID       int       `json:"pid"`
 StartedAt time.Time `json:"started_at"`
+// Project and Nodes are what this session has open, which is what tells
+// two of them apart in a list.
+Project string `json:"project"`
+Nodes   int    `json:"nodes"`
 ```
 
 ### ImportPreview
@@ -1420,9 +1481,11 @@ Firmware string   `json:"firmware"`
 // is pointed at a T-Deck, which is an ordinary thing to do.
 Board         Board  `json:"board"`
 FirmwareBoard string `json:"firmware_board"`
-Sent          int    `json:"sent"`
-Heard         int    `json:"heard"`
-Selected      bool   `json:"selected"`
+// No Sent or Heard: what a node has transmitted and received is on
+// NodeStat, from the engine's own scoreboard. They were carried here as
+// well and answered nought for every node in every reply, which reads as a
+// silent mesh rather than as a field nobody filled in.
+Selected bool `json:"selected"`
 ```
 
 ### NodeStat
@@ -1565,6 +1628,14 @@ At      time.Duration
 Every time.Duration
 ```
 
+### Session
+
+Session is one running workbench: where it answers, what process it is, when it started, and what it has open. Snapshot, read once.
+
+The description - version, mode, project, node count - is asked of the session while the list is being built, so it is what was true a moment ago rather than what was true when the session started. It is empty for a session too busy to answer in the moment it was asked; the session is still listed, because it is still running.
+
+- `Sessions() ([]Session, error)` - Sessions lists the workbenches running on this machine, oldest first.
+
 ### Shot
 
 Shot is a captured display: a PNG written under the node's own work directory, with the frame's dimensions.
@@ -1588,6 +1659,28 @@ UntilMs uint32 `json:"until_ms"`
 Events  int    `json:"events"`
 StepMs  uint32 `json:"step_ms"`
 Seed    uint64 `json:"seed"`
+// Warming, LinksMeasured and WarmHeld are the three states of the link
+// measurement, and they are three because a warm that stopped to ask
+// permission to download terrain is neither running nor finished. Reading
+// "not warming" as "measured" is how a script came to read a study over
+// ground the workbench never fetched.
+Warming       bool `json:"warming"`
+LinksMeasured bool `json:"links_measured"`
+WarmHeld      bool `json:"warm_held"`
+// Ground is what elevation data the studies here have under them.
+Ground Ground `json:"ground"`
+// Reproducible says whether running this scenario again on Seed would put
+// the same traffic at the same instants, and NotReproducibleWhy says why
+// not when it would not.
+//
+// Beside the seed because the seed is what invites the assumption. It is
+// false wherever the network carries a node running in an emulator: that
+// node's firmware is stepped by the emulator's clock rather than by the
+// run's, so its timing came from somewhere the seed does not reach. A
+// script that diffs two runs, or subtracts one arm from another, has to
+// read this before it believes the difference.
+Reproducible       bool   `json:"reproducible"`
+NotReproducibleWhy string `json:"not_reproducible_why"`
 ```
 
 ### Subscription
