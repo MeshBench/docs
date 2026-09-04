@@ -30,11 +30,13 @@ cover the macOS and Windows signing caveats.
 
 ## Install and launch
 
-1. Download `meshbench-linux-x86_64.tar.gz` from the
+1. Download `meshbench-linux-x86_64-bundled.tar.gz` from the
+   [download page](https://meshbench.github.io/download/), which picks the
+   right file for the machine you are reading on, or from the
    [releases page](https://github.com/MeshBench/meshbench/releases).
 2. Unpack it anywhere you can write to.
    ```console
-   tar xzf meshbench-linux-x86_64.tar.gz
+   tar xzf meshbench-linux-x86_64-bundled.tar.gz
    cd meshbench
    ```
 3. Run it.
@@ -43,8 +45,19 @@ cover the macOS and Windows signing caveats.
    ```
 
 There is no installer, no root, and nothing to configure. Firmware builds and
-map tiles download on first use; the emulators, if the bundle carries them,
-sit beside the binary and are found automatically.
+map tiles download on first use; the emulators sit beside the binary and are
+found automatically.
+
+Every asset comes in two forms, and the name says which. **bundled** carries
+QEMU and Renode with it, so an emulated board boots on first run - about
+118 MB, and the right answer for a one-off download. **compact** is the
+application alone, about a quarter of the size, and fetches the emulators
+through Configuration > Setup when you first want one.
+
+There is also `apt install meshbench` and `brew install --cask meshbench`,
+where the plain name is the compact build because a package manager
+re-downloads it every release; `meshbench-bundled` is the other one. The
+download page has the commands.
 
 The first launch is the slow one. The workbench opens on a network spanning
 Scotland and Ireland and measures every link in it, which means fetching the
