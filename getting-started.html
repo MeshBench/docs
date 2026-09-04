@@ -232,16 +232,20 @@ h2:hover .hl, h3:hover .hl, h2 .hl:focus-visible, h3 .hl:focus-visible { opacity
 <p>Releases ship builds for Linux (AppImage), macOS (dmg) and Windows (zip); the notes below are for Linux, where MeshBench is developed. The <a href="https://github.com/MeshBench/meshbench/blob/main/docs/install.md">per-platform notes</a> cover the macOS and Windows signing caveats.</p>
 <ul><li><strong>glibc 2.35 or newer</strong>: Ubuntu 22.04, Debian 12, RHEL 9, or anything more recent.</li><li><strong>A display and a GPU.</strong> The CPU path gives the same answers more slowly, so a machine without a usable GPU loses time rather than features.</li><li><strong>RAM</strong>: about 500 MB for the application, plus roughly 10 MB per simulated node. The 378-node network wants about 4 GB free.</li><li><strong>Disk</strong>: 200 MB for the bundle, and a cache under <code>~/.cache/meshbench</code>. Budget about <strong>1 GB for a first session</strong>: the network the workbench opens with covers Scotland and Ireland, and the ground under its links is roughly 500 MB of terrain that arrives on first launch. After that the cache grows only with the firmware builds and map tiles you actually use.</li><li><strong>Bandwidth on the first run.</strong> That terrain is fetched before you have done anything else, so a metered connection is worth knowing about in advance. Opening a smaller network first, or starting with <code>-fixture &quot;&quot;</code>, avoids it.</li></ul>
 <h2 id="install-and-launch">Install and launch<a class="hl" href="#install-and-launch" aria-label="Link to this section">#</a></h2>
-<ol class="steps"><li>Download <code>meshbench-linux-x86_64.tar.gz</code> from the
+<ol class="steps"><li>Download <code>meshbench-linux-x86_64-bundled.tar.gz</code> from the
+<a href="https://meshbench.github.io/download/">download page</a>, which picks the
+right file for the machine you are reading on, or from the
 <a href="https://github.com/MeshBench/meshbench/releases">releases page</a>.</li><li>Unpack it anywhere you can write to.
 ``<code>console
-tar xzf meshbench-linux-x86_64.tar.gz
+tar xzf meshbench-linux-x86_64-bundled.tar.gz
 cd meshbench
 </code>``</li><li>Run it.
 ``<code>console
 ./meshbench workbench
 </code>``</li></ol>
-<p>There is no installer, no root, and nothing to configure. Firmware builds and map tiles download on first use; the emulators, if the bundle carries them, sit beside the binary and are found automatically.</p>
+<p>There is no installer, no root, and nothing to configure. Firmware builds and map tiles download on first use; the emulators sit beside the binary and are found automatically.</p>
+<p>Every asset comes in two forms, and the name says which. <strong>bundled</strong> carries QEMU and Renode with it, so an emulated board boots on first run - about 118 MB, and the right answer for a one-off download. <strong>compact</strong> is the application alone, about a quarter of the size, and fetches the emulators through Configuration &gt; Setup when you first want one.</p>
+<p>There is also <code>apt install meshbench</code> and <code>brew install --cask meshbench</code>, where the plain name is the compact build because a package manager re-downloads it every release; <code>meshbench-bundled</code> is the other one. The download page has the commands.</p>
 <p>The first launch is the slow one. The workbench opens on a network spanning Scotland and Ireland and measures every link in it, which means fetching the terrain underneath: roughly 500 MB, before you have clicked anything. The status line reads <code>measuring every link</code> while that happens, so a percentage that barely moves early on is the download rather than a stall.</p>
 <p>The workbench opens on the Plan view with a map. You are ready for <a href="first-simulation.html">your first simulation</a>.</p>
 <h2 id="next">Next<a class="hl" href="#next" aria-label="Link to this section">#</a></h2>

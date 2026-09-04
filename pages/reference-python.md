@@ -1543,7 +1543,6 @@ The clock.
 - `seed: int`
 - `warming: bool`
 - `links_measured: bool`
-- `warm_held: bool`
 - `ground: dict[str, Any]`
 - `reproducible: bool`
 - `not_reproducible_why: str`

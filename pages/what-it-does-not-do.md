@@ -147,21 +147,31 @@ antennas below roof level" rather than "how tall is the town", and on this
 dataset nothing is ever tall enough to earn the exemption above.
 
 **A DEM that is not there is worse than a bare-earth one.** Terrain tiles
-download at runtime, and downloading them is the one thing this application
-asks permission for. Where the tiles under a study are not cached - refused,
-never asked, a fetch that failed, or an offline machine - the profile has no
-elevation at all and the model falls back to free space, which is more
-optimistic than everything described above: the hill that would have blocked
-the link is not merely rounded off, it is absent. That is not a caveat anybody
-can be expected to infer, so it is stated rather than left to be noticed. A
-study over ground with nothing cached carries a `ground` block in its own
-result (`state` of `terrain`, `partial` or `bare-earth`, and `chosen` saying
-whether the operator answered the terrain question); `terrain.ground` and
-`sim.state` report the same thing to a script; the caveat line in the chrome
-leads with it; and a study asked for over bare earth nobody chose is refused
-outright rather than answered. A warm held waiting for that permission reports
-itself held, not warmed, so nothing downstream reads an unmeasured matrix as a
-measured one.
+download at runtime, on by default, announced before they are spent and
+cancellable while they run. Where the tiles under a study are not cached -
+downloads switched off, a fetch that failed, or an offline machine - the
+profile has no elevation at all and the model falls back to free space, which
+is more optimistic than everything described above: the hill that would have
+blocked the link is not merely rounded off, it is absent. That is not a caveat
+anybody can be expected to infer, so it is stated rather than left to be
+noticed. A study over ground with nothing cached carries a `ground` block in
+its own result (`state` of `terrain`, `partial` or `bare-earth`, and `chosen`
+saying whether the bare earth was settled on or merely happened);
+`terrain.ground` and `sim.state` report the same thing to a script; and the
+caveat line in the chrome leads with it.
+
+**Bare earth with downloads on is refused rather than answered**, because it is
+a fetch that did not happen rather than a decision anybody made. With downloads
+off it is answered and labelled: an offline run over cached ground is exactly
+what that switch is for.
+
+This used to be gated on a question. A first launch held the link measurement
+until the operator allowed the download, which made a flat earth the resting
+state of every install nobody had answered - the most optimistic model there
+is, reached by doing nothing. The problem that gate was written for was real: a
+fresh install spent 513 MB before anybody had decided they wanted the software,
+and nothing said what it would cost. Announcing the spend fixes that; blocking
+on a question fixed it by making the answer wrong.
 
 **Direction of error: strongly optimistic, and unbounded - a free-space answer
 over a blocked path can be 40 dB out.**
@@ -430,7 +440,7 @@ to it by the engine's tick rather than read off the host. A node running in an
 emulator is outside all of that, and structurally rather than by oversight.
 
 Its firmware is a published image. There is nothing in it that could receive a
-tick, so what acknowledges the engine is `radioserver`, the chip model on our
+tick, so what acknowledges the engine is the chip model on our
 side of the socket, and the acknowledgement means the message was handled, not
 that the guest has reached that instant. The guest is meanwhile running against
 QEMU's or Renode's own clock, under neither `-icount` nor a Renode quantum, so
@@ -1042,7 +1052,7 @@ gone stale is the failure mode it exists to prevent.
 - **The source offer is met twice over.** GPL-3.0 §6 obliges a recipient of a
   binary to be able to get the corresponding source. The repository is public,
   so the source of any release is already beside the binaries at the same tag;
-  every release also attaches `meshbench-<tag>-source.tar.gz`, which pins the
+  every release also attaches `meshbench-source.tar.gz`, which pins the
   exact tree the binary came from rather than a tag somebody could move.
 - **`MeshBench/meshcore-native` exists and is public**, under MeshCore's own MIT
   terms. That is where MeshCore is compiled; nothing of it is linked here.
