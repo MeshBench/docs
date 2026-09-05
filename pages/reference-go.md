@@ -86,6 +86,14 @@ Launch opens the desktop workbench and owns it. Needs a display.
 
 Assertions reaches them.
 
+### `(w *Workbench) BoardView(ctx context.Context, node, tab string) (string, error)`
+
+BoardView opens a node's board view and reports the board it is showing.
+
+The board in full: its panel, the controls for what it has wired, and what its profile declares beside what the firmware left in the chip. Windowed sessions only, for the same reason Window is, and refused for a node running a host build: there is no board to show.
+
+tab picks which table it opens on, "Radio" or "Wiring". Empty opens on Radio; anything that is not one of the two is refused by name rather than quietly opening the default.
+
 ### `(w *Workbench) Boundary() Boundary`
 
 Boundary reaches the study area.
@@ -815,6 +823,12 @@ Device is a running board a script can look at and prod: read what its display i
 ### `(b Device) Press(ctx context.Context, pin int, down bool) error`
 
 Press holds a button pin down, or releases it. Held rather than clicked because the firmware cares: MeshCore wakes a sleeping display on a press and powers the board off on a long one, so a caller times the release itself.
+
+### `(b Device) Reset(ctx context.Context) error`
+
+Reset restarts the board, the way pressing its own reset button does.
+
+Torn down and built again from the same flash: whatever the firmware wrote survives and whatever it held in memory does not. It answers when the board is back up.
 
 ### `(b Device) Screen(ctx context.Context) (Screen, error)`
 

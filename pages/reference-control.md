@@ -19,7 +19,7 @@ of it, and what `Call` takes is below.
 
 <!-- BEGIN GENERATED VERBS -->
 
-There are 254 verbs. 254 of them say what they are for, what they take and what they answer, in the code that registers them; the rest carry what can be read out of the handler and are marked as not described yet.
+There are 256 verbs. 256 of them say what they are for, what they take and what they answer, in the code that registers them; the rest carry what can be read out of the handler and are marked as not described yet.
 
 Every entry below is generated from the MeshBench source, so it cannot drift from the verb it describes. An example that is not marked otherwise is made against a running session by that repository's test suite.
 
@@ -27,9 +27,9 @@ Every entry below is generated from the MeshBench source, so it cannot drift fro
 
 **Project** - [`project.list`](#project-list) · [`project.new`](#project-new) · [`project.open`](#project-open) · [`project.save`](#project-save)
 
-**Nodes** - [`node.aim`](#node-aim) · [`node.antenna`](#node-antenna) · [`node.card`](#node-card) · [`node.energy`](#node-energy) · [`node.output`](#node-output) · [`node.output_window`](#node-output-window) · [`node.provisioning`](#node-provisioning) · [`node.radio`](#node-radio) · [`node.radio_adopt`](#node-radio-adopt) · [`node.reflash_failed`](#node-reflash-failed) · [`node.reflashed`](#node-reflashed) · [`node.set_board`](#node-set-board) · [`node.set_firmware`](#node-set-firmware) · [`node.set_firmware_only`](#node-set-firmware-only) · [`node.start`](#node-start) · [`node.stop`](#node-stop) · [`node.truerf`](#node-truerf) · [`node.window`](#node-window) · [`node.wipe`](#node-wipe) · [`nodes.add_to_selection`](#nodes-add-to-selection) · [`nodes.allow_flood`](#nodes-allow-flood) · [`nodes.antenna`](#nodes-antenna) · [`nodes.delete`](#nodes-delete) · [`nodes.delete_many`](#nodes-delete-many) · [`nodes.keep`](#nodes-keep) · [`nodes.list`](#nodes-list) · [`nodes.move`](#nodes-move) · [`nodes.near`](#nodes-near) · [`nodes.place`](#nodes-place) · [`nodes.regions`](#nodes-regions) · [`nodes.search`](#nodes-search) · [`nodes.select`](#nodes-select) · [`nodes.select_many`](#nodes-select-many) · [`nodes.stats`](#nodes-stats)
+**Nodes** - [`node.aim`](#node-aim) · [`node.antenna`](#node-antenna) · [`node.boardview`](#node-boardview) · [`node.card`](#node-card) · [`node.energy`](#node-energy) · [`node.output`](#node-output) · [`node.output_window`](#node-output-window) · [`node.provisioning`](#node-provisioning) · [`node.radio`](#node-radio) · [`node.radio_adopt`](#node-radio-adopt) · [`node.reflash_failed`](#node-reflash-failed) · [`node.reflashed`](#node-reflashed) · [`node.set_board`](#node-set-board) · [`node.set_firmware`](#node-set-firmware) · [`node.set_firmware_only`](#node-set-firmware-only) · [`node.start`](#node-start) · [`node.stop`](#node-stop) · [`node.truerf`](#node-truerf) · [`node.window`](#node-window) · [`node.wipe`](#node-wipe) · [`nodes.add_to_selection`](#nodes-add-to-selection) · [`nodes.allow_flood`](#nodes-allow-flood) · [`nodes.antenna`](#nodes-antenna) · [`nodes.delete`](#nodes-delete) · [`nodes.delete_many`](#nodes-delete-many) · [`nodes.keep`](#nodes-keep) · [`nodes.list`](#nodes-list) · [`nodes.move`](#nodes-move) · [`nodes.near`](#nodes-near) · [`nodes.place`](#nodes-place) · [`nodes.regions`](#nodes-regions) · [`nodes.search`](#nodes-search) · [`nodes.select`](#nodes-select) · [`nodes.select_many`](#nodes-select-many) · [`nodes.stats`](#nodes-stats)
 
-**Boards** - [`board.key`](#board-key) · [`board.matrix`](#board-matrix) · [`board.press`](#board-press) · [`board.probe`](#board-probe) · [`board.probe_finished`](#board-probe-finished) · [`board.screen`](#board-screen) · [`board.screenshot`](#board-screenshot) · [`board.touch`](#board-touch)
+**Boards** - [`board.key`](#board-key) · [`board.matrix`](#board-matrix) · [`board.press`](#board-press) · [`board.probe`](#board-probe) · [`board.probe_finished`](#board-probe-finished) · [`board.reset`](#board-reset) · [`board.screen`](#board-screen) · [`board.screenshot`](#board-screenshot) · [`board.touch`](#board-touch)
 
 **Simulation** - [`sim.faster`](#sim-faster) · [`sim.inject`](#sim-inject) · [`sim.kind`](#sim-kind) · [`sim.pause`](#sim-pause) · [`sim.play`](#sim-play) · [`sim.reset`](#sim-reset) · [`sim.run`](#sim-run) · [`sim.seed`](#sim-seed) · [`sim.settle`](#sim-settle) · [`sim.slower`](#sim-slower) · [`sim.speed`](#sim-speed) · [`sim.start`](#sim-start) · [`sim.state`](#sim-state) · [`sim.step`](#sim-step) · [`sim.toggle`](#sim-toggle) · [`sim.unverified_wiring`](#sim-unverified-wiring)
 
@@ -468,6 +468,31 @@ Report what one node's antenna is and which way it points.
 ```
 
 **Client** `node.antenna`
+
+### `node.boardview`
+
+**Refuses when no window is attached.**
+
+Open a node's board view: what its profile declares, what the firmware left in the chip, where the two differ, and the controls for everything the board has wired.
+
+**Takes**
+
+| parameter | type | | what |
+|---|---|---|---|
+| `node` | string | required, primary | which node |
+| `tab` | string | optional | which table to open on, Radio or Wiring; Radio when absent |
+
+**Answers** `node`, `board`, `tab`. `board` is the profile the window is checking against, and `tab` the table it opened on. Refused for a node running a host build, which has no board to check, refused for a tab that is not one of the two, and refused outright in a headless session, there being no window to open one beside.
+
+**Example** - look at one board in full, and drive what it has
+
+```json
+{"id":1,"method":"node.boardview","params":"Deck"}
+```
+
+Not made by the test suite: this call needs more than the two-node headless session the runnable examples go to.
+
+**Client** `wb.board_view(node)`
 
 ### `node.card`
 
@@ -1275,6 +1300,28 @@ Take a finished probe back onto the store's goroutine: clear the job, republish 
 
 **Client** none: a probe worker reporting back
 
+### `board.reset`
+
+Restart one board, the way pressing its own reset button does: torn down and built again from the same flash.
+
+**Takes**
+
+| parameter | type | | what |
+|---|---|---|---|
+| `node` | string | required, primary | which board; refused when absent or when the name is not one this network has |
+
+**Answers** `reset`. Whatever the firmware wrote to its flash or its card survives, and whatever it held in memory does not - which is what a reset is. The node is stopped and started rather than having its reset line poked, because a half-reset guest would leave our own models holding state it no longer has. It answers when the board is back up.
+
+**Example** - reboot a board that has wedged
+
+```json
+{"id":1,"method":"board.reset","params":"Deck"}
+```
+
+Not made by the test suite: this call needs more than the two-node headless session the runnable examples go to.
+
+**Client** `node.device.reset()`
+
 ### `board.screen`
 
 Measure what a board's own display is showing as numbers rather than as a picture, so a script can tell whether a press or a keystroke changed anything.
@@ -1306,8 +1353,9 @@ Write the board's display to a PNG and return its path.
 | parameter | type | | what |
 |---|---|---|---|
 | `node` | string | required, primary | the node whose screen to capture |
+| `to` | string | optional | a second file to write the picture to, for keeping one: the node's own screen.png is overwritten every call, so a picture somebody wants to keep needs a name of its own |
 
-**Answers** `node`, `path`, `width`, `height`, `bpp`, `on`. The picture is the frame the firmware drew, at the size the controller holds it, written to screen.png in that node's own work directory and overwritten each time. `on` says whether the panel was lit, which is a separate question from whether there is a frame: a display put to sleep still holds its last one. Refused where the node is not running, is not a board with a display, or has drawn nothing yet.
+**Answers** `node`, `path`, `width`, `height`, `bpp`, `on`. The picture is the frame the firmware drew, at the size the controller holds it, written to screen.png in that node's own work directory and overwritten each time; `to` writes a second copy that is not, and `path` is then the copy. `on` says whether the panel was lit, which is a separate question from whether there is a frame: a display put to sleep still holds its last one. Refused where the node is not running, is not a board with a display, or has drawn nothing yet.
 
 **Example** - see what the board is showing
 

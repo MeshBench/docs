@@ -73,6 +73,7 @@ NAV = [
     ("debugging.html", "Debugging packet delivery"),
     ("firmware-library.html", "Firmware library"),
     ("firmware-development.html", "Firmware development"),
+    ("board-view.html", "The board view"),
     ("testing-repeaters.html", "Testing a repeater"),
     ("app-development.html", "App development"),
     ("testing.html", "Testing your own code"),
@@ -359,12 +360,32 @@ def highlight_code(code, lang):
             head, tail = line[:ci], '<span class="tok-com">%s</span>' % line[ci:]
         head = re.sub(r"(&quot;.*?&quot;|&#x27;.*?&#x27;|`[^`]*`)",
                       r'<span class="tok-str">\1</span>', head)
-        head = re.sub(r"\b(\d+(?:\.\d+)?)\b", r'<span class="tok-num">\1</span>', head)
-        head = re.sub(kw, lambda m: '<span class="tok-kw">%s</span>' % m.group(0), head)
-        head = re.sub(r"(?<![>\w])([A-Za-z_][A-Za-z0-9_]*)(\()",
-                      r'<span class="tok-fn">\1</span>\2', head)
+        # Every pass after the first works on text that already has spans in
+        # it, so each one has to skip them. It did not, and the markup was its
+        # own worst input: "class" is a keyword in both languages here and it
+        # is also the attribute the first pass writes, so any line holding a
+        # string came out as <span <span class="tok-kw">class</span>=... - and
+        # a browser draws the wreckage of that as source code.
+        head = sub_text(r"\b(\d+(?:\.\d+)?)\b",
+                        r'<span class="tok-num">\1</span>', head)
+        head = sub_text(kw, lambda m: '<span class="tok-kw">%s</span>' % m.group(0),
+                        head)
+        head = sub_text(r"(?<![>\w])([A-Za-z_][A-Za-z0-9_]*)(\()",
+                        r'<span class="tok-fn">\1</span>\2', head)
         out.append(head + tail)
     return "\n".join(out)
+
+
+def sub_text(pattern, repl, s):
+    """re.sub over the text of a fragment, never over its tags.
+
+    The highlighter runs one pass per kind of token and each pass sees what the
+    last one wrote. Anything that matches inside an attribute corrupts the
+    markup rather than colouring a token, and the result is not a wrong colour
+    but visible tag soup.
+    """
+    return "".join(part if part.startswith("<") else re.sub(pattern, repl, part)
+                   for part in re.split(r"(<[^>]*>)", s))
 
 
 def code_block(code, lang):

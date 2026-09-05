@@ -36,6 +36,16 @@ boot.
 | on disk | size if it is here, or a `download` button if it is not |
 | in use by | how many nodes in the current scenario run it |
 
+**A board image's role carries its transport.** Upstream publishes a companion
+once per way of talking to it, so one board has a `companion_radio_usb` and a
+`companion_radio_ble` and they are different images for the same application.
+The role column says which, because picking the wrong one gives a node that
+boots, runs and cannot be reached: a build listening on Bluetooth answers
+nothing on the serial port.
+
+Native builds have no such split. The host binary is reached over a pseudo
+terminal whatever it is, so its role is the bare `companion_radio`.
+
 **Versions are per role.** Upstream tags one role at a time and so do the native
 builds, so `companion-v1.17.0` and `repeater-v1.17.0` are different releases.
 Asking for a bare `v1.17.0` resolves nothing and reports "no native builds
