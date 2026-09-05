@@ -73,6 +73,7 @@ NAV = [
     ("debugging.html", "Debugging packet delivery"),
     ("firmware-library.html", "Firmware library"),
     ("firmware-development.html", "Firmware development"),
+    ("board-view.html", "The board view"),
     ("testing-repeaters.html", "Testing a repeater"),
     ("app-development.html", "App development"),
     ("testing.html", "Testing your own code"),
