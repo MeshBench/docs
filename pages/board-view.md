@@ -253,8 +253,26 @@ A companion's serial carries the framed protocol, so read a byte at a time it is
 a wall of escapes with the answer buried in it. Typing `ver` at one shows the
 board name and the firmware version legible inside them.
 
-The `decode` tick turns the pane into the decoded exchange instead: the same
-transcript the node window's Companion tab draws.
+The `decode` tick reads those frames out. MeshCore's framing is `>` from the
+node or `<` towards it, a little-endian length, then a payload, and each payload
+is decoded and printed as a line:
+
+    <- self: "C4894FDF" at 0.00000,0.00000, 869.618 MHz SF8 CR5, 22 dBm
+
+That single line carries the board's name, position, frequency, spreading
+factor, coding rate and transmit power, none of which is readable in the escaped
+form.
+
+**What is not a frame stays as it was.** A board prints plain text on the same
+port it frames on, so the bootloader and any error it logged sit beside the
+decoded frames rather than being replaced by them. The bootloader is what says
+whether the board started at all, and a decode that hid it would cost more than
+it gave.
+
+A response this build does not recognise is still printed, by number rather than
+by name. The firmware gains responses faster than anything tracks them, and a
+decoder that drew nothing for an unfamiliar frame would be least useful exactly
+when something new is happening.
 
 It is off by default, and the wire is what shows. That is still what the board
 actually sent, and this window is about what the board actually did. The tick
