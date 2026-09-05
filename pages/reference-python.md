@@ -200,6 +200,19 @@ Tabs are named as they are on the strip - Console, Companion, SDR,
 Settings, Radio, Stats, Activity, Connect, Hardware. Returns the one it
 opened on.
 
+### `Workbench.board_view(node, tab: str = '') -> str`
+
+Open a node's board view and return the board it is showing.
+
+The board in full: its panel, the controls for what it has wired, and
+what its profile declares beside what the firmware left in the chip.
+Windowed sessions only, for the same reason window() is, and refused for
+a node running a host build: there is no board to show.
+
+`tab` picks which table it opens on, "Radio" or "Wiring", and Radio is
+what it opens on when nothing is asked for. A tab that is not one of
+the two is refused by name rather than quietly opening the default.
+
 ### `property Workbench.nodes() -> Nodes`
 
 ### `Workbench.node(name: str) -> Node`
@@ -1029,6 +1042,14 @@ use tap, which does not hold.
 ### `Device.tap(pin: int) -> None`
 
 Press a button and let go - the ordinary click.
+
+### `Device.reset() -> None`
+
+Restart the board, the way pressing its own reset button does.
+
+Torn down and built again from the same flash: whatever the firmware
+wrote survives and whatever it held in memory does not. It answers when
+the board is back up.
 
 ### `Device.type(text: str) -> None`
 
