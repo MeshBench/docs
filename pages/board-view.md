@@ -160,8 +160,15 @@ is printed here.
 | `not running` | the board has not been started |
 
 **Take the reading after the board has settled.** The ROM bootloader and the
-application need not agree about the rate, and the earlier figure is one nothing
-is using any more.
+application need not agree about the rate, so a figure read during boot may be
+one nothing is using by the time anybody looks.
+
+**The rate assumes the UART is clocked from the APB.** An ESP32's UART can be
+driven from the crystal instead, and which one it is lives in a register the
+emulator does not read, so a firmware that chooses the crystal is reported at
+twice the rate it set. Nothing in the row says so, which is the honest reason
+to treat a figure that is exactly double a rate you recognise as this rather
+than as the firmware doing something strange.
 
 A board whose console is on USB reports no rate, and that is not a gap. USB
 carries framed packets and the rate a host asks for is discarded at both ends,
