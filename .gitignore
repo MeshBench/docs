@@ -1,2 +1,13 @@
 __pycache__/
 *.pyc
+
+# The site itself. Built by gen.py from pages/*.md, and served by the Pages
+# workflow from what it builds rather than from what is committed - so a
+# checked-in copy is never read by anybody, and it made adding one page a
+# forty-file diff that buried the change in its own output.
+#
+# Build it locally the same way the workflow does:
+#
+#     python3 gen.py
+/*.html
+/search-index.json

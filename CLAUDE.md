@@ -67,6 +67,24 @@ blame, the machine names or the first person.
 This file is not the site, and keeps the other register: the screenshot rule
 below is easier to follow because it says what nearly went wrong.
 
+## The site is built, not committed
+
+`gen.py` writes the `.html` and `search-index.json` at the root, and the Pages
+workflow runs it on every push and serves what it produced. A copy in the
+repository is read by nobody, so it is not kept: adding one page used to rewrite
+all forty HTML files, and a one-line change arriving as a forty-file diff is a
+change nobody reviews.
+
+Build it the way the workflow does, and look at the result before opening a
+pull request:
+
+    python3 gen.py
+    python3 -m http.server
+
+The navigation is the table at the top of `gen.py`, which is also the reading
+order that prev/next walks. A new page adds a line there and a file in
+`pages/`; nothing else.
+
 ## Generated pages
 
 `pages/what-it-does-not-do.md` is **generated** by `tools/sync-limits.py` from
