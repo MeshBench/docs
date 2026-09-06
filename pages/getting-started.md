@@ -62,11 +62,24 @@ download page has the commands.
 The first launch is the slow one. The workbench opens on a network spanning
 Scotland and Ireland and measures every link in it, which means fetching the
 terrain underneath: roughly 500 MB, before you have clicked anything. The
-status line reads `measuring every link` while that happens, so a percentage
-that barely moves early on is the download rather than a stall.
+status line names the download and prices it as it goes -
+`fetching terrain, 43 MB of about 499 MB` - so a percentage that barely moves
+early on is the megabytes arriving rather than a stall. The job can be stopped,
+and the measurement carries on over whatever has already landed.
 
 The workbench opens on the Plan view with a map. You are ready for
 [your first simulation](first-simulation.html).
+
+## Finding the manual again
+
+![The Help menu: Manual under READ, and the run's own answers under THIS RUN](images/help-menu.png)
+
+**Help > Manual** opens this site in your browser, from inside the
+application. Everything else in that menu is about the run in front of you:
+**What this run assumes** goes to the settings that decide how kind the model
+is being, **Licences** to what the application and everything it carries are
+licensed under, and **Setup** to what this machine has downloaded and what it
+has not.
 
 ## Next
 
