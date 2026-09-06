@@ -77,11 +77,23 @@ def one(group, names):
 def head(text):
     total = len(VERB.findall(text))
     undescribed = text.count(UNDESCRIBED)
-    said = (
-        "There are %d verbs. %d of them say what they are for, what they take "
-        "and what they answer, in the code that registers them; the rest carry "
-        "what can be read out of the handler and are marked as not described "
-        "yet." % (total, total - undescribed))
+    # The clause about the rest is only true when there is a rest. It read
+    # "256 of them say what they are for ... the rest carry what can be read
+    # out of the handler", with nothing left over to be the rest - a sentence
+    # that contradicts itself on a page whose whole claim is that it is
+    # generated and therefore cannot drift.
+    if undescribed:
+        said = (
+            "There are %d verbs. %d of them say what they are for, what they "
+            "take and what they answer, in the code that registers them; the "
+            "other %d carry what can be read out of the handler and are marked "
+            "as not described yet."
+            % (total, total - undescribed, undescribed))
+    else:
+        said = (
+            "There are %d verbs, and every one of them says what it is for, "
+            "what it takes and what it answers, in the code that registers it."
+            % total)
     return said + "\n\n" + (
         "Every entry below is generated from the MeshBench source, so it "
         "cannot drift from the verb it describes. An example that is not "

@@ -1,11 +1,58 @@
 # Control socket reference
 
-The application listens on `$XDG_RUNTIME_DIR/meshbench.sock`, newline
-delimited JSON:
+The application listens for newline-delimited JSON, one call per line:
 
 ```
 {"id":1,"method":"session.describe","params":{}}
 ```
+
+## Where it listens, and how to connect
+
+Two transports, and which you get depends on the platform. **The clients handle
+all of this**; what follows is for anything speaking the socket directly.
+
+| | address | authorisation |
+|---|---|---|
+| Linux, macOS | a unix socket at `$XDG_RUNTIME_DIR/meshbench.sock` | the file's own permissions, `0600` |
+| Windows | TCP on loopback, on a port the workbench is given when it starts | a token, sent as the first line |
+
+**On Windows the port is not fixed, so it is written down.** The workbench
+records where it is answering in `%LOCALAPPDATA%\meshbench\control.json`:
+
+```json
+{"address": "127.0.0.1:53744", "token": "…", "pid": 40248}
+```
+
+**A TCP connection sends the token on a line of its own, before anything
+else:**
+
+```
+{"token":"…"}
+{"id":1,"method":"session.describe","params":{}}
+```
+
+The token goes on its **own** line. Putting it inside the first request looks
+reasonable and is refused, because that line would be read as the greeting and
+the call in it would never be answered:
+
+```
+the first line on a TCP connection is the handshake and carries only the
+token … Send the token on its own line, then the request on the next
+```
+
+Present no token, or the wrong one, and the answer says so:
+
+```json
+{"id":0,"error":"this connection did not present the token from the workbench's address file","code":"unauthorised"}
+```
+
+A unix socket asks for no token: its permissions already do that job, and
+requiring one would break every script written against it so far.
+
+**More than one workbench can be running.** `control.json` names the one a
+client with no address finds, and it is not overwritten while that workbench is
+alive - a second workbench keeps its own address and is listed among the running
+sessions instead. Ask for the list rather than assuming there is one.
 
 Every verb drives the same code path a person clicks, so a driven session opens
 the panel and the operator can see what happened. **Prefer a verb over editing a
@@ -19,7 +66,7 @@ of it, and what `Call` takes is below.
 
 <!-- BEGIN GENERATED VERBS -->
 
-There are 256 verbs. 256 of them say what they are for, what they take and what they answer, in the code that registers them; the rest carry what can be read out of the handler and are marked as not described yet.
+There are 256 verbs, and every one of them says what it is for, what it takes and what it answers, in the code that registers it.
 
 Every entry below is generated from the MeshBench source, so it cannot drift from the verb it describes. An example that is not marked otherwise is made against a running session by that repository's test suite.
 

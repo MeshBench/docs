@@ -17,8 +17,8 @@ meshbench <command> [flags]
 ```
 
 There are **16** commands and
-**166** flags between them, of which
-**35** exist only so a panel, a menu or a view can be
+**168** flags between them, of which
+**37** exist only so a panel, a menu or a view can be
 reached without a click.
 
 Everything below the first heading is generated from the flag declarations
@@ -71,7 +71,7 @@ Every flag below carries one of these, because a flag that arranges a screenshot
 | `serve` | run a mesh and expose a companion to your app | 8 |
 | `test` | run a fixture on real firmware and check its assertions | 9 |
 | `headless` | run the verbs over the control socket, with no window | 7 |
-| `workbench` | open the desktop workbench: build a scenario on a map and run it | 40 |
+| `workbench` | open the desktop workbench: build a scenario on a map and run it | 42 |
 
 ## `meshbench link`
 
@@ -418,6 +418,8 @@ One panel filling the window, filtered, over a fixed view, closing itself. That 
 
 | flag | default | for | meaning |
 |---|---|---|---|
+| `-board-tab` | none | capture | which table the board view opens on: Radio or Wiring |
+| `-board-view` | none | capture | open this node's board view at startup |
 | `-capture` | none | capture | capture the waterfall at this node once the run has traffic |
 | `-config-section` | none | capture | open the Configuration page on this section |
 | `-control-socket` | none | capture | where the control socket answers: a path for a unix socket, or "tcp" for loopback with a token (the default on Windows, which has no unix socket a Python client can reach). MESHBENCH_CONTROL_SOCKET does the same, and two workbenches need two |
@@ -434,7 +436,7 @@ One panel filling the window, filtered, over a fixed view, closing itself. That 
 | `-layers` | none | capture | switch these map layers on at startup, comma separated |
 | `-licence-section` | none | capture | scope the Licences panel to one section: forks, bundled, golibs, runtime, data |
 | `-list-fixtures` | `false` | output | list the built-in networks and exit |
-| `-look` | none | capture | start the camera at lat,lon,zoom - a capture cannot drag the map |
+| `-look` | none | capture | start the camera at lat,lon,level - a slippy zoom level, 0 the world and the high teens a street; a capture cannot drag the map |
 | `-memprofile` | none | diagnostic | write a heap profile here on exit |
 | `-menu` | none | capture | fire this menu action at startup, so what it opens can be captured |
 | `-node-menu` | none | capture | open this node's context menu at startup |
