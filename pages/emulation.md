@@ -135,6 +135,53 @@ firmware sleeps and the node is silent while appearing healthy.
 | `TWIM` | I2C, for displays and sensors on some boards |
 | SX1262 over SPIM | the radio |
 
+## Which boards have been run
+
+Every row is a measurement rather than a claim: the firmware is the released
+image from MeshCore's own releases, and a blank cell means nobody has watched
+that board do that thing.
+
+| Board | MCU | Emulator | build | boot | radio | tx | rx | flood | fem | power |
+|---|---|---|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
+| `Generic_E22_sx1262` | ESP32 | QEMU | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
+| `Heltec_t114` | nRF52840 | Renode | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | – | ✓ |
+| `Heltec_t096` | nRF52840 | Renode | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ? | ✓ |
+| `RAK_4631` | nRF52840 | Renode | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | – | ✓ |
+| `Xiao_nrf52` | nRF52840 | Renode | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | – | ✓ |
+| `Heltec_mesh_solar` | nRF52840 | Renode | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | – | ✓ |
+| `Xiao_S3_WIO` | ESP32-S3 | QEMU | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | – | ? |
+| `Heltec_v3` | ESP32-S3 | QEMU | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | – | ✓ |
+| `LilyGo_TDeck` | ESP32-S3 | QEMU | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | – | ✓ |
+| `Ebyte_EoRa-S3` | ESP32-S3 | QEMU | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | – | ✓ |
+| `Station_G2` | ESP32-S3 | - | | | | | | | | |
+| `Heltec_v2` | ESP32 | - | | | | | | | | |
+
+✓ passed  ✗ failed  – not applicable  ? not measurable yet  blank not attempted
+
+What the columns ask for:
+
+| column | what it means |
+|---|---|
+| build | a published image whose digest checks out |
+| boot | the emulator attached and the node did not spend the run restarting |
+| radio, tx | it put its own unprompted advert on the air |
+| rx | it heard another node |
+| flood | it forwarded somebody else's packet, judged at the board itself |
+| fem | a front-end module was switched in |
+| power | it still answered after being left idle |
+
+`flood` is the column worth reading closely, because it is the one that says
+the board is a working member of a mesh rather than a node that talks to
+itself. It is judged at the board: the packet has to arrive, be recognised as
+somebody else's, and go back out.
+
+The two blanks have never been attempted rather than tried and failed.
+
+**Measured one board at a time on an idle machine.** Several emulators at once
+will make a twelve core machine fall behind the wall clock, and a board that is
+running late looks exactly like a board that is broken - so a row measured
+beside seven others is not a measurement.
+
 ## Cost and limits
 
 Each emulated node is a separate emulator process running in real time, costing
