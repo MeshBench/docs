@@ -72,6 +72,7 @@ NAV = [
     ("importing.html", "Importing a network"),
     ("debugging.html", "Debugging packet delivery"),
     ("firmware-library.html", "Firmware library"),
+    ("release-channels.html", "Release channels"),
     ("firmware-development.html", "Firmware development"),
     ("board-view.html", "The board view"),
     ("testing-repeaters.html", "Testing a repeater"),
