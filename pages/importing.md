@@ -239,12 +239,16 @@ _, err = wb.Call(ctx, "infer.apply", nil)
 `infer.apply` is a separate call and returns how many nodes it changed. A
 result of zero means inference ran and nothing was written. A healthy total
 can still hide gaps: inference only reaches nodes seen in the traffic, so a
-quiet repeater can come through with no regions at all. Check a suspect node
-with its console, and widen the `hours` window if the feed is thin.
+quiet repeater can come through with no regions at all. The Nodes table's
+region column says which, and over the socket `nodes.list` carries `regions`
+per node; widen the `hours` window if the feed is thin.
 
-**Without this step every node transmits and none relays.** A scoped message is
-sent by its originator and dropped by every repeater, with no error anywhere,
-which looks exactly like a network with no propagation.
+**Without this step no *scoped* message relays.** A scoped message is sent by
+its originator and dropped by every repeater, with no error anywhere. Adverts
+are unscoped and flood regardless, exactly as widely as with regions, so
+pressing **advert** is not the test: send on the channel and watch whether
+anything but the sender hears it. And because this step also gives each node
+its default scope, a mesh without it originates nothing scoped at all.
 
 The result lists how many nodes hold each region. Choosing a scope only a
 handful hold produces the same silence for the same reason.
@@ -290,10 +294,13 @@ reporting anything.
 
 The four silent failures above, in the order to check them:
 
-1. **Regions inferred but never applied.** Everything transmits, nothing
-   relays. Press **5. apply regions**, and confirm the count.
+1. **Regions inferred but never applied.** Adverts flood, scoped messages
+   vanish. Press **5. apply regions**, and confirm the count.
 2. **A quiet node with no regions.** The total was healthy, one repeater was
-   not. Ask it: `get repeat` on its console.
+   not. The Nodes table's region column says which; over the socket,
+   `nodes.list` carries `regions` per node. No console command reads them
+   back: `get repeat` reports whether repeating is on, a different question,
+   and answers `on` on a node with no regions at all.
 3. **No firmware version.** Imported nodes resolve to an unpublished build
    until step 4 gives them one.
 4. **A scope without its hash.** Sending on `sco` keys packets no repeater
