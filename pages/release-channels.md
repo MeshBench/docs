@@ -12,9 +12,11 @@ thing before you have found the setting.
 | who is offered it | every stable build | builds on the development channel |
 
 The version in the status bar says which you are running. A development build
-reads `v0.0.11-dev.3 · development build`; a stable one reads its tag alone.
+reads `v0.0.11-dev.1 · development build`; a stable one reads its tag alone.
 That word is there because a screenshot of a development build looks exactly
 like a release, and a screenshot is what reaches an issue.
+
+![The right end of the status bar on a development build](images/development-build-status.png)
 
 ## Choosing a channel
 
