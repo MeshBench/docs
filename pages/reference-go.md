@@ -764,7 +764,7 @@ Fetch reads the deployment and says what would change, changing nothing.
 
 Infer reads the feed's recent traffic to work out what each node holds.
 
-This is the step that decides whether anything relays. A node whose regions are unknown forwards nothing, and nothing says so.
+This is the step that decides whether scoped traffic relays. A node whose regions are unknown still relays every unscoped flood, drops every scoped packet, and nothing says so.
 
 window is the feed's own past and zero means DefaultWindow; wait is how long you will sit here for it. A week of ScotMesh is around 150,000 packets and several minutes of paging.
 

@@ -59,17 +59,25 @@ if err := wb.Firmware().WaitStarted(ctx, 10*time.Minute); err != nil {
 for "would this work on ScotMesh", because it forwards what ScotMesh forwards
 and drops what ScotMesh drops.
 
-**`-permissive`** additionally sets every transmitting node to forward flood
-traffic for *any* region, which issues `region allowf *` at boot. It exists
-because a mesh whose regions were never applied transmits everything, relays
-nothing, and reports no error at all, which is indistinguishable from bad RF.
+**`-permissive`** additionally types `region allowf *` into every transmitting
+node at boot. It was written in the belief that the wildcard is the parent of
+every region, so a flood would be forwarded whatever its scope.
 
-> **The permissive variant is declared, not demonstrated.** The firmware accepts
-> `region allowf *` and answers OK, but a controlled run flooding a scope only
-> one node holds gave 51 transmissions and 521 receptions strict against 51 and
-> 520 permissive: the same answer twice. Either the wildcard needs `region put *`
-> first, or that experiment could not see the difference. Use strict for
-> anything you plan to believe.
+> **The two fixtures behave identically.** MeshCore matches the wildcard
+> against *unscoped* floods only, and a factory-fresh node's wildcard already
+> allows them. A scoped flood is matched against the node's named regions
+> alone, and the wildcard is not among them. So `region allowf *` clears a
+> deny a fresh node never had, and never makes a scoped packet forward. That
+> is why a controlled run flooding a scope only one node holds gave 51
+> transmissions and 521 receptions strict against 51 and 520 permissive: the
+> same configuration, measured twice. Use strict. The permissive file is kept
+> so a fixture that has typed `region denyf *` somewhere can undo it.
+
+What a mesh with no regions applied actually does: it relays every unscoped
+flood, adverts included, exactly as widely as one with them, and drops every
+scoped packet without a word. What `infer.apply` changes is which scoped
+traffic each node forwards and, through the default scope it sets in the same
+stroke, whether the mesh's own traffic is scoped at all.
 
  The `meshbench test` runner prints a `PERMISSIVE:` line when one is loaded; the workbench does not yet announce it.
 

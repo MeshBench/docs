@@ -64,8 +64,8 @@ that looks fine and behaves wrongly.
   <text x="711" y="60" font-size="10" font-weight="600" fill="var(--ink)" text-anchor="middle" font-family="var(--mono)">infer.apply</text>
   <text x="711" y="82" font-size="9.5" fill="var(--dim)" text-anchor="middle">regions from a week</text>
   <text x="711" y="95" font-size="9.5" fill="var(--dim)" text-anchor="middle">of real traffic</text>
-  <text x="711" y="150" font-size="9.5" fill="var(--warn)" text-anchor="middle">skipped: transmits,</text>
-  <text x="711" y="163" font-size="9.5" fill="var(--warn)" text-anchor="middle">never relays</text>
+  <text x="711" y="150" font-size="9.5" fill="var(--warn)" text-anchor="middle">skipped: adverts flood,</text>
+  <text x="711" y="163" font-size="9.5" fill="var(--warn)" text-anchor="middle">scoped messages vanish</text>
   <text x="390" y="216" font-size="11" fill="var(--dim)" text-anchor="middle">Every step can be skipped without an error; the amber lines are what each skip looks like later.</text>
 </svg>
 <figcaption>The order matters because each step feeds the next - and a
