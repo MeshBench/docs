@@ -100,5 +100,6 @@ same commit as the last development build that passed it.
   build is installed from the release page, as the tarball, AppImage, dmg or
   zip.
 - A changelog entry of their own. The changelog describes stable releases;
-  what a development build contains is the commits on `main` since the last
-  one.
+  what a development build contains is everything under **Unreleased** at the
+  top of it, and its release notes link there. A stable release closes that
+  section under its own number.
