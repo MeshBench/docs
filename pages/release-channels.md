@@ -96,6 +96,26 @@ A stable release stays a deliberate act: a `vX.Y.Z` tag pushed by hand, on a
 commit the [release pass](quality-gates.html) has been walked on - ideally the
 same commit as the last development build that passed it.
 
+## Scripting a development build
+
+A development build has development clients, published beside it as
+pre-releases, which the package indexes hand out only when asked for. The
+Python client is spelled the way PyPI spells a pre-release, and pip needs the
+exact pin or `--pre`; the Node client keeps the tag's spelling under the `dev`
+dist-tag, so a plain `npm install @meshbench/client` keeps resolving to the
+stable release; Go takes the tag as it is.
+
+```
+pip install meshbench==0.0.11.dev1
+npm install @meshbench/client@0.0.11-dev.1
+go get github.com/MeshBench/meshbench/pkg/client-go/meshbench@v0.0.11-dev.1
+```
+
+A stable client meeting a development workbench is refused at connect, as any
+mismatched pair is: a client and the workbench it drives are the same release,
+and the refusal names both and says the client it wants is a pre-release that
+has to be asked for.
+
 ## What development builds do not get
 
 - The apt repository and the Homebrew tap carry stable only. A development
