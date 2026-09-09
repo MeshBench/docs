@@ -66,7 +66,7 @@ of it, and what `Call` takes is below.
 
 <!-- BEGIN GENERATED VERBS -->
 
-There are 258 verbs, and every one of them says what it is for, what it takes and what it answers, in the code that registers it.
+There are 259 verbs, and every one of them says what it is for, what it takes and what it answers, in the code that registers it.
 
 Every entry below is generated from the MeshBench source, so it cannot drift from the verb it describes. An example that is not marked otherwise is made against a running session by that repository's test suite.
 
@@ -74,7 +74,7 @@ Every entry below is generated from the MeshBench source, so it cannot drift fro
 
 **Project** - [`project.list`](#project-list) · [`project.new`](#project-new) · [`project.open`](#project-open) · [`project.save`](#project-save)
 
-**Nodes** - [`node.aim`](#node-aim) · [`node.antenna`](#node-antenna) · [`node.boardview`](#node-boardview) · [`node.card`](#node-card) · [`node.energy`](#node-energy) · [`node.output`](#node-output) · [`node.output_window`](#node-output-window) · [`node.provisioning`](#node-provisioning) · [`node.radio`](#node-radio) · [`node.radio_adopt`](#node-radio-adopt) · [`node.reflash_failed`](#node-reflash-failed) · [`node.reflashed`](#node-reflashed) · [`node.set_board`](#node-set-board) · [`node.set_firmware`](#node-set-firmware) · [`node.set_firmware_only`](#node-set-firmware-only) · [`node.start`](#node-start) · [`node.stop`](#node-stop) · [`node.truerf`](#node-truerf) · [`node.window`](#node-window) · [`node.wipe`](#node-wipe) · [`nodes.add_to_selection`](#nodes-add-to-selection) · [`nodes.allow_flood`](#nodes-allow-flood) · [`nodes.antenna`](#nodes-antenna) · [`nodes.delete`](#nodes-delete) · [`nodes.delete_many`](#nodes-delete-many) · [`nodes.keep`](#nodes-keep) · [`nodes.list`](#nodes-list) · [`nodes.move`](#nodes-move) · [`nodes.near`](#nodes-near) · [`nodes.place`](#nodes-place) · [`nodes.regions`](#nodes-regions) · [`nodes.search`](#nodes-search) · [`nodes.select`](#nodes-select) · [`nodes.select_many`](#nodes-select-many) · [`nodes.stats`](#nodes-stats)
+**Nodes** - [`node.aim`](#node-aim) · [`node.antenna`](#node-antenna) · [`node.boardview`](#node-boardview) · [`node.card`](#node-card) · [`node.energy`](#node-energy) · [`node.output`](#node-output) · [`node.output_window`](#node-output-window) · [`node.provisioning`](#node-provisioning) · [`node.radio`](#node-radio) · [`node.radio_adopt`](#node-radio-adopt) · [`node.reflash_failed`](#node-reflash-failed) · [`node.reflashed`](#node-reflashed) · [`node.regions`](#node-regions) · [`node.set_board`](#node-set-board) · [`node.set_firmware`](#node-set-firmware) · [`node.set_firmware_only`](#node-set-firmware-only) · [`node.start`](#node-start) · [`node.stop`](#node-stop) · [`node.truerf`](#node-truerf) · [`node.window`](#node-window) · [`node.wipe`](#node-wipe) · [`nodes.add_to_selection`](#nodes-add-to-selection) · [`nodes.allow_flood`](#nodes-allow-flood) · [`nodes.antenna`](#nodes-antenna) · [`nodes.delete`](#nodes-delete) · [`nodes.delete_many`](#nodes-delete-many) · [`nodes.keep`](#nodes-keep) · [`nodes.list`](#nodes-list) · [`nodes.move`](#nodes-move) · [`nodes.near`](#nodes-near) · [`nodes.place`](#nodes-place) · [`nodes.regions`](#nodes-regions) · [`nodes.search`](#nodes-search) · [`nodes.select`](#nodes-select) · [`nodes.select_many`](#nodes-select-many) · [`nodes.stats`](#nodes-stats)
 
 **Boards** - [`board.key`](#board-key) · [`board.matrix`](#board-matrix) · [`board.press`](#board-press) · [`board.probe`](#board-probe) · [`board.probe_finished`](#board-probe-finished) · [`board.reset`](#board-reset) · [`board.screen`](#board-screen) · [`board.screenshot`](#board-screenshot) · [`board.touch`](#board-touch)
 
@@ -728,6 +728,28 @@ Report that a node's build change went through, refreshing the counters and the 
 **Answers** Answers with nothing: what it changes is the stats, the node list and the status line.
 
 **Client** none: the store telling itself a reflash finished
+
+### `node.regions`
+
+Read a running node's actual region map back from its firmware into the model, so a region set straight over its console is reflected in nodes.list rather than showing null.
+
+**Takes**
+
+| parameter | type | | what |
+|---|---|---|---|
+| `node` | string | required, primary | the node to ask; it must be running firmware, because the map lives in the firmware |
+
+**Answers** `node`, `regions`, `default_scope`. `regions` is the named regions the node holds and `default_scope` the scope it originates under, read by asking its console `region list allowed` and `region default`. It refuses a node that is not running firmware, whose regions are whatever the scenario says until it starts. nodes.regions writes and keeps the model current for what it sets; this reads what a node was told out of band, over console.type or fleet.send, which the model never saw.
+
+**Example** - read one running node's live region map
+
+```json
+{"id":1,"method":"node.regions","params":{"node":"Abernethy Repeater"}}
+```
+
+Not made by the test suite: this call needs more than the two-node headless session the runnable examples go to.
+
+**Client** `node.read_regions()`
 
 ### `node.set_board`
 
