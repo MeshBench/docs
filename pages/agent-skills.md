@@ -36,7 +36,7 @@ and are useful to anyone driving a workbench. The third is for changing
 MeshBench itself, and is only useful inside a checkout.
 
 **`meshcoresim`** carries the order in which a scenario has to be built, the
-region inference step that decides whether anything relays, the two spellings a
+region inference step that decides whether scoped traffic relays, the two spellings a
 region has and which one goes on the wire, and the honesty rules a result is
 held to: both directions, no verdict on an uncertain position, one run is not
 evidence, quote the provenance. It also carries what the simulator does not

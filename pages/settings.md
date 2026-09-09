@@ -75,7 +75,7 @@ always configured with them regardless of this switch.
 | radio | frequency, bandwidth, spreading factor, coding rate |
 | firmware role and version | which application, and which build |
 | regions and default scope | what it relays, and what it scopes its own traffic to |
-| forward flood traffic for any region | `region allowf *`; more permissive than any real network |
+| forward flood traffic for any region | `region allowf *`; a fresh node already allows unscoped floods and the wildcard never matches a scoped one, so this changes nothing unless a node was told `region denyf *` |
 | emitter duty | for interferers only: what share of the time it is keyed |
 
 ## Simulation

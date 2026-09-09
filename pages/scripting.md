@@ -227,8 +227,9 @@ works without a network.
 
 `live.pull` runs the whole chain: fetch the nodes, commit them, read the feed's
 recent traffic, and apply the regions that traffic implies. The last step
-decides whether anything relays. Skipping it produces a mesh that transmits,
-forwards nothing, and reports no error.
+decides whether scoped traffic relays. Skipping it produces a mesh that relays
+every advert exactly as widely, drops every scoped message without a word, and
+reports no error.
 
 ## Checking a run
 

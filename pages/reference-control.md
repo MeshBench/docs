@@ -66,7 +66,7 @@ of it, and what `Call` takes is below.
 
 <!-- BEGIN GENERATED VERBS -->
 
-There are 256 verbs, and every one of them says what it is for, what it takes and what it answers, in the code that registers it.
+There are 258 verbs, and every one of them says what it is for, what it takes and what it answers, in the code that registers it.
 
 Every entry below is generated from the MeshBench source, so it cannot drift from the verb it describes. An example that is not marked otherwise is made against a running session by that repository's test suite.
 
@@ -90,7 +90,7 @@ Every entry below is generated from the MeshBench source, so it cannot drift fro
 
 **Events, packets and capture** - [`capture.file`](#capture-file) · [`capture.stop`](#capture-stop) · [`capture.wireshark`](#capture-wireshark) · [`events.dump`](#events-dump) · [`events.recent`](#events-recent) · [`packet.close`](#packet-close) · [`packet.open`](#packet-open) · [`waterfall.capture`](#waterfall-capture)
 
-**Links, budgets and profiles** - [`budget.for_selection`](#budget-for-selection) · [`link.pair`](#link-pair) · [`link.pair_set`](#link-pair-set) · [`link.profile`](#link-profile) · [`link.profile_set`](#link-profile-set) · [`links.recompute`](#links-recompute) · [`links.set`](#links-set) · [`study.margin`](#study-margin)
+**Links, budgets and profiles** - [`budget.for_selection`](#budget-for-selection) · [`link.pair`](#link-pair) · [`link.pair_set`](#link-pair-set) · [`link.profile`](#link-profile) · [`link.profile_set`](#link-profile-set) · [`link.result`](#link-result) · [`links.recompute`](#links-recompute) · [`links.set`](#links-set) · [`study.margin`](#study-margin)
 
 **Coverage and planning** - [`coverage.clear`](#coverage-clear) · [`coverage.combined`](#coverage-combined) · [`coverage.compute`](#coverage-compute) · [`coverage.failed`](#coverage-failed) · [`coverage.map`](#coverage-map) · [`coverage.resolution`](#coverage-resolution) · [`coverage.set`](#coverage-set) · [`coverage.start`](#coverage-start) · [`energy.for_selection`](#energy-for-selection) · [`plan.failed`](#plan-failed) · [`plan.routes`](#plan-routes) · [`plan.set`](#plan-set)
 
@@ -104,7 +104,7 @@ Every entry below is generated from the MeshBench source, so it cannot drift fro
 
 **Provisioning, schedule and assertions** - [`assert.add`](#assert-add) · [`assert.check`](#assert-check) · [`provisioning.apply`](#provisioning-apply) · [`provisioning.get`](#provisioning-get) · [`provisioning.set`](#provisioning-set) · [`run.save`](#run-save) · [`schedule.add`](#schedule-add) · [`schedule.clear`](#schedule-clear)
 
-**Machine resources** - [`gpu.set`](#gpu-set) · [`gpu.state`](#gpu-state) · [`job.cancel`](#job-cancel) · [`job.done`](#job-done) · [`job.list`](#job-list) · [`job.progress`](#job-progress) · [`resource.fetch`](#resource-fetch) · [`resource.fetched`](#resource-fetched) · [`resource.licence`](#resource-licence) · [`resource.licence.hide`](#resource-licence-hide) · [`resource.list`](#resource-list) · [`resource.remove`](#resource-remove) · [`setup.check`](#setup-check) · [`terrain.allow`](#terrain-allow) · [`terrain.cache`](#terrain-cache) · [`terrain.cache_dir`](#terrain-cache-dir) · [`terrain.cache_moved`](#terrain-cache-moved) · [`terrain.ground`](#terrain-ground) · [`terrain.prefetch`](#terrain-prefetch) · [`terrain.shade`](#terrain-shade) · [`terrain.shade_failed`](#terrain-shade-failed) · [`terrain.shade_set`](#terrain-shade-set) · [`update.allow`](#update-allow) · [`update.check`](#update-check) · [`update.checked`](#update-checked) · [`update.download`](#update-download) · [`update.notes`](#update-notes) · [`update.reveal`](#update-reveal) · [`update.staged`](#update-staged) · [`update.status`](#update-status)
+**Machine resources** - [`gpu.set`](#gpu-set) · [`gpu.state`](#gpu-state) · [`job.cancel`](#job-cancel) · [`job.done`](#job-done) · [`job.list`](#job-list) · [`job.progress`](#job-progress) · [`resource.fetch`](#resource-fetch) · [`resource.fetched`](#resource-fetched) · [`resource.licence`](#resource-licence) · [`resource.licence.hide`](#resource-licence-hide) · [`resource.list`](#resource-list) · [`resource.remove`](#resource-remove) · [`setup.check`](#setup-check) · [`terrain.allow`](#terrain-allow) · [`terrain.cache`](#terrain-cache) · [`terrain.cache_dir`](#terrain-cache-dir) · [`terrain.cache_moved`](#terrain-cache-moved) · [`terrain.ground`](#terrain-ground) · [`terrain.prefetch`](#terrain-prefetch) · [`terrain.shade`](#terrain-shade) · [`terrain.shade_failed`](#terrain-shade-failed) · [`terrain.shade_set`](#terrain-shade-set) · [`update.allow`](#update-allow) · [`update.channel`](#update-channel) · [`update.check`](#update-check) · [`update.checked`](#update-checked) · [`update.download`](#update-download) · [`update.notes`](#update-notes) · [`update.reveal`](#update-reveal) · [`update.staged`](#update-staged) · [`update.status`](#update-status)
 
 **The window** - [`layout.reset`](#layout-reset) · [`map.basemap`](#map-basemap) · [`map.centre`](#map-centre) · [`map.filter`](#map-filter) · [`map.fit`](#map-fit) · [`map.layer`](#map-layer) · [`map.layers`](#map-layers) · [`map.zoom`](#map-zoom) · [`panel.close`](#panel-close) · [`panel.dock`](#panel-dock) · [`panel.open`](#panel-open) · [`panel.pop_out`](#panel-pop-out) · [`panels.list`](#panels-list) · [`tool.set`](#tool-set) · [`view.delete`](#view-delete) · [`view.list`](#view-list) · [`view.load`](#view-load) · [`view.save`](#view-save) · [`window.close`](#window-close) · [`window.open`](#window-open) · [`workspace.set`](#workspace-set)
 
@@ -876,9 +876,9 @@ Open one node's own window, the thing people put on a second monitor.
 | parameter | type | | what |
 |---|---|---|---|
 | `node` | string | required, primary | which node |
-| `tab` | string | optional | which tab to open on; the window's default when absent |
+| `tab` | string | optional | which tab to open on, and which tab to switch to when the window is already out there; the window's default when absent |
 
-**Answers** `node`, `tab`. `tab` is the tab this request settled on, which is not always the one asked for: a node whose board declares nothing grows no Hardware tab, an observer has no console, and a request for a tab the node has not got lands on the first one it does have. A window already open is recalled rather than reopened, and keeps whatever tab it is showing; `tab` is still what the request settled on. Refused outright in a headless session, there being no window to open one beside.
+**Answers** `node`, `tab`, `console`. `tab` is the tab this request settled on, which is not always the one asked for: a node whose board declares nothing grows no Hardware tab, an observer has no console, and a request for a tab the node has not got lands on the first one it does have. A window already open is recalled rather than reopened, and switches to the tab asked for; `tab` is what the request settled on, which the window then shows. Refused outright in a headless session, there being no window to open one beside.
 
 **Example** - put one node on a second monitor
 
@@ -935,7 +935,7 @@ Add nodes to whatever is already selected, which is the shift-drag, and the way 
 
 ### `nodes.allow_flood`
 
-Let a node forward a flood whatever region it was scoped to, which is the difference between a scenario that relays and one that transmits everything, relays nothing and reports no error.
+Clear the wildcard's flood deny on a node with region allowf *, which a factory-fresh node never has set: it changes nothing on a node that was never told region denyf *, and it never makes a scoped flood forward, because MeshCore matches the wildcard against unscoped floods only.
 
 **Takes**
 
@@ -1839,7 +1839,7 @@ Fetch a published build now rather than at the moment a node first needs it, whi
 | `version` | string | required | the published release tag; refused when absent |
 | `board` | string | optional | the board image to fetch; absent means the native build for this machine |
 
-**Answers** `downloading`, `role`, `version`. It answers as soon as the fetch has been started, not when the file lands. Progress arrives on a job called `fw-<version>-<role>`, counted in kilobytes, and a failure is reported there rather than here; the installed list and the library are re-read either way.
+**Answers** `downloading`, `role`, `version`, `board`, `job`. It answers as soon as the fetch has been started, not when the file lands. Progress arrives on a job called `fw-<version>-<role>` for a host build and `fw-<version>-<role>-<board>` for a board image - one row per thing being downloaded, and the reply's `job` names it, counted in kilobytes, and a failure is reported there rather than here; the installed list and the library are re-read either way.
 
 **Example** - fetch a repeater build before working without a network
 
@@ -2311,7 +2311,7 @@ Claim a node's serial port for the companion protocol and make the same opening 
 |---|---|---|---|
 | `node` | string | required, primary | the node to attach to; refused when it is absent, runs no firmware, is already connected, or its port is being served to an attached outside client |
 
-**Answers** `connected`. A listener that is serving the port but has nobody on it is taken back rather than refused. Everything the node says in reply arrives later as frames, so read it with `companion.state`.
+**Answers** `connected`, `took_port`, `note`. A listener that is serving the port but has nobody on it is taken back rather than refused. Everything the node says in reply arrives later as frames, so read it with `companion.state`.
 
 **Example** - attach to a node the way a phone would
 
@@ -2812,7 +2812,7 @@ Answer why two particular places do or do not hear each other, without the engin
 | `a` | object | required | one end: a node's name as a bare string or as {node}, or a place as {lat, lon} with an optional height_m that defaults to 2 m head height; anything else is refused, as is a name this network has not got |
 | `b` | object | required | the other end, in the same two forms; refused when it labels the same place as a, since a link needs two |
 
-**Answers** `from`, `to`, `ground`. It answers with the two labels as soon as the worker starts, and with the `ground` between them in the shape `terrain.ground` returns. Said rather than refused, unlike the rasters: this verb exists to answer before a warm has happened, and a cut-through with nothing under it is visibly flat. The cut-through and both margins arrive later through the internal `link.pair_set`, and there are two margins because there are two answers: each end's gain is evaluated on the bearing towards the other, so A to B and B to A can differ by tens of decibels on a beam. Both are best cases - bare earth, the calibrated excess loss, a default noise floor and no multipath - which is what the profile's assumption line says. A clicked place with no scenario loaded is priced at 868 MHz, and says so.
+**Answers** `from`, `to`, `ground`, `note`. It answers with the two labels as soon as the worker starts, and with the `ground` between them in the shape `terrain.ground` returns. Said rather than refused, unlike the rasters: this verb exists to answer before a warm has happened, and a cut-through with nothing under it is visibly flat. The cut-through and both margins arrive later through the internal `link.pair_set`, and there are two margins because there are two answers: each end's gain is evaluated on the bearing towards the other, so A to B and B to A can differ by tens of decibels on a beam. Both are best cases - bare earth, the calibrated excess loss, a default noise floor and no multipath - which is what the profile's assumption line says. A clicked place with no scenario loaded is priced at 868 MHz, and says so.
 
 **Example** - ask why two repeaters do or do not hear each other
 
@@ -2869,6 +2869,26 @@ Hold the finished cut-through for the panel to draw, or clear it where the analy
 **Answers** `from`, `to`, `km`, `edges`. Answers nothing at all when it is handed no profile, which is how a failed analysis takes the old picture off the panel rather than leaving one of the wrong pair there.
 
 **Client** none: the profile worker publishing its answer
+
+### `link.result`
+
+Read back the link the last link.pair or link.profile analysed: the cut-through's shape and both directions' margins, which the analysis already computes and only a panel could reach.
+
+**Takes** nothing.
+
+**Answers** `from`, `to`, `km`, `a_to_b_db`, `b_to_a_db`, `verdict`, `assumed`, `edges`, `samples`, `worst_at_km`, `directions`, `note`. why these two hear each other or do not, in both directions - a margin that does not say which direction is wrong even when the arithmetic is right
+
+**Example** - read back the cut-through and both margins of the link just analysed
+
+```json
+{"id":1,"method":"link.result","params":{}}
+```
+
+Not made by the test suite: this call needs more than the two-node headless session the runnable examples go to.
+
+**Client** `wb.links.result()`
+
+Planned, not written: no client defines `wb.links` yet - the link matrix, one pair, and a terrain profile through it. Call the verb itself in the meantime.
 
 ### `links.recompute`
 
@@ -3458,7 +3478,7 @@ Planned, not written: no client defines `wb.import_` yet - bringing a real deplo
 
 ### `infer.apply`
 
-Write the inferred regions onto the nodes, which is the step that gets forgotten and the one that decides whether anything relays: without it a mesh has regions inferred and not applied, which transmits everything, relays nothing and reports no error.
+Write the inferred regions onto the nodes, and each node's default scope with them, which is the step that gets forgotten: without it a mesh still relays every unscoped flood, adverts included, exactly as widely, but a scoped packet matches no region any repeater holds and is dropped without a word, and nothing the mesh originates is scoped in the first place.
 
 **Takes** nothing.
 
@@ -4740,6 +4760,30 @@ Allow or refuse update checks on this machine, and remember it.
 
 Planned, not written: no client defines `wb.update` yet - whether a newer release exists and getting it onto the disk. Call the verb itself in the meantime.
 
+### `update.channel`
+
+Choose which releases this machine is offered - stable, or the development builds cut from main between them - and remember it; asked with nothing it reports the channel in force.
+
+**Takes**
+
+| parameter | type | | what |
+|---|---|---|---|
+| `channel` | string | optional, primary | stable or development; absent or empty reads the current choice, and any other name is refused rather than stored |
+
+**Answers** `channel`, `build`. `channel` is what the next check asks for and `build` is the channel this binary was cut on; they differ only when somebody has switched. Empty in the settings file means follow the build, so a development build follows development without being asked and a stable one stays stable. The stable channel is the release page's own redirect, which never names a pre-release; the development channel lists releases and takes the newest by version, pre-release or not, so a development build is offered the stable release that closes its series as well as the next development build.
+
+**Example** - follow the development builds
+
+```json
+{"id":1,"method":"update.channel","params":{"channel":"development"}}
+```
+
+Not made by the test suite: this call needs more than the two-node headless session the runnable examples go to.
+
+**Client** `wb.update.channel(channel)`
+
+Planned, not written: no client defines `wb.update` yet - whether a newer release exists and getting it onto the disk. Call the verb itself in the meantime.
+
 ### `update.check`
 
 Ask the release feed whether a newer release exists.
@@ -5406,7 +5450,7 @@ The rest do what their name says. These do not, quite.
 | `nodes.regions` | Gives a placed node the regions its neighbours hold. Inference only reaches nodes seen on the real network. |
 | `boundary.accept` | The chosen set **unions**, so Scotland plus Ireland is two accepts and one prune. |
 | `import.commit` | Takes `strategy`. Use `replace-all`; plain `replace` is not a strategy name and leaves the demo nodes in. |
-| `infer.apply` | **The step that gets forgotten**, and the one that decides whether anything relays. Returns how many nodes it touched; `0 applied` means inference ran and nothing was written back. |
+| `infer.apply` | **The step that gets forgotten**, and the one that decides whether scoped traffic relays: adverts flood either way. Returns how many nodes it touched; `0 applied` means inference ran and nothing was written back. |
 | `firmware.set` | With a role and no node it applies to **every** node that runs firmware *and sets its role*. Three calls in a row convert the whole mesh three times. Pass `node` to pin one. |
 | `firmware.wipe` | Every node's persistent files. Needed between the arms of any comparison. |
 | `console.type` | Runs a line on a node's CLI and returns what it said. Replies come back empty while a sweep owns the clock. |
