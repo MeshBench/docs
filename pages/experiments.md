@@ -87,6 +87,14 @@ good for the network" rather than "did this message arrive". They are reported
 for every arm without being asked for, and `rx_spread` is the number every delta
 must beat before it means anything.
 
+Every run and every arm summary also carries `builds`: the firmware each role
+actually ran, as `{role, version, file, bytes}`. A sweep exists to compare
+builds, and a delta means nothing unless the arms ran what they claimed, so the
+record says which build each one was. Two arms that come back identical are then
+a real result rather than two arms that never switched, and the `file` and its
+size tell two builds under one label apart: `local-main` is rebuilt in place,
+and two runs a week apart are not the same binary.
+
 ## Designing one that survives scrutiny
 
 **Put a control in the matrix.** Two arms the firmware guarantees are identical
