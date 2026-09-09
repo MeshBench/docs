@@ -1688,7 +1688,7 @@ noisy by a rule that did not apply to it.
 release() -> str
 ```
 
-The release this client belongs to, as PyPI spells it.
+The release this client belongs to, as the workbench spells it.
 
 Read from `__version__` rather than kept here, because the release
 workflow stamps that one line and a second copy would be a second thing to
@@ -1698,6 +1698,11 @@ remember. Imported inside the function on purpose: the package's
 A checkout carries whatever `__version__` last said, which is the previous
 release. That is not worth guarding against: a workbench built from the same
 checkout carries no release at all, so the pair is never compared.
+
+PyPI spells a development build `0.0.11.dev1` where the tag, and the
+workbench stamped from it, say `0.0.11-dev.1`. The wire carries the tag's
+spelling, so the workbench compares one spelling against itself rather than
+refusing the client that was published for it.
 
 ### `sessions`
 
