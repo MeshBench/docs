@@ -1467,6 +1467,7 @@ What one node is costing and doing right now.
 - `busy_reads: int`
 - `busy_ms: int`
 - `spurious: int`
+- `irq_suppressed: int | None`
 
 ### Notification
 
