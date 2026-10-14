@@ -94,14 +94,14 @@ for every arm without being asked for, and `rx_spread` is the number every delta
 must beat before it means anything.
 
 The last two come from the chips rather than the channel, and they are where two
-firmwares that flood identically differ. The **Results** table shows them as
-**suppressed**, a cost where fewer is better, and **busy**, in seconds and
-without a colour, because more busy time is a firmware seeing more of the
+firmwares that flood identically differ. The **Results** table shows them
+straight after **delivered**, as **IRQ suppressed**, a cost where fewer is
+better, and **busy time**, in seconds and without a colour, because more busy time is a firmware seeing more of the
 traffic that is really there. Each is averaged over the seeds whose chips
 counted it. An arm whose chips sent no counters, such as one running emulated
 boards, shows a dash in both columns rather than a zero.
 
-![The Results table for MeshCore 1.16.0, 1.17.0 and 1.17.1 over five seeds: delivery identical in every arm, suppressed down 84.9% in 1.17, busy up from 236 s to 284 s](images/sweep-chip-counters.png)
+![The Results table for MeshCore 1.16.0, 1.17.0 and 1.17.1 over five seeds: delivery identical in every arm, IRQ suppressed down 84.9% in 1.17, busy time up from 236 s to 284 s](images/sweep-chip-counters.png)
 
 Every cell of `experiment.export` also carries `chip`: the same counters for
 every node, measured from the point the cell starts counting, after the adverts
