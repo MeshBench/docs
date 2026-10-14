@@ -29,8 +29,12 @@ against the same network, with the results tabulated side by side.
    instead of with the mesh. `experiment.senders` takes the node names.
 6. **Start it, and watch the log.** Each run boots every node's firmware,
    settles, sends, and tears down.
-7. **Export.** `experiment.export` writes an HTML report with every arm, every
-   run and the deltas between them.
+7. **Export.** `experiment.export` writes the whole experiment to a JSON file:
+   the definition, every run's raw numbers and the means per arm. Each run
+   carries `chip`, what every node's radio counted over the run, measured from
+   the same point as the delivery totals, so the boot and the advert settle are
+   in neither. Two arms that deliver identically can still differ in what their
+   firmware read from the chip, and this is where that shows.
 
 ![The Bench view: the sweep definition, past runs, the experiment log and per-node timelines](images/view-bench.png)
 
