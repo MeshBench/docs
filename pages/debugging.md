@@ -121,6 +121,26 @@ uses.
 between runs and the capture survives that, but a restarted workbench has no
 capture until one is started again.
 
+## Read the node's radio
+
+A node's window has a **Radio** tab: what the firmware left in the chip's
+registers, and what the chip counted. Two rows answer whether the firmware could
+have seen a packet at all.
+
+- **IRQ suppressed** sits under the IRQ and DIO1 masks. It counts events the
+  chip raised that the firmware's mask kept out of the register. A firmware
+  waiting on an interrupt it never enabled looks exactly like a quiet mesh, and
+  this row is what tells the two apart. Above zero it is drawn in amber. A chip
+  model older than virtual-sx1262 v1.3.2 does not keep the count, and the row
+  reads **not counted** rather than 0.
+- **Spurious detections** sits under busy time. It counts the false detections
+  the faulty chip variants inject, and is 0 on a chip that behaves.
+
+![The Radio tab of a MeshCore 1.16 repeater: IRQ mask 0x0272, 14 events suppressed, spurious detections 0](images/node-radio-chip-counters.png)
+
+From a script, `nodes.stats` answers the same count as `irq_suppressed`, absent
+for a chip that does not keep it.
+
 ## Common causes that produce no error
 
 - **Regions inferred but never applied.** Everything transmits, nothing relays.
