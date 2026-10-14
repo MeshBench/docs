@@ -85,11 +85,27 @@ _, err := wb.Call(ctx, "experiment.start", nil)
 | `airtime_ms` | total time the network spent transmitting |
 | `rx_spread` | how much `rx` varied across the arm's seeds - the arm's own noise floor |
 | `at_risk_2db` | deliveries within 2 dB of the demodulator floor, absent when no run measured it |
+| `irq_suppressed` | interrupt events the chips raised and the firmware's IRQ mask kept out, summed over every node |
+| `busy_ms` | how long the chips' detection flags were up, summed over every node |
 
 Airtime, collisions and redundancy are the metrics that answer "is this change
 good for the network" rather than "did this message arrive". They are reported
 for every arm without being asked for, and `rx_spread` is the number every delta
 must beat before it means anything.
+
+The last two come from the chips rather than the channel, and they are where two
+firmwares that flood identically differ. The **Results** table shows them
+straight after **delivered**, as **IRQ suppressed**, a cost where fewer is
+better, and **busy time**, in seconds and without a colour, because more busy time is a firmware seeing more of the
+traffic that is really there. Each is averaged over the seeds whose chips
+counted it. An arm whose chips sent no counters, such as one running emulated
+boards, shows a dash in both columns rather than a zero.
+
+![The Results table for MeshCore 1.16.0, 1.17.0 and 1.17.1 over five seeds: delivery identical in every arm, IRQ suppressed down 84.9% in 1.17, busy time up from 236 s to 284 s](images/sweep-chip-counters.png)
+
+Every cell of `experiment.export` also carries `chip`: the same counters for
+every node, measured from the point the cell starts counting, after the adverts
+have settled.
 
 Every run and every arm summary also carries `builds`: the firmware each role
 actually ran, as `{role, version, file, bytes}`. A sweep exists to compare
