@@ -26,6 +26,13 @@ consoles and link budgets, with the Inspector for whichever node is selected.
 | no route | nothing relayed it | regions, `flood_max`, loop detection |
 | dropped by region | the node does not hold the scope | the region map, or the scope being sent on |
 
+A collision says where it landed. "Decoded its header, then N symbol(s) were
+destroyed" is a frame whose payload failed its CRC; "locked on, then N of its 8
+header symbols were destroyed" is a header the receiver could not read. The
+receiving node's firmware is told the same thing its radio would report: a CRC
+error, with the damaged bytes, or a header error and nothing more. A frame the
+receiver never locked onto reaches the firmware not at all.
+
 "It did not arrive" and "it arrived 3 dB under the floor" lead to completely
 different fixes, which is why the cause is recorded rather than a boolean.
 
