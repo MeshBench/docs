@@ -194,7 +194,10 @@ tell "found it" from "found something that shares a word".
 A repeater has a text command line and reads what is typed at it. A companion
 does not: it speaks the framed companion protocol, and its command line is
 meshcore-cli's vocabulary - `advert`, `public <msg>`, `chan <n> <msg>`,
-`infos`, `contacts`.
+`msg <contact> <msg>`, `login`, `req_status`, `scope`, `infos`, `contacts`. What
+the node answers to `msg`, `login` and `req_status` - sent, delivered, answered
+or refused, with the simulated time - lands in the companion's transcript,
+which `companion.state` returns under `recent`.
 
 `node.console` chooses by the node's kind, so a script does not have to. Text
 sent to a companion's text console is echoed locally and reaches nothing, which
