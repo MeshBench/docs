@@ -24,6 +24,11 @@ against the same network, with the results tabulated side by side.
    differs: a firmware version, a loop-detection setting, a path-hash size, a
    CAD setting. The control is the unchanged source under a second label; if
    the control arms disagree, nothing else measured that day means anything.
+   Over the socket an arm object takes `label`, `repeater_version`,
+   `companion_version`, `path_hash_mode`, `rep_path_hash`, `loop_detect`,
+   `cad`, `spread_ms` and `set`; any other field, or a value the setting
+   cannot take, is refused with `bad_params` and the arms already defined are
+   kept, so a misspelt setting cannot run as a second control arm.
 5. **Choose seeds and senders.** Pick senders spread across the map rather
    than the first few in the list: a cluster of neighbours contends with itself
    instead of with the mesh. `experiment.senders` takes the node names.
