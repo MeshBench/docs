@@ -51,6 +51,22 @@ release boots and transmits.
 ## Speed control
 
 The toolbar's speed control scales how fast simulated time is chased. It
-never changes what happens, only how long you wait to see it. Pausing freezes
+never changes what happens, only how long you wait to see it.
+
+The control is how much simulated time each tick covers, shown beside it as
+**ms/tick**. A tick is ten milliseconds of wall time, so 10 ms/tick is real time,
+20 is twice as fast and 5 is half. The engine always steps in its own 10 ms,
+whatever the setting, so nothing is skipped or coarsened: a larger setting just
+runs more steps in each tick. Past what the machine can step in a tick the run
+goes as fast as the machine allows, up to 1000 ms/tick. The status bar's
+**realtime** figure is the measured answer, not the setting.
+
+Native firmware reads the simulator's clock rather than the wall's, so it
+cannot tell the difference. An emulated node can, and a mesh with one in it is
+held near real time by the emulator whatever the setting.
+
+![The Fife fixture at 1000 ms/tick: the status bar reads about fourteen times real time](images/speed-control-realtime.png)
+
+From a script, `sim.speed {"step_ms": 1000}` sets the same control. Pausing freezes
 the mesh mid-thought: an [SDR observer](sdr-observer.html) streams its bare
 noise floor while paused, because frozen time cannot honestly produce signal.
