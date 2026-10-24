@@ -38,6 +38,13 @@ watch a message flood across Scotland.
 
 ![The Run view playing. The mark: the scoreboard counting what each node sent and heard](images/view-run.png)
 
+The scoreboard's **airtime** and **duty %** columns are each node's time on the
+air and its share of the run so far. From a script they are `airtime_ms` and
+`duty_cycle_pct` in every `nodes.stats` row; airtime is cumulative, so the
+airtime inside a window is two readings subtracted.
+
+![The scoreboard: what each node sent and heard, its airtime and its duty](images/scoreboard-airtime.png)
+
 > If the mesh looks dead, the usual cause is regions rather than radio. A
 > repeater only forwards flood traffic for regions it has been told about, and
 > reports no error when it declines. The `-strict` fixtures carry the real
