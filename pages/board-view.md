@@ -259,7 +259,8 @@ time it arrived:
    `login ok from 49d7bdbd0a3e`, `status from 49d7bdbd0a3e, 60 bytes`, or
    `refused` with the reason.
 
-A sent line with no second line is a message whose ack never came back. A
+A message whose ack never comes back gets `no ack from West Lomond within
+7060 ms` once the firmware's wait is over. A
 repeater answers a status request only from a client that has logged in to it,
 so `login` comes before `req_status`, as it does on a phone.
 
