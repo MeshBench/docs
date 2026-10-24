@@ -45,6 +45,13 @@ _, err := wb.Nodes().Place(ctx, meshbench.Placement{
 
 Height and power go through the raw verb, as in the socket tab: the shaped
 call does not carry them yet.
+
+A placed node joins on the modem most of its ten nearest neighbours are on -
+frequency, bandwidth, spreading factor and coding rate - so it hears them from
+the first step. Where none has a majority, or there are no nodes yet, it gets
+EU/UK (Narrow). **Radio preset** puts every node, or one, on a community preset.
+
+![A companion placed from the map, hearing the repeater and companions around it](images/placed-node-links.png)
 :::
 
 ## 3. Give it the regions its neighbours hold
