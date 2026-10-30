@@ -76,9 +76,11 @@ TCP and prints the address. Firmware starts a process per node, so on a large
 fixture it takes a few seconds and the button says so rather than handing over
 a port that answers nothing.
 
-**Two transports, per companion.** `TCP` for a client that speaks sockets,
-`serial` for the many that only know how to open a port. Both carry the
-firmware's own serial protocol byte for byte - this is not a mock, it is the
+**Three transports, per companion.** `TCP` for a client that speaks sockets,
+`serial` for the many that only know how to open a port, and `serve BLE` for a
+phone app that finds its radio over Bluetooth, described
+[below](#over-bluetooth). TCP and serial carry the firmware's own serial
+protocol byte for byte - this is not a mock, it is the
 same bytes the real device sends. The address gets a `copy` button beside it,
 because it is going into somebody else's configuration file and retyping a port
 from a screen is how a digit gets lost.
@@ -88,6 +90,65 @@ from a screen is how a digit gets lost.
 The `client` column says whether anything is attached. A port that is listening
 and a port that has a client are different situations, and the difference
 matters when an application appears to be doing nothing.
+
+### Over Bluetooth
+
+`serve BLE` advertises the companion on this machine's Bluetooth adapter, so a
+phone app finds it in its device list the way it finds a radio, under the name
+`MSIM-` followed by the node's name. It is for testing an app's own Bluetooth
+path against a simulated mesh.
+
+**The node runs its USB build behind a Bluetooth front.** The workbench serves
+the node over TCP and starts a small BLE peripheral against that port. The
+peripheral registers MeshCore's companion service (the Nordic UART Service
+UUIDs MeshCore uses) with BlueZ, turns each frame the node sends into one
+notification, and turns each write into a frame for the node. So this tests a
+client against a simulated mesh, not MeshCore's own BLE transport, which is
+never run. A client should negotiate an MTU large enough for a whole frame:
+BlueZ cuts a notification longer than the MTU.
+
+**What it needs:**
+
+- **Linux with BlueZ.** On any other system it is refused with
+  `serving over BLE needs BlueZ, which is Linux only`.
+- **`python3` on `PATH`**, or it is refused with `serving over BLE runs a
+  Python peripheral, and python3 is not on PATH`. The peripheral is a Python
+  script carried inside the binary.
+- **The Python D-Bus and GLib bindings**, `dbus` (dbus-python) and `gi`
+  (PyGObject): on Debian and Ubuntu, `python3-dbus` and `python3-gi`.
+- **A Bluetooth adapter BlueZ can advertise on.** If the service and its
+  advertisement are not registered within 15 seconds, or the peripheral exits
+  first, serving fails with `the BLE peripheral did not come up:` and the last
+  line it printed.
+
+While it is served, the endpoint's kind is `ble` and its address is the
+advertised name.
+
+:::ways
+::gui
+Select the companion node, then press **serve BLE** in the Companion bench,
+beside **serve TCP** and **serve serial**.
+::socket
+```json
+{"id":1,"method":"bench.serve","params":{"node":"AngusOutlaw1","kind":"ble"}}
+{"id":2,"method":"bench.serve","params":{"node":"AngusOutlaw1","kind":"ble","name":"Bench-1"}}
+```
+::python
+```python
+wb.call("bench.serve", {"node": "AngusOutlaw1", "kind": "ble"})
+```
+::go
+```go
+_, err := wb.Call(ctx, "bench.serve", map[string]any{"node": "AngusOutlaw1", "kind": "ble"})
+```
+:::
+
+`name` sets the advertised name in place of the `MSIM-` default.
+
+**Dropping the endpoint ends it.** The peripheral exits when the node's port
+closes, so **drop clients** in the Companion bench (`bench.drop`) also stops
+the advertising, and the phone loses the device as it would a radio switched off.
+Serving the node again in any transport replaces the BLE endpoint.
 
 ### Faults
 
