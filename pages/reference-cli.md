@@ -17,8 +17,8 @@ meshbench <command> [flags]
 ```
 
 There are **16** commands and
-**170** flags between them, of which
-**38** exist only so a panel, a menu or a view can be
+**171** flags between them, of which
+**39** exist only so a panel, a menu or a view can be
 reached without a click.
 
 Everything below the first heading is generated from the flag declarations
@@ -71,7 +71,7 @@ Every flag below carries one of these, because a flag that arranges a screenshot
 | `serve` | run a mesh and expose a companion to your app | 8 |
 | `test` | run a fixture on real firmware and check its assertions | 10 |
 | `headless` | run the verbs over the control socket, with no window | 7 |
-| `workbench` | open the desktop workbench: build a scenario on a map and run it | 43 |
+| `workbench` | open the desktop workbench: build a scenario on a map and run it | 44 |
 
 ## `meshbench link`
 
@@ -423,6 +423,7 @@ One panel filling the window, filtered, over a fixed view, closing itself. That 
 | `-board-tab` | none | capture | which table the board view opens on: Radio or Wiring |
 | `-board-view` | none | capture | open this node's board view at startup |
 | `-capture` | none | capture | capture the waterfall at this node once the run has traffic |
+| `-companion-mode` | none | capture | which way in a companion's tab shows: Client, CLI, TCP |
 | `-config-section` | none | capture | open the Configuration page on this section |
 | `-control-socket` | none | capture | where the control socket answers: a path for a unix socket, or "tcp" for loopback with a token (the default on Windows, which has no unix socket a Python client can reach). MESHBENCH_CONTROL_SOCKET does the same, and two workbenches need two |
 | `-coverage` | none | capture | compute and show coverage from this node at startup |
