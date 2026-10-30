@@ -178,6 +178,8 @@ that board do that thing.
 | `Heltec_v3` | ESP32-S3 | QEMU | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | – | ✓ |
 | `LilyGo_TDeck` | ESP32-S3 | QEMU | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | – | ✓ |
 | `Ebyte_EoRa-S3` | ESP32-S3 | QEMU | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | – | ✓ |
+| `Heltec_E290` | ESP32-S3 | QEMU | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | – | |
+| `heltec_tracker_v2` | ESP32-S3 | QEMU | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | | |
 | `Station_G2` | ESP32-S3 | - | | | | | | | | |
 | `Heltec_v2` | ESP32 | - | | | | | | | | |
 
@@ -200,7 +202,11 @@ the board is a working member of a mesh rather than a node that talks to
 itself. It is judged at the board: the packet has to arrive, be recognised as
 somebody else's, and go back out.
 
-The two blanks have never been attempted rather than tried and failed.
+`Station_G2` and `Heltec_v2` have never been attempted rather than tried and
+failed. The `Heltec_E290` runs and floods, but its e-paper panel is not drawn.
+The `heltec_tracker_v2`'s front-end module is switched by the radio rather than
+by a GPIO, and its `fem` column has not been measured. The `power` column has
+not been measured for either board.
 
 **Measured one board at a time on an idle machine.** Several emulators at once
 will make a twelve core machine fall behind the wall clock, and a board that is
@@ -228,3 +234,11 @@ for role` assigns one to every node of that role, and reports how many nodes
 that will be before it does. Each of those nodes becomes its own emulator.
 
 ![The firmware library, emulated builds included](images/firmware-library.png)
+
+Board images are listed and downloaded through GitHub's API, which allows an
+unauthenticated address sixty requests an hour: a handful of board probes. When
+the allowance is used up, the refusal says so and gives the time it resets:
+
+    GitHub's API allowance for this address is used up until 14:05; set GITHUB_TOKEN (export GITHUB_TOKEN=$(gh auth token)) to raise it. Already-downloaded images keep working without it
+
+Requests are authenticated with `GITHUB_TOKEN` whenever it is set.
