@@ -133,6 +133,31 @@ firmware sleeps and the node is silent while appearing healthy.
 | `CLOCK` | HFCLK and LFCLK start, waited on before anything proceeds |
 | `SAADC` | battery voltage |
 | `TWIM` | I2C, for displays and sensors on some boards |
+
+### Displays
+
+A board's display is drawn in the [board view](board-view.html) when its
+controller is modelled. Under Renode there are two kinds.
+
+**SPI panels**, an ST7789 and an ST7735, share the radio's SPIM and are told
+apart by chip select, which is how they are wired in copper.
+
+**I2C displays**, an SSD1306 or an SH1106, are registered on the first TWIM at
+their address, `0x3C` on the RAK4631. A transfer to a registered address moves
+its bytes through EasyDMA (`TXD` and `RXD` `PTR`, `MAXCNT`, `AMOUNT`) and
+follows the shortcuts the driver sets. An address nothing claims is answered
+with an address NACK, so a firmware probing for a sensor the board does not
+carry gets an answer rather than waiting for one.
+
+The display model takes the controller's control bytes, its column and page
+window, its addressing mode and display on and off. Other commands are
+consumed with their arguments and ignored, so a firmware that sets contrast or
+scrolling sees no error and no effect. The controller's memory is drawn as a
+one-bit frame, and an SH1106 is drawn from column 2, where its glass starts.
+
+On a RAK4631 the published v1.17.1 repeater draws MeshCore's own boot screen:
+the logo, the version line and `< Repeater >`. The same frame is what
+`board.screen` returns.
 | SX1262 over SPIM | the radio |
 
 ## Which boards have been run
