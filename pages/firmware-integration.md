@@ -114,6 +114,43 @@ real traffic and are a fact about that node.
 Before them a node is not broken - and not useful either.</figcaption>
 </figure>
 
+### Firmware that is not MeshCore
+
+Provisioning, and every setting an experiment arm pins, is MeshCore's command
+line typed at the node's console. A firmware that is not MeshCore refuses each
+line, and the only trace is a line in its console:
+
+```
+set name Deck  Error: unknown config: name Deck
+```
+
+So a build declares the console vocabulary it speaks, its **dialect**:
+`meshcore`, the default; `none`, for a firmware with no console; or another
+firmware's name. A node running a build whose dialect is not `meshcore` is sent
+none of the script. In its place the Provisioning panel shows one comment line
+saying why:
+
+```
+# Deck runs wadamesh firmware, which does not take MeshCore's console commands: nothing is sent
+```
+
+The dialect is set in three places:
+
+- **In the firmware library**, the build's own window has a switch, *takes
+  MeshCore's console commands*, on by default. Turned off, a build that has
+  not named another dialect is recorded as `none`.
+- **On import**, `firmware.import` takes `dialect`, so a third-party image is
+  never provisioned on its first run.
+- **Afterwards**, `firmware.update` takes `dialect`, and `firmware.details`
+  reports it.
+
+An [experiment](experiments.html) arm that pins a setting (a path-hash size,
+loop detection, CAD, or a `set` line) onto a node whose build does not take
+MeshCore's commands is refused by `experiment.start` before the run, naming the
+arm and the nodes: a setting that does not apply makes two cells that differ by
+nothing. Each node is judged on the build that arm runs it on, and an arm that
+only chooses builds is not refused.
+
 **The region half of this is shared code**, in `internal/app/fixture`, used by both
 the workbench and the headless test runner. It contains the `#` asymmetry, which
 this project has paid for twice, and two copies of that rule would eventually
