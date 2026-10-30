@@ -28,7 +28,10 @@ against the same network, with the results tabulated side by side.
    `companion_version`, `path_hash_mode`, `rep_path_hash`, `loop_detect`,
    `cad`, `spread_ms` and `set`; any other field, or a value the setting
    cannot take, is refused with `bad_params` and the arms already defined are
-   kept, so a misspelt setting cannot run as a second control arm.
+   kept, so a misspelt setting cannot run as a second control arm. An arm
+   that pins a setting onto a node whose build does not take MeshCore's console
+   commands is refused when the experiment starts; see
+   [firmware that is not MeshCore](firmware-integration.html#firmware-that-is-not-meshcore).
 5. **Choose seeds and senders.** Pick senders spread across the map rather
    than the first few in the list: a cluster of neighbours contends with itself
    instead of with the mesh. `experiment.senders` takes the node names.

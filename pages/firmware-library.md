@@ -76,3 +76,9 @@ and testing is one keypress:
 It reads the board and role out of the environment name and names the build
 after the branch it came from, so two local builds appear separately rather than
 overwriting each other.
+
+A build that is not MeshCore, or that has no console, is marked so in its own
+window: turn off *takes MeshCore's console commands*, or pass `dialect` to
+`firmware.import`. Nodes running it are then not sent MeshCore's provisioning
+lines, which they would refuse one by one; see
+[running real firmware](firmware-integration.html#firmware-that-is-not-meshcore).
