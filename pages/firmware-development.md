@@ -115,6 +115,103 @@ identical numbers. When they do, a difference between real arms is attributable
 to the firmware. Every run records the checksum of each binary it attached, so
 "which build produced this number" is answerable from the results.
 
+## Attaching a debugger
+
+`node.debug` makes a running node debuggable and says how to attach. The
+firmware is the real firmware, so the debugger is the ordinary one: gdb, lldb,
+or VS Code with the C/C++ extension. The node must be running firmware; a node
+that is not is refused with `is not running firmware, so there is nothing to
+debug`.
+
+:::ways
+::gui
+Open the node's row menu in the Nodes panel and choose **Debug this node**. The
+entry is there only while the node is running. The status line shows the
+command to attach with.
+::socket
+```json
+{"id":1,"method":"node.debug","params":{"node":"West Lomond"}}
+```
+::python
+```python
+print(wb.call("node.debug", {"node": "West Lomond"})["attach"])
+```
+::go
+```go
+ans, err := wb.Call(ctx, "node.debug", map[string]any{"node": "West Lomond"})
+```
+:::
+
+The answer carries `attach`, a debugger command line, and `vscode`, a
+configuration to paste into `launch.json`. From the first call `sim.state`
+reports the run as not reproducible, because a debugger stopping a node moves
+its clock. `{"node": ..., "off": true}` stops debugging.
+
+### A native node
+
+A native node is an ordinary process on this machine, and the debugger attaches
+to it by its process ID:
+
+    gdb -p 2104750 ~/.cache/meshbench/firmware/native/.../meshcore-simple_repeater-linux-amd64
+
+The answer has `pid`, `binary` and `symbols`: `debug` when the binary carries
+DWARF, `symbols` when it has a symbol table only, `stripped` when it has
+neither, and `unknown` when it cannot be read as ELF. For source-level
+debugging, build the firmware from a checkout with `meshbench dev`.
+
+**A breakpoint holds the node rather than failing it.** A native node normally
+has to answer every tick within the deadline or it is marked down. While it is
+being debugged, a node that does not answer within two seconds is held instead:
+the rest of the mesh carries on without it, and when the debugger lets it go it
+catches up to the run's clock and rejoins. Its clock jumps by however long it
+was stopped, as a real board stopped by a JTAG probe does. `off` gives it its
+deadline back.
+
+- **Nothing listens on the network.** No port is opened for a native node;
+  attaching is the operating system's own process debugging, from this machine
+  only. On Linux that needs ptrace permission: `kernel.yama.ptrace_scope` set
+  to 0, or the debugger run as root.
+- **Boot cannot be caught.** A native node runs `setup()` as soon as it starts,
+  so by the time anything can attach it has booted. `wait` is refused for a
+  native node for that reason.
+
+### An emulated board
+
+An emulated board's firmware runs inside QEMU or Renode, and the way in is the
+emulator's GDB stub. `node.debug` restarts the board with one.
+
+```json
+{"id":2,"method":"node.debug","params":{"node":"Deck","wait":true}}
+```
+
+- `gdb_port` is where the stub listens. Pass `port` to choose it, a whole
+  number from 1 to 65535; without it a free port is picked.
+- `wait` holds the CPU at reset until a debugger continues, so boot can be
+  stepped through.
+- `debugger` is the gdb that speaks the board's architecture:
+  `xtensa-esp32-elf-gdb` or `xtensa-esp32s3-elf-gdb` for an ESP32 board under
+  QEMU, `arm-none-eabi-gdb` (or `gdb-multiarch`) for an nRF52 board under
+  Renode.
+
+The image a board runs is a flashable `.bin` or `.uf2` with no symbols. Point
+the debugger at the `firmware.elf` the same build produced, for a PlatformIO
+build `.pio/build/<env>/firmware.elf`:
+
+    arm-none-eabi-gdb -ex 'target remote 127.0.0.1:3333' .pio/build/RAK_4631_repeater/firmware.elf
+
+`off` restarts the board without the stub.
+
+**Where the stub listens differs by emulator, and the difference matters.** A
+GDB stub is the whole machine: anything connected to it can read and write the
+board's memory and registers, and stop or change the firmware.
+
+- **QEMU** binds its stub to `127.0.0.1`, so only this machine can reach it.
+- **Renode's stub listens on every network interface**, not only this
+  machine's own. While debugging is on, anyone who can reach the port over the
+  network has full read and write access to the emulated board. Debug a Renode
+  board only on a network you trust, or with the port blocked by a firewall,
+  and turn it `off` when finished.
+
 ## Versions are per role
 
 MeshCore tags one role at a time. `repeater-v1.17.0` and `companion-v1.17.0` are
