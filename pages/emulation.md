@@ -252,6 +252,36 @@ produce the same result. Emulation is therefore used to verify that a release
 works, and [native firmware](native-vs-emulated.html) is used for anything that
 is measured.
 
+### Lockstep under Renode
+
+An nRF52 board under Renode can instead be run from the engine's clock. It is
+opt-in, set in the environment the workbench starts from:
+
+    MESHBENCH_RENODE_LOCKSTEP=1 meshbench
+
+With it set, three things change for every Renode board:
+
+- **The CPU advances only as far as the engine asks.** A clock entry in the
+  machine's own virtual time ticks the radio chip once a millisecond, then
+  holds the CPU until the engine grants the next millisecond. Renode's virtual
+  time comes from the instructions executed, so the CPU and the chip step with
+  the engine rather than with the host.
+- **Idle time is skipped** rather than waited out on the host clock, since in
+  lockstep the engine is the clock.
+- **The machine's random numbers are seeded from the node.** The nRF52's RNG
+  peripheral is where MeshCore draws its jitter from, and unseeded it gives a
+  fresh stream every run.
+
+Two idle runs of two RAK4631 repeaters in lockstep give byte-identical event
+logs and identical chip counters.
+
+**It does not make a run reproducible, and `sim.state` still says so.** Console
+input reaches the board's UART over a socket on the wall clock, so the lines
+provisioning types at boot and any `console.type` land wherever the machine
+happens to be, and a loaded machine moves them. Lockstep is also slower: about
+five times real time for two boards. QEMU boards are not affected by the
+setting and still run free.
+
 ## Assigning an emulated build
 
 In the firmware library, board images are listed alongside native builds. `use

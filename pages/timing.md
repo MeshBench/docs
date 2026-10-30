@@ -48,6 +48,12 @@ property of emulation, not a defect. Measure with
 [native firmware](native-vs-emulated.html); use emulation to check that a
 release boots and transmits.
 
+An nRF52 board under Renode can be run in
+[lockstep with the engine](emulation.html#lockstep-under-renode), which steps
+its CPU and radio chip with the engine's clock. Console input still arrives on
+the wall clock, so a run with an emulated node is reported as not reproducible
+either way.
+
 ## Speed control
 
 The toolbar's speed control scales how fast simulated time is chased. It
