@@ -25,7 +25,7 @@ SECTIONS = ("CONSTANTS", "VARIABLES", "FUNCTIONS", "TYPES")
 
 def godoc(root):
     pkg = os.path.join(root, PKG)
-    r = subprocess.run(["go", "doc", "-all", "-C", pkg, "."],
+    r = subprocess.run(["go", "doc", "-all", "."], cwd=pkg,
                        capture_output=True, text=True)
     if r.returncode != 0:
         sys.exit("go doc failed:\n" + r.stderr)
