@@ -125,6 +125,31 @@ path has three parts: the pending-interrupt query, the binding that exposes it
 to the core, and the call that wakes the sleeping thread. Without all three the
 firmware sleeps and the node is silent while appearing healthy.
 
+### Flash that survives a restart
+
+An nRF52 board keeps what its firmware stores from one start to the next, as a
+flashed board does. A preference set over the console, such as `set af 7`,
+reads back the same after `node.stop` and `node.start`. Two things make that
+work.
+
+**The factory registers give the flash's geometry**: 256 pages of 4 kB, in
+`CODEPAGESIZE` and `CODESIZE`. The SoftDevice checks every erase and write
+against them, and with both reading zero it refuses every flash operation with
+`NRF_ERROR_FORBIDDEN`, so the filesystem never formats and nothing the firmware
+saves is written.
+
+**The filesystem's pages are kept outside the emulator.** Renode builds flash
+from the image at every start, so whenever the flash controller returns to
+read-only after a write or an erase, the region the firmware keeps its files in
+(the Adafruit core's InternalFS, 28 kB at `0xED000`) is written to the node's
+own directory, and loaded back over the image at the next start. Only that
+region is kept: anything written elsewhere in flash is rebuilt from the image.
+
+The kept file is named for a hash of the image, so a different build starts with
+empty storage, as reflashing a board does. `wipe every node's memory` in the
+[firmware library](firmware-library.html) deletes it with the rest of each
+node's stored state.
+
 ### Peripherals touched during boot
 
 | peripheral | why the firmware needs it |
