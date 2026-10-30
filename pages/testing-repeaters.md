@@ -165,6 +165,42 @@ raises delivered and raises airtime sharply is buying delivery with spectrum,
 which may still be the right trade on a quiet band and the wrong one on a busy
 one. A difference smaller than `rx_spread` is not a difference.
 
+## 8. Hand its radio a frame
+
+To test what a repeater does with one particular reception, without the channel
+deciding anything, give its radio the frame directly. The frame is the whole
+packet, header first, as hex. `as` says how the reception went:
+
+| `as` | what the firmware's radio reports |
+|---|---|
+| `ok` | a good frame (the default) |
+| `crc_error` | RxDone beside CrcErr, with the damaged bytes in the buffer |
+| `header_error` | HeaderErr, and no frame |
+| `no_crc` | a good frame whose header said the payload carries no CRC; only the header CRC flag tells it apart |
+| `next_before_read` | the next frame's header arriving in continuous receive after the last frame was received and before the firmware read it |
+| `next_during_read` | the same, arriving between the firmware's buffer status read and the rest of its read |
+
+The last two follow an `ok` frame and model a timing the part does not document,
+for testing a driver against it. `delivered` is false when the node has no
+firmware or its chip does not read that kind.
+
+:::ways
+::socket
+```json
+{"id":4,"method":"radio.deliver","params":{"node":"Test Site","hex":"1500348b2db7","as":"no_crc"}}
+```
+::python
+```python
+wb.nodes["Test Site"].deliver("1500348b2db7", as_="no_crc")
+```
+::go
+```go
+ok, err := wb.Node("Test Site").Deliver(ctx, "1500348b2db7", "no_crc")
+```
+:::
+
+A capture shows what the node transmitted in reply.
+
 ## What to be careful about
 
 **Two runs, one changed thing.** A sweep holds the network, the seeds and the
