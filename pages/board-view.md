@@ -277,6 +277,19 @@ Nothing is echoed twice: the line is written into the console buffer before the
 bytes reach the board, so what appears is the board's own record rather than a
 copy from the interface.
 
+**On a paused run, a command waits for play.** The firmware answers as soon as
+it reads the line, so `advert` is answered `OK - Advert sent` whether or not the
+clock is running, but nothing reaches the air until the engine steps. While the
+clock is stopped, the console adds a line of its own under the reply:
+
+    > advert
+      -> OK - Advert sent
+    (the run is paused: anything this sends is queued and goes on the air when it plays)
+
+The line is bracketed so it cannot be read as something the node said. It is
+not added while the run is playing, or for a command held with `at_ms`, which
+runs inside a step rather than waiting for one.
+
 ### Decoding a companion
 
 A companion's serial carries the framed protocol, so read a byte at a time it is
