@@ -212,6 +212,11 @@ loop runs when the engine steps - so reading immediately after sending reads the
 moment before the command went out. `ask` sends, gives the mesh its own time,
 and then reads.
 
+On a paused run, `console.type` and `console.cli` also answer `paused`, the same
+sentence the console prints under the reply: whatever the command sends is
+queued and goes on the air when the run plays. A call held with `at_ms` runs
+inside a step and does not carry it.
+
 ### Running a command on another node
 
 `companion.cli` sends a command from a connected companion to another node, as

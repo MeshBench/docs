@@ -125,6 +125,31 @@ path has three parts: the pending-interrupt query, the binding that exposes it
 to the core, and the call that wakes the sleeping thread. Without all three the
 firmware sleeps and the node is silent while appearing healthy.
 
+### Flash that survives a restart
+
+An nRF52 board keeps what its firmware stores from one start to the next, as a
+flashed board does. A preference set over the console, such as `set af 7`,
+reads back the same after `node.stop` and `node.start`. Two things make that
+work.
+
+**The factory registers give the flash's geometry**: 256 pages of 4 kB, in
+`CODEPAGESIZE` and `CODESIZE`. The SoftDevice checks every erase and write
+against them, and with both reading zero it refuses every flash operation with
+`NRF_ERROR_FORBIDDEN`, so the filesystem never formats and nothing the firmware
+saves is written.
+
+**The filesystem's pages are kept outside the emulator.** Renode builds flash
+from the image at every start, so whenever the flash controller returns to
+read-only after a write or an erase, the region the firmware keeps its files in
+(the Adafruit core's InternalFS, 28 kB at `0xED000`) is written to the node's
+own directory, and loaded back over the image at the next start. Only that
+region is kept: anything written elsewhere in flash is rebuilt from the image.
+
+The kept file is named for a hash of the image, so a different build starts with
+empty storage, as reflashing a board does. `wipe every node's memory` in the
+[firmware library](firmware-library.html) deletes it with the rest of each
+node's stored state.
+
 ### Peripherals touched during boot
 
 | peripheral | why the firmware needs it |
@@ -133,6 +158,31 @@ firmware sleeps and the node is silent while appearing healthy.
 | `CLOCK` | HFCLK and LFCLK start, waited on before anything proceeds |
 | `SAADC` | battery voltage |
 | `TWIM` | I2C, for displays and sensors on some boards |
+
+### Displays
+
+A board's display is drawn in the [board view](board-view.html) when its
+controller is modelled. Under Renode there are two kinds.
+
+**SPI panels**, an ST7789 and an ST7735, share the radio's SPIM and are told
+apart by chip select, which is how they are wired in copper.
+
+**I2C displays**, an SSD1306 or an SH1106, are registered on the first TWIM at
+their address, `0x3C` on the RAK4631. A transfer to a registered address moves
+its bytes through EasyDMA (`TXD` and `RXD` `PTR`, `MAXCNT`, `AMOUNT`) and
+follows the shortcuts the driver sets. An address nothing claims is answered
+with an address NACK, so a firmware probing for a sensor the board does not
+carry gets an answer rather than waiting for one.
+
+The display model takes the controller's control bytes, its column and page
+window, its addressing mode and display on and off. Other commands are
+consumed with their arguments and ignored, so a firmware that sets contrast or
+scrolling sees no error and no effect. The controller's memory is drawn as a
+one-bit frame, and an SH1106 is drawn from column 2, where its glass starts.
+
+On a RAK4631 the published v1.17.1 repeater draws MeshCore's own boot screen:
+the logo, the version line and `< Repeater >`. The same frame is what
+`board.screen` returns.
 | SX1262 over SPIM | the radio |
 
 ## Which boards have been run
@@ -153,6 +203,8 @@ that board do that thing.
 | `Heltec_v3` | ESP32-S3 | QEMU | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | – | ✓ |
 | `LilyGo_TDeck` | ESP32-S3 | QEMU | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | – | ✓ |
 | `Ebyte_EoRa-S3` | ESP32-S3 | QEMU | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | – | ✓ |
+| `Heltec_E290` | ESP32-S3 | QEMU | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | – | |
+| `heltec_tracker_v2` | ESP32-S3 | QEMU | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | | |
 | `Station_G2` | ESP32-S3 | - | | | | | | | | |
 | `Heltec_v2` | ESP32 | - | | | | | | | | |
 
@@ -175,7 +227,11 @@ the board is a working member of a mesh rather than a node that talks to
 itself. It is judged at the board: the packet has to arrive, be recognised as
 somebody else's, and go back out.
 
-The two blanks have never been attempted rather than tried and failed.
+`Station_G2` and `Heltec_v2` have never been attempted rather than tried and
+failed. The `Heltec_E290` runs and floods, but its e-paper panel is not drawn.
+The `heltec_tracker_v2`'s front-end module is switched by the radio rather than
+by a GPIO, and its `fem` column has not been measured. The `power` column has
+not been measured for either board.
 
 **Measured one board at a time on an idle machine.** Several emulators at once
 will make a twelve core machine fall behind the wall clock, and a board that is
@@ -203,3 +259,11 @@ for role` assigns one to every node of that role, and reports how many nodes
 that will be before it does. Each of those nodes becomes its own emulator.
 
 ![The firmware library, emulated builds included](images/firmware-library.png)
+
+Board images are listed and downloaded through GitHub's API, which allows an
+unauthenticated address sixty requests an hour: a handful of board probes. When
+the allowance is used up, the refusal says so and gives the time it resets:
+
+    GitHub's API allowance for this address is used up until 14:05; set GITHUB_TOKEN (export GITHUB_TOKEN=$(gh auth token)) to raise it. Already-downloaded images keep working without it
+
+Requests are authenticated with `GITHUB_TOKEN` whenever it is set.
