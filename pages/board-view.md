@@ -268,19 +268,20 @@ what is sent, which are different questions.
 - A **companion** speaks a framed protocol whose command line is meshcore-cli's
   vocabulary: `advert`, `floodadv`, `public <msg>`, `chan <n> <msg>`,
   `msg <contact> <msg>`, `login <contact> <password>`, `req_status <contact>`,
-  `scope <name>`, `infos`, `ver`, `contacts`, `sync_msgs`, `set`, `time`.
+  `cmd <contact> <command>`, `scope <name>`, `infos`, `ver`, `contacts`,
+  `sync_msgs`, `set`, `time`.
   There is no `send`.
 
 ### Talking to one node
 
-`msg`, `login` and `req_status` address one contact, by the name the node holds
-it under or by its public key in hex. Run `contacts` first: a name is looked up
-among the contacts the node has listed, and one it has not listed is refused
-with `holds no contact`. A key is sent as given, and the firmware itself answers
-`not found` if it does not hold it.
+`msg`, `login`, `req_status` and `cmd` address one contact, by the name the
+node holds it under or by its public key in hex. Run `contacts` first: a name is
+looked up among the contacts the node has listed, and one it has not listed is
+refused with `holds no contact`. A key is sent as given, and the firmware itself
+answers `not found` if it does not hold it.
 
-Each is answered twice in the console, each line stamped with the simulated
-time it arrived:
+`msg`, `login` and `req_status` are each answered twice in the console, each
+line stamped with the simulated time it arrived:
 
 1. when the firmware takes it - `sent msg to West Lomond by flood, waiting up to
    7060 ms`. By flood means the node knew no path and the message goes
@@ -293,6 +294,14 @@ A message whose ack never comes back gets `no ack from West Lomond within
 7060 ms` once the firmware's wait is over. A
 repeater answers a status request only from a client that has logged in to it,
 so `login` comes before `req_status`, as it does on a phone.
+
+`cmd <contact> <command>` runs a command on that node over the air, as an
+operator's phone administers a repeater it cannot plug into: the command is the
+same line the node's own serial console takes, such as `get name` or
+`set af 7`. The node runs it only for a sender logged in to it as admin, so
+`login` comes first. A command from a sender that is not logged in gets no
+answer at all. Nothing is acked: the answer is the node's own reply, printed as
+`reply from <key>: <text>` with the simulated time it arrived.
 
 `scope <name>` sets the region the node's floods go out under, and `scope *`
 sends unscoped. The same commands work in a fixture's schedule.

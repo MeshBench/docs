@@ -194,10 +194,10 @@ tell "found it" from "found something that shares a word".
 A repeater has a text command line and reads what is typed at it. A companion
 does not: it speaks the framed companion protocol, and its command line is
 meshcore-cli's vocabulary - `advert`, `public <msg>`, `chan <n> <msg>`,
-`msg <contact> <msg>`, `login`, `req_status`, `scope`, `infos`, `contacts`. What
-the node answers to `msg`, `login` and `req_status` - sent, delivered, answered
-or refused, with the simulated time - lands in the companion's transcript,
-which `companion.state` returns under `recent`.
+`msg <contact> <msg>`, `login`, `req_status`, `cmd`, `scope`, `infos`,
+`contacts`. What the node answers to `msg`, `login` and `req_status` - sent,
+delivered, answered or refused, with the simulated time - lands in the
+companion's transcript, which `companion.state` returns under `recent`.
 
 `node.console` chooses by the node's kind, so a script does not have to. Text
 sent to a companion's text console is echoed locally and reaches nothing, which
@@ -216,6 +216,50 @@ On a paused run, `console.type` and `console.cli` also answer `paused`, the same
 sentence the console prints under the reply: whatever the command sends is
 queued and goes on the air when the run plays. A call held with `at_ms` runs
 inside a step and does not carry it.
+
+### Running a command on another node
+
+`companion.cli` sends a command from a connected companion to another node, as
+MeshCore's remote administration does: the text goes over the air as a
+remote-admin message, the recipient runs it on its own command line, and its
+answer comes back the same way. It is how a study provisions a mesh the way an
+operator does, rather than over every node's serial port.
+
+The recipient runs the command only for a sender logged in to it as admin, so
+log in first with `console.cli` and `login <contact> <password>`. Nothing is
+acked, and a command from a sender that is not logged in gets no answer at all.
+The answer arrives later, and `companion.state` lists every one under
+`cli_replies`, oldest first, each with the key it came `from` and its `text`.
+
+:::ways
+::gui
+On the companion's **CLI** tab, `login Kinross password`, then
+`cmd Kinross get radio`. The reply is printed in the transcript as it
+arrives.
+::socket
+```json
+{"id":1,"method":"console.cli","params":{"node":"Phone","command":"login Kinross password"}}
+{"id":2,"method":"companion.cli","params":{"node":"Phone","to":"Kinross","command":"get radio"}}
+{"id":3,"method":"companion.state","params":{"node":"Phone"}}
+```
+::python
+```python
+wb.call("console.cli", {"node": "Phone", "command": "login Kinross password"})
+wb.call("companion.cli", {"node": "Phone", "to": "Kinross", "command": "get radio"})
+print(wb.call("companion.state", {"node": "Phone"})["cli_replies"])
+```
+::go
+```go
+_, err := wb.Call(ctx, "companion.cli", map[string]any{
+	"node": "Phone", "to": "Kinross", "command": "get radio"})
+```
+:::
+
+`to` is the contact's name as the companion holds it, or its public key in hex.
+A name the companion has not listed is refused, so run `contacts` first. On the
+command line a contact is one word, so a name with a space in it is addressed
+there by its key. Like the other input verbs, `companion.cli` takes `at_ms` to
+run at an instant of simulated time rather than now.
 
 ## Importing a deployment
 
