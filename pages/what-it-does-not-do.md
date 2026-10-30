@@ -479,6 +479,24 @@ GPS feed emits a sentence a real second rather than a simulated one, and a
 native node is handed a seeded identity on its command line while an emulated
 one generates its own on first boot.
 
+**Renode lockstep, a first step (#774).** With `MESHBENCH_RENODE_LOCKSTEP=1`
+an nRF52 board under Renode no longer runs free. A clock entry in the
+machine's own virtual time ticks the chip once a millisecond and holds the CPU
+there until the engine asks for the next one. Renode's virtual time comes from
+the instructions executed and idle time is skipped, so the CPU and the chip
+step with the engine. The machine's random numbers, which the RNG peripheral
+answers and MeshCore draws its jitter from, are seeded from the node.
+Measured: two RAK_4631 repeaters, two idle runs, gave byte-identical event logs
+and identical chip counters.
+
+It does not yet make the run reproducible, and `sim.state` still says so.
+Console input reaches Renode's UART over a socket, on the wall clock, so the
+lines provisioning types at boot and any `console.type` land wherever the
+machine happens to be. A third run with every core busy diverged for that
+reason. It also costs about five times real time for two boards on this
+machine. Gating the console by virtual time, and the QEMU half (`-icount` and
+a hold in the fork's SX1262 device), are what remain.
+
 **Consequence.** A run containing an emulated node can be compared with nothing
 but itself, so a firmware A/B with an emulated arm is not measuring what it
 appears to. That is now said rather than left to be discovered: `sim.state`
@@ -486,6 +504,56 @@ answers `reproducible` and `not_reproducible_why`, `experiment.start` answers
 the same pair and puts it in the status line, the sweep panel prints it beside
 the cost estimate before the run starts, and the results panel repeats it above
 the table. Use native for anything being compared.
+
+### 3.2b A failed frame reaches the chip from interference, and from nothing else
+
+A frame a receiver locked onto and lost reaches the firmware's chip as the part
+reports it: a header it could not read raises `HeaderErr` and nothing more, and
+a header that read with a payload that did not raises `RxDone` beside `CrcErr`,
+with the corrupt bytes in the buffer. In calculated mode the engine decides
+which from where a collision landed: more than one destroyed symbol inside
+the eight-symbol header block, which is coded at CR 4/8, is a header error, and
+anything else that is lost is a CRC error. In waveform mode the demodulator
+decides.
+
+A frame the receiver could detect and never locked onto is reported too, as
+the third case. In calculated mode that is a frame swamped by an interferer it
+could not capture over that arrived while the preamble was still to be found;
+in waveform mode it is any frame the demodulator found no preamble lock in.
+The part raises nothing for it, so the chip model withdraws the `HeaderValid`
+it raised from how long the carrier lasted, and leaves `PreambleDetected` set.
+
+Native builds with strict receive keep the detection flags as the part does:
+`PreambleDetected` and `HeaderValid` stay set until the firmware clears them,
+and a frame the receiver was not listening for from its preamble to its end is
+not received, so a re-arm or a CAD scan part-way through a frame loses it.
+
+Only a node that says it takes each message is told: a native build whose
+bridge sets the capability bits in its radio stats record. Emulated boards, and
+native builds from before those bits, are told nothing, and their chip clears
+the detection flags when the carrier ends, as before.
+
+Four things are still kinder than the part:
+
+- **Only interference fails a frame.** A signal near the floor that the chip
+  would lock onto and then lose is, in calculated mode, simply not heard. Real
+  radios raise header and CRC errors on weak signals all the time.
+- **The failure arrives when the packet ends.** The calculated path judges a
+  reception once the whole packet is on the air, so `HeaderErr` is raised at the
+  end of the frame rather than the end of its header.
+- **`HeaderValid` is raised from the carrier, not from a decoded header.** The
+  chip model cannot decode, so it raises the flag once a carrier has lasted as
+  long as a header takes, and only withdraws it when the frame ends without a
+  lock. During such a frame a firmware sees a header where the part would show
+  only a preamble, and holds off transmitting for longer than it would on air.
+- **The processor takes no time.** A native node runs its loop in no simulated
+  time, so a firmware that is slow to collect a packet loses nothing to the
+  delay, where on a real board the next frame can arrive in the meantime.
+
+**Consequence.** A firmware's error paths now run, and on native builds with
+strict receive a fault in how it handles a stale `PreambleDetected`, or a
+receiver re-armed mid-frame, can be seen. A fault that needs the processor to be
+slow cannot, yet.
 
 ### 3.3 Native nodes cannot catch anything architecture-dependent
 
@@ -868,7 +936,7 @@ that can simply be left out.
 ### 3.7 BLE is ours, not the firmware's
 
 The Bluetooth companion is a host-side BlueZ GATT server presenting the Nordic
-UART Service (`tools/ble/nus_peripheral.py`, verified against a real adapter on
+UART Service (`internal/app/benchble/nus_peripheral.py`, verified against a real adapter on
 elite). It is genuinely connectable from a real phone — but it is *our*
 implementation of the companion protocol, not MeshCore's BLE code being
 exercised. Removing the SoftDevice removed the firmware's Bluetooth stack along

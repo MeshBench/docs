@@ -66,15 +66,15 @@ of it, and what `Call` takes is below.
 
 <!-- BEGIN GENERATED VERBS -->
 
-There are 259 verbs, and every one of them says what it is for, what it takes and what it answers, in the code that registers it.
+There are 263 verbs, and every one of them says what it is for, what it takes and what it answers, in the code that registers it.
 
 Every entry below is generated from the MeshBench source, so it cannot drift from the verb it describes. An example that is not marked otherwise is made against a running session by that repository's test suite.
 
-**Session and lifecycle** - [`app.quit`](#app-quit) · [`log.path`](#log-path) · [`logs.export`](#logs-export) · [`session.checkpoint`](#session-checkpoint) · [`session.checkpoints`](#session-checkpoints) · [`session.describe`](#session-describe) · [`session.journal`](#session-journal) · [`session.list`](#session-list) · [`session.restore`](#session-restore) · [`session.status`](#session-status) · [`ui.keep_above`](#ui-keep-above) · [`ui.said`](#ui-said) · [`ui.scale`](#ui-scale) · [`ui.state`](#ui-state)
+**Session and lifecycle** - [`app.quit`](#app-quit) · [`log.path`](#log-path) · [`logs.export`](#logs-export) · [`session.checkpoint`](#session-checkpoint) · [`session.checkpoints`](#session-checkpoints) · [`session.describe`](#session-describe) · [`session.detach`](#session-detach) · [`session.journal`](#session-journal) · [`session.list`](#session-list) · [`session.restore`](#session-restore) · [`session.status`](#session-status) · [`ui.keep_above`](#ui-keep-above) · [`ui.said`](#ui-said) · [`ui.scale`](#ui-scale) · [`ui.state`](#ui-state)
 
 **Project** - [`project.list`](#project-list) · [`project.new`](#project-new) · [`project.open`](#project-open) · [`project.save`](#project-save)
 
-**Nodes** - [`node.aim`](#node-aim) · [`node.antenna`](#node-antenna) · [`node.boardview`](#node-boardview) · [`node.card`](#node-card) · [`node.energy`](#node-energy) · [`node.output`](#node-output) · [`node.output_window`](#node-output-window) · [`node.provisioning`](#node-provisioning) · [`node.radio`](#node-radio) · [`node.radio_adopt`](#node-radio-adopt) · [`node.reflash_failed`](#node-reflash-failed) · [`node.reflashed`](#node-reflashed) · [`node.regions`](#node-regions) · [`node.set_board`](#node-set-board) · [`node.set_firmware`](#node-set-firmware) · [`node.set_firmware_only`](#node-set-firmware-only) · [`node.start`](#node-start) · [`node.stop`](#node-stop) · [`node.truerf`](#node-truerf) · [`node.window`](#node-window) · [`node.wipe`](#node-wipe) · [`nodes.add_to_selection`](#nodes-add-to-selection) · [`nodes.allow_flood`](#nodes-allow-flood) · [`nodes.antenna`](#nodes-antenna) · [`nodes.delete`](#nodes-delete) · [`nodes.delete_many`](#nodes-delete-many) · [`nodes.keep`](#nodes-keep) · [`nodes.list`](#nodes-list) · [`nodes.move`](#nodes-move) · [`nodes.near`](#nodes-near) · [`nodes.place`](#nodes-place) · [`nodes.regions`](#nodes-regions) · [`nodes.search`](#nodes-search) · [`nodes.select`](#nodes-select) · [`nodes.select_many`](#nodes-select-many) · [`nodes.stats`](#nodes-stats)
+**Nodes** - [`node.aim`](#node-aim) · [`node.antenna`](#node-antenna) · [`node.boardview`](#node-boardview) · [`node.card`](#node-card) · [`node.debug`](#node-debug) · [`node.energy`](#node-energy) · [`node.output`](#node-output) · [`node.output_window`](#node-output-window) · [`node.provisioning`](#node-provisioning) · [`node.radio`](#node-radio) · [`node.radio_adopt`](#node-radio-adopt) · [`node.reflash_failed`](#node-reflash-failed) · [`node.reflashed`](#node-reflashed) · [`node.regions`](#node-regions) · [`node.set_board`](#node-set-board) · [`node.set_firmware`](#node-set-firmware) · [`node.set_firmware_only`](#node-set-firmware-only) · [`node.start`](#node-start) · [`node.stop`](#node-stop) · [`node.truerf`](#node-truerf) · [`node.window`](#node-window) · [`node.wipe`](#node-wipe) · [`nodes.add_to_selection`](#nodes-add-to-selection) · [`nodes.allow_flood`](#nodes-allow-flood) · [`nodes.antenna`](#nodes-antenna) · [`nodes.delete`](#nodes-delete) · [`nodes.delete_many`](#nodes-delete-many) · [`nodes.keep`](#nodes-keep) · [`nodes.list`](#nodes-list) · [`nodes.move`](#nodes-move) · [`nodes.near`](#nodes-near) · [`nodes.place`](#nodes-place) · [`nodes.regions`](#nodes-regions) · [`nodes.search`](#nodes-search) · [`nodes.select`](#nodes-select) · [`nodes.select_many`](#nodes-select-many) · [`nodes.stats`](#nodes-stats)
 
 **Boards** - [`board.key`](#board-key) · [`board.matrix`](#board-matrix) · [`board.press`](#board-press) · [`board.probe`](#board-probe) · [`board.probe_finished`](#board-probe-finished) · [`board.reset`](#board-reset) · [`board.screen`](#board-screen) · [`board.screenshot`](#board-screenshot) · [`board.touch`](#board-touch)
 
@@ -84,9 +84,9 @@ Every entry below is generated from the MeshBench source, so it cannot drift fro
 
 **Console and fleet** - [`console.cli`](#console-cli) · [`console.read`](#console-read) · [`console.type`](#console-type) · [`fleet.replies`](#fleet-replies) · [`fleet.send`](#fleet-send)
 
-**Companion** - [`companion.add_channel`](#companion-add-channel) · [`companion.advert`](#companion-advert) · [`companion.configure`](#companion-configure) · [`companion.connect`](#companion-connect) · [`companion.disconnect`](#companion-disconnect) · [`companion.raw`](#companion-raw) · [`companion.read`](#companion-read) · [`companion.refresh`](#companion-refresh) · [`companion.scope`](#companion-scope) · [`companion.send`](#companion-send) · [`companion.state`](#companion-state)
+**Companion** - [`companion.add_channel`](#companion-add-channel) · [`companion.advert`](#companion-advert) · [`companion.cli`](#companion-cli) · [`companion.configure`](#companion-configure) · [`companion.connect`](#companion-connect) · [`companion.disconnect`](#companion-disconnect) · [`companion.raw`](#companion-raw) · [`companion.read`](#companion-read) · [`companion.refresh`](#companion-refresh) · [`companion.scope`](#companion-scope) · [`companion.send`](#companion-send) · [`companion.state`](#companion-state)
 
-**Serving to real clients** - [`bench.drop`](#bench-drop) · [`bench.refresh`](#bench-refresh) · [`bench.serve`](#bench-serve) · [`bench.stray`](#bench-stray) · [`sdr.serve`](#sdr-serve) · [`sdr.stop`](#sdr-stop)
+**Serving to real clients** - [`bench.drop`](#bench-drop) · [`bench.refresh`](#bench-refresh) · [`bench.serve`](#bench-serve) · [`bench.stray`](#bench-stray) · [`radio.deliver`](#radio-deliver) · [`radio.preset`](#radio-preset) · [`sdr.serve`](#sdr-serve) · [`sdr.stop`](#sdr-stop)
 
 **Events, packets and capture** - [`capture.file`](#capture-file) · [`capture.stop`](#capture-stop) · [`capture.wireshark`](#capture-wireshark) · [`events.dump`](#events-dump) · [`events.recent`](#events-recent) · [`packet.close`](#packet-close) · [`packet.open`](#packet-open) · [`waterfall.capture`](#waterfall-capture)
 
@@ -100,7 +100,7 @@ Every entry below is generated from the MeshBench source, so it cannot drift fro
 
 **Validation** - [`validate.calibrate`](#validate-calibrate) · [`validate.compare`](#validate-compare) · [`validate.failed`](#validate-failed) · [`validate.fetch`](#validate-fetch) · [`validate.uncalibrate`](#validate-uncalibrate)
 
-**The radio model** - [`environ.failed`](#environ-failed) · [`environ.fetch`](#environ-fetch) · [`environ.fetched`](#environ-fetched) · [`environ.list`](#environ-list) · [`radio.preset`](#radio-preset) · [`rf.environment`](#rf-environment) · [`rf.excess_loss`](#rf-excess-loss) · [`rf.mode`](#rf-mode) · [`rf.realism`](#rf-realism) · [`rf.toggle`](#rf-toggle)
+**The radio model** - [`environ.failed`](#environ-failed) · [`environ.fetch`](#environ-fetch) · [`environ.fetched`](#environ-fetched) · [`environ.list`](#environ-list) · [`rf.environment`](#rf-environment) · [`rf.excess_loss`](#rf-excess-loss) · [`rf.mode`](#rf-mode) · [`rf.realism`](#rf-realism) · [`rf.toggle`](#rf-toggle)
 
 **Provisioning, schedule and assertions** - [`assert.add`](#assert-add) · [`assert.check`](#assert-check) · [`provisioning.apply`](#provisioning-apply) · [`provisioning.get`](#provisioning-get) · [`provisioning.set`](#provisioning-set) · [`run.save`](#run-save) · [`schedule.add`](#schedule-add) · [`schedule.clear`](#schedule-clear)
 
@@ -225,6 +225,18 @@ The cheapest question a client can ask, and the one worth asking first: whether 
 ```
 
 **Client** `wb.describe()`
+
+### `session.detach`
+
+**The workbench's own callback. The socket refuses it.**
+
+Take the engine and what is served from it off the session, on the store's own goroutine, so closing the workbench can shut them down from another without racing a rebuild.
+
+**Takes** nothing.
+
+**Answers** Not for a client: Close calls it, then closes what it was handed outside the store. Nothing is returned that a caller could use.
+
+**Client** none: the store taking the engine off the Sim so Close can shut it down off its goroutine
 
 ### `session.journal`
 
@@ -563,6 +575,31 @@ Report or change what is in one node's card slot: whether a card is fitted, whic
 ```
 
 **Client** `node.card(fitted=|file=|wipe=)`
+
+### `node.debug`
+
+Make a running node debuggable and say how to attach: a native node is held rather than marked down while a breakpoint stops it, and an emulated board is restarted with its emulator's GDB stub.
+
+**Takes**
+
+| parameter | type | | what |
+|---|---|---|---|
+| `node` | string | required, primary | the node to debug; refused when absent, unknown, or not running firmware |
+| `wait` | bool | optional | for an emulated board, hold its CPU at reset until a debugger continues, so boot can be stepped through; refused for a native node, which has already booted by the time anything can attach |
+| `port` | number | optional | for an emulated board, the port its GDB stub listens on; absent picks a free one |
+| `off` | bool | optional | stop debugging: a native node is given its tick deadline back, an emulated board is restarted without the stub |
+
+**Answers** `node`, `debugging`, `backend`, `pid`, `binary`, `symbols`, `gdb_port`, `wait`, `debugger`, `image`, `attach`, `vscode`, `note`. `attach` is a debugger command line and `vscode` a launch configuration to paste. A native node has `pid`, `binary` and `symbols`: `debug` with DWARF, `symbols` with a symbol table only, `stripped` with neither. An emulated board has `gdb_port`, `wait`, the `debugger` for its architecture and the `image` it runs, which has no symbols: the debugger wants the firmware.elf the same build produced. From the first call, `sim.state` reports the run as not reproducible, because a debugger stopping a node moves its clock.
+
+**Example** - attach gdb to a native repeater
+
+```json
+{"id":1,"method":"node.debug","params":{"node":"West Lomond"}}
+```
+
+Not made by the test suite: this call needs more than the two-node headless session the runnable examples go to.
+
+**Client** `node.debug(wait=, port=, off=)`
 
 ### `node.energy`
 
@@ -1146,7 +1183,7 @@ Put one node down at a position, which is how a repeater a feed never carried ge
 | `height_m` | number | optional | antenna height above ground in metres; absent is 10 |
 | `tx_dbm` | number | optional | transmit power in decibel-milliwatts; absent is 22 |
 
-**Answers** `placed`, `kind`, `regions`, `board`, `nodes`. `regions` and the firmware build are inherited from the neighbours rather than left empty: a node holding a region its neighbours do not is as silent as one holding none. `nodes` is the whole network's count afterwards. The links are not in the answer, because measuring them is a worker's job and this returns before it.
+**Answers** `placed`, `kind`, `regions`, `board`, `nodes`. `regions` and the firmware build are inherited from the neighbours rather than left empty: a node holding a region its neighbours do not is as silent as one holding none. So is the radio: the modem most of its ten nearest neighbours are on, or EU/UK (Narrow) where none has a majority, since a node on a channel nobody else uses hears nobody. `nodes` is the whole network's count afterwards. The links are not in the answer, because measuring them is a worker's job and this returns before it.
 
 **Example** - put a repeater on the hill and see what it wins
 
@@ -1246,7 +1283,7 @@ Recompute every node's counters now rather than at the next tick, and answer wit
 
 **Takes** nothing.
 
-**Answers** `nodes`, `stats`. `nodes` is how many rows there are and `stats` is the rows. A session with no engine built has no counters to report and answers with none, which is not a failure.
+**Answers** `nodes`, `stats`. `nodes` is how many rows there are and `stats` is the rows. Each row carries `airtime_ms`, cumulative over the run, and `duty_cycle_pct` over the run's whole length, the same numbers as the Scores panel; a node the engine has no score for has neither. A session with no engine built has no counters to report and answers with none, which is not a failure.
 
 **Example** - read every node's state and counters
 
@@ -1465,13 +1502,13 @@ Not made by the test suite: this call needs more than the two-node headless sess
 
 ### `sim.faster`
 
-Double how much simulated time one tick covers, trading detail for how long a run takes to watch.
+Double how much simulated time one tick covers, which makes the run go twice as fast until the machine cannot keep up.
 
 **Takes** nothing.
 
-**Answers** `step_ms`. `step_ms` is the new tick length. Nothing bounds it: enough calls will step past whole transmissions.
+**Answers** `step_ms`. `step_ms` is the new tick length, capped at 1000. A tick is ten milliseconds of wall time and the engine still steps in its own 10 ms, so nothing is skipped: past what the machine can step in a tick the run simply goes as fast as it can, and the transport's realtime figure says how fast that is.
 
-**Example** - run twice as coarsely
+**Example** - run twice as fast
 
 ```json
 {"id":1,"method":"sim.faster","params":{}}
@@ -1637,9 +1674,9 @@ Halve how much simulated time one tick covers.
 
 **Takes** nothing.
 
-**Answers** `step_ms`. `step_ms` is the new tick length, which reaches zero after enough calls and stops the clock advancing at all.
+**Answers** `step_ms`. `step_ms` is the new tick length, never below 1. Below the engine's own 10 ms step, a tick steps only once it has been owed a whole step, so 5 is half real time.
 
-**Example** - run twice as finely
+**Example** - run at half the speed
 
 ```json
 {"id":1,"method":"sim.slower","params":{}}
@@ -1655,7 +1692,7 @@ Set how much simulated time one tick covers, which is the honest form of a speed
 
 | parameter | type | | what |
 |---|---|---|---|
-| `step_ms` | number | optional | simulated milliseconds per tick, which is what the engine actually paces on |
+| `step_ms` | number | optional | simulated milliseconds per tick, from 1 to 1000; a tick is ten milliseconds of wall time, so 10 is real time and 1000 is as fast as the machine can step |
 | `factor` | number | optional | a multiple of ten milliseconds per tick, read only when `step_ms` is absent, for scripts written against the old socket |
 
 **Answers** `step_ms`. `step_ms` is what it settled on. Neither parameter positive leaves the tick alone and reports it.
@@ -1690,7 +1727,7 @@ Report where the run has got to, cheaply enough to poll and safely enough to cal
 
 **Takes** nothing.
 
-**Answers** `playing`, `now_ms`, `until_ms`, `events`, `step_ms`, `seed`, `warming`, `links_measured`, `ground`, `reproducible`, `not_reproducible_why`. `until_ms` is zero unless `sim.run` set a limit. `events` is the count since the engine was built, not since the last call. The link measurement has two states: `warming` while it runs, and `links_measured` once every pair has been walked. Neither true is a warm that failed or was cancelled, which finishes its own job row - so a wait for the workbench to go idle returns having waited for nothing, and reading that as a measurement is how a study came to be believed over ground nobody walked. `ground` is what the studies here are standing on, in the shape `terrain.ground` returns. `reproducible` says whether running this scenario again on the same seed would put the same traffic at the same instants: false wherever a node runs in an emulator, because that node's firmware is stepped by the emulator's clock rather than by the run's, and `not_reproducible_why` is the sentence saying which node and what follows from it. A script comparing two runs, or quoting a timing against another run's, has to read it.
+**Answers** `playing`, `now_ms`, `until_ms`, `events`, `step_ms`, `seed`, `warming`, `links_measured`, `ground`, `reproducible`, `not_reproducible_why`. `until_ms` is zero unless `sim.run` set a limit. `events` is the count since the engine was built, not since the last call. The link measurement has two states: `warming` while it runs, and `links_measured` once every pair has been walked. Neither true is a warm that failed or was cancelled, which finishes its own job row - so a wait for the workbench to go idle returns having waited for nothing, and reading that as a measurement is how a study came to be believed over ground nobody walked. `ground` is what the studies here are standing on, in the shape `terrain.ground` returns. `reproducible` says whether running this scenario again on the same seed would put the same traffic at the same instants: false wherever a node runs in an emulator, because that node's firmware is stepped by the emulator's clock rather than by the run's, and `not_reproducible_why` is the sentence saying which node and what follows from it. A script comparing two runs, or quoting a timing against another run's, has to read it. It is also false once something in this run was decided by the wall clock rather than by the run: a console or companion verb called while the clock was playing without `at_ms`, a client outside the simulation writing to a served companion, or a node dropped for missing a tick's deadline on a loaded machine. A reset or a new seed clears that.
 
 **Example** - ask whether the run has finished
 
@@ -1837,7 +1874,7 @@ Report everything known about one build: where it is, what it is, and what has b
 | `role` | string | optional | which role, when one label carries more than one |
 | `board` | string | optional | which board; absent means a build for this machine |
 
-**Answers** `role`, `version`, `board`, `native`, `on_disk`, `path`, `settings_path`, `bytes`, `modified`, `in_use`, `kind`, `bootable`, `flash_mb`, `coproc_at_reset`, `card_required`, `notes`. Answered from the library, so a published build nobody has fetched is described too: `on_disk` is then false and `path` and `bytes` are empty. `in_use` counts the nodes pinned to it, `kind`, `bootable` and `flash_mb` are read from a board image and say nothing about a native build, `settings_path` is where its settings would be written whether any exist or not, and `modified` is absent for a build not on this machine. A label naming more than one build is refused rather than guessed at.
+**Answers** `role`, `version`, `board`, `native`, `on_disk`, `path`, `settings_path`, `bytes`, `modified`, `in_use`, `kind`, `bootable`, `flash_mb`, `coproc_at_reset`, `card_required`, `dialect`, `notes`. Answered from the library, so a published build nobody has fetched is described too: `on_disk` is then false and `path` and `bytes` are empty. `in_use` counts the nodes pinned to it, `kind`, `bootable` and `flash_mb` are read from a board image and say nothing about a native build, `settings_path` is where its settings would be written whether any exist or not, and `modified` is absent for a build not on this machine. A label naming more than one build is refused rather than guessed at.
 
 **Example** - find out where a build lives and what is running it
 
@@ -1902,6 +1939,7 @@ Put somebody's own build into the library, which is how a change is tested again
 | `board` | string | optional | the board it is for; absent means a build for this machine |
 | `label` | string | optional | what the library will know it by and what a node pins; absent, it is stamped with a timestamp so a second import does not replace the first in place |
 | `version` | string | optional | an older name for `label`, read only when `label` is absent, because scripts written against it are already out in the world |
+| `dialect` | string | optional | the console vocabulary the image speaks: meshcore, absent included, for MeshCore's own; none for a firmware with no console; or the name of another. A node running a build that is not MeshCore's is not sent provisioning, which it would refuse line by line |
 
 **Answers** `version`, `role`, `board`, `path`, `bytes`. `version` is the label the build was stored under, which is the timestamp when none was given and is what `firmware.set` then has to be handed.
 
@@ -1937,7 +1975,7 @@ List every build there is, on disk and published together, so a build nobody has
 
 **Takes** nothing.
 
-**Answers** `builds`, `count`. The catalogue is asked over the network in the background and its answer lands seconds later, so the first call in a session answers from disk alone and is worth making again. Each row in `builds` carries `role`, `version`, `board`, `bytes`, `on_disk`, `path`, `in_use` and `unavailable`.
+**Answers** `builds`, `count`. The catalogue is asked over the network in the background and its answer lands seconds later, so the first call in a session answers from disk alone and is worth making again. Each row in `builds` carries `role`, `version`, `board`, `bytes`, `on_disk`, `path`, `in_use`, `unavailable`, `checking` and `catalogue_down`. A build that is not on disk is `checking` until the catalogue answers, `catalogue_down` if it could not be reached, and `unavailable` only once it answered without it.
 
 **Example** - list what could be run, fetched or not
 
@@ -2080,6 +2118,7 @@ Rename a build, move it to another board or role, or change how it is run.
 | `new_board` | string | optional | move it to this board instead; unchanged when absent |
 | `card_required` | bool | optional | this firmware will not get far without storage in the board's slot, so every node running it is given a card whatever it would otherwise have had |
 | `coproc_at_reset` | bool | optional | start this build's coprocessors enabled, which the part does not do - for a firmware that traps inside its own exception vector and cannot be seen past |
+| `dialect` | string | optional | the console vocabulary the build speaks: meshcore for MeshCore's own, none for no console, or another name; absent leaves it alone. Anything but meshcore means nodes running this build are not provisioned, and an experiment arm that pins settings onto one is refused |
 | `notes` | string | optional | what the next person should know about this build |
 
 **Answers** `role`, `version`, `board`, `path`, `renamed`, `repinned`, `settings`. The build's identity after the change comes back, with `renamed` saying whether the file actually moved and `repinned` how many nodes were pointed at the new name, which happens on their behalf so none is left naming a build nothing answers to. `settings` holds `coproc_at_reset`, `card_required` and `notes` as they now stand. Refused for a build not on this machine, and refused while a node is running it.
@@ -2150,8 +2189,9 @@ Run one meshcore-cli line at a companion node, which has no text console of its 
 |---|---|---|---|
 | `node` | string | required, primary | the node to run the line at; refused when absent |
 | `command` | string | required | the line, in meshcore-cli's own vocabulary; refused when absent or blank, and `?` lists what this build answers |
+| `at_ms` | number | optional | an instant of simulated time to run this at instead of now: the call is held and runs when the engine reaches it, so it lands at the same instant on any machine. Refused unless it is after now. Without it, a call made while the clock is playing lands wherever the clock happens to be, and sim.state then says the run cannot be reproduced |
 
-**Answers** `node`, `reply`, `failed`. `failed` is present and true where the line ran and the answer was no: an unknown command, a command meshcore-cli has that this build does not, or a connect that could not be made. That is not an error, because a console refused at the status bar leaves nothing where it was typed. `reply` is what the console prints either way, and the node's own answer to it arrives later in the scrollback.
+**Answers** `node`, `reply`, `failed`, `paused`, `queued`, `at_ms`, `now_ms`. `failed` is present and true where the line ran and the answer was no: an unknown command, a command meshcore-cli has that this build does not, or a connect that could not be made. That is not an error, because a console refused at the status bar leaves nothing where it was typed. `reply` is what the console prints either way, and the node's own answer to it arrives later in the scrollback. `paused` is present when the clock is stopped: whatever the command sends is queued and goes on the air when the run plays, and the console says so under the reply.
 
 **Example** - list the meshcore-cli commands this build answers
 
@@ -2193,8 +2233,9 @@ Run a line at a node's own firmware console, which answers what the node says ra
 |---|---|---|---|
 | `node` | string | required | the node whose console to type at; refused when it is absent, unknown, or runs no firmware |
 | `command` | string | required | the line to type, sent with a carriage return and newline after it; refused when it is absent or empty |
+| `at_ms` | number | optional | an instant of simulated time to run this at instead of now: the call is held and runs when the engine reaches it, so it lands at the same instant on any machine. Refused unless it is after now. Without it, a call made while the clock is playing lands wherever the clock happens to be, and sim.state then says the run cannot be reproduced |
 
-**Answers** `node`, `sent`, `note`. The node's reply is not in this answer: it lands in the scrollback when the engine next steps, and is read with `console.read`. On a paused clock this steps the engine sixty times so the reply arrives anyway, but while a sweep owns the clock the replies come back empty.
+**Answers** `node`, `sent`, `note`, `paused`, `queued`, `at_ms`, `now_ms`. The node's reply is not in this answer: it lands in the scrollback when the engine next steps, and is read with `console.read`. On a paused clock this steps the engine sixty times so the reply arrives anyway, but while a sweep owns the clock the replies come back empty. `paused` is present when the clock is stopped: whatever the command sends is queued and goes on the air when the run plays, and the console says so under the reply.
 
 **Example** - ask a node what it believes it is called
 
@@ -2256,8 +2297,9 @@ Ask a node what one of its channel slots holds, despite the name: nothing is add
 |---|---|---|---|
 | `node` | string | required, primary | the connected node; refused when nothing is connected to it |
 | `index` | number | optional | which channel slot to ask about; absent asks about slot 0 |
+| `at_ms` | number | optional | an instant of simulated time to run this at instead of now: the call is held and runs when the engine reaches it, so it lands at the same instant on any machine. Refused unless it is after now. Without it, a call made while the clock is playing lands wherever the clock happens to be, and sim.state then says the run cannot be reproduced |
 
-**Answers** `asked_for_channel`. It answers as soon as the question is queued. What the slot holds lands in the node's decoded state, which `companion.state` counts.
+**Answers** `asked_for_channel`, `queued`, `at_ms`, `now_ms`. It answers as soon as the question is queued. What the slot holds lands in the node's decoded state, which `companion.state` counts.
 
 **Example** - ask what is in the second channel slot
 
@@ -2279,8 +2321,9 @@ Make a node announce itself, which is how the rest of the mesh comes to hold it 
 |---|---|---|---|
 | `node` | string | required, primary | the connected node; refused when nothing is connected to it, or when it has not answered anything since it was connected |
 | `flood` | bool | optional | true sends a flood advert, which repeaters carry onward; false sends one that is not flooded; absent floods |
+| `at_ms` | number | optional | an instant of simulated time to run this at instead of now: the call is held and runs when the engine reaches it, so it lands at the same instant on any machine. Refused unless it is after now. Without it, a call made while the clock is playing lands wherever the clock happens to be, and sim.state then says the run cannot be reproduced |
 
-**Answers** `advert`, `flood`
+**Answers** `advert`, `flood`, `queued`, `at_ms`, `now_ms`
 
 **Example** - announce to the neighbours only
 
@@ -2291,6 +2334,31 @@ Make a node announce itself, which is how the rest of the mesh comes to hold it 
 Not made by the test suite: this call needs more than the two-node headless session the runnable examples go to.
 
 **Client** `node.companion.advert(flood=False)`
+
+### `companion.cli`
+
+Run a command on another node over the air, as an operator's phone administers a repeater it cannot plug into: the text goes as a remote-admin message (TXT_TYPE_CLI_DATA), the recipient runs it on its own command line, and its answer comes back the same way.
+
+**Takes**
+
+| parameter | type | | what |
+|---|---|---|---|
+| `node` | string | required, primary | the connected companion to send from; refused when nothing is connected to it, or when it has not answered anything since it was connected |
+| `to` | string | required | the node to run it, by contact name or by public key in hex as the companion holds it; refused when the companion holds no such contact and the key is too short to address one |
+| `command` | string | required | the command line to run there, as it would be typed at that node's serial console; refused when absent or blank |
+| `at_ms` | number | optional | an instant of simulated time to run this at instead of now: the call is held and runs when the engine reaches it, so it lands at the same instant on any machine. Refused unless it is after now. Without it, a call made while the clock is playing lands wherever the clock happens to be, and sim.state then says the run cannot be reproduced |
+
+**Answers** `node`, `to`, `command`, `note`, `queued`, `at_ms`, `now_ms`. The recipient runs the command only for a sender logged in to it as admin, so log in first (`console.cli` with `login <contact> <password>`). Nothing is acked: the answer is the reply itself, which arrives later and is read from `companion.state` as `cli_replies`. A command from a sender that is not logged in gets no reply at all.
+
+**Example** - ask a repeater over the air what radio settings it holds
+
+```json
+{"id":1,"method":"companion.cli","params":{"command":"get radio","node":"Phone","to":"West Lomond"}}
+```
+
+Not made by the test suite: this call needs more than the two-node headless session the runnable examples go to.
+
+**Client** `node.companion.remote(to, command)`
 
 ### `companion.configure`
 
@@ -2310,8 +2378,9 @@ Change a node's own settings the way a phone would, sending only the fields that
 | `sf` | number | optional | spreading factor, refused outside 5 to 12; absent with another modem field given keeps what the node last said it holds |
 | `cr` | number | optional | coding rate denominator, refused outside 5 to 8; absent with another modem field given keeps what the node last said it holds |
 | `path_hash` | number | optional | bytes of path hash each hop adds, 1 to 3, refused outside that; absent leaves it alone |
+| `at_ms` | number | optional | an instant of simulated time to run this at instead of now: the call is held and runs when the engine reaches it, so it lands at the same instant on any machine. Refused unless it is after now. Without it, a call made while the clock is playing lands wherever the clock happens to be, and sim.state then says the run cannot be reproduced |
 
-**Answers** `set`. `set` names what was sent, in the order it went. A call that asks for nothing at all is refused rather than answered with an empty list. The four modem fields go as one command, so any one of them is refused until the node has said what its radio is.
+**Answers** `set`, `queued`, `at_ms`, `now_ms`. `set` names what was sent, in the order it went. A call that asks for nothing at all is refused rather than answered with an empty list. The four modem fields go as one command, so any one of them is refused until the node has said what its radio is.
 
 **Example** - turn a node's transmit power down
 
@@ -2332,8 +2401,9 @@ Claim a node's serial port for the companion protocol and make the same opening 
 | parameter | type | | what |
 |---|---|---|---|
 | `node` | string | required, primary | the node to attach to; refused when it is absent, runs no firmware, is already connected, or its port is being served to an attached outside client |
+| `at_ms` | number | optional | an instant of simulated time to run this at instead of now: the call is held and runs when the engine reaches it, so it lands at the same instant on any machine. Refused unless it is after now. Without it, a call made while the clock is playing lands wherever the clock happens to be, and sim.state then says the run cannot be reproduced |
 
-**Answers** `connected`, `took_port`, `note`. A listener that is serving the port but has nobody on it is taken back rather than refused. Everything the node says in reply arrives later as frames, so read it with `companion.state`.
+**Answers** `connected`, `took_port`, `note`, `queued`, `at_ms`, `now_ms`. A listener that is serving the port but has nobody on it is taken back rather than refused. Everything the node says in reply arrives later as frames, so read it with `companion.state`.
 
 **Example** - attach to a node the way a phone would
 
@@ -2377,8 +2447,9 @@ Put bytes of the caller's own choosing on a node's companion port, for when what
 |---|---|---|---|
 | `node` | string | required, primary | the connected node; refused when nothing is connected to it |
 | `bytes` | array | required | the payload, one number per byte; anything in the array that is not a number is dropped, and an empty or absent array is refused |
+| `at_ms` | number | optional | an instant of simulated time to run this at instead of now: the call is held and runs when the engine reaches it, so it lands at the same instant on any machine. Refused unless it is after now. Without it, a call made while the clock is playing lands wherever the clock happens to be, and sim.state then says the run cannot be reproduced |
 
-**Answers** `sent_bytes`. `sent_bytes` counts what was framed and written, which is the numbers that survived, not the length of the array as it was passed.
+**Answers** `sent_bytes`, `queued`, `at_ms`, `now_ms`. `sent_bytes` counts what was framed and written, which is the numbers that survived, not the length of the array as it was passed.
 
 **Example** - hand the firmware three bytes and see what it makes of them
 
@@ -2422,8 +2493,9 @@ Ask a node again for everything a client draws, emptying the held contact list f
 | parameter | type | | what |
 |---|---|---|---|
 | `node` | string | required, primary | the connected node; refused when nothing is connected to it |
+| `at_ms` | number | optional | an instant of simulated time to run this at instead of now: the call is held and runs when the engine reaches it, so it lands at the same instant on any machine. Refused unless it is after now. Without it, a call made while the clock is playing lands wherever the clock happens to be, and sim.state then says the run cannot be reproduced |
 
-**Answers** `node`. It answers as soon as the questions are queued, so the contact count read straight after is zero. The answers arrive later as frames.
+**Answers** `node`, `queued`, `at_ms`, `now_ms`. It answers as soon as the questions are queued, so the contact count read straight after is zero. The answers arrive later as frames.
 
 **Example** - rebuild the view from what the node says now
 
@@ -2445,8 +2517,9 @@ Set the region a node sends under, by the one route a companion build has for it
 |---|---|---|---|
 | `node` | string | required, primary | the connected node; refused when nothing is connected to it |
 | `scope` | string | optional | the region name, canonicalised before it is sent and paired with the key derived from it; absent or empty clears the scope, so the node sends unscoped |
+| `at_ms` | number | optional | an instant of simulated time to run this at instead of now: the call is held and runs when the engine reaches it, so it lands at the same instant on any machine. Refused unless it is after now. Without it, a call made while the clock is playing lands wherever the clock happens to be, and sim.state then says the run cannot be reproduced |
 
-**Answers** `node`, `scope`. `scope` is the name as it was asked for, canonicalised, not what the node now holds: the node's own answer arrives later as a frame.
+**Answers** `node`, `scope`, `queued`, `at_ms`, `now_ms`. `scope` is the name as it was asked for, canonicalised, not what the node now holds: the node's own answer arrives later as a frame.
 
 **Example** - put a node on a named region
 
@@ -2470,8 +2543,9 @@ Send a channel message from a node as a phone's composer would, and keep a copy 
 | `text` | string | required | the message; refused when it is absent or only whitespace |
 | `channel` | number | optional | which channel slot to send on; absent sends on slot 0 |
 | `path_hash` | number | optional | bytes of path hash each hop adds, 1 to 3, written to the node before the message goes and refused outside that range; absent leaves the node's own setting alone |
+| `at_ms` | number | optional | an instant of simulated time to run this at instead of now: the call is held and runs when the engine reaches it, so it lands at the same instant on any machine. Refused unless it is after now. Without it, a call made while the clock is playing lands wherever the clock happens to be, and sim.state then says the run cannot be reproduced |
 
-**Answers** `sent`, `channel`
+**Answers** `sent`, `channel`, `queued`, `at_ms`, `now_ms`
 
 **Example** - put a message on the public channel
 
@@ -2493,7 +2567,7 @@ Read what a client attached to this node would be showing, which is what the nod
 |---|---|---|---|
 | `node` | string | required, primary | the connected node; refused when nothing is connected to it |
 
-**Answers** `node`, `contacts`, `messages`, `channels`, `recent`, `name`, `freq_khz`. `contacts`, `messages` and `channels` are counts rather than the things themselves, and `recent` is the session's own note lines. `name` and `freq_khz` appear only once the node has answered a device query, so their absence means it has not.
+**Answers** `node`, `contacts`, `messages`, `channels`, `recent`, `name`, `freq_khz`, `cli_replies`. `contacts`, `messages` and `channels` are counts rather than the things themselves, and `recent` is the session's own note lines. `name` and `freq_khz` appear only once the node has answered a device query, so their absence means it has not. `cli_replies` lists the answers to remote commands sent with `companion.cli`, oldest first, each with the key prefix it came `from` and its `text`.
 
 **Example** - ask what the client sees
 
@@ -2552,9 +2626,10 @@ Open a real endpoint onto one simulated node, so an unmodified companion client 
 | parameter | type | | what |
 |---|---|---|---|
 | `node` | string | optional | the node to serve; absent takes the first companion in the scenario, because an endpoint is what is wanted before a node has been chosen |
-| `kind` | string | optional | "serial" for a pseudo-terminal a serial client opens; anything else, absent included, listens on TCP on every interface and a port the operating system picks the first time this node is served |
+| `kind` | string | optional | "serial" for a pseudo-terminal a serial client opens; "ble" to advertise the node on this machine's Bluetooth adapter, so a phone finds it the way it finds a radio (Linux with BlueZ, and python3 with dbus and gi); anything else, absent included, listens on TCP on every interface and a port the operating system picks the first time this node is served |
+| `name` | string | optional | for "ble", the name to advertise; absent is MSIM- and the node's name |
 
-**Answers** `node`, `addr`. Serving takes the port off the workbench, so a companion session on that node is released rather than shared. A second call for the same node replaces the listener rather than adding one, and keeps the address: the port is drawn once per node and asked for again on every serve after, including after a drop, because a client already pointed at the first address cannot be told about a second. A port taken by something else in the meantime moves the endpoint and says so.
+**Answers** `node`, `addr`. Serving takes the port off the workbench, so a companion session on that node is released rather than shared. A second call for the same node replaces the listener rather than adding one, and keeps the address: the port is drawn once per node and asked for again on every serve after, including after a drop, because a client already pointed at the first address cannot be told about a second. A port taken by something else in the meantime moves the endpoint and says so. Over BLE, `addr` is the advertised name. The node still runs its USB build: the peripheral turns each frame into one notification and each write into a frame, so this tests a client against a simulated mesh rather than MeshCore's own BLE transport. It goes when the endpoint is dropped.
 
 **Example** - put a node on a TCP port for a real client
 
@@ -2564,7 +2639,7 @@ Open a real endpoint onto one simulated node, so an unmodified companion client 
 
 Not made by the test suite: this call needs more than the two-node headless session the runnable examples go to.
 
-**Client** `node.serve(kind='tcp'|'serial')`
+**Client** `node.serve(kind='tcp'|'serial'|'ble', name=)`
 
 ### `bench.stray`
 
@@ -2585,6 +2660,55 @@ Not made by the test suite: this call needs more than the two-node headless sess
 **Client** `wb.endpoints.stray()`
 
 Planned, not written: no client defines `wb.endpoints` yet - the TCP and serial endpoints a node is served on. Call the verb itself in the meantime.
+
+### `radio.deliver`
+
+Hand a node's radio one frame directly, as received or as a chosen kind of failed reception, to test the firmware's receive path without the channel deciding anything.
+
+**Takes**
+
+| parameter | type | | what |
+|---|---|---|---|
+| `node` | string | optional | the node whose radio receives it; it needs firmware running |
+| `hex` | string | optional | the frame, header first, as hex digits |
+| `as` | string | optional | ok (the default), crc_error, header_error, no_crc (the header said the payload has no CRC), next_before_read or next_during_read (the next frame's header arriving in continuous receive before or during the firmware's read of this one) |
+
+**Answers** `node`, `as`, `bytes`, `delivered`. `delivered` is false when the node has no firmware or its chip does not read that kind, which is an answer rather than a refusal. The next_* kinds need a frame already received and not yet read, so they follow an ok delivery.
+
+**Example** - a frame whose header said it carries no CRC
+
+```json
+{"id":1,"method":"radio.deliver","params":{"as":"no_crc","hex":"1500348b2db7","node":"West Lomond"}}
+```
+
+Not made by the test suite: this call needs more than the two-node headless session the runnable examples go to.
+
+**Client** `node.deliver(frame_hex, as_='ok')`
+
+### `radio.preset`
+
+Put the nodes on one of the community's agreed modem settings, which decides sensitivity and airtime and therefore every number downstream of them, or list the settings there are to choose from.
+
+**Takes**
+
+| parameter | type | | what |
+|---|---|---|---|
+| `preset` | string | optional, primary | the preset's label, exactly as it is listed; a label no preset has is refused, and absent lists the labels instead of changing anything |
+| `node` | string | optional | one node to move, named rather than passed bare; absent moves every node in the network |
+
+**Answers** `preset`, `nodes`. `nodes` is how many were moved, and zero is the answer where `node` named nobody. Called with no preset at all it answers instead with `presets`, the labels available. The frequency is part of a preset, so a change rebuilds the engine and remeasures every link on a worker.
+
+**Example** - put the whole network on the settings its neighbours use
+
+```json
+{"id":1,"method":"radio.preset","params":"EU/UK (Narrow)"}
+```
+
+Not made by the test suite: this call needs more than the two-node headless session the runnable examples go to.
+
+**Client** `wb.radio.presets  /  wb.radio.apply(preset, node=)`
+
+Planned, not written: no client defines `wb.radio` yet - the preset list and applying one. Call the verb itself in the meantime.
 
 ### `sdr.serve`
 
@@ -3747,7 +3871,7 @@ Put every arm through every seed on a worker, each cell in its own engine with n
 
 **Takes** nothing.
 
-**Answers** `running`, `runs`, `reproducible`, `not_reproducible_why`. `runs` is how many cells were queued. Poll experiment.state until `running` goes false. It refuses where a sweep is already running, where no network is loaded, where no sender has been named, and where the last sweep's cell in flight has not yet let go of the results table. `reproducible` is false where the network carries a node running in an emulator, whose firmware is stepped by the emulator's clock rather than by the run's: the cells then differ for reasons the matrix does not record, so the arms measure nothing against each other, and `not_reproducible_why` says which node, empty when there is none. The sweep still runs - a single arm on emulated firmware is a legitimate thing to watch - but a script comparing arms should stop here.
+**Answers** `running`, `runs`, `reproducible`, `not_reproducible_why`. `runs` is how many cells were queued. Poll experiment.state until `running` goes false. It refuses where a sweep is already running, where no network is loaded, where no sender has been named, and where the last sweep's cell in flight has not yet let go of the results table. `reproducible` is false where the network carries a node running in an emulator, whose firmware is stepped by the emulator's clock rather than by the run's: the cells then differ for reasons the matrix does not record, so the arms measure nothing against each other, and `not_reproducible_why` says which node, empty when there is none. The sweep still runs - a single arm on emulated firmware is a legitimate thing to watch - but a script comparing arms should stop here. Refused before anything runs when an arm pins a setting onto a node whose firmware does not take MeshCore's console commands (`firmware.update` `dialect`), naming the arm and the nodes: the setting would not apply, and the cells would differ by nothing.
 
 **Example** - start the matrix that is defined
 
@@ -4018,31 +4142,6 @@ Name every building pull already on this disk, so moving between environments is
 **Client** `wb.rf.environments`
 
 Planned, not written: no client defines `wb.rf` yet - the radio model: which physics, what realism, how much excess loss. Call the verb itself in the meantime.
-
-### `radio.preset`
-
-Put the nodes on one of the community's agreed modem settings, which decides sensitivity and airtime and therefore every number downstream of them, or list the settings there are to choose from.
-
-**Takes**
-
-| parameter | type | | what |
-|---|---|---|---|
-| `preset` | string | optional, primary | the preset's label, exactly as it is listed; a label no preset has is refused, and absent lists the labels instead of changing anything |
-| `node` | string | optional | one node to move, named rather than passed bare; absent moves every node in the network |
-
-**Answers** `preset`, `nodes`. `nodes` is how many were moved, and zero is the answer where `node` named nobody. Called with no preset at all it answers instead with `presets`, the labels available. The frequency is part of a preset, so a change rebuilds the engine and remeasures every link on a worker.
-
-**Example** - put the whole network on the settings its neighbours use
-
-```json
-{"id":1,"method":"radio.preset","params":"EU/UK (Narrow)"}
-```
-
-Not made by the test suite: this call needs more than the two-node headless session the runnable examples go to.
-
-**Client** `wb.radio.presets  /  wb.radio.apply(preset, node=)`
-
-Planned, not written: no client defines `wb.radio` yet - the preset list and applying one. Call the verb itself in the meantime.
 
 ### `rf.environment`
 

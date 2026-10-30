@@ -561,6 +561,15 @@ Originate a packet without firmware.
 It exercises the radio model and the channel; what it does not exercise
 is relaying, which is a firmware behaviour and needs a firmware.
 
+### `Node.deliver(frame_hex: str, as_: str = 'ok') -> bool`
+
+Hand this node's radio one frame directly, as received or as a kind
+of failed reception: ok, crc_error, header_error, no_crc,
+next_before_read or next_during_read.
+
+False when the node has no firmware or its chip does not read that
+kind, which is an answer, not a refusal.
+
 ### `Node.provisioning() -> list[str]`
 
 What this node is told at boot, in the console's own words.
@@ -687,7 +696,7 @@ deliberately: this one names a published release asset, and the
 catalogue's own spellings are not always the application names the
 verbs are keyed on.
 
-### `Firmware.import_(path: str, role: str, board: str = '', label: str = '') -> Build`
+### `Firmware.import_(path: str, role: str, board: str = '', label: str = '', dialect: str = '') -> Build`
 
 Take a build from a path - the one way a locally built image gets
 into the library.
@@ -715,7 +724,7 @@ Takes a Build or a bare label. A label alone is refused when it names
 more than one build - the same image imported for two boards, say -
 because acting on the wrong one is a rename of somebody else's image.
 
-### `Firmware.update(build: Build | str, *, board: Board | str = '', role: Role | str = '', label: str | None = None, new_role: Role | str | None = None, new_board: Board | str | None = None, coproc_at_reset: bool | None = None, card_required: bool | None = None, notes: str | None = None) -> BuildDetails`
+### `Firmware.update(build: Build | str, *, board: Board | str = '', role: Role | str = '', label: str | None = None, new_role: Role | str | None = None, new_board: Board | str | None = None, coproc_at_reset: bool | None = None, card_required: bool | None = None, dialect: str | None = None, notes: str | None = None) -> BuildDetails`
 
 Rename a build, move it to another board or role, or change how it
 is run.
@@ -807,7 +816,13 @@ reads exactly like a command that ran and did nothing.
 So this picks the right one from the node's kind. A caller should not have
 to know, and every caller that did know got it wrong at least once.
 
-### `Console.send(line: str) -> None`
+### `Console.send(line: str, at_ms: int | None = None) -> None`
+
+Type a line at it, now or at `at_ms` of simulated time.
+
+Now, on a playing clock, is whenever this call happens to arrive, so
+the same script lands its lines at different instants on a busy
+machine. `at_ms` holds the line until the run reaches that instant.
 
 ### `Console.read() -> list[str]`
 
@@ -1312,6 +1327,8 @@ LilyGo_TDeck, built as a companion.
 - `path: str`
 - `in_use: int`
 - `unavailable: bool`
+- `checking: bool`
+- `catalogue_down: bool`
 
 ### BuildDetails
 
@@ -1338,6 +1355,7 @@ expected.
 - `flash_mb: int`
 - `coproc_at_reset: bool`
 - `card_required: bool`
+- `dialect: str`
 - `notes: str`
 
 ### CardSlot
@@ -1468,6 +1486,8 @@ What one node is costing and doing right now.
 - `busy_ms: int`
 - `spurious: int`
 - `irq_suppressed: int | None`
+- `airtime_ms: float | None`
+- `duty_cycle_pct: float | None`
 
 ### Notification
 
