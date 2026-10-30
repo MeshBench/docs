@@ -392,6 +392,10 @@ Console reaches a node's console.
 
 Delete removes it from the scenario, and re-measures what is left.
 
+### `(n Node) Deliver(ctx context.Context, frameHex, as string) (bool, error)`
+
+Deliver hands this node's radio one frame directly, as received or as a kind of failed reception: "ok", "crc_error", "header_error", "no_crc", "next_before_read" or "next_during_read". It reports false when the node has no firmware or its chip does not read that kind, which is an answer, not a refusal.
+
 ### `(n Node) Device() Device`
 
 Device is this node as a device to drive: its screen, buttons and panel.
@@ -669,6 +673,10 @@ The lines come back under "tail" and "lines" is how many there are in total, so 
 Send types a line at it.
 
 Which verb that is depends on what the node runs. A companion or a room server speaks the framed companion protocol, so its console takes a command rather than keystrokes, and console.type reaches a node of that kind without ever being delivered.
+
+### `(c Console) SendAt(ctx context.Context, line string, atMs uint32) error`
+
+SendAt types a line at an instant of simulated time rather than now. Now, on a playing clock, is whenever the call arrives, so the same program lands its lines at different instants on a busy machine; atMs does not.
 
 ## Events
 
@@ -1153,6 +1161,11 @@ InUse   int    `json:"in_use"`
 // fails at start, which reads as the library losing builds rather than as
 // a pin nobody can honour.
 Unavailable bool `json:"unavailable"`
+// Checking marks a build not on disk while the catalogue has not answered
+// yet, and CatalogueDown one whose catalogue could not be reached: in both
+// it may well be published, and nobody can yet say it is not.
+Checking      bool `json:"checking"`
+CatalogueDown bool `json:"catalogue_down"`
 ```
 
 - `(b Build) Describe() string` - Describe is how this build is named where a person will read it.
@@ -1175,7 +1188,11 @@ NewRole  Role
 NewBoard Board
 CoprocAtReset *bool
 CardRequired  *bool
-Notes         *string
+// Dialect is the console vocabulary the build speaks: "meshcore", "none",
+// or another name. A node running anything but MeshCore's is not sent
+// provisioning.
+Dialect *string
+Notes   *string
 ```
 
 ### BuildDetails
@@ -1212,8 +1229,11 @@ CoprocAtReset bool `json:"coproc_at_reset"`
 // CardRequired says this firmware will not get far without storage in the
 // board's slot, so every node running it is given a card whatever its own
 // slot was set to.
-CardRequired bool   `json:"card_required"`
-Notes        string `json:"notes"`
+CardRequired bool `json:"card_required"`
+// Dialect is the console vocabulary the build speaks; "meshcore" unless
+// something else was recorded.
+Dialect string `json:"dialect"`
+Notes   string `json:"notes"`
 ```
 
 - `(b BuildDetails) Describe() string` - Describe is how this build is named where a person will read it.
