@@ -140,7 +140,8 @@ because nothing watches most GPIOs, and that is stated rather than printed as a
 dash somebody would read as "low".
 
 The rows that do come back are the ones something reads: the front-end module's
-enable line, the display, the parts that are driven, and the console.
+enable line, the display, the parts that are driven, the lamps on a board
+running under Renode, and the console.
 
 ### The console rate
 
@@ -189,9 +190,38 @@ and keeping them apart is what the window is for.
 | `not modelled` | there is no model for this part, so there is nothing to observe. About MeshBench, not about the board |
 | blank | nothing observable is claimed for it yet |
 
-A lamp is drawn as an outline rather than as an unlit lamp for the same reason:
-"off" and "not modelled" are different facts, and the second is a statement
-about the simulator.
+### Lamps
+
+How a lamp is drawn depends on whether anything watches its pin.
+
+**Under Renode, a lamp is watched.** Each declared lamp pin's output is
+followed from inside the machine, so the lamp is drawn lit or unlit as the
+firmware last drove it, and its row on the Wiring table says what it saw:
+
+| observed | verdict | meaning |
+|---|---|---|
+| `lit, changed 3 times` | `agrees` | the firmware last drove it on |
+| `off, changed 3 times` | `agrees` | the firmware last drove it off |
+| `never driven` | `silent` | the board is running and the firmware has not touched the pin |
+| `not powered` | blank | the board is not running |
+
+The count is there because a flash can begin and end between two frames of
+the window, and an unlit lamp says nothing about whether it lit a moment ago.
+
+**Under QEMU, nothing watches a lamp's pin**, so an ESP32 board's lamp is drawn
+as an outline rather than as an unlit lamp, and its row says
+`no watcher on this pin` and `not modelled`. "Off" and "not modelled" are
+different facts, and the second is a statement about the simulator.
+
+From a script, `nodes.stats` carries the same reading under `lamps`, keyed by
+pin:
+
+```json
+"lamps": {"35": {"changes": 3, "lit": false}, "36": {"changes": 3, "lit": false}}
+```
+
+The field is absent, rather than empty, on a board whose lamps nothing watches,
+because "every lamp off" and "not watched" are different answers.
 
 The inspector under the selection gives the board profile's own account of what
 the row does, including what it would take to tell a silent row from a broken
